@@ -1,0 +1,16 @@
+.mouseOverModule:hover{
+    border: 3px solid #4e73df;
+    margin: -3px;
+}
+.mouseOverCategory:hover{
+    border: 3px solid #1cc88a;
+    margin: -3px;
+}
+.overMouseButtons:hover{
+    border: 3px solid #1cc88a;
+    margin: -3px;
+}
+a:hover {
+    color: initial;
+    text-decoration: initial;
+}

@@ -9,26 +9,28 @@
 
     <!-- Content Row -->
     <div class="row">
-
-      <!-- Earnings (Monthly) Card Example -->
-      <div class="modal fade" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <!-- Modal create Module -->
+      <div class="modal fade" id="createModuleModal" tabindex="-1" role="dialog" aria-labelledby="createModuleLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <form action="{% url 'createmod' %}" method="post">
               {% csrf_token %}
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Create new Module</h5>
+                <h5 class="modal-title" id="createModuleLabel">Create new Module</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <input name="module_name" class="form-control bg-light border-0 small col-md-6 mb-4" placeholder="Module name"/>
-                <select name="category_name" class="custom-select custom-select-sm form-control form-control-sm col-xl-3 col-md-6 mb-4">
+                <input name="module_name" class="form-control bg-light border-0 small col-md-6 mb-4" placeholder="Module name" required/>
+                <select id="editable-select" name="category_name" class="custom-select custom-select-sm form-control form-control-sm col-xl-3 col-md-6 mb-4">
                   {% for cat in categories %}
                     <option value="{{cat}}">{{cat}}</option>
                   {% endfor %}
                 </select>
+                <script>
+                  $('#editable-select').editableSelect();
+                </script>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -39,8 +41,8 @@
         </div>
       </div>
       <div class="col-xl-3 col-md-6 mb-4">
-        <a href="#" data-toggle="modal" data-target="#basicExampleModal">
-          <div class="card border-left-success shadow h-100 py-2">
+        <a href="#" data-toggle="modal" data-target="#createModuleModal">
+          <div class="card border-left-success shadow h-100 py-2 overMouseButtons">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -59,7 +61,7 @@
       <!-- Earnings (Monthly) Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
         <a href="{% url 'home' %}">
-          <div class="card border-left-info shadow h-100 py-2">
+          <div class="card border-left-info shadow h-100 py-2 overMouseButtons">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -75,10 +77,33 @@
         </a>
       </div>
 
+      <!-- Modal create Category -->
+      <div class="modal fade" id="createCategoryModal" tabindex="-1" role="dialog" aria-labelledby="createCategoryLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <form action="{% url 'createcat' %}" method="post">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h5 class="modal-title" id="createCategoryLabel">Create new Module</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input name="category_name" class="form-control bg-light border-0 small col-md-6 mb-4" placeholder="Category name"/>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" value="Save changes"></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
       <!-- Earnings (Monthly) Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
-        <a href="{% url 'home' %}">
-          <div class="card border-left-primary shadow h-100 py-2">
+        <a href="{% url 'home' %}" data-toggle="modal" data-target="#createCategoryModal">
+          <div class="card border-left-primary shadow h-100 py-2 overMouseButtons">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -97,7 +122,7 @@
       <!-- Pending Requests Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
         <a href="{% url 'home' %}">
-          <div class="card border-left-warning shadow h-100 py-2">
+          <div class="card border-left-warning shadow h-100 py-2 overMouseButtons">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -120,12 +145,14 @@
         <div class="row">
           {% for mod in modules %}
             <div class="col-lg-6 mb-4">
-              <div class="card bg-success text-white shadow">
-                <div class="card-body">
-                  {{mod}}
-                  <div class="text-white-50 small">Module</div>
+              <a href="#">
+                <div class="card bg-success text-white shadow mouseOverModule">
+                  <div class="card-body">
+                    {{mod}}
+                    <div class="text-white-50 small">Module</div>
+                  </div>
                 </div>
-              </div>
+              </a>
             </div>
           {% endfor %}
         </div>
@@ -138,7 +165,7 @@
         <div class="row">
           {% for cat in categories %}
             <div class="col-lg-6 mb-4">
-              <div class="card bg-primary text-white shadow">
+              <div class="card bg-primary text-white shadow mouseOverCategory">
                 <div class="card-body">
                   {{cat}}
                   <div class="text-white-50 small">Category</div>

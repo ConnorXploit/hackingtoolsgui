@@ -146,6 +146,7 @@ def __importModules__():
             for files in modules[modu][submod]:
                 module_name = modules[modu][submod][files][0].split(".")[0]
                 module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
+                module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
                 try:
                     exec(module_import_string)
                     #globals()[module_name] = importlib.import_module(module_import_string)
@@ -153,7 +154,7 @@ def __importModules__():
                     module_functions = __methodsFromModule__(eval(module_name))
                     
                     if len(module_functions) > 0:
-                        modules_loaded[module_import_string] = {}
+                        modules_loaded[module_import_string_no_from] = {}
                         for mod_func in module_functions:
                             function = '{module}.{callClass}().{function}'.format(module=module_name, callClass=default_class_name_for_all, function=mod_func)
 
@@ -168,16 +169,16 @@ def __importModules__():
                                     if param_func not in function_param_exclude:
                                         clean_params.append(param_func)
 
-                            modules_loaded[module_import_string][mod_func] = {}
+                            modules_loaded[module_import_string_no_from][mod_func] = {}
 
                             if clean_params and len(clean_params) > 0:
-                                modules_loaded[module_import_string][mod_func]['params'] = clean_params
+                                modules_loaded[module_import_string_no_from][mod_func]['params'] = clean_params
                             else:
-                                modules_loaded[module_import_string][mod_func]['params'] = False
+                                modules_loaded[module_import_string_no_from][mod_func]['params'] = False
                     else:
-                        modules_loaded[module_import_string] = 'Sin funciones...'   
+                        modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
                 except:
-                    print("{a} - [ERROR]".format(a=module_import_string))
+                    print("{a} - [ERROR]".format(a=module_import_string_no_from))
 
 def getModules():
     data = []
@@ -186,7 +187,7 @@ def getModules():
     return data
 
 def createModule(moduleName, category):
-    moduleName = moduleName.lower()
+    moduleName = moduleName.replace(" ", "_").lower()
     category = category.lower()
     categories = getCategories()
     if category not in categories:
@@ -203,7 +204,10 @@ def createModule(moduleName, category):
     if not os.path.exists('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
         f = open('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
         f.write('')
+    # Reload variables on client side
+    global hackingtools
     reload(hackingtools)
+    __importModules__()
     
 def createCategory(categoryName):
     categoryName = categoryName.lower()
