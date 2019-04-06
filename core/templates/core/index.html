@@ -11,8 +11,35 @@
     <div class="row">
 
       <!-- Earnings (Monthly) Card Example -->
+      <div class="modal fade" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <form action="{% url 'createmod' %}" method="post">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create new Module</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input name="module_name" class="form-control bg-light border-0 small col-md-6 mb-4" placeholder="Module name"/>
+                <select name="category_name" class="custom-select custom-select-sm form-control form-control-sm col-xl-3 col-md-6 mb-4">
+                  {% for cat in categories %}
+                    <option value="{{cat}}">{{cat}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" value="Save changes"></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
       <div class="col-xl-3 col-md-6 mb-4">
-        <a href="{% url 'home' %}">
+        <a href="#" data-toggle="modal" data-target="#basicExampleModal">
           <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
