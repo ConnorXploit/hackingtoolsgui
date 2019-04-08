@@ -2,3 +2,5 @@
 core/__pycache__/
 
 *.pyc
+
+\.vscode/
