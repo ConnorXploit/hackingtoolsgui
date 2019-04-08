@@ -29,6 +29,20 @@ def createModule(request):
     modules_names = hackingtools.getModulesNames()
     return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all })
 
+def configModule(request):
+    mod_name = request.POST.get('module_name').replace(" ", "_").lower()
+    mod_conf = hackingtools.getModuleConfig(mod_name)
+    reload(hackingtools) # NO SE ACTUALIZA
+    modules_and_params = hackingtools.getModulesJSON()
+    modules_all = {}
+    categories = []
+    for mod in modules_and_params:
+        if not mod.split('.')[1] in categories:
+            categories.append(mod.split('.')[1])
+        modules_all[mod.split('.')[2]] = modules_and_params[mod]
+    modules_names = hackingtools.getModulesNames()
+    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all })
+
 def createCategory(request):
     mod_cat = request.POST.get('category_name').replace(" ", "_").lower()
     hackingtools.createCategory(mod_cat)

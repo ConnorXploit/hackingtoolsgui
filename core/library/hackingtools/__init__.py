@@ -55,5 +55,11 @@ def createModule(moduleName, category):
     Logger.printMessage('Creating {moduleName} on {category}'.format(moduleName=moduleName, category=category), debug_module=True)
     modules.createModule(moduleName, category)
     return 'Created'
-def holliiii():
-    pass
+
+def getModuleConfig(moduleName):
+    if moduleName in getModulesNames():
+        actualConf = getModulesJSON()
+        for mod in actualConf:
+            if moduleName in mod.split('.')[-1]:
+                return actualConf[mod]
+    return None
