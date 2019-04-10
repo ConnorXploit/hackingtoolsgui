@@ -1,13 +1,40 @@
 from .core import Logger
-from . import import_modules as modules # Cambiar esto (ya no existe el fichero import_modules)
 from colorama import Fore, Back, Style
+
+import os, time, sys
+from os import listdir
+from os.path import isfile, join
+import importlib
+import types
+import inspect
+import ast
+from importlib import reload
+from .core import Config
+config = Config.getConfig(parentKey='core', key='import_modules')
+
+modules_loaded = {}
+
+this_dir = os.path.dirname(os.path.abspath(__file__))
+
+blacklist_extensions = config['blacklist_extensions']
+blacklist_directories = config['blacklist_directories']
+ignore_files = config['ignore_files']
+ignore_folders = config['ignore_folders']
+class_name_starts_with_modules = config['class_name_starts_with_modules']
+function_name_starts_with_modules = config['function_name_starts_with_modules']
+function_param_exclude = config['function_param_exclude']
+default_class_name_for_all = config['default_class_name_for_all']
+
+default_template_modules_ht = config['default_template_modules_ht']
+
+package = config['package_name']
 
 def getModulesJSON():
     """
     Mostramos los modulos cargados
     """
-    Logger.printMessage('Modules loaded as JSON automatically:', modules.modules_loaded, debug_module=True)
-    return modules.modules_loaded
+    Logger.printMessage('Modules loaded as JSON automatically:', modules_loaded, debug_module=True)
+    return modules_loaded
 
 def getModulesCalls():
     """
@@ -15,7 +42,7 @@ def getModulesCalls():
     """
     Logger.printMessage('Modules :', debug_module=True)
     modulesCalls = []
-    for mods in modules.getModules():
+    for mods in getModules():
         Logger.printMessage('\t{text}'.format(text=mods), color=Fore.YELLOW, debug_module=True)
         modulesCalls.append(mods)
     return modulesCalls
@@ -25,7 +52,7 @@ def getModulesNames():
     Devuelve los nombre de todos los modulos importados (ht_shodan, etc.)
     """
     modules_names = []
-    for tools in modules.modules_loaded:
+    for tools in modules_loaded:
         modules_names.append(tools.split('.')[-1])
     return modules_names
 
@@ -65,33 +92,6 @@ def getModuleConfig(moduleName):
     return None
 
 # Import Modules
-import os, time, sys
-from os import listdir
-from os.path import isfile, join
-import importlib
-import types
-import inspect
-import ast
-from importlib import reload
-from .core import Config
-config = Config.getConfig(parentKey='core', key='import_modules')
-
-modules_loaded = {}
-
-this_dir = os.path.dirname(os.path.abspath(__file__))
-
-blacklist_extensions = config['blacklist_extensions']
-blacklist_directories = config['blacklist_directories']
-ignore_files = config['ignore_files']
-ignore_folders = config['ignore_folders']
-class_name_starts_with_modules = config['class_name_starts_with_modules']
-function_name_starts_with_modules = config['function_name_starts_with_modules']
-function_param_exclude = config['function_param_exclude']
-default_class_name_for_all = config['default_class_name_for_all']
-
-default_template_modules_ht = config['default_template_modules_ht']
-
-package = config['package_name']
 
 # Core method - Usado por: __importModules__()
 def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):
@@ -218,7 +218,7 @@ def __importModules__():
                     #globals()[module_name] = importlib.import_module(module_import_string)
                     module_className = __classNameFromModule__(eval(module_name))
                     module_functions = __methodsFromModule__(eval(module_name))
-                    
+
                     if len(module_functions) > 0:
                         modules_loaded[module_import_string_no_from] = {}
                         for mod_func in module_functions:
@@ -244,7 +244,7 @@ def __importModules__():
                     else:
                         modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
                 except:
-                    print("{a} - [ERROR]".format(a=module_import_string_no_from))
+                    print("{a} - [ERROR]".format(a=module_import_string))
 
 def getModules():
     data = []
@@ -289,4 +289,5 @@ def getCategories():
         if mods not in data:
             data.append(mods.split('.')[3])
     return data
+
 __importModules__()
