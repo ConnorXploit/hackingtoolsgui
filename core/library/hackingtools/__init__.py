@@ -272,7 +272,7 @@ def createModule(moduleName, category):
         f.write('')
     # Reload variables on client side
     global hackingtools
-    reload(hackingtools)
+    #reload(hackingtools)
     __importModules__()
     
 def createCategory(categoryName):

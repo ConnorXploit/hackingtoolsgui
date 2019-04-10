@@ -18,7 +18,7 @@ def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_cat = request.POST.get('category_name')
     hackingtools.createModule(mod_name, mod_cat)
-    reload(hackingtools) # NO SE ACTUALIZA
+    #reload(hackingtools) # NO SE ACTUALIZA
     modules_and_params = hackingtools.getModulesJSON()
     modules_all = {}
     categories = []
