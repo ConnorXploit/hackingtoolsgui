@@ -73,7 +73,11 @@ def getModule(moduleName):
     Iniciamos con el comando anterior la instancia del modulo
     """
     Logger.printMessage('Initiation of {moduleName}'.format(moduleName=moduleName), debug_module=True)
-    return eval('modules.{moduleName}.StartModule()'.format(moduleName=moduleName))
+    for m in modules_loaded:
+        if moduleName in m:
+            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
+            print(sentence)
+            return eval(sentence)
 
 def createModule(moduleName, category):
     """
