@@ -146,8 +146,47 @@
       </div>
 
       <!-- Pending Requests Card Example -->
+      <div class="modal fade" id="testModuleModal" tabindex="-1" role="dialog" aria-labelledby="testModuleLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="testModuleLabel">Test your Module</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <!-- Test Crypter -->
+            <form action="{% url 'crypt_file' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="modal-body">
+                <h5>Crypter</h5>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon">Upload</span>
+                  </div>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="filename" name="filename" aria-describedby="addon">
+                    <label class="custom-file-label" for="inputGroupFile01" placeholder="Choose file"></label>
+                  </div>
+                </div><br />
+                <input type="text" id="new_file_name" name="new_file_name" class="form-control" placeholder="New filename"/><br />
+                <input type="text" id="drop_file_name" name="drop_file_name" class="form-control" placeholder="Drop filename on execute"/><br />
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="compile_exe">
+                    <label class="custom-control-label" for="compile_exe">Compile to EXE</label>
+                </div><br />
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" value="Crypt File"></button>
+              </div>
+            </form>
+            <!-- Test Crypter -->
+          </div>
+        </div>
+      </div>
       <div class="col-xl-3 col-md-6 mb-4">
-        <a href="{% url 'home' %}">
+        <a href="#" data-toggle="modal" data-target="#testModuleModal">
           <div class="card border-left-warning shadow h-100 py-2 overMouseButtons">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
