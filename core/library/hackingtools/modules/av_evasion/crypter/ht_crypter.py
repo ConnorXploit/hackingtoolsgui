@@ -263,7 +263,6 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 			prime_a, prime_b = self.getRandomKeypair()
 			public, private = self.generate_keypair(prime_a, prime_b)
 			crypted_data = self.encrypt(private_key=private, plaintext=data.decode("utf-8"))
-			print(crypted_data)
 			new_file = new_file_name
 			if not '.' in new_file:
 				new_file = '{file}.py'.format(file=new_file)
