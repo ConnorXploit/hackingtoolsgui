@@ -61,7 +61,7 @@ class StartModule():
 	def decrypt(self, public_key, ciphertext):
 		#Unpack the key into its components
 		key, n = public_key
-		mensajeRecibido = self.__recibirBase64__(ciphertext.encode('utf-8'))
+		mensajeRecibido = self.__recibirBase64__(ciphertext)
 		mensajeHexRecibido = self.__Base64_Hex__(mensajeRecibido)
 		mensajeDecimalRecibido = self.__Hex_decimal__(mensajeHexRecibido)
 		mensajeDescifrado = [((char ** key) % n) for char in mensajeDecimalRecibido]
