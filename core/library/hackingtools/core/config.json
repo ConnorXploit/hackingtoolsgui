@@ -38,6 +38,11 @@
             "color_verbose" : "BLUE",
             "color_info" : "YELLOW",
             "color_ok" : "GREEN"
+        },
+        "ht_crypter":{
+            "bad_identical_prime" : "Both numbers must be prime",
+            "p_q_equal_error" : "p and q cannot be equal",
+            "pyinstaller" : "pyinstaller -F -w --clean"
         }
     },
     "core":{
