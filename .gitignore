@@ -4,3 +4,7 @@ core/__pycache__/
 *.pyc
 
 \.vscode/
+
+*.spec
+
+*.zip

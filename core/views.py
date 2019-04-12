@@ -57,7 +57,7 @@ def cryptFile(request):
             uploaded_file_url = os.path.join(location, filename)
             # Compile Exe
             compile_exe = False
-            if request.POST.get('compile_exe'):
+            if request.POST.get('compile_exe','')=='on':
                 compile_exe = True
 
             # Get Crypter Module
@@ -73,6 +73,8 @@ def cryptFile(request):
             crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, compile_exe=compile_exe)
             if crypted_file:
                 with open(crypted_file, 'rb') as fh:
+                    if compile_exe:
+                        new_file_name = '{name}.exe'.format(name=new_file_name.split('.')[0])
                     response = HttpResponse(fh.read(), content_type="application/{type}".format(type=new_file_name.split('.')[1]))
                     response['Content-Disposition'] = 'inline; filename=' + os.path.basename(crypted_file)
                     os.remove(uploaded_file_url)
