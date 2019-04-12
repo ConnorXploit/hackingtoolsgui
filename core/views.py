@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
 from .library import hackingtools
 from importlib import reload
+import os
 # Create your views here.
 
 def home(request):
@@ -46,12 +48,13 @@ def cryptFile(request):
         if request.POST.get('new_file_name') and request.POST.get('drop_file_name'):
             # Get file
             myfile = request.FILES['filename']
-            fs = FileSystemStorage()
+
+            location = os.path.join("core", "library", "hackingtools", "modules", "av_evasion", "crypter", "output")
+            fs = FileSystemStorage(location=location)
 
             # Save file
             filename = fs.save(myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-
+            uploaded_file_url = os.path.join(location, filename)
             # Compile Exe
             compile_exe = False
             if request.POST.get('compile_exe'):
@@ -60,15 +63,19 @@ def cryptFile(request):
             # Get Crypter Module
             crypter = hackingtools.getModule('ht_crypter')
 
-            new_file_name = request.POST.get('new_file_name')
+            tmp_new_file_name = request.POST.get('new_file_name')
+            if not '.' in tmp_new_file_name:
+                tmp_new_file_name = '{name}.py'.format(name=tmp_new_file_name)
+            new_file_name = os.path.join(location, tmp_new_file_name)
+
             drop_file_name = request.POST.get('drop_file_name')
 
             crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, compile_exe=compile_exe)
-            
             if crypted_file:
                 with open(crypted_file, 'rb') as fh:
                     response = HttpResponse(fh.read(), content_type="application/{type}".format(type=new_file_name.split('.')[1]))
                     response['Content-Disposition'] = 'inline; filename=' + os.path.basename(crypted_file)
+                    os.remove(uploaded_file_url)
                     return response
             else:
                 print('No se ha guardado correctamente')
