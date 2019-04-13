@@ -65,10 +65,7 @@ def cryptFile(request):
 
             tmp_new_file_name = request.POST.get('new_file_name')
             if not '.' in tmp_new_file_name:
-                if compile_exe:
-                    tmp_new_file_name = '{name}.exe'.format(name=tmp_new_file_name)
-                else:
-                    tmp_new_file_name = '{name}.py'.format(name=tmp_new_file_name)
+                tmp_new_file_name = '{name}.py'.format(name=tmp_new_file_name)
             new_file_name = os.path.join(location, tmp_new_file_name)
 
             drop_file_name = request.POST.get('drop_file_name')
@@ -77,14 +74,15 @@ def cryptFile(request):
 
             crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, compile_exe=compile_exe)
             if crypted_file:
-                with open(crypted_file, 'rb') as fh:
-                    if compile_exe:
-                        new_file_name = '{name}.exe'.format(name=new_file_name.split('.')[0])
-                    response = HttpResponse(fh.read(), content_type="application/{type}".format(type=new_file_name.split('.')[1]))
-                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(crypted_file)
-                    return response
-                    os.remove(uploaded_file_url)
-                    os.remove(crypted_file)
+                if os.path.isfile(crypted_file):
+                    with open(crypted_file, 'rb') as fh:
+                        if compile_exe:
+                            new_file_name = '{name}.exe'.format(name=new_file_name.split('.')[0])
+                        response = HttpResponse(fh.read(), content_type="application/{type}".format(type=new_file_name.split('.')[1]))
+                        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(crypted_file)
+                        return response
+                        os.remove(uploaded_file_url)
+                        os.remove(crypted_file)
             else:
                 print('No se ha guardado correctamente')
 

