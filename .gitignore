@@ -8,3 +8,7 @@ core/__pycache__/
 *.spec
 
 *.zip
+
+build/*
+dist/*
+core/library/hackingtools/modules/av_evasion/crypter/output/

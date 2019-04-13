@@ -9,6 +9,7 @@ from random import randint
 import base64
 import binascii
 import random
+import shutil
 config = Config.getConfig(parentKey='modules', key='ht_crypter')
 
 class StartModule():
@@ -182,7 +183,28 @@ class StartModule():
 	def convertToExe(self, stub_name):
 		# Convert py to exe with pyinstaller
 		import os
-		os.system(config['pyinstaller'] + " " + stub_name)
+		os.system(config['pyinstaller'].format(path=os.path.dirname(stub_name)) + " " + stub_name)
+		filename = '{file}.exe'.format(file=stub_name.split('.')[0].split('\\')[-1])
+
+		file_to_move = os.path.abspath(os.path.join('dist', '{file}'.format(file=filename)))
+		new_file = os.path.abspath(os.path.join(os.path.dirname(stub_name), filename))
+		if os.path.isfile(file_to_move) and not os.path.isfile(new_file):
+			os.rename(file_to_move, new_file)
+
+		new_spec_file = '{name}.spec'.format(name=new_file.split('.')[0])
+		if os.path.isfile(new_spec_file):
+			os.remove(new_spec_file)
+
+		build_dir = os.path.abspath(os.path.join('build', '{file}'.format(file=filename.split('.')[0])))
+		if os.path.isdir(build_dir):
+			shutil.rmtree(build_dir)
+
+		if os.path.isfile(file_to_move):
+			os.remove(file_to_move)
+
+		spec_file = os.path.abspath('{file}.spec'.format(file=filename.split('.')[0]))
+		if os.path.isfile(spec_file):
+			os.remove(spec_file)
 
 	def is_valid_file(self, parser, arg):
 		if not os.path.exists(arg):

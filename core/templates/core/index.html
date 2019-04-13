@@ -160,15 +160,7 @@
               {% csrf_token %}
               <div class="modal-body">
                 <h5>Crypter</h5>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="addon">Upload</span>
-                  </div>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="filename" name="filename" aria-describedby="addon">
-                    <label class="custom-file-label" for="inputGroupFile01" placeholder="Choose file"></label>
-                  </div>
-                </div><br />
+                <input type="file" name="filename"><br /><br />
                 <input type="text" id="new_file_name" name="new_file_name" class="form-control" placeholder="New filename"/><br />
                 <input type="text" id="drop_file_name" name="drop_file_name" class="form-control" placeholder="Drop filename on execute"/><br />
                 <div class="custom-control custom-checkbox">

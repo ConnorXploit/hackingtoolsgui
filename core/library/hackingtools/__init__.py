@@ -247,8 +247,8 @@ def __importModules__():
                                 modules_loaded[module_import_string_no_from][mod_func]['params'] = False
                     else:
                         modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
-                except:
-                    print("{a} - [ERROR]".format(a=module_import_string))
+                except Exception as e:
+                    print("{a} - [ERROR] - {msg}".format(a=module_import_string, msg=str(e)))
 
 def getModules():
     data = []
