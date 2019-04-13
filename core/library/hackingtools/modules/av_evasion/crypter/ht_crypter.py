@@ -186,7 +186,7 @@ class StartModule():
 		os.system(config['pyinstaller'].format(path=os.path.dirname(stub_name)) + " " + stub_name)
 		filename = '{file}.exe'.format(file=stub_name.split('.')[0].split('\\')[-1])
 
-		file_to_move = os.path.abspath(os.path.join('dist', '{file}'.format(file=filename)))
+		file_to_move = os.path.abspath(os.path.join('dist', '{folder}'.format(folder=filename.split('.')[0]), '{file}'.format(file=filename)))
 		new_file = os.path.abspath(os.path.join(os.path.dirname(stub_name), filename))
 
 		if os.path.isfile(file_to_move) and not os.path.isfile(new_file):
