@@ -298,10 +298,10 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 			if not '.' in new_file:
 				new_file = '{file}.py'.format(file=new_file)
 			if compile_exe:
-				self.createStub(crypted_data, public, drop_file_name, new_file, print_save_stub, True)
+				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub, convert=True)
 				new_file = '{file}.exe'.format(file=new_file.split('.')[0])
 			else:
-				self.createStub(crypted_data, public, drop_file_name, new_file, print_save_stub)
+				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub)
 			return new_file
 		else:
 			return None
