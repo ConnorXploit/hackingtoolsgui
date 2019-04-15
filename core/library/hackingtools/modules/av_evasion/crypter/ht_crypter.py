@@ -64,7 +64,7 @@ class StartModule():
 		return (prime_a, prime_b)
 
 	def encrypt(self, private_key, plaintext):
-		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key} - {plaintext}'.format(private_key=private_key, plaintext=plaintext), debug_module=True)
+		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key}'.format(private_key=private_key), debug_module=True)
 		#Unpack the key into it's components
 		key, n = private_key
 		mensaje = self.__mensajeASCII__(plaintext)
@@ -75,7 +75,7 @@ class StartModule():
 		return mensajeFinalBase64.decode("utf-8")
 
 	def decrypt(self, public_key, ciphertext):
-		Logger.printMessage(message='{methodName}'.format(methodName='decrypt'), description='{public_key} - {ciphertext}'.format(public_key=public_key, ciphertext=ciphertext), debug_module=True)
+		Logger.printMessage(message='{methodName}'.format(methodName='decrypt'), description='{public_key}'.format(public_key=public_key), debug_module=True)
 		#Unpack the key into its components
 		key, n = public_key
 		mensajeRecibido = self.__recibirBase64__(ciphertext.encode('utf-8'))
@@ -282,6 +282,7 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 		drop_file_name es el nombre con el que se guarda trás ejecutarse el stub para poder ejecutarlo (drop_file_name='descifrado_ejecutable.py')
 		compile_exe es si queremos compilarlo con pyinstaller
 		"""
+		Logger.printMessage(message='{methodName}'.format(methodName='crypt_file'), description='{filename}'.format(filename=filename), debug_module=True)
 		temp_filename = filename
 		if iterate_count > 1:
 			temp_filename = filename

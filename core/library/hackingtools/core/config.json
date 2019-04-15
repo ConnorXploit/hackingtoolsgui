@@ -48,7 +48,7 @@
     "core":{
         "Logger":{
             "DEBUG_CORE_FLAG": false,
-            "DEBUG_MODULE_FLAG": false,
+            "DEBUG_MODULE_FLAG": true,
             "DEBUG_USER": true,
             "clear_on_load": false,
             "log_save_date_format":"%Y-%m-%d-%H:%M:%S.%f",
