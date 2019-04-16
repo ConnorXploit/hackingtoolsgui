@@ -48,21 +48,17 @@ class StartModule():
 			#Public key is (e, n) and private key is (d, n)
 			return ((e, n), (d, n))
 
-	def getRandomKeypair(self):
+	def getRandomKeypair(self, length = 8):
 		Logger.printMessage(message='{methodName}'.format(methodName='getRandomKeypair'), debug_module=True)
 		prime_a = ''
 		prime_b = ''
 		while prime_a == prime_b:
 			while prime_a == '':
-				num = random.randint(random.randint(0,40),random.randint(40,80))*random.randint(1,10)
-				if self.__is_prime__(num):
-					prime_a = num
+				prime_a = self.__getRandomPrime__(length)
 			while prime_b == '':
-				num = random.randint(random.randint(40,80),random.randint(80,120))*random.randint(1,10)
-				if self.__is_prime__(num):
-					prime_b = num
+				prime_b = self.__getRandomPrime__(length)
 		return (prime_a, prime_b)
-
+	
 	def encrypt(self, private_key, plaintext):
 		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key}'.format(private_key=private_key), debug_module=True)
 		#Unpack the key into it's components
@@ -109,18 +105,32 @@ class StartModule():
 		if inv < 1: inv += phi #we only want positive values
 		return inv
 	
-	def __is_prime__(self, num):
+	def __is_prime__(self, primo):
 		'''
 		Tests to see if a number is prime.
 		'''
-		if int(num) == 2:
-			return True
-		if int(num) < 2 or int(num) % 2 == 0:
-			return False
-		for n in range(3, int(num**0.5)+2, 2):
-			if num % n == 0:
+		excluidos = (0, 2, 4, 5, 6, 8)
+		if not int(str(primo)[-1]) in excluidos:
+			division = 0
+			try:
+				mitad = primo/2
+				if not isinstance(mitad, float):
+					return False
+			except:
 				return False
-		return True
+			fibo_1 = 0
+			fibo_2 = 1
+			fibo_temp = fibo_1 + fibo_2
+			while fibo_temp < int(primo/2):
+				if primo % fibo_temp == 0:
+					division += 1
+				fibo_1 = fibo_2
+				fibo_2 = fibo_temp
+				fibo_temp = fibo_1 + fibo_2
+				if division == 2:
+					return False
+			if division == 1:
+				return True
 
 	def __mensajeASCII__(self, mensaje):
 		men = []
@@ -171,6 +181,13 @@ class StartModule():
 		for decimal in mensaje:
 			mensaje1 = mensaje1 + chr(decimal)
 		return mensaje1
+
+	def __getRandomPrime__(self, length = 8):
+		prime = 0
+		while True:
+			primo=random.randint(10**(length-1), 10**length)
+			if self.__is_prime__(primo):
+				return primo
 
 	# FIN RSA
 
@@ -303,7 +320,7 @@ dcy_data = dcy(pk=pk, cptx=cdx)
 		filename = temp_filename
 		if filename and new_file_name:
 			data = self.getMalwareData(filename)
-			prime_a, prime_b = self.getRandomKeypair()
+			prime_a, prime_b = self.getRandomKeypair(2)
 			public, private = self.generate_keypair(prime_a, prime_b)
 			crypted_data = self.encrypt(private_key=private, plaintext=data.decode("utf-8"))
 			new_file = new_file_name

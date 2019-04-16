@@ -51,7 +51,7 @@
             "DEBUG_MODULE_FLAG": true,
             "DEBUG_USER": true,
             "clear_on_load": false,
-            "log_save_date_format":"%Y-%m-%d-%H:%M:%S.%f",
+            "log_save_date_format":"%Y-%m-%d-%H-%M-%S-%f",
             "log_print_date_format" :"%Y-%m-%d %H:%M:%S.%f"
         },
         "import_modules":{
