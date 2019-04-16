@@ -48,6 +48,10 @@ def cryptFile(request):
         # Get file
         myfile = request.FILES['filename']
 
+        # Get Crypter Module
+        crypter = hackingtools.getModule('ht_crypter')
+        crypter.clean_output_dir()
+        
         location = os.path.join("core", "library", "hackingtools", "modules", "av_evasion", "crypter", "output")
         fs = FileSystemStorage(location=location)
 
@@ -58,9 +62,6 @@ def cryptFile(request):
         compile_exe = False
         if request.POST.get('compile_exe','')=='on':
             compile_exe = True
-
-        # Get Crypter Module
-        crypter = hackingtools.getModule('ht_crypter')
 
         tmp_new_file_name = filename.split('.')[0]
         if not '.' in tmp_new_file_name:
