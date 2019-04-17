@@ -79,8 +79,12 @@ def cryptFile(request):
                 iterate_count = int(request.POST.get('iteratecount'))
             except:
                 pass
-        
-        crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, iterate_count=iterate_count, compile_exe=compile_exe)
+                
+        is_last = False
+        if iterate_count == 1:
+            is_last = True
+
+        crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, iterate_count=iterate_count, is_last=is_last, compile_exe=compile_exe)
 
         if crypted_file:
             if os.path.isfile(crypted_file):

