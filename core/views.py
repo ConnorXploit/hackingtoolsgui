@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
+from django.urls import reverse
 from .library import hackingtools
 from importlib import reload
 import os
@@ -79,7 +80,7 @@ def cryptFile(request):
                 iterate_count = int(request.POST.get('iteratecount'))
             except:
                 pass
-                
+
         is_last = False
         if iterate_count == 1:
             is_last = True
@@ -99,4 +100,4 @@ def cryptFile(request):
         else:
             print('No se ha guardado correctamente')
 
-    return redirect('home')
+    return redirect(reverse('home'))

