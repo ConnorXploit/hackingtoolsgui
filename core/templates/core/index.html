@@ -155,45 +155,6 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <!-- Test Crypter -->
-            <form action="{% url 'crypt_file' %}" method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="modal-body">
-                <h5>Crypter</h5>
-                <label class="btn btn-default">
-                  Browse file to crypt<span class="name-file"></span><input type="file" name="filename" class="file-input" hidden>
-                </label>
-                <script>
-                  $('.file-input').on('change',function(){
-                      //get the file name
-                      var fileName = ': ' + $(this).val();
-                      //replace the "Choose a file" label
-                      file_pieces = fileName.split('\\');
-                      $('.name-file').html(': <b>' + file_pieces[file_pieces.length-1] + '</b>');
-                  })
-                </script>
-                <div class="form-group row">
-                  <label for="iteratecount" class="col-4 col-form-label">Iterate count</label>
-                  <div class="col-4">
-                    <input class="form-control" type="number" value="1" name="iteratecount">
-                  </div>
-                </div>
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="compile_exe" name="compile_exe">
-                    <label class="custom-control-label" for="compile_exe">Compile to EXE</label>
-                </div><br />
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" value="Crypt File" id="crypt_file_button"></button>
-                <script>
-                  $('#crypt_file_button').on('click', function(){
-                    $('#crypt_file_button').attr('value', 'Crypting...');
-                  });
-                </script>
-              </div>
-            </form>
-            <!-- Test Crypter -->
           </div>
         </div>
       </div>
@@ -220,31 +181,60 @@
     <div class="row">
       <div class="col-lg-6 mb-4">
         <div class="row">
-          {% for mod in modules %}
-            <div class="modal fade" id="configModuleModal_{{mod}}" tabindex="-1" role="dialog" aria-labelledby="configModuleLabel_{{mod}}" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <form action="{% url 'savemod' mod %}" method="post">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="configModuleLabel_{{mod}}">Configure {{mod}}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                    
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <input type="submit" class="btn btn-primary" value="Save module"></button>
-                    </div>
-                  </form>
+          <div class="modal fade" id="ht_crypter_test" tabindex="-1" role="dialog" aria-labelledby="ht_crypter_test_label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="ht_crypter_test_label">Test your Module</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
+                <!-- Test Crypter -->
+                <form action="{% url 'crypt_file' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <h5>Crypter</h5>
+                    <label class="btn btn-default">
+                      Browse file to crypt<span class="name-file"></span><input type="file" name="filename" class="file-input" hidden>
+                    </label>
+                    <script>
+                      $('.file-input').on('change',function(){
+                          //get the file name
+                          var fileName = ': ' + $(this).val();
+                          //replace the "Choose a file" label
+                          file_pieces = fileName.split('\\');
+                          $('.name-file').html(': <b>' + file_pieces[file_pieces.length-1] + '</b>');
+                      })
+                    </script>
+                    <div class="form-group row">
+                      <label for="iteratecount" class="col-4 col-form-label">Iterate count</label>
+                      <div class="col-4">
+                        <input class="form-control" type="number" value="1" name="iteratecount">
+                      </div>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="compile_exe" name="compile_exe">
+                        <label class="custom-control-label" for="compile_exe">Compile to EXE</label>
+                    </div><br />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Crypt File" id="crypt_file_button"></button>
+                    <script>
+                      $('#crypt_file_button').on('click', function(){
+                        $('#crypt_file_button').attr('value', 'Crypting...');
+                      });
+                    </script>
+                  </div>
+                </form>
+                <!-- Test Crypter -->
               </div>
             </div>
+          </div>
+          {% for mod in modules %}
             <div class="col-lg-6 mb-4">
-              <a href="#" data-toggle="modal" data-target="#configModuleModal_{{mod}}">
+              <a href="#" data-toggle="modal" data-target="#{{mod}}_test">
                 <div class="card bg-success text-white shadow mouseOverModule">
                   <div class="card-body">
                     {{mod}}

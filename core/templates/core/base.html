@@ -74,7 +74,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Loaded Modules:</h6>
               {% for mod in modules %}
-                <a class="collapse-item" href="{% url 'home' %}">{{mod}}</a>
+                <a href="#" class="collapse-item" data-toggle="modal" data-target="#{{mod}}_test">{{mod}}</a>
               {% endfor %}
             </div>
           </div>

