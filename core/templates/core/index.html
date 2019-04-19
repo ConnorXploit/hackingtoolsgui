@@ -60,50 +60,25 @@
       </div>
 
       <!-- Modal config Module -->
-      <div class="modal fade" id="configModuleModal2" tabindex="-1" role="dialog" aria-labelledby="configModuleLabel2" aria-hidden="true">
+      <div class="modal fade" id="configModuleModal" tabindex="-1" role="dialog" aria-labelledby="configModuleLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <form action="{% url 'configmod' %}" method="post">
               {% csrf_token %}
               <div class="modal-header">
-                <h5 class="modal-title" id="configModuleLabel2">Configure Module</h5>
+                <h5 class="modal-title" id="configModuleLabel">Configure Module</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-              
+              {{modules_config}}
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <input type="submit" class="btn btn-primary" value="Save module"></button>
               </div>
             </form>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="configModuleModal" tabindex="-1" role="dialog" aria-labelledby="configModuleLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="configModuleLabel">Select a Module</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <select id="module_name" name="module_name" class="custom-select custom-select-sm form-control form-control-sm col-xl-3 col-md-6 mb-4" required>
-                {% for mod in modules %}
-                  <option value="{{mod}}">{{mod}}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <a href="#" data-toggle="modal" data-target="#configModuleModal2" data-dismiss="modal">
-                <input type="submit" class="btn btn-primary" value="Configure module"></button>
-              </a>
-            </div>
           </div>
         </div>
       </div>

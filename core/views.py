@@ -10,6 +10,7 @@ import os
 def home(request):
     modules_and_params = hackingtools.getModulesJSON()
     modules_forms = hackingtools.__getModulesDjangoForms__()
+    modules_config = hackingtools.getModulesConfig()
     modules_all = {}
     categories = []
     for mod in modules_and_params:
@@ -17,7 +18,7 @@ def home(request):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = hackingtools.getModulesNames()
-    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms })
+    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_config':modules_config })
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()

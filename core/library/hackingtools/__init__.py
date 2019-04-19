@@ -34,7 +34,7 @@ def getModulesJSON():
     """
     Mostramos los modulos cargados
     """
-    Logger.printMessage('Modules loaded as JSON automatically:', modules_loaded, debug_module=True)
+    Logger.printMessage('Modules loaded as JSON automatically:', [{mod:'{func} functions'.format(func=len(modules_loaded[mod]))} for mod in modules_loaded], debug_module=True)
     return modules_loaded
 
 def getModulesCalls():
@@ -229,10 +229,13 @@ def __createHtmlModalForm__(mod):
             loading_text = ''
             if 'loading_text' in module_form[m]:
                 loading_text = module_form[m]['loading_text']
+            required = ''
+            if 'required' in module_form[m]:
+                required = 'required'
             if input_type == 'file':
-                html += "<label class=\"btn btn-default\">{placeholder}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden /></label>".format(placeholder=input_placeholder, className=input_class, id=input_id)
+                html += "<label class=\"btn btn-default\">{placeholder}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(placeholder=input_placeholder, className=input_class, id=input_id, required=required)
             elif input_type == 'checkbox':
-                html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\"><label class=\"custom-control-label\" for=\"{id}\">{placeholder}</label></div><br />".format(id=input_id, className=input_class, placeholder=input_placeholder)
+                html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{placeholder}</label></div><br />".format(id=input_id, className=input_class, placeholder=input_placeholder, required=required)
             elif input_type == 'button':
                 footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
             elif input_type == 'submit':
@@ -245,7 +248,7 @@ def __createHtmlModalForm__(mod):
                     footer += "').attr('value', '{loading_text}');".format(loading_text=loading_text)
                     footer += "});</script>"
             else:
-                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{placeholder}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" name=\"{id}\" /></div></div>".format(id=input_id, placeholder=input_placeholder, className=input_class, input_type=input_type, input_value=input_value)
+                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{placeholder}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" name=\"{id}\" {required} /></div></div>".format(id=input_id, placeholder=input_placeholder, className=input_class, input_type=input_type, input_value=input_value, required=required)
     footer += '</div>'
     html += footer
     html += '</div>'
@@ -258,6 +261,9 @@ def __getModulesDjangoForms__():
         if form:
             forms[mod] = form
     return forms
+
+def getModulesConfig():
+    return [{m:Config.getConfig(parentKey='modules', key=m.split('.')[-1])} for m in modules_loaded]
 
 # Core method
 def __importModules__():
