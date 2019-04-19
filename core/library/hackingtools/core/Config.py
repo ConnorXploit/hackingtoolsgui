@@ -15,7 +15,10 @@ def __readConfig__():
 def getConfig(parentKey, key, subkey=None):
     try:
         if subkey:
-            return config[parentKey][key][subkey]
+            try:
+                return config[parentKey][key][subkey]
+            except:
+                return
         return config[parentKey][key]
     except:
         return 'Bad key on JSON'

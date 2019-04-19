@@ -27,6 +27,15 @@
 
       {% block staticfiles %}{% endblock %}
 
+      <script>
+        $('.file-input').on('change',function(){
+            //get the file name
+            var fileName = ': ' + $(this).val();
+            //replace the "Choose a file" label
+            file_pieces = fileName.split('\\');
+            $('.name-file').html(': <b>' + file_pieces[file_pieces.length-1] + '</b>');
+        })
+      </script>
   </head>
 
   <body id="page-top">

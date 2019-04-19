@@ -1,4 +1,7 @@
 from .core import Logger
+from .core import Config
+config = Config.getConfig(parentKey='core', key='import_modules')
+
 from colorama import Fore, Back, Style
 
 import os, time, sys
@@ -9,8 +12,6 @@ import types
 import inspect
 import ast
 from importlib import reload
-from .core import Config
-config = Config.getConfig(parentKey='core', key='import_modules')
 
 modules_loaded = {}
 
@@ -203,6 +204,53 @@ def __methodsFromModule__(cls):
 def __classNameFromModule__(cls):
     return [x for x in dir(cls) if inspect.isclass(getattr(cls, x)) and x.startswith(class_name_starts_with_modules)]
 
+def __createHtmlModalForm__(mod):
+    module_form = Config.getConfig(parentKey='modules', key=mod, subkey='django_form')
+    if not module_form:
+        return
+
+    form_url = ''
+    if 'django_url_post' in module_form:
+        form_url = module_form['django_url_post']
+    html = "<div class=\"modal-body\">"
+    footer = '<div class="modal-footer">'
+    for m in module_form:
+        if '__type__' in module_form[m] and '__id__' in module_form[m] and '__className__' in module_form[m]:
+            input_type = module_form[m]['__type__']
+            input_id = module_form[m]['__id__']
+            input_class = module_form[m]['__className__']
+            input_placeholder = ''
+            loading_text = ''
+            if 'placeholder' in module_form[m]:
+                input_placeholder = module_form[m]['placeholder']
+            input_value = ''
+            if 'value' in module_form[m]:
+                input_value = module_form[m]['value']
+            loading_text = ''
+            if 'loading_text' in module_form[m]:
+                loading_text = module_form[m]['loading_text']
+            if input_type == 'file':
+                html += "<label class=\"btn btn-default\">{placeholder}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden /></label>".format(placeholder=input_placeholder, className=input_class, id=input_id)
+            elif input_type == 'checkbox':
+                html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\"><label class=\"custom-control-label\" for=\"{id}\">{placeholder}</label></div><br />".format(id=input_id, className=input_class, placeholder=input_placeholder)
+            elif input_type == 'button':
+                footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
+            elif input_type == 'submit':
+                footer += "<input type=\"submit\" class=\"{className}\" value=\"{input_value}\" id=\"{id}\" />".format(className=input_class, input_value=input_value, id=input_id)
+                if loading_text:
+                    footer += "<script>$('#"
+                    footer += input_id
+                    footer += "').on('click', function(){$('#"
+                    footer += input_id
+                    footer += "').attr('value', '{loading_text}');".format(loading_text=loading_text)
+                    footer += "});</script>"
+            else:
+                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{placeholder}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" name=\"{id}\" /></div></div>".format(id=input_id, placeholder=input_placeholder, className=input_class, input_type=input_type, input_value=input_value)
+    footer += '</div>'
+    html += footer
+    html += '</div>'
+    return html
+
 # Core method
 def __importModules__():
     """
@@ -293,5 +341,13 @@ def getCategories():
         if mods not in data:
             data.append(mods.split('.')[3])
     return data
+
+def getModulesDjangoForms():
+    forms = {}
+    for mod in getModulesNames():
+        form = __createHtmlModalForm__(mod)
+        if form:
+            forms[mod] = form
+    return forms
 
 __importModules__()

@@ -42,7 +42,48 @@
         "ht_crypter":{
             "bad_identical_prime" : "Both numbers must be prime",
             "p_q_equal_error" : "p and q cannot be equal",
-            "pyinstaller" : "pyinstaller -F -w --clean --noconsole --specpath {path}"
+            "pyinstaller" : "pyinstaller -F -w --clean --noconsole --specpath {path}",
+            "django_form" : {
+                "filename" : {
+                    "__id__" : "filename",
+                    "__type__" : "file",
+                    "__className__" : "file-input",
+                    "placeholder" : "Browse file to crypt"
+                },
+                "iteratecount" : {
+                    "__id__" : "iteratecount",
+                    "__type__" : "number",
+                    "__className__" : "form-control",
+                    "placeholder" : "Iterate count",
+                    "value" : "1"
+                },
+                "prime_length" : {
+                    "__id__" : "prime_length",
+                    "__type__" : "number",
+                    "__className__" : "form-control",
+                    "placeholder" : "Prime's Length",
+                    "value" : "8"
+                },
+                "compile_exe" : {
+                    "__id__" : "compile_exe",
+                    "__type__" : "checkbox",
+                    "__className__" : "custom-control-input",
+                    "placeholder" : "Compile to EXE"
+                },
+                "close" : {
+                    "__id__" : "close",
+                    "__type__" : "button",
+                    "__className__" : "btn btn-secondary",
+                    "value" : "Close"
+                },
+                "submit" : {
+                    "__id__" : "crypt_file_button",
+                    "__type__" : "submit",
+                    "__className__" : "btn btn-primary",
+                    "value" : "Crypt File",
+                    "loading_text" : "Crypting..."
+                }
+            }
         }
     },
     "core":{
