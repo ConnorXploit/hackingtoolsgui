@@ -9,7 +9,7 @@ import os
 
 def home(request):
     modules_and_params = hackingtools.getModulesJSON()
-    modules_forms = hackingtools.getModulesDjangoForms()
+    modules_forms = hackingtools.__getModulesDjangoForms__()
     modules_all = {}
     categories = []
     for mod in modules_and_params:
@@ -73,13 +73,17 @@ def cryptFile(request):
             if request.POST.get('iteratecount'):
                 try:
                     iterate_count = int(request.POST.get('iteratecount'))
+                    if iterate_count < 1:
+                        iterate_count = 1
                 except:
                     pass
 
-            prime_length = 8
+            prime_length = 2
             if request.POST.get('prime_length'):
                 try:
                     prime_length = int(request.POST.get('prime_length'))
+                    if prime_length < 1:
+                        prime_length = 2
                 except:
                     pass
 

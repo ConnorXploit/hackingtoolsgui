@@ -251,6 +251,14 @@ def __createHtmlModalForm__(mod):
     html += '</div>'
     return html
 
+def __getModulesDjangoForms__():
+    forms = {}
+    for mod in getModulesNames():
+        form = __createHtmlModalForm__(mod)
+        if form:
+            forms[mod] = form
+    return forms
+
 # Core method
 def __importModules__():
     """
@@ -341,13 +349,5 @@ def getCategories():
         if mods not in data:
             data.append(mods.split('.')[3])
     return data
-
-def getModulesDjangoForms():
-    forms = {}
-    for mod in getModulesNames():
-        form = __createHtmlModalForm__(mod)
-        if form:
-            forms[mod] = form
-    return forms
 
 __importModules__()

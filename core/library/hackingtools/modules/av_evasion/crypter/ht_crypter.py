@@ -69,6 +69,7 @@ class StartModule():
 		ba64un = self.__unirBase64__(hexba64)
 		decasc = self.__decimal_ASCII__(ba64un)
 		mensaje = self.__mensajeASCII__(decasc)
+		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg}'.format(msg=mensaje[0:10]), debug_module=True)
 		mensaje1 = [(ord(chr(char)) ** key) % n for char in mensaje]
 		mensajeHex = self.__ASCII_Hex__(mensaje1)
 		mensajeBase64 = self.__Hex_Base64__(mensajeHex)
@@ -79,12 +80,13 @@ class StartModule():
 		Logger.printMessage(message='{methodName}'.format(methodName='decrypt'), description='{public_key}'.format(public_key=public_key), debug_module=True)
 		#Unpack the key into its components
 		key, n = public_key
-		mensajeRecibido = self.__recibirBase64__(ciphertext.encode('utf-8'))
-		mensajeHexRecibido = self.__Base64_Hex__(mensajeRecibido)
-		mensajeDecimalRecibido = self.__Hex_decimal__(mensajeHexRecibido)
-		mensajeDescifrado = [((char ** key) % n) for char in mensajeDecimalRecibido]
-		mensaje_de_ascii = self.__decimal_ASCII__(mensajeDescifrado)
-		decasc = self.__recibirBase64__(''.join(mensaje_de_ascii).encode())
+		menRec = self.__recibirBase64__(ciphertext.encode('utf-8'))
+		menHex = self.__Base64_Hex__(menRec)
+		menDec = self.__Hex_decimal__(menHex)
+		Logger.printMessage(message='{methodName}'.format(methodName='decrypt'), description='{msg}'.format(msg=menDec[0:10]), debug_module=True)
+		menDesc = [((char ** key) % n) for char in menDec]
+		menAscii = self.__decimal_ASCII__(menDesc)
+		decasc = self.__recibirBase64__(''.join(menAscii).encode())
 		hexba64 = self.__Base64_Hex__(decasc)
 		ashex = self.__Hex_decimal__(hexba64)
 		deasc = self.__decimal_ASCII__(ashex)
@@ -145,67 +147,42 @@ class StartModule():
 	def __mensajeASCII__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__mensajeASCII__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		men = [ord(pal) for pal in mensaje]
-		#men = []
-		#for palabra in mensaje:
-		#	men.append(ord(palabra))
 		return men
 
 	def __ASCII_Hex__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__ASCII_Hex__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeHex = [hex(numero)[2:] for numero in mensaje]
-		#mensajeHex = []
-		#for numero in mensaje:
-		#	mensajeHex.append(hex(numero)[2:])
 		return mensajeHex
 
 	def __Hex_Base64__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__Hex_Base64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeBase64 = [base64.b64encode(numero.encode()) for numero in mensaje]
-		#mensajeBase64 = []
-		#for numero in mensaje:
-		#	mensajeBase64.append(base64.b64encode(numero.encode()))
 		return mensajeBase64
 
 	def __unirBase64__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__unirBase64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		msg_base64 = ''.join([mensaje[i].decode('utf-8') for i in range(0, len(mensaje))])
-		#msg_base64 = "".encode()
-		#for i in range(0, len(mensaje)):
-		#	msg_base64 = msg_base64 + mensaje[i]
 		Logger.printMessage(message='{methodName}'.format(methodName='__unirBase64__'), description='{msg_base64} ...'.format(msg_base64=msg_base64[0:10]), debug_module=True)
 		return msg_base64.encode()
 
 	def __recibirBase64__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__recibirBase64__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		msg_base64 = [mensaje[i:i+4] for i in range(0, len(mensaje), 4)]
-		#msg_base64 = []
-		#for i in range(0,len(mensaje), 4):
-		#	msg_base64.append(mensaje[i:i+4])
 		return msg_base64
 		
 	def __Base64_Hex__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__Base64_Hex__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeHex = [base64.b64decode(b64) for b64 in mensaje]
-		#mensajeHex = []
-		#for b64 in mensaje:
-		#	mensajeHex.append(base64.b64decode(b64))
 		return mensajeHex
 
 	def __Hex_decimal__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__Hex_decimal__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensajeDecimal = [int(hexa.decode("UTF-8"), 16) for hexa in mensaje]
-		#mensajeDecimal = []
-		#for hexa in mensaje:
-		#	hexa = hexa.decode("UTF-8")
-		#	numero = int(hexa, 16)
-		#	mensajeDecimal.append(numero)    
 		return mensajeDecimal
 
 	def __decimal_ASCII__(self, mensaje):
 		Logger.printMessage(message='{methodName}'.format(methodName='__decimal_ASCII__'), description='Length: {length} - {mensaje} ...'.format(length=len(mensaje), mensaje=mensaje[0:10]), debug_module=True)
 		mensaje1 = ''.join([chr(decimal) for decimal in mensaje])
-		#for decimal in mensaje:
-		#	mensaje1 = mensaje1 + chr(decimal)
 		return mensaje1
 
 	def __getRandomPrime__(self, length = 8):
@@ -349,11 +326,11 @@ if os.path.exists(drpnm):
 		if convert:
 			self.convertToExe(save_name)
 
-	def crypt_file(self, filename, new_file_name, drop_file_name, is_iterating=False, prime_length=8, iterate_count=1, is_last=False, print_save_stub=True, compile_exe=False):
+	def crypt_file(self, filename, new_file_name, drop_file_name, is_iterating=False, prime_length=2, iterate_count=1, is_last=False, print_save_stub=True, compile_exe=False):
 		"""
 		filename es el archivo original a indetectar (filename='servidor.py')
 		new_file_name es el nombre final del fichero indetectado (new_file_name='indetectable.py')
-		drop_file_name es el nombre con el que se guarda trás ejecutarse el stub para poder ejecutarlo (drop_file_name='descifrado_ejecutable.py')
+		drop_file_name es el nombre con el que se guarda trás ejecutarse el stub para poder ejecutarlo
 		compile_exe es si queremos compilarlo con pyinstaller
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='crypt_file'), description='{filename}'.format(filename=filename), debug_module=True)

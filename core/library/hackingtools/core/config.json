@@ -48,7 +48,8 @@
                     "__id__" : "filename",
                     "__type__" : "file",
                     "__className__" : "file-input",
-                    "placeholder" : "Browse file to crypt"
+                    "placeholder" : "Browse file to crypt",
+                    "required" : true
                 },
                 "iteratecount" : {
                     "__id__" : "iteratecount",
@@ -62,7 +63,7 @@
                     "__type__" : "number",
                     "__className__" : "form-control",
                     "placeholder" : "Prime's Length",
-                    "value" : "8"
+                    "value" : "2"
                 },
                 "compile_exe" : {
                     "__id__" : "compile_exe",
