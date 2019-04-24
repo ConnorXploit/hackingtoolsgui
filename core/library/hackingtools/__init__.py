@@ -57,6 +57,14 @@ def getModulesNames():
         modules_names.append(tools.split('.')[-1])
     return modules_names
 
+def getModulesGuiNames():
+    names = []
+    for tool in getModulesNames():
+        label = Config.getConfig(parentKey='modules', key=tool, subkey='__gui_label__')
+        if label:
+            names.append(label)
+    return names
+
 def setDebugCore(on=True):
     """
     Establece en True / False el Debug para el CORE
