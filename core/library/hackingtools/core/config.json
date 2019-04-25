@@ -1,6 +1,7 @@
 {
     "modules":{
         "ht_shodan":{
+            "__gui_label__" : "Shodan",
             "api_key" : "lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl",
             "bad_api_key_error" : "The specified APIKey is invalid, please insert another one.",
             "error_ip_no_exists" : "No data available for the IP",
@@ -34,12 +35,14 @@
             "shodan_api_info" : "api-info"
         },
         "ht_sqlinjection":{
+            "__gui_label__" : "SQLI",
             "color_error" : "RED",
             "color_verbose" : "BLUE",
             "color_info" : "YELLOW",
             "color_ok" : "GREEN"
         },
         "ht_crypter":{
+            "__gui_label__" : "Crypter",
             "bad_identical_prime" : "Both numbers must be prime",
             "p_q_equal_error" : "p and q cannot be equal",
             "pyinstaller" : "pyinstaller -F -w --clean --noconsole --specpath {path}",
