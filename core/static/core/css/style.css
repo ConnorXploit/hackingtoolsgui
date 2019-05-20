@@ -2,6 +2,10 @@
     border: 3px solid #4e73df;
     margin: -3px;
 }
+.mouseOverFunction:hover{
+    border: 5px solid #4e73df;
+    margin: -5px 0;
+}
 .mouseOverCategory:hover{
     border: 3px solid #1cc88a;
     margin: -3px;
@@ -122,6 +126,10 @@ a:hover {
     opacity: 0.75;
 }
 
+.modal-dialog-bigger {
+    max-width: 90% !important;
+}
+
 .loader-txt > p {
     font-size: 13px;
     color: #666;
@@ -130,4 +138,12 @@ a:hover {
 .loader-txt > small {
     font-size: 11.5px;
     color: #999;
+}
+
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body-limited{
+    height: 75vh !important;
+    overflow-y: auto !important;
 }

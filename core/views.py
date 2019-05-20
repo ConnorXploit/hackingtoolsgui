@@ -39,6 +39,9 @@ def createCategory(request):
     hackingtools.createCategory(mod_cat)
     return redirect('home')
 
+def createScript(request):
+    return redirect('home')
+
 def cryptFile(request):
     if len(request.FILES) != 0:
         if request.FILES['filename']:

@@ -101,9 +101,60 @@
         </a>
       </div>
 
+      <!-- Modal create Script -->
+      <div class="modal fade" id="createScriptModuleModal" tabindex="-1" role="dialog" aria-labelledby="createScriptModuleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-bigger" role="document">
+          <div class="modal-content">
+            <form action="{% url 'createscript' %}" method="post">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h5 class="modal-title" id="createScriptModuleLabel">Create Script</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body modal-body-limited">
+                <div class="row">
+                  {% for name, funct in modules_all.items %}
+                    <div class="col-lg-3 mb-3">
+                        {{name}}
+                        {% if funct.items %}
+                          {% for funct_name, funct_params in funct.items %}
+                            <div class="card bg-dark text-white shadow mouseOverFunction">
+                              <div class="card-body">
+                                {{funct_name}}
+                                {% for i, param in funct_params.items %}
+                                  {% if param %}
+                                  <div class="text-white-50 small">{{param}}</div>
+                                  {% else %}
+                                  <div class="text-white-50 small">No params</div>
+                                  {% endif %}
+                                {% endfor %}
+                              </div>
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          <div class="card bg-secondary text-white shadow mouseOverFunction">
+                            <div class="card-body">
+                              No functions
+                            </div>
+                          </div>
+                        {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" value="Save script"></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
       <!-- Earnings (Monthly) Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
-        <a href="{% url 'home' %}">
+        <a href="#" data-toggle="modal" data-target="#createScriptModuleModal">
           <div class="card border-left-primary shadow h-100 py-2 overMouseButtons">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
@@ -175,7 +226,7 @@
             </div>
           {% endfor %}
           {% for mod in modules %}
-            <div class="col-lg-6 mb-4">
+            <div class="col-lg-4 mb-3">
               <a href="#" data-toggle="modal" data-target="#{{mod}}_test">
                 <div class="card bg-success text-white shadow mouseOverModule">
                   <div class="card-body">
@@ -195,7 +246,7 @@
         <!-- Color System -->
         <div class="row">
           {% for cat in categories %}
-            <div class="col-lg-6 mb-4">
+            <div class="col-lg-4 mb-3">
               <div class="card bg-primary text-white shadow mouseOverCategory">
                 <div class="card-body">
                   {{cat}}
