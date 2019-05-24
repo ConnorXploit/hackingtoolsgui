@@ -87,6 +87,26 @@
                     "value" : "Crypt File",
                     "loading_text" : "Crypting..."
                 }
+            },
+            "modal_form" : {
+                "ht_crypter" : {
+                    "decrypt" : {
+                        "public_key" : {
+                            "__id__" : "public_key",
+                            "__type__" : "text",
+                            "__className__" : "text-input",
+                            "placeholder" : "(0, 0)",
+                            "required" : true
+                        },
+                        "cipher_text" : {
+                            "__id__" : "cipher_text",
+                            "__type__" : "text",
+                            "__className__" : "text-input",
+                            "placeholder" : "Write text to cipher",
+                            "required" : true
+                        }
+                    }
+                }
             }
         }
     },
