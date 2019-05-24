@@ -115,11 +115,21 @@
               </div>
               <div class="modal-body modal-body-limited">
                 <div class="row">
+                  {{modules_functions_modals}}
                   {% for name, funct in modules_all.items %}
                     <div class="col-lg-3 mb-3">
                         {{name}}
                         {% if funct.items %}
                           {% for funct_name, funct_params in funct.items %}
+
+                            {% for tool, function in modules_functions_modals.items %}
+                              {% for functi, data in function.items %}
+                                {% if functi in funct_name and name in tool %}
+                                  <!-- TODO MODAL PARA LA FUNCTION -->
+                                {% endif %}
+                              {% endfor %}
+                            {% endfor %}
+
                             <div class="card bg-dark text-white shadow mouseOverFunction">
                               <div class="card-body">
                                 {{funct_name}}

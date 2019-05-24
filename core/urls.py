@@ -7,6 +7,12 @@ urlpatterns = [
     path('module/config/', views.configModule, name="configmod"),
     path('module/save/<string>', views.configModule, name="savemod"),
     path('script/save/', views.createScript, name="createscript"),
-    path('test/module/crypter/', views.cryptFile, name="test_ht_crypter"),
     path('category/create/', views.createCategory, name="createcat"),
+]
+
+# Crypter
+urlpatterns += [
+    path('test/module/crypter/cryptfile/', views.ht_crypter_cryptFile, name="test_ht_crypter"),
+    path('test/module/crypter/encrypt/', views.ht_crypter_encrypt, name="test_ht_crypter_encrypt"),
+    path('test/module/crypter/decrypt/', views.ht_crypter_decrypt, name="test_ht_crypter_encrypt"),
 ]

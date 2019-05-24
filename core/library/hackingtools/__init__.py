@@ -65,6 +65,14 @@ def getModulesGuiNames():
             names.append(label)
     return names
 
+def getModulesModalTests():
+    tools_functions = {}
+    for tool in getModulesNames():
+        tool_functions = Config.getConfig(parentKey='modules', key=tool, subkey='modal_form')
+        if tool_functions:
+            tools_functions[tool] = tool_functions
+    return tools_functions
+
 def setDebugCore(on=True):
     """
     Establece en True / False el Debug para el CORE
