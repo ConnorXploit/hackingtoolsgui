@@ -7,9 +7,11 @@ from importlib import reload
 import os
 # Create your views here.
 
-def home(request, popup=''):
+def home(request, popup_text=''):
+    print(popup_text)
     modules_and_params = hackingtools.getModulesJSON()
     modules_forms = hackingtools.__getModulesDjangoForms__()
+    modules_forms_modal = hackingtools.__getModulesDjangoFormsModal__()
     modules_config = hackingtools.getModulesConfig()
     modules_functions_modals = hackingtools.getModulesModalTests()
     modules_all = {}
@@ -19,7 +21,7 @@ def home(request, popup=''):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = hackingtools.getModulesNames()
-    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_config':modules_config, 'modules_functions_modals':modules_functions_modals, 'popup':popup })
+    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_forms_modal':modules_forms_modal, 'modules_config':modules_config, 'modules_functions_modals':modules_functions_modals, 'popup_text':popup_text })
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -46,23 +48,59 @@ def createScript(request):
 # Crypter
 def ht_crypter_encrypt(request):
     if request.POST.get('private_key') and request.POST.get('cipher_text'):
-        priv_key = request.POST.get('private_key')
+        return_type = None
+        if request.POST.get('return-type'):
+            return_type = request.POST.get('return-type')
+        priv_key_k = request.POST.get('private_key_keynumber')
+        priv_key_n = request.POST.get('private_key_keymod')
         text = request.POST.get('cipher_text')
+        print(text)
         crypter = hackingtools.getModule('ht_crypter')
-        crypted_text = crypter.encrypt(priv_key, text)
-        return redirect(reverse('home', popup=crypted_text))
+        crypted_text = crypter.encrypt((priv_key_k, priv_key_n), text)
+        return home(request=request, popup_text=crypted_text)
     else:
-        return redirect(reverse('home'))
+        return home(request=request)
 
 def ht_crypter_decrypt(request):
     if request.POST.get('public_key') and request.POST.get('cipher_text'):
+        return_type = None
+        if request.POST.get('return-type'):
+            return_type = request.POST.get('return-type')
         pub_key = request.POST.get('public_key')
         text = request.POST.get('cipher_text')
         crypter = hackingtools.getModule('ht_crypter')
         decrypted_text = crypter.decrypt(pub_key, text)
-        return redirect(reverse('home', popup=decrypted_text))
+        return home(request=request, popup_text=decrypted_text)
     else:
-        return redirect(reverse('home'))
+        return home(request=request)
+
+def ht_crypter_getRandomKeypair(request):
+    length = None
+    if request.POST.get('prime_length'):
+        length = request.POST.get('prime_length')
+    crypter = hackingtools.getModule('ht_crypter')
+    keypair = (0, 0)
+    if length:
+        keypair = crypter.getRandomKeypair(int(length))
+    else:
+        keypair = crypter.getRandomKeypair()
+    keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
+    return home(request=request, popup_text=keypair)
+
+def ht_crypter_generate_keypair(request):
+    if request.POST.get('prime_a') and request.POST.get('prime_b'):
+        prime_a = request.POST.get('prime_a')
+        prime_b = request.POST.get('prime_b')
+        crypter = hackingtools.getModule('ht_crypter')
+        keypair = crypter.generate_keypair(int(prime_a), int(prime_b))
+        if not isinstance(keypair, str):
+            try: 
+                keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
+            except:
+                pass
+        return home(request=request, popup_text=keypair)
+    else:
+        return home(request=request)
 
 def ht_crypter_cryptFile(request):
     if len(request.FILES) != 0:

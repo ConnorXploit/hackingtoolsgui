@@ -1,6 +1,11 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block content %}
+    {% if popup_text %}
+      <script>
+        alert('{{popup_text}}')
+      </script>
+    {% endif %}
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
@@ -105,31 +110,65 @@
       <div class="modal fade" id="createScriptModuleModal" tabindex="-1" role="dialog" aria-labelledby="createScriptModuleLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-bigger" role="document">
           <div class="modal-content">
-            <form action="{% url 'createscript' %}" method="post">
-              {% csrf_token %}
-              <div class="modal-header">
-                <h5 class="modal-title" id="createScriptModuleLabel">Create Script</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body modal-body-limited">
-                <div class="row">
-                  {{modules_functions_modals}}
-                  {% for name, funct in modules_all.items %}
-                    <div class="col-lg-3 mb-3">
-                        {{name}}
-                        {% if funct.items %}
-                          {% for funct_name, funct_params in funct.items %}
+            <div class="modal-header">
+              <h5 class="modal-title" id="createScriptModuleLabel">Create Script</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body modal-body-limited">
+              <div class="row">
+                {% for name, funct in modules_all.items %}
+                  <div class="col-lg-3 mb-3">
+                      {{name}}
+                      {% if funct.items %}
+                        {% for funct_name, funct_params in funct.items %}
 
-                            {% for tool, function in modules_functions_modals.items %}
-                              {% for functi, data in function.items %}
-                                {% if functi in funct_name and name in tool %}
-                                  <!-- TODO MODAL PARA LA FUNCTION -->
-                                {% endif %}
-                              {% endfor %}
+                          {% for tool, function in modules_functions_modals.items %}
+                            {% for functi, data in function.items %}
+                              {% if functi in funct_name and name in tool %}
+                                <!-- MODAL PARA LA FUNCTION -->
+                                <div class="modal fade" id="testModuleFunctionModal_{{tool}}_{{functi}}" tabindex="-1" role="dialog" aria-labelledby="testModuleFunctionModalLabel_{{tool}}_{{functi}}" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      {% for data_key, data_value in data.items %}
+                                        {% if data_key in '__function__' %}
+                                          <form action="{% url data_value %}" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                              {% for mod, modform in modules_forms_modal.items %}
+                                                {% for f_name, f_data_form in modform.items %}
+                                                  {% if f_name == functi %}
+                                                    {{f_data_form|safe}}
+                                                  {% endif %}
+                                                {% endfor %}
+                                              {% endfor %}
+                                              {% for dk, dv in data.items %}
+                                                {% if dk in '__return__' %}
+                                                  <input type="{{dv}}" id="return-type" placeholder="Return should appear here...">
+                                                {% endif %}
+                                              {% endfor %}
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                              <input type="submit" class="btn btn-primary" value="Test {{functi}}"></button>
+                                            </div>
+                                          </form>
+                                        {% endif %}
+                                      {% endfor %}
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endif %}
                             {% endfor %}
-
+                          {% endfor %}
+                          <a href="#" data-toggle="modal" data-target="#testModuleFunctionModal_ht_{{name}}_{{funct_name}}">
                             <div class="card bg-dark text-white shadow mouseOverFunction">
                               <div class="card-body">
                                 {{funct_name}}
@@ -142,23 +181,23 @@
                                 {% endfor %}
                               </div>
                             </div>
-                          {% endfor %}
-                        {% else %}
-                          <div class="card bg-secondary text-white shadow mouseOverFunction">
-                            <div class="card-body">
-                              No functions
-                            </div>
+                          </a>
+                        {% endfor %}
+                      {% else %}
+                        <div class="card bg-secondary text-white shadow mouseOverFunction">
+                          <div class="card-body">
+                            No functions
                           </div>
-                        {% endif %}
-                    </div>
-                  {% endfor %}
-                </div>
+                        </div>
+                      {% endif %}
+                  </div>
+                {% endfor %}
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" value="Save script"></button>
-              </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Save script"></button>
+            </div>
           </div>
         </div>
       </div>

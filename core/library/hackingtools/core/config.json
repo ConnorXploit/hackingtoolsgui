@@ -46,7 +46,7 @@
             "bad_identical_prime" : "Both numbers must be prime",
             "p_q_equal_error" : "p and q cannot be equal",
             "pyinstaller" : "pyinstaller -F -w --clean --noconsole --specpath {path}",
-            "django_form" : {
+            "django_form_main_function" : {
                 "filename" : {
                     "__id__" : "filename",
                     "__type__" : "file",
@@ -88,26 +88,48 @@
                     "loading_text" : "Crypting..."
                 }
             },
-            "modal_form" : {
-                "decrypt" : {
-                    "__function__" : "encrypt",
-                    "private_key" : {
-                        "__id__" : "private_key",
-                        "__type__" : "text",
+            "django_form_module_function" : {
+                "encrypt" : {
+                    "__function__" : "test_ht_crypter_encrypt",
+                    "__return__" : "textarea",
+                    "private_key_keynumber" : {
+                        "__id__" : "private_key_keynumber",
+                        "__type__" : "number",
                         "__className__" : "text-input",
-                        "placeholder" : "(0, 0)",
-                        "required" : true
+                        "placeholder" : "Private Key",
+                        "value" : 0,
+                        "required" : true,
+                        "returnable_modules_functions" : {
+                            "ht_crypter" : [
+                                "getRandomKeypair"
+                            ]
+                        }
+                    },
+                    "private_key_keymod" : {
+                        "__id__" : "private_key_keymod",
+                        "__type__" : "number",
+                        "__className__" : "text-input",
+                        "placeholder" : "Private Mod",
+                        "value" : 0,
+                        "required" : true,
+                        "returnable_modules_functions" : {
+                            "ht_crypter" : [
+                                "getRandomKeypair"
+                            ]
+                        }
                     },
                     "cipher_text" : {
                         "__id__" : "cipher_text",
-                        "__type__" : "text",
+                        "__type__" : "textarea",
                         "__className__" : "text-input",
-                        "placeholder" : "Write text to cipher",
+                        "placeholder" : "Text to cipher",
+                        "value" : "Write here the text to cipher",
                         "required" : true
                     }
                 },
-                "encrypt" : {
-                    "__function__" : "decrypt",
+                "decrypt" : {
+                    "__function__" : "test_ht_crypter_decrypt",
+                    "__return__" : "textarea",
                     "public_key" : {
                         "__id__" : "public_key",
                         "__type__" : "text",
@@ -121,6 +143,37 @@
                         "__className__" : "text-input",
                         "placeholder" : "Write text to cipher",
                         "required" : true
+                    }
+                },
+                "generate_keypair" : {
+                    "__function__" : "test_ht_crypter_generate_keypair",
+                    "__return__" : "text",
+                    "prime_a" : {
+                        "__id__" : "prime_a",
+                        "__type__" : "number",
+                        "__className__" : "text-input",
+                        "placeholder" : "Prime A",
+                        "value" : "1299853",
+                        "required" : true
+                    },
+                    "prime_b" : {
+                        "__id__" : "prime_b",
+                        "__type__" : "number",
+                        "__className__" : "text-input",
+                        "placeholder" : "Prime B",
+                        "value" : "2099837",
+                        "required" : true
+                    }
+                },
+                "getRandomKeypair" : {
+                    "__function__" : "test_ht_crypter_getRandomKeypair",
+                    "__return__" : "text",
+                    "prime_length" : {
+                        "__id__" : "prime_length",
+                        "__type__" : "number",
+                        "__className__" : "text-input",
+                        "placeholder" : "Prime Length",
+                        "value" : "8"
                     }
                 }
             }

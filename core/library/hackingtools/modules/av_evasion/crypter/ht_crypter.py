@@ -19,12 +19,12 @@ class StartModule():
 		pass
 
 	def generate_keypair(self, prime_a, prime_b):
-		if not (self.__is_prime__(prime_a) and self.__is_prime__(prime_b)):
+		if not (self.__is_prime__(int(prime_a)) and self.__is_prime__(int(prime_b))):
 			Logger.printMessage(message='{methodName}'.format(methodName='generate_keypair'), description=config['bad_identical_prime'], debug_module=True, is_error=True)
-			raise ValueError(config['bad_identical_prime'])
+			return config['bad_identical_prime']
 		elif prime_a == prime_b:
 			Logger.printMessage(message='{methodName}'.format(methodName='generate_keypair'), description=config['p_q_equal_error'], debug_module=True, is_error=True)
-			raise ValueError(config['p_q_equal_error'])
+			return config['p_q_equal_error']
 		else:
 			#n = pq
 			n = prime_a * prime_b

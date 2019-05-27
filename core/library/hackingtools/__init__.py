@@ -68,7 +68,7 @@ def getModulesGuiNames():
 def getModulesModalTests():
     tools_functions = {}
     for tool in getModulesNames():
-        tool_functions = Config.getConfig(parentKey='modules', key=tool, subkey='modal_form')
+        tool_functions = Config.getConfig(parentKey='modules', key=tool, subkey='django_form_module_function')
         if tool_functions:
             tools_functions[tool] = tool_functions
     return tools_functions
@@ -220,8 +220,8 @@ def __methodsFromModule__(cls):
 def __classNameFromModule__(cls):
     return [x for x in dir(cls) if inspect.isclass(getattr(cls, x)) and x.startswith(class_name_starts_with_modules)]
 
-def __createHtmlModalForm__(mod):
-    module_form = Config.getConfig(parentKey='modules', key=mod, subkey='django_form')
+def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', config_extrasubkey=None):
+    module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
     if not module_form:
         return
 
@@ -230,23 +230,25 @@ def __createHtmlModalForm__(mod):
         form_url = module_form['django_url_post']
     html = "<div class=\"modal-body\">"
     footer = '<div class="modal-footer">'
-    for m in module_form:
-        if '__type__' in module_form[m] and '__id__' in module_form[m] and '__className__' in module_form[m]:
-            input_type = module_form[m]['__type__']
-            input_id = module_form[m]['__id__']
-            input_class = module_form[m]['__className__']
+    m_form = module_form
+    for m in m_form:
+        temp_m_form = m_form
+        if '__type__' in temp_m_form[m] and '__id__' in temp_m_form[m] and '__className__' in temp_m_form[m]:
+            input_type = temp_m_form[m]['__type__']
+            input_id = temp_m_form[m]['__id__']
+            input_class = temp_m_form[m]['__className__']
             input_placeholder = ''
             loading_text = ''
-            if 'placeholder' in module_form[m]:
-                input_placeholder = module_form[m]['placeholder']
+            if 'placeholder' in temp_m_form[m]:
+                input_placeholder = temp_m_form[m]['placeholder']
             input_value = ''
-            if 'value' in module_form[m]:
-                input_value = module_form[m]['value']
+            if 'value' in temp_m_form[m]:
+                input_value = temp_m_form[m]['value']
             loading_text = ''
-            if 'loading_text' in module_form[m]:
-                loading_text = module_form[m]['loading_text']
+            if 'loading_text' in temp_m_form[m]:
+                loading_text = temp_m_form[m]['loading_text']
             required = ''
-            if 'required' in module_form[m]:
+            if 'required' in temp_m_form[m]:
                 required = 'required'
             if input_type == 'file':
                 html += "<label class=\"btn btn-default\">{placeholder}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(placeholder=input_placeholder, className=input_class, id=input_id, required=required)
@@ -277,6 +279,27 @@ def __getModulesDjangoForms__():
         if form:
             forms[mod] = form
     return forms
+
+def __getModulesDjangoFormsModal__():
+    forms = {}
+    for mod in getModulesNames():
+        mod_data = {}
+        functions = __getModuleFunctionNamesFromConfig__(mod)
+        if functions:
+            for functs in functions:
+                form = __createHtmlModalForm__(mod, 'django_form_module_function', functs)
+                if form:
+                    mod_data[functs] = form
+        if mod_data:
+            forms[mod] = mod_data
+    return forms
+
+def __getModuleFunctionNamesFromConfig__(mod):
+    functions = Config.getConfig(parentKey='modules', key=mod, subkey='django_form_module_function')
+    if functions:
+        return [func_name for func_name in functions]
+    else:
+        return
 
 def getModulesConfig():
     return [{m:Config.getConfig(parentKey='modules', key=m.split('.')[-1])} for m in modules_loaded]
