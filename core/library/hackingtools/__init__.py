@@ -265,8 +265,10 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     footer += input_id
                     footer += "').attr('value', '{loading_text}');".format(loading_text=loading_text)
                     footer += "});</script>"
+            elif input_type == 'textarea':
+                html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_class, id=input_id, placeholder=input_placeholder)
             else:
-                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{placeholder}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" name=\"{id}\" {required} /></div></div>".format(id=input_id, placeholder=input_placeholder, className=input_class, input_type=input_type, input_value=input_value, required=required)
+                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{placeholder}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" name=\"{id}\" {required}/></div></div>".format(id=input_id, placeholder=input_placeholder, className=input_class, input_type=input_type, input_value=input_value, required=required)
     footer += '</div>'
     html += footer
     html += '</div>'

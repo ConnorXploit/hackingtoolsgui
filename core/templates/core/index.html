@@ -3,7 +3,7 @@
 {% block content %}
     {% if popup_text %}
       <script>
-        alert('{{popup_text}}')
+        prompt("Copy to clipboard: Ctrl+C, Enter", '{{popup_text}}')
       </script>
     {% endif %}
     <!-- Page Heading -->
@@ -148,11 +148,6 @@
                                                     {{f_data_form|safe}}
                                                   {% endif %}
                                                 {% endfor %}
-                                              {% endfor %}
-                                              {% for dk, dv in data.items %}
-                                                {% if dk in '__return__' %}
-                                                  <input type="{{dv}}" id="return-type" placeholder="Return should appear here...">
-                                                {% endif %}
                                               {% endfor %}
                                             </div>
                                             <div class="modal-footer">

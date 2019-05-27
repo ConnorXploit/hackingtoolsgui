@@ -47,29 +47,23 @@ def createScript(request):
 
 # Crypter
 def ht_crypter_encrypt(request):
-    if request.POST.get('private_key') and request.POST.get('cipher_text'):
-        return_type = None
-        if request.POST.get('return-type'):
-            return_type = request.POST.get('return-type')
+    if request.POST.get('private_key_keynumber') and request.POST.get('private_key_keymod') and request.POST.get('cipher_text'):
         priv_key_k = request.POST.get('private_key_keynumber')
         priv_key_n = request.POST.get('private_key_keymod')
         text = request.POST.get('cipher_text')
-        print(text)
         crypter = hackingtools.getModule('ht_crypter')
-        crypted_text = crypter.encrypt((priv_key_k, priv_key_n), text)
+        crypted_text = crypter.encrypt((int(priv_key_k), int(priv_key_n)), text.encode())
         return home(request=request, popup_text=crypted_text)
     else:
         return home(request=request)
 
 def ht_crypter_decrypt(request):
-    if request.POST.get('public_key') and request.POST.get('cipher_text'):
-        return_type = None
-        if request.POST.get('return-type'):
-            return_type = request.POST.get('return-type')
-        pub_key = request.POST.get('public_key')
+    if request.POST.get('public_key_keynumber') and request.POST.get('public_key_keymod') and request.POST.get('cipher_text'):
+        pub_key_k = request.POST.get('public_key_keynumber')
+        pub_key_n = request.POST.get('public_key_keymod')
         text = request.POST.get('cipher_text')
         crypter = hackingtools.getModule('ht_crypter')
-        decrypted_text = crypter.decrypt(pub_key, text)
+        decrypted_text = crypter.decrypt((int(pub_key_k), int(pub_key_n)), text)
         return home(request=request, popup_text=decrypted_text)
     else:
         return home(request=request)
@@ -86,6 +80,8 @@ def ht_crypter_getRandomKeypair(request):
         keypair = crypter.getRandomKeypair()
     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
     return home(request=request, popup_text=keypair)
+
+# ((4417, 5621), (3361, 5621))
 
 def ht_crypter_generate_keypair(request):
     if request.POST.get('prime_a') and request.POST.get('prime_b'):

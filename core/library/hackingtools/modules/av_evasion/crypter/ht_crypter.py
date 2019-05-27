@@ -60,21 +60,24 @@ class StartModule():
 		return (prime_a, prime_b)
 	
 	def encrypt(self, private_key, plaintext):
-		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key} - {msg}'.format(private_key=private_key, msg=plaintext[0:10]), debug_module=True)
-		#Unpack the key into it's components
-		key, n = private_key
-		ba64 = base64.b64encode(plaintext)
-		ashex = self.__ASCII_Hex__(ba64)
-		hexba64 = self.__Hex_Base64__(ashex)
-		ba64un = self.__unirBase64__(hexba64)
-		decasc = self.__decimal_ASCII__(ba64un)
-		mensaje = self.__mensajeASCII__(decasc)
-		Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg}'.format(msg=mensaje[0:10]), debug_module=True)
-		mensaje1 = [(ord(chr(char)) ** key) % n for char in mensaje]
-		mensajeHex = self.__ASCII_Hex__(mensaje1)
-		mensajeBase64 = self.__Hex_Base64__(mensajeHex)
-		mensajeFinalBase64 = self.__unirBase64__(mensajeBase64)
-		return mensajeFinalBase64.decode("utf-8")
+		try:
+			Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{private_key} - {msg}'.format(private_key=private_key, msg=plaintext[0:10]), debug_module=True)
+			#Unpack the key into it's components
+			key, n = private_key
+			ba64 = base64.b64encode(plaintext)
+			ashex = self.__ASCII_Hex__(ba64)
+			hexba64 = self.__Hex_Base64__(ashex)
+			ba64un = self.__unirBase64__(hexba64)
+			decasc = self.__decimal_ASCII__(ba64un)
+			mensaje = self.__mensajeASCII__(decasc)
+			Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg}'.format(msg=mensaje[0:10]), debug_module=True)
+			mensaje1 = [(ord(chr(char)) ** key) % n for char in mensaje]
+			mensajeHex = self.__ASCII_Hex__(mensaje1)
+			mensajeBase64 = self.__Hex_Base64__(mensajeHex)
+			mensajeFinalBase64 = self.__unirBase64__(mensajeBase64)
+			return mensajeFinalBase64.decode("utf-8")
+		except:
+			return config['error_encrypt']
 
 	def decrypt(self, public_key, ciphertext):
 		Logger.printMessage(message='{methodName}'.format(methodName='decrypt'), description='{public_key}'.format(public_key=public_key), debug_module=True)
