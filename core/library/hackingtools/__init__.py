@@ -1,10 +1,10 @@
 from .core import Logger
 from .core import Config
 config = Config.getConfig(parentKey='core', key='import_modules')
-
+config_locales = Config.getConfig(parentKey='core', key='locales')
 from colorama import Fore, Back, Style
 
-import os, time, sys
+import os, time, sys, threading
 from os import listdir
 from os.path import isfile, join
 import importlib
@@ -65,6 +65,14 @@ def getModulesGuiNames():
             names.append(label)
     return names
 
+def getModulesFullConfig():
+    modules_conf = {}
+    for module in getModulesNames():
+        module_conf = Config.getConfig(parentKey='modules', key=module)
+        if module_conf:
+            modules_conf[module] = module_conf
+    return modules_conf
+
 def getModulesModalTests():
     tools_functions = {}
     for tool in getModulesNames():
@@ -72,6 +80,46 @@ def getModulesModalTests():
         if tool_functions:
             tools_functions[tool] = tool_functions
     return tools_functions
+
+def __getModulesConfig_treeView__():
+    count = 1
+    result_text = []
+    tools_config = getModulesFullConfig()
+    __treeview_load_all__(config=tools_config, result_text=result_text)
+    response =  ','.join(result_text)
+    print(response)
+    return response
+
+def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
+    open_key = "{"
+    close_key = "}"
+    count += 1
+    count_pid += 1
+    for c in config:
+        result_text.append(__treeview_createJSON__(conf_key=config[c], key=c, count=count, pid=count_pid))
+        if not isinstance(config[c], str) and not isinstance(config[c], bool) and not isinstance(config[c], int) and not isinstance(config[c], float):
+            try:
+                __treeview_load_all__(config=config[c],result_text=result_text, count=count, count_pid=count_pid)
+                count += 1
+            except:
+                try:
+                    __treeview_load_all__(config=tuple(config[c]),result_text=result_text, count=count, count_pid=count_pid)
+                    count += 1
+                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), color=Fore.YELLOW)
+                except:
+                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED)
+            
+
+def __treeview_createJSON__(conf_key, key, count=1, pid=0):
+    try:
+        open_key = "{"
+        close_key = "}"
+        if isinstance(conf_key, str):
+            return '{open_key}id:{count},name:"{name}",pid:{pid},value:"{value}"{close_key}'.format(open_key=open_key, count=count, name=key, pid=pid, value=conf_key, close_key=close_key)
+        else:
+            return '{open_key}id:{count},name:"{name}",pid:{pid},value:""{close_key}'.format(open_key=open_key, count=count, name=key, pid=pid, close_key=close_key)
+    except:
+        Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_load_json_data'], key=key, conf_key=conf_key), color=Fore.RED)
 
 def setDebugCore(on=True):
     """
@@ -241,6 +289,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
             loading_text = ''
             if 'placeholder' in temp_m_form[m]:
                 input_placeholder = temp_m_form[m]['placeholder']
+            input_label_desc = ''
+            if 'label_desc' in temp_m_form[m]:
+                input_label_desc = temp_m_form[m]['label_desc']
             input_value = ''
             if 'value' in temp_m_form[m]:
                 input_value = temp_m_form[m]['value']
@@ -251,9 +302,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
             if 'required' in temp_m_form[m]:
                 required = 'required'
             if input_type == 'file':
-                html += "<label class=\"btn btn-default\">{placeholder}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(placeholder=input_placeholder, className=input_class, id=input_id, required=required)
+                html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
             elif input_type == 'checkbox':
-                html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{placeholder}</label></div><br />".format(id=input_id, className=input_class, placeholder=input_placeholder, required=required)
+                html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
             elif input_type == 'button':
                 footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
             elif input_type == 'submit':
@@ -266,9 +317,12 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     footer += "').attr('value', '{loading_text}');".format(loading_text=loading_text)
                     footer += "});</script>"
             elif input_type == 'textarea':
-                html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_class, id=input_id, placeholder=input_placeholder)
+                if input_label_desc:
+                    html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea></div></div>".format(className=input_class, id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc)
+                else:
+                    html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_class, id=input_id, placeholder=input_placeholder)
             else:
-                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{placeholder}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" name=\"{id}\" {required}/></div></div>".format(id=input_id, placeholder=input_placeholder, className=input_class, input_type=input_type, input_value=input_value, required=required)
+                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" placeholder=\"{placeholder}\" name=\"{id}\" {required}/></div></div>".format(id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc, className=input_class, input_type=input_type, input_value=input_value, required=required)
     footer += '</div>'
     html += footer
     html += '</div>'

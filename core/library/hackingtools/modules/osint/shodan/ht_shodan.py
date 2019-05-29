@@ -19,16 +19,21 @@ class StartModule():
             Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=shodanKeyString, debug_module=True)
             self.api = Shodan(shodanKeyString)
         except:
-            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=config['bad_api_key_error'], debug_module=True, is_error=True)
-            exit() 
+            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=config['bad_api_key_error'], debug_module=True, is_error=True) 
 
-    def getIPListfromServices(self, serviceName):
+    def getIPListfromServices(self, serviceName, shodanKeyString=None):
         Logger.printMessage(message='{methodName}'.format(methodName='getIPListfromServices'), description='{param}'.format(param=serviceName), debug_module=True)
-        result = self.api.search(serviceName)
-        dict_obj = []
-        for res in result['matches']:
-            dict_obj.append(res['ip_str'].encode('utf-8').decode('utf-8'))
-        return dict_obj
+        if not self.api and not shodanKeyString:
+            self.settingApi(Config.getApiKey('shodan_api'))
+        if self.api or shodanKeyString:
+            self.settingApi(shodanKeyString=shodanKeyString)
+            result = self.api.search(serviceName)
+            dict_obj = []
+            for res in result['matches']:
+                dict_obj.append(res['ip_str'].encode('utf-8').decode('utf-8'))
+            return dict_obj
+        else:
+            return config['bad_api_key_error']
 
     def queryShodan(self, category=''):
         try:

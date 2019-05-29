@@ -12,6 +12,19 @@ def __readConfig__():
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
         config = json.load(json_data_file)
 
+def __look_for_changes__():
+    import json
+
+    global config
+    config_tmp = {}
+    with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
+        config_tmp = json.load(json_data_file)
+
+    if not sorted(config.items()) == sorted(config_tmp.items()):
+        config = config_tmp
+        return True
+    return False
+
 def getConfig(parentKey, key, subkey=None, extrasubkey=None):
     try:
         if extrasubkey:
@@ -34,6 +47,12 @@ def getConfig(parentKey, key, subkey=None, extrasubkey=None):
                 return
         return config[parentKey][key]
     except:
-        return 'Bad key on JSON'
+        return
+
+def getApiKey(apiName):
+    try:
+        return config['core']['__API_KEY__'][apiName]
+    except:
+        return 'API {n} not found'.format(n=apiName)
 
 __readConfig__()

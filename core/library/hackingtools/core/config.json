@@ -32,7 +32,30 @@
             "shodan_profile" : "account/profile",
             "shodan_myip" : "tools/myip",
             "shodan_httpheaders" : "tools/httpheaders",
-            "shodan_api_info" : "api-info"
+            "shodan_api_info" : "api-info",
+            "django_form_module_function" : {
+                "getIPListfromServices" : {
+                    "__function__" : "test_ht_shodan_getIPListfromServices",
+                    "__return__" : "text",
+                    "service_name" : {
+                        "__id__" : "service_name",
+                        "__type__" : "text",
+                        "__className__" : "form-control",
+                        "placeholder" : "apache",
+                        "value" : "",
+                        "label_desc" : "Search query",
+                        "required" : true
+                    },
+                    "shodanKeyString" : {
+                        "__id__" : "shodanKeyString",
+                        "__type__" : "text",
+                        "__className__" : "form-control",
+                        "placeholder" : "abcdef0123456789",
+                        "value" : "",
+                        "label_desc" : "Shodan API Key"
+                    }
+                }
+            }
         },
         "ht_sqlinjection":{
             "__gui_label__" : "SQLI",
@@ -52,28 +75,28 @@
                     "__id__" : "filename",
                     "__type__" : "file",
                     "__className__" : "file-input",
-                    "placeholder" : "Browse file to crypt",
+                    "label_desc" : "Browse file to crypt",
                     "required" : true
                 },
                 "iteratecount" : {
                     "__id__" : "iteratecount",
                     "__type__" : "number",
                     "__className__" : "form-control",
-                    "placeholder" : "Iterate count",
+                    "label_desc" : "Iterate count",
                     "value" : "1"
                 },
                 "prime_length" : {
                     "__id__" : "prime_length",
                     "__type__" : "number",
                     "__className__" : "form-control",
-                    "placeholder" : "Prime's Length",
+                    "label_desc" : "Prime's Length",
                     "value" : "2"
                 },
                 "compile_exe" : {
                     "__id__" : "compile_exe",
                     "__type__" : "checkbox",
                     "__className__" : "custom-control-input",
-                    "placeholder" : "Compile to EXE"
+                    "label_desc" : "Compile to EXE"
                 },
                 "close" : {
                     "__id__" : "close",
@@ -96,9 +119,9 @@
                     "private_key_keynumber" : {
                         "__id__" : "private_key_keynumber",
                         "__type__" : "number",
-                        "__className__" : "text-input",
-                        "placeholder" : "Private Key",
-                        "value" : 0,
+                        "__className__" : "form-control",
+                        "label_desc" : "Private Key",
+                        "value" : 10000,
                         "required" : true,
                         "returnable_modules_functions" : {
                             "ht_crypter" : [
@@ -109,8 +132,8 @@
                     "private_key_keymod" : {
                         "__id__" : "private_key_keymod",
                         "__type__" : "number",
-                        "__className__" : "text-input",
-                        "placeholder" : "Private Mod",
+                        "__className__" : "form-control",
+                        "label_desc" : "Private Mod",
                         "value" : 0,
                         "required" : true,
                         "returnable_modules_functions" : {
@@ -124,7 +147,6 @@
                         "__type__" : "textarea",
                         "__className__" : "form-control rounded-0",
                         "placeholder" : "Text to cipher",
-                        "value" : "Write here the text to cipher",
                         "required" : true
                     }
                 },
@@ -134,24 +156,24 @@
                     "public_key_keynumber" : {
                         "__id__" : "public_key_keynumber",
                         "__type__" : "number",
-                        "__className__" : "text-input",
-                        "placeholder" : "Public Key",
+                        "__className__" : "form-control",
+                        "label_desc" : "Public Key",
                         "value" : 0,
                         "required" : true
                     },
                     "public_key_keymod" : {
                         "__id__" : "public_key_keymod",
                         "__type__" : "number",
-                        "__className__" : "text-input",
-                        "placeholder" : "Public Mod",
+                        "__className__" : "form-control",
+                        "label_desc" : "Public Mod",
                         "value" : 0,
                         "required" : true
                     },
                     "cipher_text" : {
                         "__id__" : "cipher_text",
                         "__type__" : "textarea",
-                        "__className__" : "text-input",
-                        "placeholder" : "Write text to decipher",
+                        "__className__" : "form-control",
+                        "placeholder" : "Text to decipher",
                         "required" : true
                     }
                 },
@@ -161,16 +183,16 @@
                     "prime_a" : {
                         "__id__" : "prime_a",
                         "__type__" : "number",
-                        "__className__" : "text-input",
-                        "placeholder" : "Prime A",
+                        "__className__" : "form-control",
+                        "label_desc" : "Prime A",
                         "value" : "1299853",
                         "required" : true
                     },
                     "prime_b" : {
                         "__id__" : "prime_b",
                         "__type__" : "number",
-                        "__className__" : "text-input",
-                        "placeholder" : "Prime B",
+                        "__className__" : "form-control",
+                        "label_desc" : "Prime B",
                         "value" : "2099837",
                         "required" : true
                     }
@@ -181,8 +203,8 @@
                     "prime_length" : {
                         "__id__" : "prime_length",
                         "__type__" : "number",
-                        "__className__" : "text-input",
-                        "placeholder" : "Prime Length",
+                        "__className__" : "form-control",
+                        "label_desc" : "Prime Length",
                         "value" : "8"
                     }
                 }
@@ -190,6 +212,49 @@
         }
     },
     "core":{
+        "__API_KEY__" : {
+            "botscout_api":"FRGWan7gqCxArce",
+            "builtwith_api":"c29c5821-1cbc-49f0-880f-54fb55238b97",
+            "censysio_id":"bca2c0fe-d4cb-4139-aef9-5e7c2cf5f75e",
+            "censysio_secret":"Nne6yIrlY2uQWc3qmV2yddBcIHj5Kb02",
+            "clearbit_apikey":"pk_ba91d4de6bde46c1db3d973eb40f9ed1",
+            "clearbit_secret":"sk_17c82aacd8831aefd44bc74e27d05a15",
+            "cymon_api":"99b8240b560ddab32daa91c2e74e1852e263b349",
+            "emailhunter":"bd01903ba851d2a098e7814c44c29d9507e5242b",
+            "facebook_id":"249127405944189",
+            "facebook_access_token":"7d980a5120f3a16b401e968450b6ac1f",
+            "flickr_api":"f9dd71a35f5a691c938ba96816c00bbd",
+            "fullcontact_id":"KuZNzcofEdS1GgfnXq85ODRdotfmdEiG",
+            "fullcontact_api":"QniOLfVxaVfJwSlIHlMcHoo0sIYSsJ2j",
+            "github_access_token":"d1ce2b2b8916109112ad2a396169803eebd689ad",
+            "google_api":"AIzaSyCzLYmNR2nqoxzhKojS5FU1uA7h6vbQM_E",
+            "google_cse_cx":"001099431887354511118:785oekflvsi",
+            "google_cse_key":"AIzaSyAmXrtsWu27KITfSddxeyTzMmDGEr726EM",
+            "google_maps_api":"AIzaSyDuiAoqpkqHOTwabu6y0-jBLVjCoViPF9c",
+            "instagram_client_id":"825909c1eefc47229b4eba8752bd4ec2",
+            "instagram_client_secret":"67cb10705c2f43e699a5f3a3f583f190",
+            "ipinfodb_api":"b783dab1ecf60d7053441390e7fa2517bded046d32b99bda2535633b1b26ebf9",
+            "jsonwhois":"69656a0c3b4305a0ec3f0364df27387f",
+            "linkedin_api":"8634jdqaqwkllf",
+            "linkedin_secret":"Kq6eSHONISXgKuua",
+            "mailboxlayer_api":"79b62e65f507bf2a4156678c90d3fef0",
+            "reddit_id":"4pPXtnnywusfbw",
+            "reddit_secret":"eeLxwRMNnvLpXhYwjYqmoSFBZ4A",
+            "rosette_api":"4eb8672a80ecc115a42b723749fa611b",
+            "security_trails_api":"ugj7iEWZktvYVtHzFAhZeptjDIzuUwc3",
+            "shodan_api":"lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl",
+            "spyonweb_access_token":"k8VOKyAizVBj",
+            "twitter_access_token":"9W2Unr2NaQThltwkT4kYvEiOT",
+            "twitter_access_token_secret":"ugwZrC5zOvFJQEx4fkoZ1owMgQLXUCR2JnLoujrTs7noUdPNIl",
+            "twitter_consumer_key":"9W2Unr2NaQThltwkT4kYvEiOT",
+            "twitter_consumer_secret":"ugwZrC5zOvFJQEx4fkoZ1owMgQLXUCR2JnLoujrTs7noUdPNIl",
+            "zoomeyeuser":"cgehminecraft@gmail.com",
+            "zoomeyepass":"001FAF7C6677",
+            "freewallet_pub_key":"1K19DnKWVTW46x12X9BApDF3518ikPAh8U",
+            "freewallet_pri_key":"KwzJgtCtisxCwZbGwsBNMpmkWqd1iCg2ckzgbTsdoL5Mu5fYXkuR",
+            "walletbuilders_masternode_key":"5KGkkEo2wzxYJDTwGSFPADgWruFFNSPnZPzHG44RmwLMqR2wwXU",
+            "walletbuilders_masternode_acc_addr_MN1":"1HhJn8WYuBjZ3DUqVBLebhBo6ntyaakbQo"
+        },
         "Logger":{
             "DEBUG_CORE_FLAG": false,
             "DEBUG_MODULE_FLAG": true,
@@ -197,6 +262,10 @@
             "clear_on_load": false,
             "log_save_date_format":"%Y-%m-%d-%H-%M-%S-%f",
             "log_print_date_format" :"%Y-%m-%d %H:%M:%S.%f"
+        },
+        "locales":{
+            "error_json_data_loaded" : "You have errors on your JSON config",
+            "error_json_data_not_loaded" : "Error loading some data of your JSON config"
         },
         "import_modules":{
             "package_name" : "hackingtools",
@@ -208,7 +277,7 @@
             "function_name_starts_with_modules": "__",
             "function_param_exclude": "self",
             "default_class_name_for_all": "StartModule",
-            "default_template_modules_ht": "from hackingtools.core import Logger\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tLogger.printMessage(message='ht_{moduleName} loaded', debug_module=True)\n\t\tpass"
+            "default_template_modules_ht": "from hackingtools.core import Logger\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tLogger.printMessage(message:'ht_{moduleName} loaded', debug_module:True)\n\t\tpass"
         },
         "utilities":{
             "resources_cryptography_rest_api":{
@@ -219,58 +288,58 @@
                 "hex-upper" : "0123456789ABCDEF",
                 "numeric" : "0123456789",
                 "numeric-space" : "0123456789 ",
-                "symbols14" : "!@#$%^&*()-_+=",
-                "symbols14-space" : "!@#$%^&*()-_+= ",
-                "symbols-all" : "!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/",
-                "symbols-all-space" : "!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/ ",
+                "symbols14" : "!@#$%^&*()-_+:",
+                "symbols14-space" : "!@#$%^&*()-_+: ",
+                "symbols-all" : "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "symbols-all-space" : "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
                 "ualpha" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "ualpha-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ ",
                 "ualpha-numeric" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
                 "ualpha-numeric-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
-                "ualpha-numeric-symbol14" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+=",
-                "ualpha-numeric-symbol14-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+= ",
-                "ualpha-numeric-all" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/",
-                "ualpha-numeric-all-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/ ",
+                "ualpha-numeric-symbol14" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:",
+                "ualpha-numeric-symbol14-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+: ",
+                "ualpha-numeric-all" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "ualpha-numeric-all-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
                 "lalpha" : "abcdefghijklmnopqrstuvwxyz",
                 "lalpha-space" : "abcdefghijklmnopqrstuvwxyz ",
                 "lalpha-numeric" : "abcdefghijklmnopqrstuvwxyz0123456789",
                 "lalpha-numeric-space" : "abcdefghijklmnopqrstuvwxyz0123456789 ",
-                "lalpha-numeric-symbol14" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=",
-                "lalpha-numeric-symbol14-space" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+= ",
-                "lalpha-numeric-all" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/",
-                "lalpha-numeric-all-space" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/ ",
+                "lalpha-numeric-symbol14" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:",
+                "lalpha-numeric-symbol14-space" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+: ",
+                "lalpha-numeric-all" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "lalpha-numeric-all-space" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
                 "mixalpha" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "mixalpha-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ",
                 "mixalpha-numeric" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
                 "mixalpha-numeric-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
-                "mixalpha-numeric-symbol14" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+=",
-                "mixalpha-numeric-symbol14-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+= ",
-                "mixalpha-numeric-all" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/",
-                "mixalpha-numeric-all-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/ ",
+                "mixalpha-numeric-symbol14" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:",
+                "mixalpha-numeric-symbol14-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+: ",
+                "mixalpha-numeric-all" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "mixalpha-numeric-all-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
                 "ualpha-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
                 "ualpha-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ ",
                 "ualpha-numeric-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789",
                 "ualpha-numeric-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789 ",
-                "ualpha-numeric-symbol14-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+=",
-                "ualpha-numeric-symbol14-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+= ",
-                "ualpha-numeric-all-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/",
-                "ualpha-numeric-all-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/ ",
+                "ualpha-numeric-symbol14-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:",
+                "ualpha-numeric-symbol14-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+: ",
+                "ualpha-numeric-all-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "ualpha-numeric-all-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
                 "lalpha-sv" : "abcdefghijklmnopqrstuvwxyzåäö",
                 "lalpha-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö ",
                 "lalpha-numeric-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789",
                 "lalpha-numeric-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789 ",
-                "lalpha-numeric-symbol14-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+=",
-                "lalpha-numeric-symbol14-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+= ",
-                "lalpha-numeric-all-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/",
-                "lalpha-numeric-all-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/ ",
+                "lalpha-numeric-symbol14-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+:",
+                "lalpha-numeric-symbol14-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+: ",
+                "lalpha-numeric-all-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "lalpha-numeric-all-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
                 "mixalpha-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
                 "mixalpha-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ ",
                 "mixalpha-numeric-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789",
                 "mixalpha-numeric-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789 ",
-                "mixalpha-numeric-symbol14-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+=",
-                "mixalpha-numeric-symbol14-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+= ",
-                "mixalpha-numeric-all-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/",
-                "mixalpha-numeric-all-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+=~`[]{}|\\:;\"'<>,.?/ "
+                "mixalpha-numeric-symbol14-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:",
+                "mixalpha-numeric-symbol14-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+: ",
+                "mixalpha-numeric-all-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "mixalpha-numeric-all-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ "
             }
         }
     }

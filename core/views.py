@@ -8,11 +8,11 @@ import os
 # Create your views here.
 
 def home(request, popup_text=''):
-    print(popup_text)
     modules_and_params = hackingtools.getModulesJSON()
     modules_forms = hackingtools.__getModulesDjangoForms__()
     modules_forms_modal = hackingtools.__getModulesDjangoFormsModal__()
     modules_config = hackingtools.getModulesConfig()
+    modules_config_treeview = hackingtools.__getModulesConfig_treeView__()
     modules_functions_modals = hackingtools.getModulesModalTests()
     modules_all = {}
     categories = []
@@ -21,7 +21,7 @@ def home(request, popup_text=''):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = hackingtools.getModulesNames()
-    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_forms_modal':modules_forms_modal, 'modules_config':modules_config, 'modules_functions_modals':modules_functions_modals, 'popup_text':popup_text })
+    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_forms_modal':modules_forms_modal, 'modules_config':modules_config, 'modules_config_treeview':modules_config_treeview, 'modules_functions_modals':modules_functions_modals, 'popup_text':popup_text })
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -45,14 +45,18 @@ def createCategory(request):
 def createScript(request):
     return redirect('home')
 
-# Crypter
+def config_look_for_changes(request):
+    hackingtools.Config.__look_for_changes__()
+    return redirect('home')
+
+# ht_crypter
 def ht_crypter_encrypt(request):
     if request.POST.get('private_key_keynumber') and request.POST.get('private_key_keymod') and request.POST.get('cipher_text'):
         priv_key_k = request.POST.get('private_key_keynumber')
         priv_key_n = request.POST.get('private_key_keymod')
         text = request.POST.get('cipher_text')
         crypter = hackingtools.getModule('ht_crypter')
-        crypted_text = crypter.encrypt((int(priv_key_k), int(priv_key_n)), text.encode())
+        crypted_text = crypter.encrypt(private_key=(int(priv_key_k), int(priv_key_n)), plaintext=text.encode())
         return home(request=request, popup_text=crypted_text)
     else:
         return home(request=request)
@@ -63,7 +67,7 @@ def ht_crypter_decrypt(request):
         pub_key_n = request.POST.get('public_key_keymod')
         text = request.POST.get('cipher_text')
         crypter = hackingtools.getModule('ht_crypter')
-        decrypted_text = crypter.decrypt((int(pub_key_k), int(pub_key_n)), text)
+        decrypted_text = crypter.decrypt(public_key=(int(pub_key_k), int(pub_key_n)), ciphertext=text)
         return home(request=request, popup_text=decrypted_text)
     else:
         return home(request=request)
@@ -80,8 +84,6 @@ def ht_crypter_getRandomKeypair(request):
         keypair = crypter.getRandomKeypair()
     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
     return home(request=request, popup_text=keypair)
-
-# ((4417, 5621), (3361, 5621))
 
 def ht_crypter_generate_keypair(request):
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
@@ -168,4 +170,21 @@ def ht_crypter_cryptFile(request):
 
     return redirect(reverse('home'))
 
-# End Crypter
+# End ht_crypter
+
+# ht_shodan
+
+def ht_shodan_getIPListfromServices(request):
+    if request.POST.get('service_name'):
+        service_name = request.POST.get('service_name')
+        shodan_key = None
+        if request.POST.get('shodanKeyString'):
+            shodan_key = request.POST.get('shodanKeyString')
+        shodan = hackingtools.getModule('ht_shodan')
+        response_shodan = shodan.getIPListfromServices(serviceName=service_name, shodanKeyString=shodan_key)
+        resp_text = ','.join(response_shodan)
+        return home(request=request, popup_text=resp_text)
+    else:
+        return home(request=request)
+
+# End ht_shodan
