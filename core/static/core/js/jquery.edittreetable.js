@@ -22,7 +22,7 @@
 			data:[],
 			extfield:[],//{title:"column name",key:"",type:"input"}
 			nodeaddEnable:true,
-			maxlevel:4,
+			maxlevel:8,
 			nodeaddCallback:function(data,callback){},
 			noderemoveCallback:function(data,callback){},
 			nodeupdateCallback:function(data,callback){},

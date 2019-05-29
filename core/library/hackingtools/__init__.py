@@ -98,16 +98,18 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
     for c in config:
         result_text.append(__treeview_createJSON__(conf_key=config[c], key=c, count=count, pid=count_pid))
         if not isinstance(config[c], str) and not isinstance(config[c], bool) and not isinstance(config[c], int) and not isinstance(config[c], float):
+            Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW)
             try:
-                __treeview_load_all__(config=config[c],result_text=result_text, count=count, count_pid=count_pid)
+                __treeview_load_all__(config=config[c],result_text=result_text, count=count, count_pid=count-1)
                 count += 1
             except:
                 try:
-                    __treeview_load_all__(config=tuple(config[c]),result_text=result_text, count=count, count_pid=count_pid)
+                    __treeview_load_all__(config=tuple(config[c]),result_text=result_text, count=count, count_pid=count-1)
                     count += 1
-                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), color=Fore.YELLOW)
+                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), color=Fore.YELLOW, debug_core=True)
                 except:
-                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED)
+                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED, debug_core=True)
+        count += 1
             
 
 def __treeview_createJSON__(conf_key, key, count=1, pid=0):
