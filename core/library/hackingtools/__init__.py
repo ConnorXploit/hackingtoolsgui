@@ -87,8 +87,10 @@ def __getModulesConfig_treeView__():
     tools_config = getModulesFullConfig()
     __treeview_load_all__(config=tools_config, result_text=result_text)
     response =  ','.join(result_text)
-    print(response)
     return response
+
+global __treeview_counter__
+__treeview_counter__ = 0
 
 def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
     open_key = "{"
@@ -97,8 +99,9 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
     count_pid += 1
     for c in config:
         count += 1
+        count = __treeview_count__(count)
         result_text.append(__treeview_createJSON__(conf_key=config[c], key=c, count=count, pid=count_pid))
-        Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW)
+        Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW, debug_core=True)
         if not isinstance(config[c], str) and not isinstance(config[c], bool) and not isinstance(config[c], int) and not isinstance(config[c], float):
             try:
                 __treeview_load_all__(config=config[c],result_text=result_text, count=count, count_pid=count-1)
@@ -111,8 +114,15 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
                 except:
                     Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED, debug_core=True)
         count += 1
-            
 
+def __treeview_count__(count):
+    global __treeview_counter__
+    if count < __treeview_counter__:
+        count = __treeview_counter__
+    count += 1
+    __treeview_counter__ = count
+    return count
+    
 def __treeview_createJSON__(conf_key, key, count=1, pid=0):
     try:
         open_key = "{"
