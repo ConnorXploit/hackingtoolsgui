@@ -96,9 +96,10 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
     count += 1
     count_pid += 1
     for c in config:
+        count += 1
         result_text.append(__treeview_createJSON__(conf_key=config[c], key=c, count=count, pid=count_pid))
+        Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW)
         if not isinstance(config[c], str) and not isinstance(config[c], bool) and not isinstance(config[c], int) and not isinstance(config[c], float):
-            Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW)
             try:
                 __treeview_load_all__(config=config[c],result_text=result_text, count=count, count_pid=count-1)
                 count += 1
