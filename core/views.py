@@ -14,6 +14,7 @@ def home(request, popup_text=''):
     modules_config = hackingtools.getModulesConfig()
     modules_config_treeview = hackingtools.__getModulesConfig_treeView__()
     modules_functions_modals = hackingtools.getModulesModalTests()
+    modules_functions_calls_console_string = hackingtools.getModulesFunctionsCalls()
     modules_all = {}
     categories = []
     for mod in modules_and_params:
@@ -21,7 +22,7 @@ def home(request, popup_text=''):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = hackingtools.getModulesNames()
-    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_forms_modal':modules_forms_modal, 'modules_config':modules_config, 'modules_config_treeview':modules_config_treeview, 'modules_functions_modals':modules_functions_modals, 'popup_text':popup_text })
+    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_forms_modal':modules_forms_modal, 'modules_config':modules_config, 'console_command':modules_functions_calls_console_string, 'modules_config_treeview':modules_config_treeview, 'modules_functions_modals':modules_functions_modals, 'popup_text':popup_text })
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()

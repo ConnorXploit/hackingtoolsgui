@@ -48,6 +48,20 @@ def getModulesCalls():
         modulesCalls.append(mods)
     return modulesCalls
 
+def getModulesFunctionsCalls():
+    modulesCalls = {}
+    header = 'import hackingtools as ht\n\nht_mod = ht.getModule("{module_name}")\nmod_result = ht_mod.{module_function}({module_function_params})\n\nprint(mod_result)'
+    for module in modules_loaded:
+        module_funcs = {}
+        for func in modules_loaded[module]:
+            try:
+                for param in modules_loaded[module][func]:
+                    module_funcs[func] = header.format(module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(modules_loaded[module][func][param]))
+            except:
+                module_funcs[func] = header.format(module_name=module.split('.')[-1], module_function=func, module_function_params='')
+        modulesCalls[module.split('.')[-1]] = module_funcs
+    return modulesCalls
+
 def getModulesNames():
     """
     Devuelve los nombre de todos los modulos importados (ht_shodan, etc.)
