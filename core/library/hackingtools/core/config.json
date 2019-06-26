@@ -1,345 +1,501 @@
 {
-    "modules":{
-        "ht_shodan":{
-            "__gui_label__" : "Shodan",
-            "api_key" : "lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl",
-            "bad_api_key_error" : "The specified APIKey is invalid, please insert another one.",
-            "error_ip_no_exists" : "No data available for the IP",
-            "search_limit_date_format" : "%d/%m/%Y",
-            "scan_interesting_data_keys" : ["hostnames", "ip_str", "city", "country_name", "org", "isp", "last_update", "asn", "os", "port"],
-            "msg_result_found" : "Results found",
-            "msg_fetch_page" : "Fetched page",
-            "error" : "Error",
-            "shodan_host_ip" : "shodan/host/{ip}",
-            "shodan_count_search" : "shodan/host/count",
-            "shodan_host_search" : "shodan/host/search",
-            "shodan_token_search" : "shodan/host/search/tokens",
-            "shodan_ports" : "shodan/ports",
-            "shodan_exploit_author" : "shodan/exploit/author",
-            "shodan_exploit_cve" : "shodan/exploit/cve",
-            "shodan_exploit_msb" : "shodan/exploit/msb",
-            "shodan_exploit_bid" : "shodan/exploit/bugtraq-id",
-            "shodan_exploit_osvdb" : "shodan/exploit/osvdb",
-            "shodan_exploit_title" : "shodan/exploit/title",
-            "shodan_exploit_description" : "shodan/exploit/description",
-            "shodan_exploit_date" : "shodan/exploit/date",
-            "shodan_exploit_code" : "shodan/exploit/code",
-            "shodan_exploit_platform" : "shodan/exploit/platform",
-            "shodan_exploit_port" : "shodan/exploit/port",
-            "shodan_dns_lookup" : "dns/resolve",
-            "shodan_dns_reverse" : "dns/reverse",
-            "shodan_honeyscore" : "labs/honeyscore/{ip}",
-            "shodan_profile" : "account/profile",
-            "shodan_myip" : "tools/myip",
-            "shodan_httpheaders" : "tools/httpheaders",
-            "shodan_api_info" : "api-info",
-            "django_form_module_function" : {
-                "getIPListfromServices" : {
-                    "__function__" : "test_ht_shodan_getIPListfromServices",
-                    "__return__" : "text",
-                    "service_name" : {
-                        "__id__" : "service_name",
-                        "__type__" : "text",
-                        "__className__" : "form-control",
-                        "placeholder" : "apache",
-                        "value" : "",
-                        "label_desc" : "Search query",
-                        "required" : true
+    "modules": {
+        "ht_shodan": {
+            "__gui_label__": "Shodan",
+            "api_key": "lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl",
+            "bad_api_key_error": "The specified APIKey is invalid, please insert another one.",
+            "error_ip_no_exists": "No data available for the IP",
+            "search_limit_date_format": "%d/%m/%Y",
+            "scan_interesting_data_keys": [
+                "hostnames",
+                "ip_str",
+                "city",
+                "country_name",
+                "org",
+                "isp",
+                "last_update",
+                "asn",
+                "os",
+                "port"
+            ],
+            "msg_result_found": "Results found",
+            "msg_fetch_page": "Fetched page",
+            "error": "Error",
+            "shodan_host_ip": "shodan/host/{ip}",
+            "shodan_count_search": "shodan/host/count",
+            "shodan_host_search": "shodan/host/search",
+            "shodan_token_search": "shodan/host/search/tokens",
+            "shodan_ports": "shodan/ports",
+            "shodan_exploit_author": "shodan/exploit/author",
+            "shodan_exploit_cve": "shodan/exploit/cve",
+            "shodan_exploit_msb": "shodan/exploit/msb",
+            "shodan_exploit_bid": "shodan/exploit/bugtraq-id",
+            "shodan_exploit_osvdb": "shodan/exploit/osvdb",
+            "shodan_exploit_title": "shodan/exploit/title",
+            "shodan_exploit_description": "shodan/exploit/description",
+            "shodan_exploit_date": "shodan/exploit/date",
+            "shodan_exploit_code": "shodan/exploit/code",
+            "shodan_exploit_platform": "shodan/exploit/platform",
+            "shodan_exploit_port": "shodan/exploit/port",
+            "shodan_dns_lookup": "dns/resolve",
+            "shodan_dns_reverse": "dns/reverse",
+            "shodan_honeyscore": "labs/honeyscore/{ip}",
+            "shodan_profile": "account/profile",
+            "shodan_myip": "tools/myip",
+            "shodan_httpheaders": "tools/httpheaders",
+            "shodan_api_info": "api-info",
+            "django_form_module_function": {
+                "getIPListfromServices": {
+                    "__function__": "test_ht_shodan_getIPListfromServices",
+                    "__return__": "text",
+                    "service_name": {
+                        "__id__": "service_name",
+                        "__type__": "text",
+                        "__className__": "form-control",
+                        "placeholder": "apache",
+                        "value": "",
+                        "label_desc": "Search query",
+                        "required": true
                     },
-                    "shodanKeyString" : {
-                        "__id__" : "shodanKeyString",
-                        "__type__" : "text",
-                        "__className__" : "form-control",
-                        "placeholder" : "abcdef0123456789",
-                        "value" : "",
-                        "label_desc" : "Shodan API Key"
+                    "shodanKeyString": {
+                        "__id__": "shodanKeyString",
+                        "__type__": "text",
+                        "__className__": "form-control",
+                        "placeholder": "abcdef0123456789",
+                        "value": "",
+                        "label_desc": "Shodan API Key"
                     }
                 }
             }
         },
-        "ht_sqlinjection":{
-            "__gui_label__" : "SQLI",
-            "color_error" : "RED",
-            "color_verbose" : "BLUE",
-            "color_info" : "YELLOW",
-            "color_ok" : "GREEN"
+        "ht_sqlinjection": {
+            "__gui_label__": "SQLI",
+            "color_error": "RED",
+            "color_verbose": "BLUE",
+            "color_info": "YELLOW",
+            "color_ok": "GREEN"
         },
-        "ht_crypter":{
-            "__gui_label__" : "File Crypter",
-            "bad_identical_prime" : "Both numbers must be prime",
-            "p_q_equal_error" : "p and q cannot be equal",
-            "pyinstaller" : "pyinstaller -F -w --clean --noconsole --specpath {path}",
-            "error_encrypt" : "Something went wrong",
-            "django_form_main_function" : {
-                "filename" : {
-                    "__id__" : "filename",
-                    "__type__" : "file",
-                    "__className__" : "file-input",
-                    "label_desc" : "Browse file to crypt",
-                    "required" : true
+        "ht_crypter": {
+            "__gui_label__": "File Crypter",
+            "bad_identical_prime": "Both numbers must be prime",
+            "p_q_equal_error": "p and q cannot be equal",
+            "pyinstaller": "pyinstaller -F -w --clean --noconsole --specpath {path}",
+            "error_encrypt": "Something went wrong",
+            "django_form_main_function": {
+                "filename": {
+                    "__id__": "filename",
+                    "__type__": "file",
+                    "__className__": "file-input",
+                    "label_desc": "Browse file to crypt",
+                    "required": true
                 },
-                "iteratecount" : {
-                    "__id__" : "iteratecount",
-                    "__type__" : "number",
-                    "__className__" : "form-control",
-                    "label_desc" : "Iterate count",
-                    "value" : "1"
+                "iteratecount": {
+                    "__id__": "iteratecount",
+                    "__type__": "number",
+                    "__className__": "form-control",
+                    "label_desc": "Iterate count",
+                    "value": "1"
                 },
-                "prime_length" : {
-                    "__id__" : "prime_length",
-                    "__type__" : "number",
-                    "__className__" : "form-control",
-                    "label_desc" : "Prime's Length",
-                    "value" : "2"
+                "prime_length": {
+                    "__id__": "prime_length",
+                    "__type__": "number",
+                    "__className__": "form-control",
+                    "label_desc": "Prime's Length",
+                    "value": "2"
                 },
-                "compile_exe" : {
-                    "__id__" : "compile_exe",
-                    "__type__" : "checkbox",
-                    "__className__" : "custom-control-input",
-                    "label_desc" : "Compile to EXE"
+                "compile_exe": {
+                    "__id__": "compile_exe",
+                    "__type__": "checkbox",
+                    "__className__": "custom-control-input",
+                    "label_desc": "Compile to EXE"
                 },
-                "close" : {
-                    "__id__" : "close",
-                    "__type__" : "button",
-                    "__className__" : "btn btn-secondary",
-                    "value" : "Close"
+                "close": {
+                    "__id__": "close",
+                    "__type__": "button",
+                    "__className__": "btn btn-secondary",
+                    "value": "Close"
                 },
-                "submit" : {
-                    "__id__" : "crypt_file_button",
-                    "__type__" : "submit",
-                    "__className__" : "btn btn-primary",
-                    "value" : "Crypt File",
-                    "loading_text" : "Crypting..."
+                "submit": {
+                    "__id__": "crypt_file_button",
+                    "__type__": "submit",
+                    "__className__": "btn btn-primary",
+                    "value": "Crypt File",
+                    "loading_text": "Crypting..."
                 }
             },
-            "django_form_module_function" : {
-                "encrypt" : {
-                    "__function__" : "test_ht_crypter_encrypt",
-                    "__return__" : "text",
-                    "private_key_keynumber" : {
-                        "__id__" : "private_key_keynumber",
-                        "__type__" : "number",
-                        "__className__" : "form-control",
-                        "label_desc" : "Private Key",
-                        "value" : 10000,
-                        "required" : true,
-                        "returnable_modules_functions" : {
-                            "ht_crypter" : [
+            "django_form_module_function": {
+                "encrypt": {
+                    "__function__": "test_ht_crypter_encrypt",
+                    "__return__": "text",
+                    "private_key_keynumber": {
+                        "__id__": "private_key_keynumber",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Private Key",
+                        "value": 10000,
+                        "required": true,
+                        "returnable_modules_functions": {
+                            "ht_crypter": [
                                 "getRandomKeypair"
                             ]
                         }
                     },
-                    "private_key_keymod" : {
-                        "__id__" : "private_key_keymod",
-                        "__type__" : "number",
-                        "__className__" : "form-control",
-                        "label_desc" : "Private Mod",
-                        "value" : 0,
-                        "required" : true,
-                        "returnable_modules_functions" : {
-                            "ht_crypter" : [
+                    "private_key_keymod": {
+                        "__id__": "private_key_keymod",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Private Mod",
+                        "value": 0,
+                        "required": true,
+                        "returnable_modules_functions": {
+                            "ht_crypter": [
                                 "getRandomKeypair"
                             ]
                         }
                     },
-                    "cipher_text" : {
-                        "__id__" : "cipher_text",
-                        "__type__" : "textarea",
-                        "__className__" : "form-control rounded-0",
-                        "placeholder" : "Text to cipher",
-                        "required" : true
+                    "cipher_text": {
+                        "__id__": "cipher_text",
+                        "__type__": "textarea",
+                        "__className__": "form-control rounded-0",
+                        "placeholder": "Text to cipher",
+                        "required": true
                     }
                 },
-                "decrypt" : {
-                    "__function__" : "test_ht_crypter_decrypt",
-                    "__return__" : "text",
-                    "public_key_keynumber" : {
-                        "__id__" : "public_key_keynumber",
-                        "__type__" : "number",
-                        "__className__" : "form-control",
-                        "label_desc" : "Public Key",
-                        "value" : 0,
-                        "required" : true
+                "decrypt": {
+                    "__function__": "test_ht_crypter_decrypt",
+                    "__return__": "text",
+                    "public_key_keynumber": {
+                        "__id__": "public_key_keynumber",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Public Key",
+                        "value": 0,
+                        "required": true
                     },
-                    "public_key_keymod" : {
-                        "__id__" : "public_key_keymod",
-                        "__type__" : "number",
-                        "__className__" : "form-control",
-                        "label_desc" : "Public Mod",
-                        "value" : 0,
-                        "required" : true
+                    "public_key_keymod": {
+                        "__id__": "public_key_keymod",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Public Mod",
+                        "value": 0,
+                        "required": true
                     },
-                    "cipher_text" : {
-                        "__id__" : "cipher_text",
-                        "__type__" : "textarea",
-                        "__className__" : "form-control",
-                        "placeholder" : "Text to decipher",
-                        "required" : true
+                    "cipher_text": {
+                        "__id__": "cipher_text",
+                        "__type__": "textarea",
+                        "__className__": "form-control",
+                        "placeholder": "Text to decipher",
+                        "required": true
                     }
                 },
-                "generate_keypair" : {
-                    "__function__" : "test_ht_crypter_generate_keypair",
-                    "__return__" : "text",
-                    "prime_a" : {
-                        "__id__" : "prime_a",
-                        "__type__" : "number",
-                        "__className__" : "form-control",
-                        "label_desc" : "Prime A",
-                        "value" : "1299853",
-                        "required" : true
+                "generate_keypair": {
+                    "__function__": "test_ht_crypter_generate_keypair",
+                    "__return__": "text",
+                    "prime_a": {
+                        "__id__": "prime_a",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Prime A",
+                        "value": "1299853",
+                        "required": true
                     },
-                    "prime_b" : {
-                        "__id__" : "prime_b",
-                        "__type__" : "number",
-                        "__className__" : "form-control",
-                        "label_desc" : "Prime B",
-                        "value" : "2099837",
-                        "required" : true
+                    "prime_b": {
+                        "__id__": "prime_b",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Prime B",
+                        "value": "2099837",
+                        "required": true
                     }
                 },
-                "getRandomKeypair" : {
-                    "__function__" : "test_ht_crypter_getRandomKeypair",
-                    "__return__" : "text",
-                    "prime_length" : {
-                        "__id__" : "prime_length",
-                        "__type__" : "number",
-                        "__className__" : "form-control",
-                        "label_desc" : "Prime Length",
-                        "value" : "8"
+                "getRandomKeypair": {
+                    "__function__": "test_ht_crypter_getRandomKeypair",
+                    "__return__": "text",
+                    "prime_length": {
+                        "__id__": "prime_length",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Prime Length",
+                        "value": "8"
+                    }
+                }
+            }
+        },
+        "ht_nuevooo": {
+            "__gui_label__": "_MODULE_GUI_LABEL_",
+            "django_form_main_function": {
+                "_HTML_FIELD_NAME_": {
+                    "__id__": "_HTML_FIELD_NAME_",
+                    "__type__": "_HTML_INPUT_TYPE_",
+                    "__className__": "_HTML_INPUT_CLASS_",
+                    "label_desc": "_DESCRIPTION_LABEL_",
+                    "required": "_IF_REQUIRED_",
+                    "value": "_INPUT_VALUE_",
+                    "loading_text": "_INPUT_LOADING_TEXT_"
+                }
+            },
+            "django_form_module_function": {
+                "_PUBLIC_FUNCTION_": {
+                    "__function__": "_FUNCTION_CALLABLE_NAME_",
+                    "__return__": "_IF_RETURNS_LIKE_TEXT_",
+                    "_PARAM_TO_USE_IN_VIEWS_PY_": {
+                        "__id__": "_HTML_FIELD_NAME_",
+                        "__type__": "_HTML_INPUT_TYPE_",
+                        "__className__": "_HTML_INPUT_CLASS_",
+                        "label_desc": "_DESCRIPTION_LABEL_",
+                        "value": "_INPUT_VALUE_",
+                        "required": "_IF_REQUIRED_",
+                        "returnable_modules_functions": {
+                            "_MODULE_CALL_FOR_": [
+                                "_THAT_MODULES_FUNCTION"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "ht_bb": {
+            "__gui_label__": "_MODULE_GUI_LABEL_",
+            "django_form_main_function": {
+                "_HTML_FIELD_NAME_": {
+                    "__id__": "_HTML_FIELD_NAME_",
+                    "__type__": "_HTML_INPUT_TYPE_",
+                    "__className__": "_HTML_INPUT_CLASS_",
+                    "label_desc": "_DESCRIPTION_LABEL_",
+                    "required": "_IF_REQUIRED_",
+                    "value": "_INPUT_VALUE_",
+                    "loading_text": "_INPUT_LOADING_TEXT_"
+                }
+            },
+            "django_form_module_function": {
+                "_PUBLIC_FUNCTION_": {
+                    "__function__": "_FUNCTION_CALLABLE_NAME_",
+                    "__return__": "_IF_RETURNS_LIKE_TEXT_",
+                    "_PARAM_TO_USE_IN_VIEWS_PY_": {
+                        "__id__": "_HTML_FIELD_NAME_",
+                        "__type__": "_HTML_INPUT_TYPE_",
+                        "__className__": "_HTML_INPUT_CLASS_",
+                        "label_desc": "_DESCRIPTION_LABEL_",
+                        "value": "_INPUT_VALUE_",
+                        "required": "_IF_REQUIRED_",
+                        "returnable_modules_functions": {
+                            "_MODULE_CALL_FOR_": [
+                                "_THAT_MODULES_FUNCTION"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "ht_ads": {
+            "__gui_label__": "_MODULE_GUI_LABEL_",
+            "django_form_main_function": {
+                "_HTML_FIELD_NAME_": {
+                    "__id__": "_HTML_FIELD_NAME_",
+                    "__type__": "_HTML_INPUT_TYPE_",
+                    "__className__": "_HTML_INPUT_CLASS_",
+                    "label_desc": "_DESCRIPTION_LABEL_",
+                    "required": "_IF_REQUIRED_",
+                    "value": "_INPUT_VALUE_",
+                    "loading_text": "_INPUT_LOADING_TEXT_"
+                }
+            },
+            "django_form_module_function": {
+                "_PUBLIC_FUNCTION_": {
+                    "__function__": "_FUNCTION_CALLABLE_NAME_",
+                    "__return__": "_IF_RETURNS_LIKE_TEXT_",
+                    "_PARAM_TO_USE_IN_VIEWS_PY_": {
+                        "__id__": "_HTML_FIELD_NAME_",
+                        "__type__": "_HTML_INPUT_TYPE_",
+                        "__className__": "_HTML_INPUT_CLASS_",
+                        "label_desc": "_DESCRIPTION_LABEL_",
+                        "value": "_INPUT_VALUE_",
+                        "required": "_IF_REQUIRED_",
+                        "returnable_modules_functions": {
+                            "_MODULE_CALL_FOR_": [
+                                "_THAT_MODULES_FUNCTION"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "ht_juju": {
+            "__gui_label__": "_MODULE_GUI_LABEL_",
+            "django_form_main_function": {
+                "_HTML_FIELD_NAME_": {
+                    "__id__": "_HTML_FIELD_NAME_",
+                    "__type__": "_HTML_INPUT_TYPE_",
+                    "__className__": "_HTML_INPUT_CLASS_",
+                    "label_desc": "_DESCRIPTION_LABEL_",
+                    "required": "_IF_REQUIRED_",
+                    "value": "_INPUT_VALUE_",
+                    "loading_text": "_INPUT_LOADING_TEXT_"
+                }
+            },
+            "django_form_module_function": {
+                "_PUBLIC_FUNCTION_": {
+                    "__function__": "_FUNCTION_CALLABLE_NAME_",
+                    "__return__": "_IF_RETURNS_LIKE_TEXT_",
+                    "_PARAM_TO_USE_IN_VIEWS_PY_": {
+                        "__id__": "_HTML_FIELD_NAME_",
+                        "__type__": "_HTML_INPUT_TYPE_",
+                        "__className__": "_HTML_INPUT_CLASS_",
+                        "label_desc": "_DESCRIPTION_LABEL_",
+                        "value": "_INPUT_VALUE_",
+                        "required": "_IF_REQUIRED_",
+                        "returnable_modules_functions": {
+                            "_MODULE_CALL_FOR_": [
+                                "_THAT_MODULES_FUNCTION"
+                            ]
+                        }
                     }
                 }
             }
         }
     },
-    "core":{
-        "__API_KEY__" : {
-            "botscout_api":"FRGWan7gqCxArce",
-            "builtwith_api":"c29c5821-1cbc-49f0-880f-54fb55238b97",
-            "censysio_id":"bca2c0fe-d4cb-4139-aef9-5e7c2cf5f75e",
-            "censysio_secret":"Nne6yIrlY2uQWc3qmV2yddBcIHj5Kb02",
-            "clearbit_apikey":"pk_ba91d4de6bde46c1db3d973eb40f9ed1",
-            "clearbit_secret":"sk_17c82aacd8831aefd44bc74e27d05a15",
-            "cymon_api":"99b8240b560ddab32daa91c2e74e1852e263b349",
-            "emailhunter":"bd01903ba851d2a098e7814c44c29d9507e5242b",
-            "facebook_id":"249127405944189",
-            "facebook_access_token":"7d980a5120f3a16b401e968450b6ac1f",
-            "flickr_api":"f9dd71a35f5a691c938ba96816c00bbd",
-            "fullcontact_id":"KuZNzcofEdS1GgfnXq85ODRdotfmdEiG",
-            "fullcontact_api":"QniOLfVxaVfJwSlIHlMcHoo0sIYSsJ2j",
-            "github_access_token":"d1ce2b2b8916109112ad2a396169803eebd689ad",
-            "google_api":"AIzaSyCzLYmNR2nqoxzhKojS5FU1uA7h6vbQM_E",
-            "google_cse_cx":"001099431887354511118:785oekflvsi",
-            "google_cse_key":"AIzaSyAmXrtsWu27KITfSddxeyTzMmDGEr726EM",
-            "google_maps_api":"AIzaSyDuiAoqpkqHOTwabu6y0-jBLVjCoViPF9c",
-            "instagram_client_id":"825909c1eefc47229b4eba8752bd4ec2",
-            "instagram_client_secret":"67cb10705c2f43e699a5f3a3f583f190",
-            "ipinfodb_api":"b783dab1ecf60d7053441390e7fa2517bded046d32b99bda2535633b1b26ebf9",
-            "jsonwhois":"69656a0c3b4305a0ec3f0364df27387f",
-            "linkedin_api":"8634jdqaqwkllf",
-            "linkedin_secret":"Kq6eSHONISXgKuua",
-            "mailboxlayer_api":"79b62e65f507bf2a4156678c90d3fef0",
-            "reddit_id":"4pPXtnnywusfbw",
-            "reddit_secret":"eeLxwRMNnvLpXhYwjYqmoSFBZ4A",
-            "rosette_api":"4eb8672a80ecc115a42b723749fa611b",
-            "security_trails_api":"ugj7iEWZktvYVtHzFAhZeptjDIzuUwc3",
-            "shodan_api":"lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl",
-            "spyonweb_access_token":"k8VOKyAizVBj",
-            "twitter_access_token":"9W2Unr2NaQThltwkT4kYvEiOT",
-            "twitter_access_token_secret":"ugwZrC5zOvFJQEx4fkoZ1owMgQLXUCR2JnLoujrTs7noUdPNIl",
-            "twitter_consumer_key":"9W2Unr2NaQThltwkT4kYvEiOT",
-            "twitter_consumer_secret":"ugwZrC5zOvFJQEx4fkoZ1owMgQLXUCR2JnLoujrTs7noUdPNIl",
-            "zoomeyeuser":"cgehminecraft@gmail.com",
-            "zoomeyepass":"001FAF7C6677",
-            "freewallet_pub_key":"1K19DnKWVTW46x12X9BApDF3518ikPAh8U",
-            "freewallet_pri_key":"KwzJgtCtisxCwZbGwsBNMpmkWqd1iCg2ckzgbTsdoL5Mu5fYXkuR",
-            "walletbuilders_masternode_key":"5KGkkEo2wzxYJDTwGSFPADgWruFFNSPnZPzHG44RmwLMqR2wwXU",
-            "walletbuilders_masternode_acc_addr_MN1":"1HhJn8WYuBjZ3DUqVBLebhBo6ntyaakbQo"
+    "core": {
+        "__API_KEY__": {
+            "botscout_api": "FRGWan7gqCxArce",
+            "builtwith_api": "c29c5821-1cbc-49f0-880f-54fb55238b97",
+            "censysio_id": "bca2c0fe-d4cb-4139-aef9-5e7c2cf5f75e",
+            "censysio_secret": "Nne6yIrlY2uQWc3qmV2yddBcIHj5Kb02",
+            "clearbit_apikey": "pk_ba91d4de6bde46c1db3d973eb40f9ed1",
+            "clearbit_secret": "sk_17c82aacd8831aefd44bc74e27d05a15",
+            "cymon_api": "99b8240b560ddab32daa91c2e74e1852e263b349",
+            "emailhunter": "bd01903ba851d2a098e7814c44c29d9507e5242b",
+            "facebook_id": "249127405944189",
+            "facebook_access_token": "7d980a5120f3a16b401e968450b6ac1f",
+            "flickr_api": "f9dd71a35f5a691c938ba96816c00bbd",
+            "fullcontact_id": "KuZNzcofEdS1GgfnXq85ODRdotfmdEiG",
+            "fullcontact_api": "QniOLfVxaVfJwSlIHlMcHoo0sIYSsJ2j",
+            "github_access_token": "d1ce2b2b8916109112ad2a396169803eebd689ad",
+            "google_api": "AIzaSyCzLYmNR2nqoxzhKojS5FU1uA7h6vbQM_E",
+            "google_cse_cx": "001099431887354511118:785oekflvsi",
+            "google_cse_key": "AIzaSyAmXrtsWu27KITfSddxeyTzMmDGEr726EM",
+            "google_maps_api": "AIzaSyDuiAoqpkqHOTwabu6y0-jBLVjCoViPF9c",
+            "instagram_client_id": "825909c1eefc47229b4eba8752bd4ec2",
+            "instagram_client_secret": "67cb10705c2f43e699a5f3a3f583f190",
+            "ipinfodb_api": "b783dab1ecf60d7053441390e7fa2517bded046d32b99bda2535633b1b26ebf9",
+            "jsonwhois": "69656a0c3b4305a0ec3f0364df27387f",
+            "linkedin_api": "8634jdqaqwkllf",
+            "linkedin_secret": "Kq6eSHONISXgKuua",
+            "mailboxlayer_api": "79b62e65f507bf2a4156678c90d3fef0",
+            "reddit_id": "4pPXtnnywusfbw",
+            "reddit_secret": "eeLxwRMNnvLpXhYwjYqmoSFBZ4A",
+            "rosette_api": "4eb8672a80ecc115a42b723749fa611b",
+            "security_trails_api": "ugj7iEWZktvYVtHzFAhZeptjDIzuUwc3",
+            "shodan_api": "lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl",
+            "spyonweb_access_token": "k8VOKyAizVBj",
+            "twitter_access_token": "9W2Unr2NaQThltwkT4kYvEiOT",
+            "twitter_access_token_secret": "ugwZrC5zOvFJQEx4fkoZ1owMgQLXUCR2JnLoujrTs7noUdPNIl",
+            "twitter_consumer_key": "9W2Unr2NaQThltwkT4kYvEiOT",
+            "twitter_consumer_secret": "ugwZrC5zOvFJQEx4fkoZ1owMgQLXUCR2JnLoujrTs7noUdPNIl",
+            "zoomeyeuser": "cgehminecraft@gmail.com",
+            "zoomeyepass": "001FAF7C6677",
+            "freewallet_pub_key": "1K19DnKWVTW46x12X9BApDF3518ikPAh8U",
+            "freewallet_pri_key": "KwzJgtCtisxCwZbGwsBNMpmkWqd1iCg2ckzgbTsdoL5Mu5fYXkuR",
+            "walletbuilders_masternode_key": "5KGkkEo2wzxYJDTwGSFPADgWruFFNSPnZPzHG44RmwLMqR2wwXU",
+            "walletbuilders_masternode_acc_addr_MN1": "1HhJn8WYuBjZ3DUqVBLebhBo6ntyaakbQo"
         },
-        "Logger":{
+        "Logger": {
             "DEBUG_CORE_FLAG": false,
             "DEBUG_MODULE_FLAG": true,
             "DEBUG_USER": true,
             "clear_on_load": false,
-            "log_save_date_format":"%Y-%m-%d-%H-%M-%S-%f",
-            "log_print_date_format" :"%Y-%m-%d %H:%M:%S.%f"
+            "log_save_date_format": "%Y-%m-%d-%H-%M-%S-%f",
+            "log_print_date_format": "%Y-%m-%d %H:%M:%S.%f"
         },
-        "locales":{
-            "error_json_data_loaded" : "You have errors on your JSON config",
-            "error_json_data_not_loaded" : "Error loading some data of your JSON config"
+        "locales": {
+            "error_json_data_loaded": "You have errors on your JSON config",
+            "error_json_data_not_loaded": "Error loading some data of your JSON config"
         },
-        "import_modules":{
-            "package_name" : "hackingtools",
-            "blacklist_extensions": [".pyc"],
-            "blacklist_directories": ["__"],
-            "ignore_files": ["ht_flask.py"],
-            "ignore_folders": ["templates", "core", "build", "dist", "hackingtools", "gui"],
+        "import_modules": {
+            "package_name": "hackingtools",
+            "blacklist_extensions": [
+                ".pyc"
+            ],
+            "blacklist_directories": [
+                "__"
+            ],
+            "ignore_files": [
+                "ht_flask.py"
+            ],
+            "ignore_folders": [
+                "templates",
+                "core",
+                "build",
+                "dist",
+                "hackingtools",
+                "gui"
+            ],
             "class_name_starts_with_modules": "ht_",
             "function_name_starts_with_modules": "__",
             "function_param_exclude": "self",
             "default_class_name_for_all": "StartModule",
-            "default_template_modules_ht": "from hackingtools.core import Logger\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tLogger.printMessage(message:'ht_{moduleName} loaded', debug_module:True)\n\t\tpass"
+            "default_template_modules_ht": "from hackingtools.core import Logger\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tLogger.printMessage(message='ht_{moduleName} loaded', debug_module=True)\n\t\tpass"
         },
-        "utilities":{
-            "resources_cryptography_rest_api":{
-                "md5_decrypt" : "https://md5.pinasthika.com/api/decrypt"
+        "utilities": {
+            "resources_cryptography_rest_api": {
+                "md5_decrypt": "https://md5.pinasthika.com/api/decrypt"
             },
-            "dictionaries":{
-                "hex-lower" : "0123456789abcdef",
-                "hex-upper" : "0123456789ABCDEF",
-                "numeric" : "0123456789",
-                "numeric-space" : "0123456789 ",
-                "symbols14" : "!@#$%^&*()-_+:",
-                "symbols14-space" : "!@#$%^&*()-_+: ",
-                "symbols-all" : "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
-                "symbols-all-space" : "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
-                "ualpha" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                "ualpha-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ ",
-                "ualpha-numeric" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-                "ualpha-numeric-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
-                "ualpha-numeric-symbol14" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:",
-                "ualpha-numeric-symbol14-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+: ",
-                "ualpha-numeric-all" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
-                "ualpha-numeric-all-space" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
-                "lalpha" : "abcdefghijklmnopqrstuvwxyz",
-                "lalpha-space" : "abcdefghijklmnopqrstuvwxyz ",
-                "lalpha-numeric" : "abcdefghijklmnopqrstuvwxyz0123456789",
-                "lalpha-numeric-space" : "abcdefghijklmnopqrstuvwxyz0123456789 ",
-                "lalpha-numeric-symbol14" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:",
-                "lalpha-numeric-symbol14-space" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+: ",
-                "lalpha-numeric-all" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
-                "lalpha-numeric-all-space" : "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
-                "mixalpha" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                "mixalpha-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ",
-                "mixalpha-numeric" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-                "mixalpha-numeric-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
-                "mixalpha-numeric-symbol14" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:",
-                "mixalpha-numeric-symbol14-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+: ",
-                "mixalpha-numeric-all" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
-                "mixalpha-numeric-all-space" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
-                "ualpha-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
-                "ualpha-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ ",
-                "ualpha-numeric-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789",
-                "ualpha-numeric-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789 ",
-                "ualpha-numeric-symbol14-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:",
-                "ualpha-numeric-symbol14-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+: ",
-                "ualpha-numeric-all-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
-                "ualpha-numeric-all-space-sv" : "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
-                "lalpha-sv" : "abcdefghijklmnopqrstuvwxyzåäö",
-                "lalpha-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö ",
-                "lalpha-numeric-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789",
-                "lalpha-numeric-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789 ",
-                "lalpha-numeric-symbol14-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+:",
-                "lalpha-numeric-symbol14-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+: ",
-                "lalpha-numeric-all-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
-                "lalpha-numeric-all-space-sv" : "abcdefghijklmnopqrstuvwxyzåäö0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
-                "mixalpha-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
-                "mixalpha-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ ",
-                "mixalpha-numeric-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789",
-                "mixalpha-numeric-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789 ",
-                "mixalpha-numeric-symbol14-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:",
-                "mixalpha-numeric-symbol14-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+: ",
-                "mixalpha-numeric-all-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
-                "mixalpha-numeric-all-space-sv" : "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ "
+            "dictionaries": {
+                "hex-lower": "0123456789abcdef",
+                "hex-upper": "0123456789ABCDEF",
+                "numeric": "0123456789",
+                "numeric-space": "0123456789 ",
+                "symbols14": "!@#$%^&*()-_+:",
+                "symbols14-space": "!@#$%^&*()-_+: ",
+                "symbols-all": "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "symbols-all-space": "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
+                "ualpha": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                "ualpha-space": "ABCDEFGHIJKLMNOPQRSTUVWXYZ ",
+                "ualpha-numeric": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                "ualpha-numeric-space": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
+                "ualpha-numeric-symbol14": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:",
+                "ualpha-numeric-symbol14-space": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+: ",
+                "ualpha-numeric-all": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "ualpha-numeric-all-space": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
+                "lalpha": "abcdefghijklmnopqrstuvwxyz",
+                "lalpha-space": "abcdefghijklmnopqrstuvwxyz ",
+                "lalpha-numeric": "abcdefghijklmnopqrstuvwxyz0123456789",
+                "lalpha-numeric-space": "abcdefghijklmnopqrstuvwxyz0123456789 ",
+                "lalpha-numeric-symbol14": "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:",
+                "lalpha-numeric-symbol14-space": "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+: ",
+                "lalpha-numeric-all": "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "lalpha-numeric-all-space": "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
+                "mixalpha": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                "mixalpha-space": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ",
+                "mixalpha-numeric": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                "mixalpha-numeric-space": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
+                "mixalpha-numeric-symbol14": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:",
+                "mixalpha-numeric-symbol14-space": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+: ",
+                "mixalpha-numeric-all": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "mixalpha-numeric-all-space": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
+                "ualpha-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u2013",
+                "ualpha-space-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u2013 ",
+                "ualpha-numeric-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789",
+                "ualpha-numeric-space-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789 ",
+                "ualpha-numeric-symbol14-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+:",
+                "ualpha-numeric-symbol14-space-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+: ",
+                "ualpha-numeric-all-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "ualpha-numeric-all-space-sv": "ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
+                "lalpha-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6",
+                "lalpha-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6 ",
+                "lalpha-numeric-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b60123456789",
+                "lalpha-numeric-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b60123456789 ",
+                "lalpha-numeric-symbol14-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b60123456789!@#$%^&*()-_+:",
+                "lalpha-numeric-symbol14-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b60123456789!@#$%^&*()-_+: ",
+                "lalpha-numeric-all-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b60123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "lalpha-numeric-all-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b60123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ ",
+                "mixalpha-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u2013",
+                "mixalpha-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u2013 ",
+                "mixalpha-numeric-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789",
+                "mixalpha-numeric-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789 ",
+                "mixalpha-numeric-symbol14-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+:",
+                "mixalpha-numeric-symbol14-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+: ",
+                "mixalpha-numeric-all-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "mixalpha-numeric-all-space-sv": "abcdefghijklmnopqrstuvwxyz\u00c3\u00a5\u00c3\u00a4\u00c3\u00b6ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c3\u2026\u00c3\u201e\u00c3\u20130123456789!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/ "
             }
         }
     }

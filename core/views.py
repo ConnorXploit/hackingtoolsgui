@@ -27,9 +27,10 @@ def home(request, popup_text=''):
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_cat = request.POST.get('category_name')
-    hackingtools.createModule(mod_name, mod_cat)
+    created = hackingtools.createModule(mod_name, mod_cat)
     #reload(hackingtools) # NO SE ACTUALIZA
-    modules_and_params = hackingtools.getModulesJSON()
+    if created:
+        modules_and_params = hackingtools.getModulesJSON()
     return redirect(reverse('home'))
 
 def configModule(request):

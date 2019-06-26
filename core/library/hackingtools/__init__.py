@@ -34,7 +34,13 @@ def getModulesJSON():
     """
     Mostramos los modulos cargados
     """
-    Logger.printMessage('Modules loaded as JSON automatically:', [{mod:'{func} functions'.format(func=len(modules_loaded[mod]))} for mod in modules_loaded], debug_module=True)
+    conf = {}
+    for mod in modules_loaded:
+        if isinstance(modules_loaded[mod], str):
+            conf[mod] = '1 function'
+        else:
+            conf[mod] = '{func} functions'.format(func=len(modules_loaded[mod]))
+    Logger.printMessage('Modules loaded as JSON automatically:', conf, debug_module=True)
     return modules_loaded
 
 def getModulesCalls():
@@ -170,14 +176,6 @@ def getModule(moduleName):
             sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
             print(sentence)
             return eval(sentence)
-
-def createModule(moduleName, category):
-    """
-    Iniciamos con el comando anterior la instancia del modulo
-    """
-    Logger.printMessage('Creating {moduleName} on {category}'.format(moduleName=moduleName, category=category), debug_module=True)
-    modules.createModule(moduleName, category)
-    return 'Created'
 
 def getModuleConfig(moduleName):
     if moduleName in getModulesNames():
@@ -433,6 +431,7 @@ def __importModules__():
                         modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
                 except Exception as e:
                     print("{a} - [ERROR] - {msg}".format(a=module_import_string, msg=str(e)))
+    return True
 
 def getModules():
     data = []
@@ -441,6 +440,10 @@ def getModules():
     return data
 
 def createModule(moduleName, category):
+    """
+    Iniciamos con el comando anterior la instancia del modulo
+    """
+    Logger.printMessage('Creating {moduleName} on {category}'.format(moduleName=moduleName, category=category), debug_module=True)
     moduleName = moduleName.replace(" ", "_").lower()
     category = category.lower()
     categories = getCategories()
@@ -461,7 +464,8 @@ def createModule(moduleName, category):
     # Reload variables on client side
     global hackingtools
     #reload(hackingtools)
-    __importModules__()
+    Config.__createModuleTemplateConfig__(moduleName)
+    return __importModules__()
     
 def createCategory(categoryName):
     categoryName = categoryName.lower()
