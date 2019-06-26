@@ -329,7 +329,7 @@ if os.path.exists(drpnm):
 		if convert:
 			self.convertToExe(save_name)
 
-	def crypt_file(self, filename, new_file_name, drop_file_name, is_iterating=False, prime_length=2, iterate_count=1, is_last=False, print_save_stub=True, compile_exe=False):
+	def crypt_file(self, filename, new_file_name, drop_file_name='dropped.py', is_iterating=False, prime_length=4, iterate_count=1, is_last=False, print_save_stub=True, compile_exe=False):
 		"""
 		filename es el archivo original a indetectar (filename='servidor.py')
 		new_file_name es el nombre final del fichero indetectado (new_file_name='indetectable.py')
