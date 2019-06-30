@@ -9,8 +9,8 @@ import os
 
 def home(request, popup_text=''):
     modules_and_params = hackingtools.getModulesJSON()
-    modules_forms = hackingtools.__getModulesDjangoForms__()
-    modules_forms_modal = hackingtools.__getModulesDjangoFormsModal__()
+    modules_forms = hackingtools.__getModulesDjangoForms__() # Corregir template config vacios
+    modules_forms_modal = hackingtools.__getModulesDjangoFormsModal__() # Corregir template config vacios
     modules_config = hackingtools.getModulesConfig()
     modules_config_treeview = hackingtools.__getModulesConfig_treeView__()
     modules_functions_modals = hackingtools.getModulesModalTests()

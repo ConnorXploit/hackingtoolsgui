@@ -11,8 +11,8 @@ def __readConfig__():
         config = json.load(json_data_file)
 
 def __save_config__(new_conf):
-    with open(os.path.join(os.path.dirname(__file__) , 'config.json'), 'w') as outfile:  
-        json.dump(new_conf, outfile, indent=4)
+    with open(os.path.join(os.path.dirname(__file__) , 'config.json'), 'w', encoding='utf8') as outfile:  
+        json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
 def __createModuleTemplateConfig__(module_name):
     global config
@@ -21,7 +21,8 @@ def __createModuleTemplateConfig__(module_name):
         config_tmp = json.load(json_data_file)
     new_config = {
         "__gui_label__" : "_MODULE_GUI_LABEL_",
-        "django_form_main_function" : {
+        "_comment" : "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+        "_django_form_main_function_" : {
             "_HTML_FIELD_NAME_" : {
                 "__id__" : "_HTML_FIELD_NAME_",
                 "__type__" : "_HTML_INPUT_TYPE_",
@@ -32,7 +33,7 @@ def __createModuleTemplateConfig__(module_name):
                 "loading_text" : "_INPUT_LOADING_TEXT_"
             }
         },
-        "django_form_module_function" : {
+        "_django_form_module_function_" : {
             "_PUBLIC_FUNCTION_" : {
                 "__function__" : "_FUNCTION_CALLABLE_NAME_",
                 "__return__" : "_IF_RETURNS_LIKE_TEXT_",

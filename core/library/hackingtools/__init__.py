@@ -297,10 +297,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
     if not module_form:
         return
-
-    form_url = ''
-    if 'django_url_post' in module_form:
-        form_url = module_form['django_url_post']
+        
     html = "<div class=\"modal-body\">"
     footer = '<div class="modal-footer">'
     m_form = module_form
@@ -431,7 +428,7 @@ def __importModules__():
                         modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
                 except Exception as e:
                     print("{a} - [ERROR] - {msg}".format(a=module_import_string, msg=str(e)))
-    return True
+    #return True
 
 def getModules():
     data = []
@@ -461,12 +458,22 @@ def createModule(moduleName, category):
     if not os.path.exists('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
         f = open('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
         f.write('')
+    # temp_path, hackingtools_dir = os.path.split(dir_actual)
+    # temp_path, library_dir = os.path.split(temp_path)
+    # urls_file = os.path.join(temp_path, 'urls.py')
+    # insert_url_django(urls_file, moduleName) # TODO edit urls for auto URLs when creating module
+    # print("{msg}".format(msg=urls_file))
     # Reload variables on client side
     global hackingtools
     #reload(hackingtools)
     Config.__createModuleTemplateConfig__(moduleName)
-    return __importModules__()
-    
+    trying_something = __importModules__()
+    return
+
+def insert_url_django(url, name):
+    print(url)
+    print(name)
+
 def createCategory(categoryName):
     categoryName = categoryName.lower()
     categories = getCategories()
