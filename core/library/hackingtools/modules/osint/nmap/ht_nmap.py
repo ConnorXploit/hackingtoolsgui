@@ -1,5 +1,8 @@
 from hackingtools.core import Logger
+import hackingtools as ht
+
 import nmap
+
 class StartModule():
 
 	cacheSearchInfo = []
@@ -7,6 +10,11 @@ class StartModule():
 	def __init__(self):
 		Logger.printMessage(message='ht_nmap loaded', debug_module=True)
 		pass
+
+	def help(self):
+		functions = ht.getFunctionsNamesFromModule('ht_nmap')
+		Logger.printMessage(message=functions)
+		return functions
 
 	def saveCacheSearchInfo(self, activate=False):
 		pass

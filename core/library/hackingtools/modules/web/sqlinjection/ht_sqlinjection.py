@@ -4,7 +4,9 @@ import urllib
 import json
 import binascii
 
-from hackingtools.core import Config
+from hackingtools.core import Config, Logger
+import hackingtools as ht
+
 config = Config.getConfig(parentKey='modules', key='ht_sqlinjection')
 config_dict = Config.getConfig(parentKey='core', key='utilities', subkey='dictionaries')
 config_decrypt = Config.getConfig(parentKey='core', key='utilities', subkey='resources_cryptography_rest_api')
@@ -19,7 +21,13 @@ url_md5_decrypt = config_decrypt['md5_decrypt']
 class StartModule():
 
     def __init__(self):
+        Logger.printMessage(message='ht_sqlinjection loaded', debug_module=True)
         pass
+    
+    def help(self):
+        functions = ht.getFunctionsNamesFromModule('ht_sqlinjection')
+        Logger.printMessage(message=functions)
+        return functions
 
     def setParams(self, url, param_focus, cookie='', proxies='', submit_name='', security=''):
         self.url = url

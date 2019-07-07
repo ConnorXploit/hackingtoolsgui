@@ -1,4 +1,6 @@
 from hackingtools.core import Logger
+import hackingtools as ht
+
 import random
 import base64
 
@@ -7,6 +9,11 @@ class StartModule():
 	def __init__(self):
 		Logger.printMessage(message='ht_rsa loaded', debug_module=True)
 		pass
+
+	def help(self):
+		functions = ht.getFunctionsNamesFromModule('ht_nmap')
+		Logger.printMessage(message=functions)
+		return functions
 
 	def generate_keypair(self, prime_a, prime_b):
 		if not (self.__is_prime__(prime_a) and self.__is_prime__(prime_b)):

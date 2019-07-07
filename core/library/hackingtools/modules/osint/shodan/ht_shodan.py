@@ -3,6 +3,7 @@ import requests
 import json
 from hackingtools.core import Logger, Config
 config = Config.getConfig(parentKey='modules', key='ht_shodan')
+import hackingtools as ht
 
 class StartModule():
 
@@ -11,6 +12,11 @@ class StartModule():
     def __init__(self):
         Logger.printMessage(message='ht_shodan loaded', debug_module=True)
         self.settingApi()
+
+    def help(self):
+        functions = ht.getFunctionsNamesFromModule('ht_shodan')
+        Logger.printMessage(message=functions)
+        return functions
 
     def settingApi(self, shodanKeyString=None):
         try:

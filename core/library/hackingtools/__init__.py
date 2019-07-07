@@ -43,6 +43,16 @@ def getModulesJSON():
     Logger.printMessage('Modules loaded as JSON automatically:', conf, debug_module=True)
     return modules_loaded
 
+def getFunctionsNamesFromModule(module_name):
+    """
+    Devuelve las funciones de un module en concreto
+    """
+    for mod in modules_loaded:
+        if module_name in mod and not isinstance(modules_loaded[mod], str):
+            return list(modules_loaded[mod].keys())
+        elif module_name in mod:
+            return list(modules_loaded[mod])
+
 def getModulesCalls():
     """
     Por cada modulo, muestro la llamada que pueda hacer y sale en YELLOW
@@ -176,6 +186,7 @@ def getModule(moduleName):
             sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
             print(sentence)
             return eval(sentence)
+    Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log'.format(mod=moduleName), debug_module=True, is_error=True)
 
 def getModuleConfig(moduleName):
     if moduleName in getModulesNames():

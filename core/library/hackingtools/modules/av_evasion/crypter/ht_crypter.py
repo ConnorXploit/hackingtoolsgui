@@ -1,4 +1,5 @@
 from hackingtools.core import Logger, Config
+import hackingtools as ht 
 
 import binascii
 import sys
@@ -17,6 +18,11 @@ class StartModule():
 	def __init__(self):
 		Logger.printMessage(message='ht_crypter loaded', debug_module=True)
 		pass
+
+	def help(self):
+		functions = ht.getFunctionsNamesFromModule('ht_crypter')
+		Logger.printMessage(message=functions)
+		return functions
 
 	def generate_keypair(self, prime_a, prime_b):
 		if not (self.__is_prime__(int(prime_a)) and self.__is_prime__(int(prime_b))):
