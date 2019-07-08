@@ -112,7 +112,7 @@ class StartModule():
             res = "***{errormsg} {ip}.***".format(errormsg=config['error_ip_no_exists'], ip=ip)
         return res
 
-    def getSSLCerts(ip):
+    def getSSLCerts(self, ip):
         res = {}
         try:
             Logger.printMessage(message='{methodName}'.format(methodName='getSSLCerts'), debug_module=True)
