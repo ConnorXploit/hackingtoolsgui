@@ -10,7 +10,7 @@ class StartModule():
     api = None
 
     def __init__(self):
-        Logger.printMessage(message='ht_shodan loaded', debug_module=True)
+        Logger.printMessage(message='ht_shodan loaded', debug_core=True)
         self.settingApi()
 
     def help(self):
@@ -22,10 +22,10 @@ class StartModule():
         try:
             if not shodanKeyString:
                 shodanKeyString = config['api_key']
-            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=shodanKeyString, debug_module=True)
+            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=shodanKeyString, debug_core=True)
             self.api = Shodan(shodanKeyString)
         except:
-            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=config['bad_api_key_error'], debug_module=True, is_error=True) 
+            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=config['bad_api_key_error'], debug_core=True, is_error=True) 
 
     def getIPListfromServices(self, serviceName, shodanKeyString=None):
         Logger.printMessage(message='{methodName}'.format(methodName='getIPListfromServices'), description='{param}'.format(param=serviceName), debug_module=True)

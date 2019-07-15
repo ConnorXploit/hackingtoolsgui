@@ -16,7 +16,7 @@ config = Config.getConfig(parentKey='modules', key='ht_crypter')
 class StartModule():
 
 	def __init__(self):
-		Logger.printMessage(message='ht_crypter loaded', debug_module=True)
+		Logger.printMessage(message='ht_crypter loaded', debug_core=True)
 		pass
 
 	def help(self):

@@ -7,7 +7,7 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 class StartModule():
 
 	def __init__(self):
-		Logger.printMessage(message='ht_metadata loaded', debug_module=True)
+		Logger.printMessage(message='ht_metadata loaded', debug_core=True)
 		pass
 
 	def help(self):

@@ -406,6 +406,7 @@ def __importModules__():
         for submod in modules[modu]:
             for files in modules[modu][submod]:
                 module_name = modules[modu][submod][files][0].split(".")[0]
+                Logger.printMessage(message='{category}'.format(category=submod), description=module_name, debug_module=True) 
                 module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
                 module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
                 try:

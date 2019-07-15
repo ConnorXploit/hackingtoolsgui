@@ -8,7 +8,7 @@ class StartModule():
 	cacheSearchInfo = []
 	
 	def __init__(self):
-		Logger.printMessage(message='ht_nmap loaded', debug_module=True)
+		Logger.printMessage(message='ht_nmap loaded', debug_core=True)
 		pass
 
 	def help(self):
