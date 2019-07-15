@@ -287,6 +287,31 @@
                     }
                 }
             }
+        },
+        "ht_nmap": {
+            "__gui_label__": "Scan for hosts",
+            "django_form_main_function": {
+                "ip": {
+                    "__id__": "ip",
+                    "__type__": "text",
+                    "__className__": "form-control",
+                    "label_desc": "Enter an IP range to scan",
+                    "required": true
+                },
+                "close": {
+                    "__id__": "close",
+                    "__type__": "button",
+                    "__className__": "btn btn-secondary",
+                    "value": "Close"
+                },
+                "submit": {
+                    "__id__": "getConnectedDevice_button",
+                    "__type__": "submit",
+                    "__className__": "btn btn-primary",
+                    "value": "Scan",
+                    "loading_text": "Scanning..."
+                }
+            }
         }
     },
     "core": {

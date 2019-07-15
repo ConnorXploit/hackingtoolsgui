@@ -21,4 +21,6 @@ urlpatterns = [
     # ht_shodan
     path('modules/ht_shodan/getIPListfromServices/', views.ht_shodan_getIPListfromServices, name="test_ht_shodan"),
     path('modules/ht_shodan/getIPListfromServices/', views.ht_shodan_getIPListfromServices, name="test_ht_shodan_getIPListfromServices"),
+    # ht_nmap
+    path('modules/ht_nmap/getConnectedDevices/', views.ht_nmap_getConnectedDevices, name="test_ht_nmap"),
 ]

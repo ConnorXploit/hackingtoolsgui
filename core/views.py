@@ -190,3 +190,17 @@ def ht_shodan_getIPListfromServices(request):
         return home(request=request)
 
 # End ht_shodan
+
+# ht_nmap
+
+def ht_nmap_getConnectedDevices(request):
+    if request.POST.get('ip'):
+        ip_to_scan = request.POST.get('ip')
+        nmap = ht.getModule('ht_nmap')
+        response_nmap = nmap.getConnectedDevices(ip=ip_to_scan)
+        resp_text = ','.join(response_nmap)
+        return home(request=request, popup_text=resp_text)
+    else:
+        return home(request=request)
+
+# End ht_nmap
