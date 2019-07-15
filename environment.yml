@@ -20,7 +20,7 @@ dependencies:
     - click-plugins==1.0.4
     - colorama==0.4.1
     - dis3==0.1.3
-    - django==2.2
+    - django
     - docutils==0.14
     - entrypoints==0.3
     - flask==1.0.2
@@ -50,8 +50,6 @@ dependencies:
     - pypdf2
     - python-nmap==0.6.1
     - pytz==2018.9
-    - pywin32==224
-    - pywin32-ctypes==0.2.0
     - readme-renderer==24.0
     - requests==2.21.0
     - requests-toolbelt==0.9.1
