@@ -2,53 +2,53 @@ from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.urls import reverse
-from .library import hackingtools
+from .library import hackingtools as ht
 from importlib import reload
 import os
 # Create your views here.
 
 def home(request, popup_text=''):
-    modules_and_params = hackingtools.getModulesJSON()
-    modules_forms = hackingtools.__getModulesDjangoForms__() # Corregir template config vacios
-    modules_forms_modal = hackingtools.__getModulesDjangoFormsModal__() # Corregir template config vacios
-    modules_config = hackingtools.getModulesConfig()
-    modules_config_treeview = hackingtools.__getModulesConfig_treeView__()
-    modules_functions_modals = hackingtools.getModulesModalTests()
-    modules_functions_calls_console_string = hackingtools.getModulesFunctionsCalls()
+    modules_and_params = ht.getModulesJSON()
+    modules_forms = ht.__getModulesDjangoForms__() # Corregir template config vacios
+    modules_forms_modal = ht.__getModulesDjangoFormsModal__() # Corregir template config vacios
+    modules_config = ht.getModulesConfig()
+    modules_config_treeview = ht.__getModulesConfig_treeView__()
+    modules_functions_modals = ht.getModulesModalTests()
+    modules_functions_calls_console_string = ht.getModulesFunctionsCalls()
     modules_all = {}
     categories = []
     for mod in modules_and_params:
         if not mod.split('.')[1] in categories:
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
-    modules_names = hackingtools.getModulesNames()
+    modules_names = ht.getModulesNames()
     return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_forms_modal':modules_forms_modal, 'modules_config':modules_config, 'console_command':modules_functions_calls_console_string, 'modules_config_treeview':modules_config_treeview, 'modules_functions_modals':modules_functions_modals, 'popup_text':popup_text })
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_cat = request.POST.get('category_name')
-    created = hackingtools.createModule(mod_name, mod_cat)
-    #reload(hackingtools) # NO SE ACTUALIZA
+    created = ht.createModule(mod_name, mod_cat)
+    #reload(ht) # NO SE ACTUALIZA
     if created:
-        modules_and_params = hackingtools.getModulesJSON()
+        modules_and_params = ht.getModulesJSON()
     return redirect(reverse('home'))
 
 def configModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
-    mod_conf = hackingtools.getModuleConfig(mod_name)
-    reload(hackingtools)
+    mod_conf = ht.getModuleConfig(mod_name)
+    reload(ht)
     return redirect('home')
 
 def createCategory(request):
     mod_cat = request.POST.get('category_name').replace(" ", "_").lower()
-    hackingtools.createCategory(mod_cat)
+    ht.createCategory(mod_cat)
     return redirect('home')
 
 def createScript(request):
     return redirect('home')
 
 def config_look_for_changes(request):
-    hackingtools.Config.__look_for_changes__()
+    ht.Config.__look_for_changes__()
     return redirect('home')
 
 # ht_crypter
@@ -57,7 +57,7 @@ def ht_crypter_encrypt(request):
         priv_key_k = request.POST.get('private_key_keynumber')
         priv_key_n = request.POST.get('private_key_keymod')
         text = request.POST.get('cipher_text')
-        crypter = hackingtools.getModule('ht_crypter')
+        crypter = ht.getModule('ht_crypter')
         crypted_text = crypter.encrypt(private_key=(int(priv_key_k), int(priv_key_n)), plaintext=text.encode())
         return home(request=request, popup_text=crypted_text)
     else:
@@ -68,7 +68,7 @@ def ht_crypter_decrypt(request):
         pub_key_k = request.POST.get('public_key_keynumber')
         pub_key_n = request.POST.get('public_key_keymod')
         text = request.POST.get('cipher_text')
-        crypter = hackingtools.getModule('ht_crypter')
+        crypter = ht.getModule('ht_crypter')
         decrypted_text = crypter.decrypt(public_key=(int(pub_key_k), int(pub_key_n)), ciphertext=text)
         return home(request=request, popup_text=decrypted_text)
     else:
@@ -78,7 +78,7 @@ def ht_crypter_getRandomKeypair(request):
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
-    crypter = hackingtools.getModule('ht_crypter')
+    crypter = ht.getModule('ht_crypter')
     keypair = (0, 0)
     if length:
         keypair = crypter.getRandomKeypair(int(length))
@@ -91,7 +91,7 @@ def ht_crypter_generate_keypair(request):
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
-        crypter = hackingtools.getModule('ht_crypter')
+        crypter = ht.getModule('ht_crypter')
         keypair = crypter.generate_keypair(int(prime_a), int(prime_b))
         if not isinstance(keypair, str):
             try: 
@@ -109,7 +109,7 @@ def ht_crypter_cryptFile(request):
             myfile = request.FILES['filename']
 
             # Get Crypter Module
-            crypter = hackingtools.getModule('ht_crypter')
+            crypter = ht.getModule('ht_crypter')
             crypter.clean_output_dir()
             
             location = os.path.join("core", "library", "hackingtools", "modules", "av_evasion", "crypter", "output")
@@ -182,7 +182,7 @@ def ht_shodan_getIPListfromServices(request):
         shodan_key = None
         if request.POST.get('shodanKeyString'):
             shodan_key = request.POST.get('shodanKeyString')
-        shodan = hackingtools.getModule('ht_shodan')
+        shodan = ht.getModule('ht_shodan')
         response_shodan = shodan.getIPListfromServices(serviceName=service_name, shodanKeyString=shodan_key)
         resp_text = ','.join(response_shodan)
         return home(request=request, popup_text=resp_text)

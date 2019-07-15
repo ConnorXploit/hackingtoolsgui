@@ -19,5 +19,6 @@ urlpatterns = [
     path('modules/ht_crypter/getRandomKeypair/', views.ht_crypter_getRandomKeypair, name="test_ht_crypter_getRandomKeypair"),
     path('modules/ht_crypter/generate_keypair/', views.ht_crypter_generate_keypair, name="test_ht_crypter_generate_keypair"),
     # ht_shodan
+    path('modules/ht_shodan/getIPListfromServices/', views.ht_shodan_getIPListfromServices, name="test_ht_shodan"),
     path('modules/ht_shodan/getIPListfromServices/', views.ht_shodan_getIPListfromServices, name="test_ht_shodan_getIPListfromServices"),
 ]
