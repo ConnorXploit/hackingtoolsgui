@@ -314,48 +314,49 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     m_form = module_form
     for m in m_form:
         temp_m_form = m_form
-        if '__type__' in temp_m_form[m] and '__id__' in temp_m_form[m] and '__className__' in temp_m_form[m]:
-            input_type = temp_m_form[m]['__type__']
-            input_id = temp_m_form[m]['__id__']
-            input_class = temp_m_form[m]['__className__']
-            input_placeholder = ''
-            loading_text = ''
-            if 'placeholder' in temp_m_form[m]:
-                input_placeholder = temp_m_form[m]['placeholder']
-            input_label_desc = ''
-            if 'label_desc' in temp_m_form[m]:
-                input_label_desc = temp_m_form[m]['label_desc']
-            input_value = ''
-            if 'value' in temp_m_form[m]:
-                input_value = temp_m_form[m]['value']
-            loading_text = ''
-            if 'loading_text' in temp_m_form[m]:
-                loading_text = temp_m_form[m]['loading_text']
-            required = ''
-            if 'required' in temp_m_form[m]:
-                required = 'required'
-            if input_type == 'file':
-                html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
-            elif input_type == 'checkbox':
-                html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
-            elif input_type == 'button':
-                footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
-            elif input_type == 'submit':
-                footer += "<input type=\"submit\" class=\"{className}\" value=\"{input_value}\" id=\"{id}\" />".format(className=input_class, input_value=input_value, id=input_id)
-                if loading_text:
-                    footer += "<script>$('#"
-                    footer += input_id
-                    footer += "').on('click', function(){$('#"
-                    footer += input_id
-                    footer += "').attr('value', '{loading_text}');".format(loading_text=loading_text)
-                    footer += "});</script>"
-            elif input_type == 'textarea':
-                if input_label_desc:
-                    html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea></div></div>".format(className=input_class, id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc)
+        if ('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m]:
+            if '__type__' in temp_m_form[m] and '__id__' in temp_m_form[m] and '__className__' in temp_m_form[m]:
+                input_type = temp_m_form[m]['__type__']
+                input_id = temp_m_form[m]['__id__']
+                input_class = temp_m_form[m]['__className__']
+                input_placeholder = ''
+                loading_text = ''
+                if 'placeholder' in temp_m_form[m]:
+                    input_placeholder = temp_m_form[m]['placeholder']
+                input_label_desc = ''
+                if 'label_desc' in temp_m_form[m]:
+                    input_label_desc = temp_m_form[m]['label_desc']
+                input_value = ''
+                if 'value' in temp_m_form[m]:
+                    input_value = temp_m_form[m]['value']
+                loading_text = ''
+                if 'loading_text' in temp_m_form[m]:
+                    loading_text = temp_m_form[m]['loading_text']
+                required = ''
+                if 'required' in temp_m_form[m]:
+                    required = 'required'
+                if input_type == 'file':
+                    html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
+                elif input_type == 'checkbox':
+                    html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
+                elif input_type == 'button':
+                    footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
+                elif input_type == 'submit':
+                    footer += "<input type=\"submit\" class=\"{className}\" value=\"{input_value}\" id=\"{id}\" />".format(className=input_class, input_value=input_value, id=input_id)
+                    if loading_text:
+                        footer += "<script>$('#"
+                        footer += input_id
+                        footer += "').on('click', function(){$('#"
+                        footer += input_id
+                        footer += "').attr('value', '{loading_text}');".format(loading_text=loading_text)
+                        footer += "});</script>"
+                elif input_type == 'textarea':
+                    if input_label_desc:
+                        html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea></div></div>".format(className=input_class, id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc)
+                    else:
+                        html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_class, id=input_id, placeholder=input_placeholder)
                 else:
-                    html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_class, id=input_id, placeholder=input_placeholder)
-            else:
-                html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" placeholder=\"{placeholder}\" name=\"{id}\" {required}/></div></div>".format(id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc, className=input_class, input_type=input_type, input_value=input_value, required=required)
+                    html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" placeholder=\"{placeholder}\" name=\"{id}\" {required}/></div></div>".format(id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc, className=input_class, input_type=input_type, input_value=input_value, required=required)
     footer += '</div>'
     html += footer
     html += '</div>'

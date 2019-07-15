@@ -107,7 +107,8 @@
                     "__id__": "compile_exe",
                     "__type__": "checkbox",
                     "__className__": "custom-control-input",
-                    "label_desc": "Compile to EXE"
+                    "label_desc": "Compile to EXE",
+                    "systems": ["nt"]
                 },
                 "close": {
                     "__id__": "close",

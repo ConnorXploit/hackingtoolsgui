@@ -13,7 +13,7 @@ docutils==0.14
 entrypoints==0.3
 Flask==1.0.2
 future==0.17.1
-hackingtools==0.9.911
+hackingtools==0.9.912
 httplib2==0.12.0
 idna==2.8
 isort==4.3.16
@@ -35,10 +35,9 @@ Pygments==2.3.1
 PyInstaller==3.4
 pylint==2.3.1
 pymetasploit==1.1
+pypdf2
 python-nmap==0.6.1
 pytz==2018.9
-pywin32==224
-pywin32-ctypes==0.2.0
 readme-renderer==24.0
 requests==2.21.0
 requests-toolbelt==0.9.1
