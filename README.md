@@ -13,6 +13,11 @@ First of all download this repository and be sure you have Python 3.7.X installe
 You can install the environment into your Anaconda Environment (automatically set's the name to "ht" in your environment):
 
 ```sh
+./install_gui.sh
+```
+Or:
+
+```sh
 conda env create -f=environment.yml
 ```
 
