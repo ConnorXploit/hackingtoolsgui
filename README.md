@@ -10,10 +10,10 @@ HackingTools is a recopilation of my own created modules in Python for automatin
 
 First of all download this repository and be sure you have Python 3.7.X installed and well configured in your PATH.
 
-You can install the environment into your Anaconda Environment:
+You can install the environment into your Anaconda Environment (automatically set's the name to "ht" in your environment):
 
 ```sh
-conda env create -f=environments.yml
+conda env create -f=environment.yml
 ```
 
 Or install requirements.txt with pip:
@@ -28,6 +28,11 @@ If you have created a Virtual Environment for this project, you have to activate
 
 ```sh
 $ activate envname
+```
+In case you have installed it with the environment.yml file, you could use:
+
+```sh
+$ activate ht
 ```
 
 And now we can start the Django project:
