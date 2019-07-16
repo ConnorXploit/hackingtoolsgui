@@ -1,4 +1,4 @@
-name: hackingtoolsguienv
+name: ht
 channels:
   - defaults
 dependencies:
