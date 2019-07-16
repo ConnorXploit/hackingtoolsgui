@@ -13,7 +13,7 @@ First of all download this repository and be sure you have Python 3.7.X installe
 You can install the environment into your Anaconda Environment:
 
 ```sh
-conda env create --name envname -f=environments.yml
+conda env create -f=environments.yml
 ```
 
 Or install requirements.txt with pip:
