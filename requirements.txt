@@ -35,9 +35,11 @@ Pygments==2.3.1
 PyInstaller==3.4
 pylint==2.3.1
 pymetasploit==1.1
-pypdf2
+PyPDF2==1.26.0
 python-nmap==0.6.1
 pytz==2018.9
+pywin32==224
+pywin32-ctypes==0.2.0
 readme-renderer==24.0
 requests==2.21.0
 requests-toolbelt==0.9.1

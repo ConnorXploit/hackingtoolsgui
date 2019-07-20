@@ -51,34 +51,34 @@ def config_look_for_changes(request):
     ht.Config.__look_for_changes__()
     return redirect('home')
 
-# ht_crypter
-def ht_crypter_encrypt(request):
+# ht_rsa
+def ht_rsa_encrypt(request):
     if request.POST.get('private_key_keynumber') and request.POST.get('private_key_keymod') and request.POST.get('cipher_text'):
         priv_key_k = request.POST.get('private_key_keynumber')
         priv_key_n = request.POST.get('private_key_keymod')
         text = request.POST.get('cipher_text')
-        crypter = ht.getModule('ht_crypter')
+        crypter = ht.getModule('ht_rsa')
         crypted_text = crypter.encrypt(private_key=(int(priv_key_k), int(priv_key_n)), plaintext=text.encode())
         return home(request=request, popup_text=crypted_text)
     else:
         return home(request=request)
 
-def ht_crypter_decrypt(request):
+def ht_rsa_decrypt(request):
     if request.POST.get('public_key_keynumber') and request.POST.get('public_key_keymod') and request.POST.get('cipher_text'):
         pub_key_k = request.POST.get('public_key_keynumber')
         pub_key_n = request.POST.get('public_key_keymod')
         text = request.POST.get('cipher_text')
-        crypter = ht.getModule('ht_crypter')
+        crypter = ht.getModule('ht_rsa')
         decrypted_text = crypter.decrypt(public_key=(int(pub_key_k), int(pub_key_n)), ciphertext=text)
         return home(request=request, popup_text=decrypted_text)
     else:
         return home(request=request)
 
-def ht_crypter_getRandomKeypair(request):
+def ht_rsa_getRandomKeypair(request):
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
-    crypter = ht.getModule('ht_crypter')
+    crypter = ht.getModule('ht_rsa')
     keypair = (0, 0)
     if length:
         keypair = crypter.getRandomKeypair(int(length))
@@ -87,11 +87,11 @@ def ht_crypter_getRandomKeypair(request):
     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
     return home(request=request, popup_text=keypair)
 
-def ht_crypter_generate_keypair(request):
+def ht_rsa_generate_keypair(request):
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
-        crypter = ht.getModule('ht_crypter')
+        crypter = ht.getModule('ht_rsa')
         keypair = crypter.generate_keypair(int(prime_a), int(prime_b))
         if not isinstance(keypair, str):
             try: 
@@ -102,6 +102,9 @@ def ht_crypter_generate_keypair(request):
     else:
         return home(request=request)
 
+# End ht_rsa
+
+# ht_crypter
 def ht_crypter_cryptFile(request):
     if len(request.FILES) != 0:
         if request.FILES['filename']:

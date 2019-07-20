@@ -109,8 +109,6 @@
         },
         "ht_crypter": {
             "__gui_label__": "File Crypter",
-            "bad_identical_prime": "Both numbers must be prime",
-            "p_q_equal_error": "p and q cannot be equal",
             "pyinstaller": "pyinstaller -F -w --clean --noconsole --specpath {path}",
             "error_encrypt": "Something went wrong",
             "django_form_main_function": {
@@ -155,10 +153,16 @@
                     "value": "Crypt File",
                     "loading_text": "Crypting..."
                 }
-            },
+            }
+        },
+        "ht_rsa": {
+            "__gui_label__": "RSA Cypher",
+            "bad_identical_prime": "Both numbers must be prime",
+            "p_q_equal_error": "p and q cannot be equal",
+            "error_encrypt": "Something went wrong",
             "django_form_module_function": {
                 "encrypt": {
-                    "__function__": "test_ht_crypter_encrypt",
+                    "__function__": "test_ht_rsa_encrypt",
                     "__return__": "text",
                     "private_key_keynumber": {
                         "__id__": "private_key_keynumber",
@@ -195,7 +199,7 @@
                     }
                 },
                 "decrypt": {
-                    "__function__": "test_ht_crypter_decrypt",
+                    "__function__": "test_ht_rsa_decrypt",
                     "__return__": "text",
                     "public_key_keynumber": {
                         "__id__": "public_key_keynumber",
@@ -222,7 +226,7 @@
                     }
                 },
                 "generate_keypair": {
-                    "__function__": "test_ht_crypter_generate_keypair",
+                    "__function__": "test_ht_rsa_generate_keypair",
                     "__return__": "text",
                     "prime_a": {
                         "__id__": "prime_a",
@@ -242,7 +246,7 @@
                     }
                 },
                 "getRandomKeypair": {
-                    "__function__": "test_ht_crypter_getRandomKeypair",
+                    "__function__": "test_ht_rsa_getRandomKeypair",
                     "__return__": "text",
                     "prime_length": {
                         "__id__": "prime_length",

@@ -14,10 +14,11 @@ urlpatterns = [
     # Modules URLs
     # ht_crypter
     path('modules/ht_crypter/cryptfile/', views.ht_crypter_cryptFile, name="test_ht_crypter"),
-    path('modules/ht_crypter/encrypt/', views.ht_crypter_encrypt, name="test_ht_crypter_encrypt"),
-    path('modules/ht_crypter/decrypt/', views.ht_crypter_decrypt, name="test_ht_crypter_decrypt"),
-    path('modules/ht_crypter/getRandomKeypair/', views.ht_crypter_getRandomKeypair, name="test_ht_crypter_getRandomKeypair"),
-    path('modules/ht_crypter/generate_keypair/', views.ht_crypter_generate_keypair, name="test_ht_crypter_generate_keypair"),
+    # ht_rsa
+    path('modules/ht_rsa/encrypt/', views.ht_rsa_encrypt, name="test_ht_rsa_encrypt"),
+    path('modules/ht_rsa/decrypt/', views.ht_rsa_decrypt, name="test_ht_rsa_decrypt"),
+    path('modules/ht_rsa/getRandomKeypair/', views.ht_rsa_getRandomKeypair, name="test_ht_rsa_getRandomKeypair"),
+    path('modules/ht_rsa/generate_keypair/', views.ht_rsa_generate_keypair, name="test_ht_rsa_generate_keypair"),
     # ht_shodan
     path('modules/ht_shodan/getIPListfromServices/', views.ht_shodan_getIPListfromServices, name="test_ht_shodan"),
     path('modules/ht_shodan/getIPListfromServices/', views.ht_shodan_getIPListfromServices, name="test_ht_shodan_getIPListfromServices"),
