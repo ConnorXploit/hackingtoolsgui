@@ -172,6 +172,7 @@ def ht_crypter_cryptFile(request):
                         os.remove(crypted_file)
             else:
                 print('No se ha guardado correctamente')
+            return redirect(reverse('home'))
 
     return redirect(reverse('home'))
 
