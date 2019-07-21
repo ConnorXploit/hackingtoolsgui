@@ -5,6 +5,7 @@ from django.urls import reverse
 from .library import hackingtools as ht
 from importlib import reload
 import os
+import json
 # Create your views here.
 
 def home(request, popup_text=''):
@@ -208,3 +209,28 @@ def ht_nmap_getConnectedDevices(request):
         return home(request=request)
 
 # End ht_nmap
+
+# ht_metadta
+
+def ht_metadata_get_metadata_exif(request):
+    if len(request.FILES) != 0:
+        if request.FILES['image_file']:
+            # Get file
+            myfile = request.FILES['image_file']
+            # Get Crypter Module
+            metadata = ht.getModule('ht_metadata')
+            
+            location = os.path.join("core", "library", "hackingtools", "modules", "forensic", "metadata", "output")
+            fs = FileSystemStorage(location=location)
+
+            # Save file
+            filename = fs.save(myfile.name, myfile)
+            uploaded_file_url = os.path.join(location, filename)
+
+            data = metadata.get_pdf_exif(uploaded_file_url)
+
+            print(str(json.dumps(data)))
+
+            return home(request=request, popup_text=str(json.dumps(data)))
+    else:
+        return home(request=request)
