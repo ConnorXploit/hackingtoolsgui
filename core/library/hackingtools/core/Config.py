@@ -5,16 +5,28 @@ global config
 config = {}
 
 def __readConfig__():
+    """
+    Read's all the configuration included in your config.json file
+    """
     global config
     config = {}
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
         config = json.load(json_data_file)
 
 def __save_config__(new_conf):
+    """
+    Save configuration passed as parameter to this function.
+    This, writes into your config.json
+    """
     with open(os.path.join(os.path.dirname(__file__) , 'config.json'), 'w', encoding='utf8') as outfile:  
         json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
 def __createModuleTemplateConfig__(module_name):
+    """
+    This function creates into config.json a template for auto-creating a simple config for trying in your GUI your functions.
+    You would see in configuration file a new ht_yourmodulename key with some more data inside it.
+    They are necesary when using the framework GUI for trying the functions.
+    """
     global config
     config_tmp = {}
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
@@ -58,6 +70,10 @@ def __createModuleTemplateConfig__(module_name):
     __save_config__(config_tmp)
 
 def __look_for_changes__():
+    """
+    Reloads the configuration loaded.
+    Return: True/False
+    """
     import json
 
     global config
@@ -71,6 +87,12 @@ def __look_for_changes__():
     return False
 
 def getConfig(parentKey, key, subkey=None, extrasubkey=None):
+    """
+    Returns the configuration of some key values you explicitly tell on params
+    First param gets the first parent key in the json. In this case, "modules" or "core", for example.
+    The second param, could be for getting a module configuration. For example, "ht_shodan".
+    Return: JSON Object
+    """
     try:
         if extrasubkey:
             try:
@@ -95,6 +117,11 @@ def getConfig(parentKey, key, subkey=None, extrasubkey=None):
         return
 
 def getApiKey(apiName):
+    """
+    Return an API Key registered into configuration.
+    Param apiName: The API Key name into config.json
+    Return: JSON Object / String Error
+    """
     try:
         return config['core']['__API_KEY__'][apiName]
     except:

