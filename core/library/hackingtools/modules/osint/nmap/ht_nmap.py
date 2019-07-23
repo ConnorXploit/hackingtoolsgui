@@ -12,9 +12,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		functions = ht.getFunctionsNamesFromModule('ht_nmap')
-		Logger.printMessage(message=functions)
-		return functions
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_nmap'))
 
 	def saveCacheSearchInfo(self, activate=False):
 		pass

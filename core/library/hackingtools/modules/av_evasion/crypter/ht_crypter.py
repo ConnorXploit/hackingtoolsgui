@@ -20,9 +20,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		functions = ht.getFunctionsNamesFromModule('ht_crypter')
-		Logger.printMessage(message=functions)
-		return functions
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_crypter'))
 
 	def getMalwareData(self, fileName):
 		"""
@@ -200,7 +198,6 @@ if os.path.exists(drpnm):
 		Param is_iterating: is used internally for knowing where the bucle is.
 		Param iterate_count: is used internally for knowing where the bucle is.
 		Param is_last: is used internally for knowing where the bucle is.
-
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='crypt_file'), description='{filename}'.format(filename=filename), debug_module=True)
 		temp_filename = filename

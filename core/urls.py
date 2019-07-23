@@ -24,6 +24,7 @@ urlpatterns = [
     path('modules/ht_shodan/getIPListfromServices/', views.ht_shodan_getIPListfromServices, name="test_ht_shodan_getIPListfromServices"),
     # ht_nmap
     path('modules/ht_nmap/getConnectedDevices/', views.ht_nmap_getConnectedDevices, name="test_ht_nmap"),
+    path('modules/ht_nmap/getConnectedDevices/', views.ht_nmap_getConnectedDevices, name="test_ht_nmap_getConnectedDevices"),
     # ht_metadata
     path('modules/ht_metadata/get_image_exif/', views.ht_metadata_get_metadata_exif, name="test_ht_metadata_get_image_exif"),
 ]

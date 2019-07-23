@@ -184,7 +184,6 @@ def getModule(moduleName):
     for m in modules_loaded:
         if moduleName in m:
             sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
-            print(sentence)
             return eval(sentence)
     Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log'.format(mod=moduleName), debug_module=True, is_error=True)
 

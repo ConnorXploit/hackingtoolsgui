@@ -12,9 +12,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		functions = ht.getFunctionsNamesFromModule('ht_rsa')
-		Logger.printMessage(message=functions)
-		return functions
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_rsa'))
 
 	def generate_keypair(self, prime_a, prime_b):
 		if not (self.__is_prime__(int(prime_a)) and self.__is_prime__(int(prime_b))):
