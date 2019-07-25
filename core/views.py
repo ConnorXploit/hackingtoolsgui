@@ -6,6 +6,7 @@ from .library import hackingtools as ht
 from importlib import reload
 import os
 import json
+
 # Create your views here.
 
 def home(request, popup_text=''):

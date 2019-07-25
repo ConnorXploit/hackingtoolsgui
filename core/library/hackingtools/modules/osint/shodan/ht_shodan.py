@@ -14,8 +14,8 @@ class StartModule():
         self.settingApi()
 
     def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_shodan'))
-
+        Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_shodan'))
+        
     def settingApi(self, shodanKeyString=None):
         try:
             if not shodanKeyString:

@@ -2,11 +2,36 @@
 {% load static %}
 {% block content %}
     {% if popup_text %}
-      <script>
-        if(prompt("¿Copy to clipboard?", '{{popup_text}}')){
-          navigator.clipboard.writeText('{{popup_text|safe}}');
+      <script type="text/javascript">
+        $(window).on('load',function(){
+          $('#popup').modal('show');
+        });
+        function copyToClipboard() {
+          var copyText = document.getElementById("popup_textarea");
+          copyText.select();
+          document.execCommand("copy");
+          $('#popup').modal('hide');
         }
       </script>
+      <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="testModuleLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="testModuleLabel">Response:</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <textarea id="popup_textarea" class="form-control">{{popup_text|safe}}</textarea>
+            </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="button" class="btn btn-primary" value="Copy to the clipboard" onclick="copyToClipboard()"></button>
+              </div>
+          </div>
+        </div>
+      </div>
     {% endif %}
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">

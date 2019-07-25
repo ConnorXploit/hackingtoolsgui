@@ -25,8 +25,8 @@ class StartModule():
         pass
     
     def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_sqlinjection'))
-
+        Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_sqlinjection'))
+        
     def setParams(self, url, param_focus, cookie='', proxies='', submit_name='', security=''):
         self.url = url
         self.cookie_session = cookie
