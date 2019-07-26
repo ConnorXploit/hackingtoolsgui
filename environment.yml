@@ -25,7 +25,7 @@ dependencies:
     - django==2.2
     - flask==1.0.2
     - future==0.17.1
-    - hackingtools==0.9.918
+    - hackingtools==0.9.919
     - httplib2==0.12.0
     - idna==2.8
     - isort==4.3.16

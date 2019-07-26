@@ -6,7 +6,6 @@ import base64
 config = Config.getConfig(parentKey='modules', key='ht_rsa')
 
 class StartModule():
-
 	'''How to use:
 
 	prime_a, prime_b = self.getRandomKeypair()
@@ -87,8 +86,9 @@ class StartModule():
 			mensajeBase64 = Utils.hexToBase64(mensajeHex)
 			mensajeFinalBase64 = Utils.joinBase64(mensajeBase64)
 			return mensajeFinalBase64.decode("utf-8")
-		except:
-			return config['error_encrypt']
+		except Exception as e:
+			Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg}'.format(msg=e), debug_error=True)
+			return
 
 	def decrypt(self, public_key, ciphertext):
 		Logger.printMessage(message='{methodName}'.format(methodName='decrypt'), description='{public_key}'.format(public_key=public_key), debug_module=True)

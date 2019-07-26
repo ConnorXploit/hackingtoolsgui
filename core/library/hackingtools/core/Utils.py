@@ -7,14 +7,12 @@ import base64
 # File Manipulation
 def getFileContentInByteArray(filePath):
     """Function that returns a ByteArray with the data from a file
-
-    Parameters
-    ----------
-        filePath = String
-
-    Return
-    ----------
-        ByteArray/None
+    
+    Arguments:
+        filePath {String} -- The Path of the file and the file name
+    
+    Returns:
+        byteArray -- The content of the file / None
     """
     try:
         Logger.printMessage(message='{methodName}'.format(methodName='getFileInByteArray'), description='{filePath}'.format(filePath=filePath), debug_core=True)
@@ -28,15 +26,13 @@ def getFileContentInByteArray(filePath):
 
 def saveToFile(content, fileName):
     """Saves a new file with a Byte Array and a fileName
-
-    Parameters
-    ----------
-        content = ByteArray
-        fileName = String
-
-    Return
-    ----------
-        boolean (True/False)
+    
+    Arguments:
+        content {byteArray} -- The content we want to write into the file
+        fileName {String} -- The file name
+    
+    Returns:
+        boolean -- If saved True, else False
     """
     try:
         Logger.printMessage(message='{methodName}'.format(methodName='saveToFile'), description='{filename}'.format(filename=fileName), debug_core=True)
@@ -50,35 +46,31 @@ def saveToFile(content, fileName):
 
 # Maths
 def euclides(a, b):
-    '''Euclid's algorithm for determining the greatest common divisor
+    """Euclid's algorithm for determining the greatest common divisor
     Use iteration to make it faster for larger integers
-
-    Parameters
-    ----------
-        a = int
-        b = int
-
-    Return
-    ----------
-        int
-    '''
+    
+    Arguments:
+        a {integer} -- Value 1 to use in euclides
+        b {integer} -- Value 2 to use in euclides
+    
+    Returns:
+        integer -- Euclides of a and b
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='euclides'), description='{a} - {b}'.format(a=a, b=b), debug_core=True)
     while b != 0:
         a, b = b, a % b
     return a
 
 def multiplicativeInverse(e, phi):
-    '''Euclid's extended algorithm for finding the multiplicative inverse of two numbers
-
-    Parameters
-    ----------
-        e = int
-        phi = int
-
-    Return
-    ----------
-        int
-    '''
+    """Euclid's extended algorithm for finding the multiplicative inverse of two numbers
+    
+    Arguments:
+        e {integer} -- Euclides value
+        phi {integer} -- Phi value
+    
+    Returns:
+        integer -- The inverse multiplicative of e and phi
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='multiplicativeInverse'), description='{e} - {phi}'.format(e=e, phi=phi), debug_core=True)
     # See: http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
     def eea(a,b):
@@ -92,17 +84,14 @@ def multiplicativeInverse(e, phi):
     return inv
 
 def isPrime(number):
-    '''Tests to see if a number is prime.
-
-    Parameters
-    ----------
-        e = int
-        phi = int
-
-    Return
-    ----------
-        boolean (True/False)
-    '''
+    """Tests to see if a number is prime.
+    
+    Arguments:
+        number {integer} -- The number to test if is a prime number
+    
+    Returns:
+        boolean -- If is prime True, else False
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='isPrime'), description='{n}'.format(n=number), debug_core=True)
     excepted = (0, 2, 4, 5, 6, 8)
     if not int(str(number)[-1]) in excepted:
@@ -128,16 +117,14 @@ def isPrime(number):
             return True
 
 def getRandomPrimeByLength(length = 8):
-    '''Returns a random prime number with the length you choose
-
-    Parameters
-    ----------
-        length = int
-
-    Return
-    ----------
-        int (-1 if error)
-    '''
+    """Returns a random prime number with the length you choose
+    
+    Keyword Arguments:
+        length {integer} -- The length of the number we want (default: {8})
+    
+    Returns:
+        integer -- A random prime number with the length you specified / -1
+    """
     try:
         length = int(length)
     except:
@@ -152,114 +139,98 @@ def getRandomPrimeByLength(length = 8):
 
 # Text Treatment
 def textToAscii(content):
-    '''Transform text in String to ASCII Array
-
-    Parameters
-    ----------
-        content = String
-
-    Return
-    ----------
-        Array
-    '''
+    """Transform text in String to ASCII Array
+    
+    Arguments:
+        content {String} -- The String content we want to transform into ASCII Array
+    
+    Returns:
+        Array -- The content String transformed into an Array in ASCII
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='textToAscii'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return [ord(pal) for pal in content]
 
 def asciiToHex(content):
-    '''Transform ASCII Array to Hex Array
-
-    Parameters
-    ----------
-        content = Array
-
-    Return
-    ----------
-        Array
-    '''
+    """Transform ASCII Array to Hex Array
+    
+    Arguments:
+        content {Array} -- An Array with some content in ASCII for transforming into Hex Array
+    
+    Returns:
+        Array -- The content ASCII Array transformed into an Hex Array
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='AsciiToHex'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return [hex(n)[2:] for n in content]
 
 def hexToBase64(content):
-    '''Transform Hex Array to Base64 Array
-
-    Parameters
-    ----------
-        content = Array
-
-    Return
-    ----------
-        Array
-    '''
+    """Transform Hex Array to Base64 Array
+    
+    Arguments:
+        content {Array} -- An Array with some content in Hex for transforming into Base64 Array
+    
+    Returns:
+        Array -- The content transformed into an Base64 Array
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='HexToBase64'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return [base64.b64encode(n.encode()) for n in content]
 
 def joinBase64(content):
-    '''Transform Base64 Array to String
-
-    Parameters
-    ----------
-        content = Array
-
-    Return
-    ----------
-        String
-    '''
+    """Transform Base64 Array to String
+    
+    Arguments:
+        content {Array} -- An Array with some content in Base64 for transforming into a String
+    
+    Returns:
+        String -- The content Base64 Array joined and transformed from Base64 decoded and encoded to String
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='joinBase64'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return (''.join([content[i].decode('utf-8') for i in range(0, len(content))])).encode()
 
 def asciiToBase64(content):
-    '''Transform ASCII String to Base64 Array
-
-    Parameters
-    ----------
-        content = String
-
-    Return
-    ----------
-        Array
-    '''
+    """Transform ASCII String to Base64 Array
+    
+    Arguments:
+        content {String} -- A String with some content in ASCII for transforming into a Base64 Array
+    
+    Returns:
+        Array -- The content in ASCII String transformed into a Base64 Array
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='asciiToBase64'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return [content[i:i+4] for i in range(0, len(content), 4)]
 
 def base64ToHex(content):
-    '''Transform Base64 Array to Hex Array
-
-    Parameters
-    ----------
-        content = Array
-
-    Return
-    ----------
-        Array
-    '''
+    """Transform Base64 Array to Hex Array
+    
+    Arguments:
+        content {Array} -- The content in a Base64 Array to transform into an Hex Array
+    
+    Returns:
+        Array -- The content in Base64 Array transformed into an Hex Array
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='base64ToHex'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return [base64.b64decode(b64) for b64 in content]
 
 def hexToDecimal(content):
-    '''Transform Hex Array to Decimal Array
-
-    Parameters
-    ----------
-        content = Array
-
-    Return
-    ----------
-        Array
-    '''
+    """Transform Hex Array to Decimal Array
+    
+    Arguments:
+        content {Array} -- The content in an Hex Array to transform to a Decimal Array
+    
+    Returns:
+        Array -- The content in an Hex Array transformed into a Decimal Array
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='hexToDecimal'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return [int(hexa.decode("UTF-8"), 16) for hexa in content]
 
 def decimalToAscii(content):
-    '''Transform Decimal Array to ASCII String
-
-    Parameters
-    ----------
-        content = Array
-
-    Return
-    ----------
-        Array
-    '''
+    """Transform Decimal Array to ASCII String
+    
+    Arguments:
+        content {Array} -- The content in a Decimal Array to transform to an ASCII String
+    
+    Returns:
+        String -- The content in a Decimal Array transformed to an ASCII String
+    """
     Logger.printMessage(message='{methodName}'.format(methodName='decimalToAscii'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return ''.join([chr(dec) for dec in content])
 

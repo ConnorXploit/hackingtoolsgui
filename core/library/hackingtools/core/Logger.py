@@ -24,29 +24,34 @@ if config['clear_on_load']:
     print(colorama.ansi.clear_screen()) # Clear Screen Code
 
 def setDebugCore(on=True):
-    """
-    Function for establising DEBUG_CORE_FLAG to True/False
+    """Function for establising DEBUG_CORE_FLAG to True/False
+    
+    Keyword Arguments:
+        on {boolean} -- Set's True or False the Debug messages for Core Logger calls (default: {True})
     """
     global DEBUG_CORE_FLAG
     DEBUG_CORE_FLAG = on
 
 def setDebugModule(on=True):
-    """
-    Funcion for establising DEBUG_MODULE_FLAG to True/False
+    """Function for establising DEBUG_MODULE_FLAG to True/False
+    
+    Keyword Arguments:
+        on {boolean} -- Set's True or False the Debug messages for Module Logger calls (default: {True})
     """
     global DEBUG_MODULE_FLAG
     DEBUG_MODULE_FLAG = on
 
 def setDebug(on=True):
-    """
-    Funcion for establising DEBUG_USER to True/False
+    """Function for establising DEBUG_USER to True/False
+    
+    Keyword Arguments:
+        on {boolean} -- Set's True or False the Debug messages for User Logger calls (default: {True})
     """
     global DEBUG_USER
     DEBUG_USER = on
 
 def saveLog():
-    """
-    Creates a file with the log created by the library since loaded last time.
+    """Creates a file with the log created by the library since loaded last time.
     Output format can be changed into config.json
     """
     time_now = datetime.utcnow().strftime(config['log_save_date_format'])[:-3]
@@ -55,15 +60,17 @@ def saveLog():
             f.write("{log}\n".format(log=log))
 
 def printMessage(message, description=None, debug_module=False, debug_core=False, is_error=False, color=None):
-    """
-    Funcion para imprimir mensajes en consola con estilos, tiempo, funcion de llamada, etc.
-    This function a pretty message in console. The colors can be changed in config.json.
-    The main param is the message.
-    Param description, would have a second part in message with different color.
-    Param debug_module, tells to the core that a message is from a module and depeding the config.json, it would be shown or not.
-    Param debug_core, tells to the core that a message is from itself and depeding the config.json, it would be shown or not.
-    Param is_error, tells if is an error message. In that case, it would be shown in another color for been easy to see at console. If is error, it doesn't matter if anything is banned in config.json for not been shown from module or core.
-    Param color, can change the color of the message would be shown.
+    """This function prints a pretty message in console. The colors can be changed in config.json
+    
+    Arguments:
+        message {String} -- The main message you want to show on console log
+    
+    Keyword Arguments:
+        description {String} -- The description of the message you are showing (default: {None})
+        debug_module {bool} -- Tell's if the message is been called from a module (default: {False})
+        debug_core {bool} -- Tell's if the message is been called from any core file (default: {False})
+        is_error {bool} -- For showing in other color because been an error (default: {False})
+        color {[type]} -- A color for showing with other color (default: {None})
     """
     filename = inspect.stack()[1].filename
     methodName = inspect.stack()[1].function
