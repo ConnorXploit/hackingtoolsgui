@@ -405,7 +405,7 @@
             "function_name_starts_with_modules": "__",
             "function_param_exclude": "self",
             "default_class_name_for_all": "StartModule",
-            "default_template_modules_ht": "from hackingtools.core import Logger\nimport hackingtools as ht\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tLogger.printMessage(message='ht_{moduleName} loaded', debug_module=True)\n\t\tpass\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'))"
+            "default_template_modules_ht": "from hackingtools.core import Logger, Utils, Config\nimport hackingtools as ht\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tLogger.printMessage(message='ht_{moduleName} loaded', debug_module=True)\n\t\tpass\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'))"
         },
         "utilities": {
             "resources_cryptography_rest_api": {
