@@ -4,6 +4,8 @@ import json
 from hackingtools.core import Logger, Config
 config = Config.getConfig(parentKey='modules', key='ht_shodan')
 import hackingtools as ht
+import time
+from colorama import init, Fore
 
 class StartModule():
 
@@ -77,11 +79,11 @@ class StartModule():
             return []
 
     def shodan_search_host(self, ip):
+        res = {}
         try:
             Logger.printMessage(message='{methodName}'.format(methodName='shodan_search_host'), description='{param}'.format(param=ip), debug_module=True)
             host = self.api.host(ip)
 
-            res = {}
             interesting_data = config['scan_interesting_data_keys']
 
             for posibe_data in interesting_data:
@@ -106,8 +108,9 @@ class StartModule():
                         pass
 
         except Exception as e:
-            Logger.printMessage(message='Error: {0}'.format(e), debug_module=True)
-            res = "***{errormsg} {ip}.***".format(errormsg=config['error_ip_no_exists'], ip=ip)
+            Logger.printMessage(message='Warning: {0}... Retrying in 0,5 seconds...'.format(e), color=Fore.YELLOW)
+            time.sleep(0.4)
+            return self.shodan_search_host(ip)
         return res
 
     def getSSLCerts(self, ip):

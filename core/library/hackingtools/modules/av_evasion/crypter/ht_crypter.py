@@ -66,16 +66,8 @@ class StartModule():
 			shutil.rmtree(output_dir)
 
 	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, is_iterating=False, is_last=False, convert=False):
-		"""Create's the stub for the crypter and has some courious params he have to see:
-		Param crypto_data_hex: Byte Array
-		Param public_key: (x, y)
-		Param drop_file_name: String
-		Param save_name: String
-		Param is_iterating: True/False
-		Param is_last: True/False
-		Param convert: True/False
 		"""
-		"""Create's the stub for the crypter and has some courious params he have to see
+		Create's the stub for the crypter and has some courious params he have to see
 		
 		Arguments:
 			crypto_data_hex {String} -- File path that want to crypt
