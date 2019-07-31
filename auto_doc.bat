@@ -1,0 +1,15 @@
+pycco core\views.py -p
+pycco core\urls.py -p
+pycco core\library\hackingtools\__init__.py -p
+pycco core\library\hackingtools\core\Config.py -p
+pycco core\library\hackingtools\core\Logger.py -p
+pycco core\library\hackingtools\core\Objects.py -p
+pycco core\library\hackingtools\core\Utils.py -p
+pycco core\library\hackingtools\modules\av_evasion\crypter\ht_crypter.py -p
+pycco core\library\hackingtools\modules\crypto\rsa\ht_rsa.py -p
+pycco core\library\hackingtools\modules\forensic\metadata\ht_metadata.py -p
+pycco core\library\hackingtools\modules\malware\rat\ht_rat.py -p
+pycco core\library\hackingtools\modules\osint\instagram\ht_instagram.py -p
+pycco core\library\hackingtools\modules\osint\nmap\ht_nmap.py -p
+pycco core\library\hackingtools\modules\osint\shodan\ht_shodan.py -p
+pycco core\library\hackingtools\modules\web\sqlinjection\ht_sqlinjection.py -p

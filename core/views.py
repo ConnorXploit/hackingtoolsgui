@@ -235,3 +235,5 @@ def ht_metadata_get_metadata_exif(request):
             return home(request=request, popup_text=str(json.dumps(data)))
     else:
         return home(request=request)
+
+

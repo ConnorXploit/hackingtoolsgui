@@ -30,8 +30,10 @@ default_template_modules_ht = config['default_template_modules_ht']
 
 package = config['package_name']
 
+# === getModulesJSON ===
 def getModulesJSON():
-    '''Returns an Array with the modules loaded
+    """
+    Returns an Array with the modules loaded
 
     Parameters
     ----------
@@ -40,7 +42,7 @@ def getModulesJSON():
     Return
     ----------
         Array
-    '''
+    """
     conf = {}
     for mod in modules_loaded:
         if isinstance(modules_loaded[mod], str):
@@ -51,7 +53,7 @@ def getModulesJSON():
     return modules_loaded
 
 def getFunctionsNamesFromModule(module_name):
-    '''Returns an Array with the functions of a module you choose
+    """Returns an Array with the functions of a module you choose
 
     Parameters
     ----------
@@ -60,7 +62,7 @@ def getFunctionsNamesFromModule(module_name):
     Return
     ----------
         Array
-    '''
+    """
     try:
         for mod in modules_loaded:
             if module_name in mod and not isinstance(modules_loaded[mod], str):
@@ -72,7 +74,7 @@ def getFunctionsNamesFromModule(module_name):
         return []
 
 def getModulesCalls():
-    '''Return an Array with the modules calls you can write for importing directly a module.
+    """Return an Array with the modules calls you can write for importing directly a module.
     Also, it logs into your console the calls formated for well reading.
 
     Parameters
@@ -82,7 +84,7 @@ def getModulesCalls():
     Return
     ----------
         Array
-    '''
+    """
     Logger.printMessage('Modules :', debug_module=True)
     modulesCalls = []
     for mods in getModules():
@@ -91,7 +93,7 @@ def getModulesCalls():
     return modulesCalls
 
 def getModulesFunctionsCalls():
-    '''Return's an Array with modules name as keys and inside it's values, 
+    """Return's an Array with modules name as keys and inside it's values, 
     the key are the functions call names with a value of a template for 
     initialaizing and calling that function
 
@@ -102,7 +104,7 @@ def getModulesFunctionsCalls():
     Return
     ----------
         Array
-    '''
+    """
     modulesCalls = {}
     header = 'import hackingtools as ht\n\nht_mod = ht.getModule("{module_name}")\nmod_result = ht_mod.{module_function}({module_function_params})\n\nprint(mod_result)'
     for module in modules_loaded:
@@ -117,7 +119,7 @@ def getModulesFunctionsCalls():
     return modulesCalls
 
 def getModulesNames():
-    '''Return's an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)
+    """Return's an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)
 
     Parameters
     ----------
@@ -126,14 +128,14 @@ def getModulesNames():
     Return
     ----------
         Array
-    '''
+    """
     modules_names = []
     for tools in modules_loaded:
         modules_names.append(tools.split('.')[-1])
     return modules_names
 
 def getModulesGuiNames():
-    '''Return's an Array with the Label for GUI for that module
+    """Return's an Array with the Label for GUI for that module
 
     Parameters
     ----------
@@ -142,7 +144,7 @@ def getModulesGuiNames():
     Return
     ----------
         Array
-    '''
+    """
     names = []
     for tool in getModulesNames():
         label = Config.getConfig(parentKey='modules', key=tool, subkey='__gui_label__')
@@ -151,7 +153,7 @@ def getModulesGuiNames():
     return names
 
 def getModulesFullConfig():
-    '''Return's an Array with all the config of all modules loaded
+    """Return's an Array with all the config of all modules loaded
 
     Parameters
     ----------
@@ -160,7 +162,7 @@ def getModulesFullConfig():
     Return
     ----------
         Array
-    '''
+    """
     modules_conf = {}
     for module in getModulesNames():
         module_conf = Config.getConfig(parentKey='modules', key=module)
@@ -169,7 +171,7 @@ def getModulesFullConfig():
     return modules_conf
 
 def getModulesModalTests():
-    '''Return's an Array with all modules as keys and their values, the Modal GUI function forms
+    """Return's an Array with all modules as keys and their values, the Modal GUI function forms
 
     Parameters
     ----------
@@ -178,7 +180,7 @@ def getModulesModalTests():
     Return
     ----------
         Array
-    '''
+    """
     tools_functions = {}
     for tool in getModulesNames():
         tool_functions = Config.getConfig(parentKey='modules', key=tool, subkey='django_form_module_function')
@@ -187,7 +189,7 @@ def getModulesModalTests():
     return tools_functions
 
 def __getModulesConfig_treeView__():
-    '''Return a String with the config for the GUI Treeview
+    """Return a String with the config for the GUI Treeview
 
     Parameters
     ----------
@@ -196,7 +198,7 @@ def __getModulesConfig_treeView__():
     Return
     ----------
         String
-    '''
+    """
     count = 1
     result_text = []
     tools_config = getModulesFullConfig()
@@ -208,7 +210,7 @@ global __treeview_counter__
 __treeview_counter__ = 0
 
 def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
-    '''Loads the GUI Treeview with the config of all the modules loaded
+    """Loads the GUI Treeview with the config of all the modules loaded
 
     Parameters
     ----------
@@ -220,7 +222,7 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
     Return
     ----------
         None
-    '''
+    """
     open_key = "{"
     close_key = "}"
     count += 1
@@ -252,7 +254,7 @@ def __treeview_count__(count):
     return count
     
 def __treeview_createJSON__(conf_key, key, count=1, pid=0):
-    '''Return JSON String with the config for the treeview
+    """Return JSON String with the config for the treeview
 
     Parameters
     ----------
@@ -264,7 +266,7 @@ def __treeview_createJSON__(conf_key, key, count=1, pid=0):
     Return
     ----------
         String JSON Format
-    '''
+    """
     try:
         open_key = "{"
         close_key = "}"
@@ -276,7 +278,7 @@ def __treeview_createJSON__(conf_key, key, count=1, pid=0):
         Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_load_json_data'], key=key, conf_key=conf_key), color=Fore.RED)
 
 def setDebugCore(on=True):
-    '''Set Debug Log from Core to on/off
+    """Set Debug Log from Core to on/off
 
     Parameters
     ----------
@@ -285,11 +287,11 @@ def setDebugCore(on=True):
     Return
     ----------
         None
-    '''
+    """
     Logger.setDebugCore(on)
 
 def setDebugModule(on=True):
-    '''Set Debug Log from Modules to on/off
+    """Set Debug Log from Modules to on/off
 
     Parameters
     ----------
@@ -298,11 +300,11 @@ def setDebugModule(on=True):
     Return
     ----------
         None
-    '''
+    """
     Logger.setDebugModule(on)
     
 def getModule(moduleName):
-    '''Return's and load's a module into a variable passing a module name as parameter
+    """Return's and load's a module into a variable passing a module name as parameter
 
     Parameters
     ----------
@@ -311,7 +313,7 @@ def getModule(moduleName):
     Return
     ----------
         eval(module)
-    '''
+    """
     Logger.printMessage('Initiation of {moduleName}'.format(moduleName=moduleName), debug_module=True)
     for m in modules_loaded:
         if moduleName in m:
@@ -320,7 +322,7 @@ def getModule(moduleName):
     Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log'.format(mod=moduleName), debug_module=True, is_error=True)
 
 def getModuleConfig(moduleName):
-    '''Return's an Array with the config of a module passed as parameter
+    """Return's an Array with the config of a module passed as parameter
 
     Parameters
     ----------
@@ -329,7 +331,7 @@ def getModuleConfig(moduleName):
     Return
     ----------
         Array/None
-    '''
+    """
     if moduleName in getModulesNames():
         actualConf = getModulesJSON()
         for mod in actualConf:

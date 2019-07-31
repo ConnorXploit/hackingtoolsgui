@@ -37,7 +37,7 @@ option = input('Service to search (e.g: apache): ')
 target = Target(option, 1)
 
 # Set the API for shodan
-shodan.settingApi('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+shodan.settingApi('lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl')
 
 # Ask shodan for getting a list of IPs from a service name
 for ip in shodan.getIPListfromServices(option):

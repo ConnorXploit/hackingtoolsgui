@@ -29,7 +29,6 @@ import json
 global config
 config = {}
 
-
 # === __readConfig__ ===
 def __readConfig__():
     """

