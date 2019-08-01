@@ -3,7 +3,10 @@ import hackingtools as ht
 
 import random
 import base64
+import os
+
 config = Config.getConfig(parentKey='modules', key='ht_rsa')
+output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 class StartModule():
 	'''How to use:

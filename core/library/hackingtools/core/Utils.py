@@ -3,6 +3,7 @@ config = Config.getConfig(parentKey='core', key='Utils')
 
 import random
 import base64
+import os
 
 # File Manipulation
 def getFileContentInByteArray(filePath):
@@ -43,6 +44,31 @@ def saveToFile(content, fileName):
     except:
         pass
     return False
+
+def emptyDirectory(dir):
+    """
+    Cleans a directory given as param
+    Be carefull with the 
+    
+    Arguments:
+        dir : str
+        
+            output_dir variable in modules,
+            for example, ht_crypter, it has a
+            path automatically created
+            for this function
+    Returns:
+        bool
+
+            Returns if all was OK
+    """
+    try:
+        if os.path.isdir(dir):
+            shutil.rmtree(dir)
+            return True
+        return False
+    except:
+        return False
 
 # Maths
 def euclides(a, b):

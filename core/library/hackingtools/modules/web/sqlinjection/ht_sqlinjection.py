@@ -3,13 +3,16 @@ import requests
 import urllib
 import json
 import binascii
+import os
 
-from hackingtools.core import Config, Logger
 import hackingtools as ht
+from hackingtools.core import Config, Logger
 
 config = Config.getConfig(parentKey='modules', key='ht_sqlinjection')
-config_dict = Config.getConfig(parentKey='core', key='utilities', subkey='dictionaries')
-config_decrypt = Config.getConfig(parentKey='core', key='utilities', subkey='resources_cryptography_rest_api')
+config_dict = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
+config_decrypt = Config.getConfig(parentKey='core', key='Utils', subkey='resources_cryptography_rest_api')
+
+output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 url = ''
 cookie_session = ''

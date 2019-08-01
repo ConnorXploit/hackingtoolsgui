@@ -1,11 +1,14 @@
 from shodan import Shodan 
 import requests
 import json
-from hackingtools.core import Logger, Config
-config = Config.getConfig(parentKey='modules', key='ht_shodan')
 import hackingtools as ht
+from hackingtools.core import Logger, Config
 import time
 from colorama import init, Fore
+import os
+
+config = Config.getConfig(parentKey='modules', key='ht_shodan')
+output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 class StartModule():
 

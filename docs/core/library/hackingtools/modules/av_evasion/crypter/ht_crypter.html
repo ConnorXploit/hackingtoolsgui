@@ -17,10 +17,48 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-0'>#</a>
       </div>
-      
+      <h3><span id="crypts-any-file-using-ht_rsa-module-and-some-utils.-for-now,-is-fud-100%" href="crypts-any-file-using-ht_rsa-module-and-some-utils.-for-now,-is-fud-100%"> Crypts any file using ht_rsa module and some Utils. For now, is FUD 100% </span></h3>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hackingtools.core</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Utils</span>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>With this module, we can crypt any file we want 
+for not been detected, for example, by antiviruses.
+Currently it support&rsquo;s the following 2 public functions and 4 private functions:</p>
+<p>Public:</p>
+<ol>
+<li>
+<p><strong>getConfig</strong> - Returns the configuration of some key values you explicitly tell on params (jump to section in  <a href="Config.html#getConfig">Config.py</a> )</p>
+</li>
+<li>
+<p><strong>getApiKey</strong> - Return an API Key registered into configuration (jump to section in  <a href="Config.html#getApiKey">Config.py</a> )</p>
+</li>
+</ol>
+<p>Private:</p>
+<ol>
+<li>
+<p><strong><strong>readConfig</strong></strong> - Read&rsquo;s all the configuration included in your config.json file (jump to section in  <a href="Config.html#__readConfig__">Config.py</a> )</p>
+</li>
+<li>
+<p><strong><strong>save_config</strong></strong> - Save configuration passed as parameter to this function. This, writes into your config.json (jump to section in  <a href="Config.html#__save_config__">Config.py</a> )</p>
+</li>
+<li>
+<p><strong><strong>createModuleTemplateConfig</strong></strong> - This function creates into config.json a template with a simple config for trying in your GUI your functions (jump to section in  <a href="Config.html#__createModuleTemplateConfig__">Config.py</a> )</p>
+</li>
+<li>
+<p><strong><strong>look_for_changes</strong></strong> - Reloads the configuration loaded (jump to section in  <a href="Config.html#__look_for_changes__">Config.py</a> )</p>
+</li>
+</ol>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">hackingtools.core</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Utils</span>
 <span class="kn">import</span> <span class="nn">hackingtools</span> <span class="kn">as</span> <span class="nn">ht</span> 
 
 <span class="kn">import</span> <span class="nn">binascii</span>
@@ -37,18 +75,6 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-1'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-1'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span> <span class="nc">StartModule</span><span class="p">():</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-2'>
     <div class='docs'>
       <div class='octowrap'>
@@ -57,9 +83,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;ht_crypter loaded&#39;</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-		<span class="k">pass</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">StartModule</span><span class="p">():</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -68,11 +92,12 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      
+      <h3><span id="__init__" href="__init__"> <strong>init</strong> </span></h3>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_crypter&#39;</span><span class="p">))</span></pre></div>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;ht_crypter loaded&#39;</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">pass</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -81,10 +106,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      <p>Convert&rsquo;s given Python file path in String into a new one with the same name and .exe as extension</p>
+      <h3><span id="help" href="help"> help </span></h3>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">convertToExe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub_name</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_crypter&#39;</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -93,14 +119,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <pre><code>    Compile's with pyinstaller and could be change it's params in config.json
-
-    Arguments:
-        stub_name {String} -- File path to convert to exe
-</code></pre>
+      <p>=== convertToExe ===
+Convert&rsquo;s given Python file path in String into a new one with the same name and .exe as extension</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;convertToExe&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{stub_name}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stub_name</span><span class="o">=</span><span class="n">stub_name</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">convertToExe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub_name</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -108,6 +131,22 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <pre><code>    Compile's with pyinstaller and could be change it's params in config.json
+
+    Arguments:
+        stub_name : str -- File path to convert to exe
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;convertToExe&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{stub_name}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stub_name</span><span class="o">=</span><span class="n">stub_name</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>Convert py to exe with pyinstaller</p>
     </div>
@@ -139,22 +178,23 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
-      <p>Clean&rsquo;s the output.</p>
+      <p>=== clean_output_dir ===
+Clean&rsquo;s the output.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">clean_output_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <pre><code>    Is used for removing all bad files we don't want in our path if we want to upload after to Pypi
 </code></pre>
@@ -167,39 +207,62 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
-      <pre><code>    Create's the stub for the crypter and has some courious params he have to see
-
-    Arguments:
-        crypto_data_hex {String} -- File path that want to crypt
-        public_key {String} -- New File name for crypted file when return's it
-        drop_file_name {String} -- New File name for crypted file when return's it
-        save_name {String} -- New File name for crypted file when return's it
-
-    Keyword Arguments:
-        is_iterating {boolean} -- Compile's the final file if we select it (default: {False})
-        is_last {boolean} -- Internal variable for looping on the crypting (default: {False})
-        convert {boolean} -- Internal varuable for looping on the crypting (default: {1})
-
-    Returns:
-        String -- Crypted file path name / None
-</code></pre>
+      <h3><span id="createstub" href="createstub"> createStub </span></h3>
     </div>
     <div class='code'>
       <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">createStub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crypto_data_hex</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">drop_file_name</span><span class="p">,</span> <span class="n">save_name</span><span class="p">,</span> <span class="n">is_iterating</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_last</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-10'>
+  <div class='section' id='section-11'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      
+      <pre><code>    Create's the stub for the crypter and 
+    has some courious params he have to see
+
+    Arguments
+    ---------
+        crypto_data_hex : str
+
+            File path that want to crypt
+        public_key : str
+
+            New File name for crypted file when 
+            return's it
+        drop_file_name : str
+            New File name for crypted file when 
+            return's it
+        save_name : str
+            New File name for crypted file when 
+            return's it
+
+    Keyword Arguments:
+        is_iterating : bool
+
+            Compile's the final file if we select 
+            it (default: {False})
+        is_last : bool
+
+            Internal variable for looping on the 
+            crypting (default: {False})
+        convert : bool
+
+            Internal varuable for looping on the 
+            crypting (default: {1})
+
+    Returns
+    -------
+        str
+
+            Crypted file path name / None
+</code></pre>
     </div>
     <div class='code'>
       <div class="highlight"><pre>		<span class="n">stub</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
@@ -284,10 +347,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
+  <div class='section' id='section-12'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
+        <a class='octothorpe' href='#section-12'>#</a>
       </div>
       
     </div>
@@ -296,10 +359,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       
     </div>
@@ -334,18 +397,6 @@
 			<span class="k">return</span> <span class="bp">None</span>
 
 </pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-13'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -390,7 +441,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
-      <p>Crypt&rsquo;s a file when some params we have to use</p>
+      
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -402,21 +453,63 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-18'>#</a>
       </div>
+      <p>=== crypt_file ===
+Crypt&rsquo;s a file when some params we have to use</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
       <pre><code>    
-    Arguments:
-        filename {String} -- File path that want to crypt
-        new_file_name {String} -- New File name for crypted file when return's it
+    Arguments
+    ---------
+        filename : str
 
-    Keyword Arguments:
-        drop_file_name {String} -- Drop a new file on execute the cryted file (default: {'dropped.py'})
-        prime_length {integer} -- Set a prime length for auto-generating the primes for the cryptography (default: {4})
-        compile_exe {boolean} -- Compile's the final file if we select it (default: {False})
-        is_iterating {boolean} -- Internal variable for looping on the crypting (default: {False})
-        iterate_count {integer} -- Internal varuable for looping on the crypting (default: {1})
-        is_last {boolean} -- Internal varuable for looping on the crypting (default: {False})
+            File path that want to crypt
+        new_file_name : str
 
-    Returns:
-        String -- Crypted file path name / None
+            New File name for crypted file 
+            when return's it
+
+    Keyword Arguments
+    -----------------
+        drop_file_name : str
+
+            Drop a new file on execute the 
+            cryted file (default: {'dropped.py'})
+        prime_length : int
+
+            Set a prime length for auto-generating
+             the primes for the cryptography 
+             (default: {4})
+        compile_exe : bool
+
+            Compile's the final file if 
+            we select it (default: {False})
+        is_iterating : bool
+
+            Internal variable for looping 
+            on the crypting (default: {False})
+        iterate_count : int
+
+            Internal variable for looping 
+            on the crypting (default: {1})
+        is_last : bool
+
+            Internal variable for looping 
+            on the crypting (default: {False})
+
+    Returns
+    -------
+        str
+
+            Crypted file path name / None
 </code></pre>
     </div>
     <div class='code'>

@@ -1,7 +1,11 @@
-from hackingtools.core import Logger
+from hackingtools.core import Logger, Config
 import hackingtools as ht
 
 import nmap
+import os
+
+config = Config.getConfig(parentKey='modules', key='ht_nmap')
+output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 class StartModule():
 
