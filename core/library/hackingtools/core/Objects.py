@@ -92,7 +92,7 @@ class Target():
                     response.append(ip)
             return response
         except:
-            return []
+            return None
 
     def removeHost(self, host):
         try:

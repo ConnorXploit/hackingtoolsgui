@@ -22,6 +22,7 @@ class StartModule():
 		pass
 
 	def getConnectedDevices(self, ip):
+		Logger.printMessage(message='{methodName}'.format(methodName='getConnectedDevices'), description='{param}'.format(param=ip), debug_module=True)
 		nm = nmap.PortScanner()
 		results = nm.scan(ip, '-sP')
 		hosts = []
@@ -31,27 +32,34 @@ class StartModule():
 		return hosts
 
 	def getDevicePorts(self, ip, tcp=True, udp=False):
+		Logger.printMessage(message='{methodName}'.format(methodName='getDevicePorts'), description='{param} - TCP {tcp} - UDP {udp}'.format(param=ip, tcp=tcp, udp=udp), debug_module=True)
 		nm = nmap.PortScanner()
 		results = nm.scan(ip)
-		ports = []
-		for host in results.all_hosts():
-			if tcp:
-				for port in results[host]['tcp'].keys():
-					ports.append(port)
-			if udp:
-				for port in results[host]['udp'].keys():
-					ports.append(port)
-		return ports
+		try:
+			if tcp and not udp:
+				return results["scan"][ip]["tcp"]
+			if udp and not tcp:
+				return results["scan"][ip]["udp"]
+			if tcp and udp:
+				return [results["scan"][ip]["tcp"],results["scan"][ip]["udp"]]
+			return results["scan"][ip]["tcp"]
+		except:
+			return []
 
 	def hasDevicePortOpened(self, ip, port):
+		Logger.printMessage(message='{methodName}'.format(methodName='hasDevicePortOpened'), description='{param}:{param2}'.format(param=ip, param2=port), debug_module=True)
 		nm = nmap.PortScanner()
 		results = nm.scan(ip)
 		exists = False
-		for host in results.all_hosts():
-			if exists:
-				break
-			if not exists:
-				exists = results[host].has_tcp(port)
-			if not exists:
-				exists = results[host].has_udp(port)
+		try:
+			for host in results.all_hosts():
+				if exists:
+					break
+				if not exists:
+					exists = results[host].has_tcp(port)
+				if not exists:
+					exists = results[host].has_udp(port)
+		except:
+			print(results)
+			raise
 		return exists

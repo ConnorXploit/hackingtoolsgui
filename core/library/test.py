@@ -32,6 +32,11 @@ shodan.help()
 
 # Ask for an option for using later in a shodan function
 option = input('Service to search (e.g: apache): ')
+try:
+    count = int(input('How many hosts minimum are you searching for? (minimum and default: 100): '))
+except:
+    count = 100
+    print('You entered bad chars... Taking default value (100)')
 
 # Create a Target with an ID for later adding some hosts
 target = Target(option, 1)
@@ -40,10 +45,18 @@ target = Target(option, 1)
 shodan.settingApi('lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl')
 
 # Ask shodan for getting a list of IPs from a service name
-for ip in shodan.getIPListfromServices(option):
-    # For any IP we get, create a Host object, with the Target ID
-    # Add it to target with addHost function
-    target.addHost(Host(1, ip))
+discarded = 0
+while len(target.hosts) < count and discarded < count:
+    for ip in shodan.getIPListfromServices(option):
+        # For any IP we get, create a Host object, with the Target ID
+        # Add it to target with addHost function
+        if not target.getHostByIp(ip):
+            target.addHost(Host(1, ip))
+        else:
+            discarded += 1
+
+if discarded >= count:
+    print('You arrived yo a bucle of IPs on getIPListfromServices function and they where repeated')
 
 # For all the host we have:
 for host in target.hosts:
@@ -51,7 +64,14 @@ for host in target.hosts:
     # In this case, we get some public info of that IP
     host.data = shodan.shodan_search_host(host.ip)
 
+# Import nmap module
+nmap = ht.getModule('ht_nmap')
+
+# For all host we have:
+for host in target.hosts:
+    # Add info of the response from nmap module function
+    host.ports = nmap.getDevicePorts(host.ip)
+
 # __str__() function is written in the Objects.py file
 # ! It print in logger but only with "Logger.setDebugCore(True)" set
 [host.__str__() for host in target.hosts]
-

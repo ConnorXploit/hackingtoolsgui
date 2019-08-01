@@ -35,12 +35,16 @@ class StartModule():
         if not self.api and not shodanKeyString:
             self.settingApi(Config.getApiKey('shodan_api'))
         if self.api or shodanKeyString:
-            self.settingApi(shodanKeyString=shodanKeyString)
-            result = self.api.search(serviceName)
-            dict_obj = []
-            for res in result['matches']:
-                dict_obj.append(res['ip_str'].encode('utf-8').decode('utf-8'))
-            return dict_obj
+            if shodanKeyString:
+                self.settingApi(shodanKeyString=shodanKeyString)
+            try:
+                result = self.api.search(serviceName)
+                dict_obj = []
+                for res in result['matches']:
+                    dict_obj.append(res['ip_str'].encode('utf-8').decode('utf-8'))
+                return dict_obj
+            except:
+                return []
         else:
             return config['bad_api_key_error']
 
