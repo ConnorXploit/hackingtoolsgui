@@ -70,6 +70,21 @@ def emptyDirectory(dir):
     except:
         return False
 
+def getValidDictNoEmptyKeys(data):
+    print(data)
+    final_data = {}
+    if isinstance(data, str):
+        return data
+    for d in data:
+        if data[d]:
+            if isinstance(data[d], str):
+                print('Texto encontrado: ', data[d], ' en ', d)
+                final_data[d] = data[d]
+            else:
+                print('Dict encontrado: en ', d)
+                final_data[d] = getValidDictNoEmptyKeys(data[d])
+    return final_data
+
 # Maths
 def euclides(a, b):
     """Euclid's algorithm for determining the greatest common divisor

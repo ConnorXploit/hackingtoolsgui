@@ -115,7 +115,7 @@ class StartModule():
                         pass
 
         except Exception as e:
-            Logger.printMessage(message='Warning: {0}... Retrying in 0,5 seconds...'.format(e), color=Fore.YELLOW)
+            Logger.printMessage(message='Warning: {0}... Retrying in 0,5 seconds...'.format(e), color=Fore.YELLOW, debug_module=True)
             time.sleep(0.4)
             return self.shodan_search_host(ip)
         return res
