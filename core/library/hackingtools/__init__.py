@@ -11,6 +11,7 @@ import importlib
 import types
 import inspect
 import ast
+import progressbar
 from importlib import reload
 
 modules_loaded = {}
@@ -317,9 +318,11 @@ def getModule(moduleName):
     Logger.printMessage('Initiation of {moduleName}'.format(moduleName=moduleName), debug_module=True)
     for m in modules_loaded:
         if moduleName in m:
-            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
+            if not 'ht_' in moduleName:
+                moduleName = 'ht_{m}'.format(m=moduleName)
+            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=m.split('_')[1], moduleName=moduleName)
             return eval(sentence)
-    Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log'.format(mod=moduleName), debug_module=True, is_error=True)
+    Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), debug_module=True, is_error=True)
 
 def getModuleConfig(moduleName):
     """Return's an Array with the config of a module passed as parameter
@@ -456,10 +459,11 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
     if not module_form:
         return
-        
+    
     html = "<div class=\"modal-body\">"
     footer = '<div class="modal-footer">'
     m_form = module_form
+
     for m in m_form:
         temp_m_form = m_form
         if ('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m]:
@@ -477,6 +481,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 input_value = ''
                 if 'value' in temp_m_form[m]:
                     input_value = temp_m_form[m]['value']
+                checkbox_selected = False
+                if 'selected' in temp_m_form[m]:
+                    checkbox_selected = temp_m_form[m]['selected']
                 loading_text = ''
                 if 'loading_text' in temp_m_form[m]:
                     loading_text = temp_m_form[m]['loading_text']
@@ -486,7 +493,10 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 if input_type == 'file':
                     html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
                 elif input_type == 'checkbox':
-                    html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
+                    if checkbox_selected:
+                        html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} checked><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
+                    else:
+                        html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
                 elif input_type == 'button':
                     footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
                 elif input_type == 'submit':
@@ -494,9 +504,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     if loading_text:
                         footer += "<script>$('#"
                         footer += input_id
-                        footer += "').on('click', function(){$('#"
+                        footer += "').on('click', function(e){$('#"
                         footer += input_id
-                        footer += "').attr('value', '{loading_text}');".format(loading_text=loading_text)
+                        footer += "').attr('value', '{loading_text}'); e.preventDevault();".format(loading_text=loading_text)
                         footer += "});</script>"
                 elif input_type == 'textarea':
                     if input_label_desc:
@@ -550,45 +560,48 @@ def __importModules__():
     tienen que estar los directorios individualmente por herramientas que se incorpore a la librería
     """
     modules = __getModules__()
-    for modu in modules:
-        for submod in modules[modu]:
-            for files in modules[modu][submod]:
-                module_name = modules[modu][submod][files][0].split(".")[0]
-                Logger.printMessage(message='{category}'.format(category=submod), description=module_name, debug_module=True) 
-                module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
-                module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
-                try:
-                    exec(module_import_string)
-                    #globals()[module_name] = importlib.import_module(module_import_string)
-                    module_className = __classNameFromModule__(eval(module_name))
-                    module_functions = __methodsFromModule__(eval(module_name))
+    Logger.printMessage(message='{meth}'.format(meth='__importModules__'), description='Loading modules...', debug_module=True)
+    with progressbar.ProgressBar(max_value=progressbar.UnknownLength) as bar:
+        for modu in modules:
+            for submod in modules[modu]:
+                for files in modules[modu][submod]:
+                    module_name = modules[modu][submod][files][0].split(".")[0]
+                    #Logger.printMessage(message='{category}'.format(category=submod), description=module_name, debug_module=True) 
+                    module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
+                    module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
+                    try:
+                        exec(module_import_string)
+                        #globals()[module_name] = importlib.import_module(module_import_string)
+                        module_className = __classNameFromModule__(eval(module_name))
+                        module_functions = __methodsFromModule__(eval(module_name))
+                        #Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
+                        bar.update(1)
+                        if len(module_functions) > 0:
+                            modules_loaded[module_import_string_no_from] = {}
+                            for mod_func in module_functions:
+                                function = '{module}.{callClass}().{function}'.format(module=module_name, callClass=default_class_name_for_all, function=mod_func)
 
-                    if len(module_functions) > 0:
-                        modules_loaded[module_import_string_no_from] = {}
-                        for mod_func in module_functions:
-                            function = '{module}.{callClass}().{function}'.format(module=module_name, callClass=default_class_name_for_all, function=mod_func)
+                                try:
+                                    params_func = inspect.getfullargspec(eval(function))[0]
+                                except:
+                                    pass
 
-                            try:
-                                params_func = inspect.getfullargspec(eval(function))[0]
-                            except:
-                                pass
+                                if params_func:
+                                    clean_params = []
+                                    for param_func in params_func:
+                                        if param_func not in function_param_exclude:
+                                            clean_params.append(param_func)
 
-                            if params_func:
-                                clean_params = []
-                                for param_func in params_func:
-                                    if param_func not in function_param_exclude:
-                                        clean_params.append(param_func)
+                                modules_loaded[module_import_string_no_from][mod_func] = {}
 
-                            modules_loaded[module_import_string_no_from][mod_func] = {}
-
-                            if clean_params and len(clean_params) > 0:
-                                modules_loaded[module_import_string_no_from][mod_func]['params'] = clean_params
-                            else:
-                                modules_loaded[module_import_string_no_from][mod_func]['params'] = False
-                    else:
-                        modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
-                except Exception as e:
-                    print("{a} - [ERROR] - {msg}".format(a=module_import_string, msg=str(e)))
+                                if clean_params and len(clean_params) > 0:
+                                    modules_loaded[module_import_string_no_from][mod_func]['params'] = clean_params
+                                else:
+                                    modules_loaded[module_import_string_no_from][mod_func]['params'] = False
+                        else:
+                            modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
+                    except Exception as e:
+                        print("{a} - [ERROR] - {msg}".format(a=module_import_string, msg=str(e)))
     #return True
 
 def getModules():

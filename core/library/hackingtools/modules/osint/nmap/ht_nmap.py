@@ -12,7 +12,6 @@ class StartModule():
 	cacheSearchInfo = []
 	
 	def __init__(self):
-		Logger.printMessage(message='ht_nmap loaded', debug_core=True)
 		pass
 
 	def help(self):
@@ -37,12 +36,12 @@ class StartModule():
 		results = nm.scan(ip)
 		try:
 			if tcp and not udp:
-				return results["scan"][ip]["tcp"]
+				return Utils.getValidDictNoEmptyKeys(results["scan"][ip]["tcp"])
 			if udp and not tcp:
-				return results["scan"][ip]["udp"]
+				return Utils.getValidDictNoEmptyKeys(results["scan"][ip]["udp"])
 			if tcp and udp:
-				return [results["scan"][ip]["tcp"],results["scan"][ip]["udp"]]
-			return results["scan"][ip]["tcp"]
+				return Utils.getValidDictNoEmptyKeys([results["scan"][ip]["tcp"],results["scan"][ip]["udp"]])
+			return Utils.getValidDictNoEmptyKeys(results["scan"][ip]["tcp"])
 		except:
 			return []
 

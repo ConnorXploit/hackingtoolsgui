@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import urllib.request as urllib3
 import time
 import mechanize
+import inspect
 
 config = Config.getConfig(parentKey='modules', key='ht_spider')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
@@ -16,7 +17,7 @@ output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 class StartModule():
 
 	def __init__(self):
-		Logger.printMessage(message='ht_spider loaded', debug_module=True)
+		pass
 	
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_spider'))

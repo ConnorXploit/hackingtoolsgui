@@ -1,5 +1,6 @@
 from . import Config, Logger
 config = Config.getConfig(parentKey='core', key='Utils')
+config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
 
 import random
 import base64
@@ -24,7 +25,7 @@ def getFileContentInByteArray(filePath):
     except:
         pass
     return None
-
+        
 def saveToFile(content, fileName):
     """Saves a new file with a Byte Array and a fileName
     
@@ -45,7 +46,7 @@ def saveToFile(content, fileName):
         pass
     return False
 
-def emptyDirectory(dir):
+def emptyDirectory(directory):
     """
     Cleans a directory given as param
     Be carefull with the 
@@ -63,8 +64,8 @@ def emptyDirectory(dir):
             Returns if all was OK
     """
     try:
-        if os.path.isdir(dir):
-            shutil.rmtree(dir)
+        if os.path.isdir(directory):
+            shutil.rmtree(directory)
             return True
         return False
     except:
@@ -275,4 +276,19 @@ def decimalToAscii(content):
     Logger.printMessage(message='{methodName}'.format(methodName='decimalToAscii'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return ''.join([chr(dec) for dec in content])
 
+def randomText(length=8, alphabet='lalpha'):
+    try:
+        return ''.join(random.SystemRandom().choice(config_utils[alphabet]) for _ in range(int(length)))
+    except Exception as e:
+        Logger.printMessage(message=randomText, description=e, is_error=True)
 
+def getDict(length=8, maxvalue=10000, alphabet='lalpha', consecutive=False):
+    res = []
+    if 'numeric'in alphabet and consecutive:
+        for i in range(maxvalue):
+            res.append(str(str(i).zfill(int(length))))
+    else:
+        for i in range(maxvalue):
+            res.append(randomText(length=length, alphabet=alphabet))
+    Logger.printMessage(message='getDict', description=res[20:], debug_core=True)
+    return res

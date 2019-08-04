@@ -277,6 +277,37 @@
                 }
             }
         },
+        "ht_bruteforce": {
+            "__gui_label__": "Bruteforce",
+            "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+            "django_form_module_function": {
+                "crackZip": {
+                    "__function__": "test_ht_bruteforce_crackZip",
+                    "__return__": "text",
+                    "zipFile": {
+                        "__id__": "zipFile",
+                        "__type__": "file",
+                        "__className__": "file-input",
+                        "label_desc": "Browse zip file for crack it",
+                        "required": true
+                    },
+                    "consecutive": {
+                        "__id__": "consecutive",
+                        "__type__": "checkbox",
+                        "__className__": "custom-control-input",
+                        "label_desc": "Consecutive password try?",
+                        "selected": true
+                    },
+                    "async": {
+                        "__id__": "async",
+                        "__type__": "checkbox",
+                        "__className__": "custom-control-input",
+                        "label_desc": "Async execution",
+                        "selected": true
+                    }
+                }
+            }
+        },
         "ht_nmap": {
             "__gui_label__": "Scan for hosts",
             "django_form_main_function": {
@@ -321,40 +352,6 @@
                         "placeholder": "abcdef0123456789",
                         "value": "",
                         "label_desc": "Shodan API Key"
-                    }
-                }
-            }
-        },
-        "ht_spider": {
-            "__gui_label__": "_MODULE_GUI_LABEL_",
-            "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
-            "_django_form_main_function_": {
-                "_HTML_FIELD_NAME_": {
-                    "__id__": "_HTML_FIELD_NAME_",
-                    "__type__": "_HTML_INPUT_TYPE_",
-                    "__className__": "_HTML_INPUT_CLASS_",
-                    "label_desc": "_DESCRIPTION_LABEL_",
-                    "required": "_IF_REQUIRED_",
-                    "value": "_INPUT_VALUE_",
-                    "loading_text": "_INPUT_LOADING_TEXT_"
-                }
-            },
-            "_django_form_module_function_": {
-                "_PUBLIC_FUNCTION_": {
-                    "__function__": "_FUNCTION_CALLABLE_NAME_",
-                    "__return__": "_IF_RETURNS_LIKE_TEXT_",
-                    "_PARAM_TO_USE_IN_VIEWS_PY_": {
-                        "__id__": "_HTML_FIELD_NAME_",
-                        "__type__": "_HTML_INPUT_TYPE_",
-                        "__className__": "_HTML_INPUT_CLASS_",
-                        "label_desc": "_DESCRIPTION_LABEL_",
-                        "value": "_INPUT_VALUE_",
-                        "required": "_IF_REQUIRED_",
-                        "returnable_modules_functions": {
-                            "_MODULE_CALL_FOR_": [
-                                "_THAT_MODULES_FUNCTION"
-                            ]
-                        }
                     }
                 }
             }
@@ -439,7 +436,7 @@
             "function_name_starts_with_modules": "__",
             "function_param_exclude": "self",
             "default_class_name_for_all": "StartModule",
-            "default_template_modules_ht": "from hackingtools.core import Logger, Utils, Config\nimport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tLogger.printMessage(message='ht_{moduleName} loaded', debug_module=True)\n\t\tpass\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'))"
+            "default_template_modules_ht": "from hackingtools.core import Logger, Utils, Config\nimport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tpass\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'))"
         },
         "Utils": {
             "empty_directory_strict": "modules/",

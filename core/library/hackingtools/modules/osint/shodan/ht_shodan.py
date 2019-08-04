@@ -15,7 +15,6 @@ class StartModule():
     api = None
 
     def __init__(self):
-        Logger.printMessage(message='ht_shodan loaded', debug_core=True)
         self.settingApi()
 
     def help(self):
@@ -44,9 +43,11 @@ class StartModule():
                     dict_obj.append(res['ip_str'].encode('utf-8').decode('utf-8'))
                 return dict_obj
             except:
+                print('----')
                 return []
         else:
-            return config['bad_api_key_error']
+            print('....')
+            return []
 
     def queryShodan(self, category=''):
         try:

@@ -30,10 +30,9 @@ def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_cat = request.POST.get('category_name')
     created = ht.createModule(mod_name, mod_cat)
-    #reload(ht) # NO SE ACTUALIZA
     if created:
         modules_and_params = ht.getModulesJSON()
-    return redirect(reverse('home'))
+    return home(request=request) #TODO create a param for html to popup bootstrap in green or red if all ok
 
 def configModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -52,6 +51,12 @@ def createScript(request):
 def config_look_for_changes(request):
     ht.Config.__look_for_changes__()
     return redirect('home')
+
+def saveFileOutput(myfile, module_name, category):
+    location = os.path.join("core", "library", "hackingtools", "modules", category, module_name.split('ht_')[0], "output")
+    fs = FileSystemStorage(location=location)
+    filename = fs.save(myfile.name, myfile)
+    return os.path.join(location, filename)
 
 # ht_rsa
 def ht_rsa_encrypt(request):
@@ -115,14 +120,10 @@ def ht_crypter_cryptFile(request):
 
             # Get Crypter Module
             crypter = ht.getModule('ht_crypter')
-            crypter.clean_output_dir()
-            
-            location = os.path.join("core", "library", "hackingtools", "modules", "av_evasion", "crypter", "output")
-            fs = FileSystemStorage(location=location)
 
-            # Save file
-            filename = fs.save(myfile.name, myfile)
-            uploaded_file_url = os.path.join(location, filename)
+            # Save the file
+            uploaded_file_url = saveFileOutput(myfile, "crypter", "av_evasion")
+            
             # Compile Exe
             compile_exe = False
             if request.POST.get('compile_exe','')=='on':
@@ -236,4 +237,35 @@ def ht_metadata_get_metadata_exif(request):
     else:
         return home(request=request)
 
+# ht_bruteforce
 
+def ht_bruteforce_crackZip(request):
+    if len(request.FILES) != 0:
+        if request.FILES['zipFile']:
+            # Get file
+            myfile = request.FILES['zipFile']
+
+            consecutive = False
+            if request.POST.get('consecutive'):
+                consecutive = True
+                
+            async_execution = False
+            if request.POST.get('async'):
+                async_execution = True
+
+            # Get Crypter Module
+            bruter = ht.getModule('ht_bruteforce')
+
+            # Save the file
+            uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
+            
+            if async_execution:
+                pass # TODO Threads
+            if uploaded_file_url:
+                password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
+            else:
+                return home(request=request, popup_text='Something wnet wrong. See the log')
+
+            return home(request=request, popup_text=password)
+
+    return home(request=request)

@@ -22,24 +22,19 @@ try:
 except:
     import pyreadline as readline # Windows
 
-# # Prints the modules loaded on your hackingtools library
-# print(ht.getModulesNames())
+# Prints the modules loaded on your hackingtools library
+print(ht.getModulesNames())
 
-# # From hackingtools, I get a module. In this case, shodan module:
-# shodan = ht.getModule('ht_shodan')
+# From hackingtools, I get a module. In this case, shodan module:
+# nmap = ht.getModule('ht_nmap')
 
 # # I get help method from the shodan module
 # # ! This returns the methods in console!
 # # ! For this options, you should have: "Logger.setDebugModule(True)" set
-# shodan.help()
+# # shodan.help()
 
 # # Ask for an option for using later in a shodan function
 # option = input('Service to search (e.g: apache): ')
-# try:
-#     count = int(input('How many hosts minimum are you searching for? (minimum and default: 100): '))
-# except:
-#     count = 100
-#     print('You entered bad chars... Taking default value (100)')
 
 # # Create a Target with an ID for later adding some hosts
 # target = Target(option, 1)
@@ -48,26 +43,25 @@ except:
 # shodan.settingApi('lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl')
 
 # # Ask shodan for getting a list of IPs from a service name
-# discarded = 0
-# with progressbar.ProgressBar(max_value=count) as bar:
-#     while len(target.hosts) < count and discarded < count:
-#         for ip in shodan.getIPListfromServices(option):
-#             # For any IP we get, create a Host object, with the Target ID
-#             # Add it to target with addHost function
-#             if not target.getHostByIp(ip):
-#                 target.addHost(Host(1, ip))
-#                 bar.update(1)
-#             else:
-#                 discarded += 1
+# for ip in shodan.getIPListfromServices(option):
+#     # For any IP we get, create a Host object, with the Target ID
+#     # Add it to target with addHost function
+#     if not target.existsHostWithIp(ip):
+#         host = Host(1, ip)
+#         target.addHost(host)
+#         host.addScanResult(shodan.shodan_search_host(host.ip))
+#         host.ports = nmap.getDevicePorts(host.ip)
+#         hosts_with_cpe = target.getHostsWithKey('cpe')
+#         for h in hosts_with_cpe:
+#             print(h.__str__())
+#     else:
+#         print('IP Repeated... Host registered yet on the Target - {i}'.format(i=ip))
 
-# if discarded >= count:
-#     print('You arrived yo a bucle of IPs on getIPListfromServices function and they where repeated')
-
-# # For all the host we have:
+# For all the host we have:
 # for host in target.hosts:
 #     # Add to host's data the response of the call to the shodan function.
 #     # In this case, we get some public info of that IP
-#     host.data = shodan.shodan_search_host(host.ip)
+#     host.addScanResult(shodan.shodan_search_host(host.ip))
 
 # Import nmap module
 # nmap = ht.getModule('ht_nmap')
@@ -84,12 +78,17 @@ except:
 #         host.ports = Utils.getValidDictNoEmptyKeys(nmap.getDevicePorts(host.ip))
 #         bar.update(1)
 
-spider = ht.getModule('ht_spider')
-links, webforms = spider.crawl(url=input('Search a web domain: '), depth=2)
+# spider = ht.getModule('ht_spider')
+# links, webforms = spider.crawl(url=input('Search a web domain: '), depth=2)
 
-print(links)
-print(json.dumps(webforms, indent=4, sort_keys=True))
+# print(links)
+# print(json.dumps(webforms, indent=4, sort_keys=True))
+
+
 
 # __str__() function is written in the Objects.py file
 # ! It print in logger but only with "Logger.setDebugCore(True)" set
-# [host.__str__() for host in target.hosts]
+#[host.__str__() for host in target.hosts]
+
+zipp = ht.getModule('unzip')
+print(zipp.extractFile(input('File path: '), input('Password:' )))

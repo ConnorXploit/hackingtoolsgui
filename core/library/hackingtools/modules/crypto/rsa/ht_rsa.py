@@ -25,7 +25,6 @@ class StartModule():
 	'''
 
 	def __init__(self):
-		Logger.printMessage(message='ht_rsa loaded', debug_core=True)
 		pass
 
 	def help(self):

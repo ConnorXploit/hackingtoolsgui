@@ -3,7 +3,7 @@ import json
 
 class Host():
 
-    def __init__(self, target_id, ip='', ports=[], hostnames='', city='', country_name='', org='', isp='', last_update='', asn='', os='', data=''):
+    def __init__(self, target_id, ip=[], ports=[], hostnames=[], city='', country_name='', org='', isp='', last_update='', asn='', os='', data=''):
         self.target_id = target_id
         self.ip = ip
         self.ports = ports
@@ -46,6 +46,40 @@ class Host():
         Logger.printMessage(message='{data}'.format(data=json.dumps(parameters, indent=4, sort_keys=True), debug_core=True))
         return parameters
     
+    def addScanResult(self, result):
+        try:
+            print(result)
+            for r in result:
+                try:
+                    if "ip_str" == r:
+                        if not result[r] in self.ip:
+                            self.ip.append(result[r])
+                    if "ports" == r:
+                        for p, val in result[r]:
+                            if not p in self.ports:
+                                self.ports.append({p, val})
+                    if "hostnames" == r:
+                        self.hostnames += list(result[r])
+                    if "city" == r:
+                        self.city = result[r]
+                    if "country_name" == r:
+                        self.country_name = result[r]
+                    if "org" == r:
+                        self.org = result[r]
+                    if "isp" == r:
+                        self.isp = result[r]
+                    if "last_update" == r:
+                        self.last_update = result[r]
+                    if "asn" == r:
+                        self.asn = result[r]
+                    if "os" == r:
+                        self.os = result[r]
+                    if "data" == r:
+                        self.data = result[r]
+                except:
+                    pass
+        except:
+            pass
         
 class Target():
 
@@ -74,26 +108,56 @@ class Target():
         except:
             return False
 
+    def getHostsWithKey(self, key):
+        try:
+            response = []
+            for host in self.hosts:
+                if key in host.name:
+                    response.append(host)
+            return response
+        except:
+            return []
+
     def getHostByName(self, name):
         try:
             response = []
             for host in self.hosts:
                 if name in host.name:
-                    response.append(name)
+                    response.append(host)
             return response
         except:
             return []
 
-    def getHostByIp(self, ip):
+    def getHostByCpe(self, cpe):
+        try:
+            response = []
+            for host in self.hosts:
+                if name in host.name:
+                    response.append(host)
+            return response
+        except:
+            return []
+
+    def getHostsByIp(self, ip):
         try:
             response = []
             for host in self.hosts:
                 if ip in host.ip:
-                    response.append(ip)
+                    response.append(host)
             return response
         except:
             return None
 
+    def existsHostWithIp(self, ip):
+        try:
+            response = []
+            for host in self.hosts:
+                if ip in host.ip:
+                    return True
+            return False
+        except:
+            return None
+    
     def removeHost(self, host):
         try:
             if host in self.hosts:

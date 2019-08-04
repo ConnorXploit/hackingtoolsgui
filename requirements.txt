@@ -1,5 +1,6 @@
 altgraph==0.16.1
 astroid==2.2.5
+beautifulsoup4==4.8.0
 bleach==3.1.0
 certifi==2019.3.9
 cffi==1.12.1
@@ -13,7 +14,8 @@ docutils==0.14
 entrypoints==0.3
 Flask==1.0.2
 future==0.17.1
-hackingtools==0.9.2
+hackingtools==0.9.927
+html5lib==1.0.1
 httplib2==0.12.0
 idna==2.8
 isort==4.3.16
@@ -25,12 +27,14 @@ macholib==1.11
 Markdown==3.1.1
 MarkupSafe==1.1.0
 mccabe==0.6.1
+mechanize==0.4.2
 msgpack-python==0.5.6
 netaddr==0.7.19
 netifaces==0.10.9
 pefile==2018.8.8
 Pillow==2.9.0
 pkginfo==1.5.0.1
+progressbar2==3.42.0
 Pycco==0.6.0
 pycparser==2.19
 Pygments==2.3.1
@@ -41,6 +45,7 @@ PyPDF2==1.26.0
 pyreadline==2.1
 pystache==0.5.4
 python-nmap==0.6.1
+python-utils==2.3.0
 pytz==2018.9
 pywin32==224
 pywin32-ctypes==0.2.0
@@ -50,6 +55,7 @@ requests-toolbelt==0.9.1
 shodan==1.11.1
 six==1.12.0
 smartypants==2.0.1
+soupsieve==1.9.2
 sqlparse==0.3.0
 tqdm==4.31.1
 twine==1.13.0

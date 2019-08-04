@@ -8,7 +8,6 @@ output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 class StartModule():
     
     def __init__(self):
-        Logger.printMessage(message='ht_instagram loaded', debug_core=True)
         pass
         
     def help(self):

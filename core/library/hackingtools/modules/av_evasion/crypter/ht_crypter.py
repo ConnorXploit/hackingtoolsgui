@@ -36,7 +36,8 @@ class StartModule():
 
 # === __init__ ===
 	def __init__(self):
-		Logger.printMessage(message='ht_crypter loaded', debug_core=True)
+		Utils.emptyDirectory(output_dir)
+		pass
 
 # === help ===
 	def help(self):
@@ -80,15 +81,6 @@ class StartModule():
 		spec_file = os.path.abspath('{file}.spec'.format(file=filename.split('.')[0]))
 		if os.path.isfile(spec_file):
 			os.remove(spec_file)
-
-# === clean_output_dir ===
-	def clean_output_dir(self):
-		"""
-		Clean's the output.
-		Is used for removing all bad files we don't want in our path if we want to upload after to Pypi
-		"""
-		Logger.printMessage(message='{methodName}'.format(methodName='clean_output_dir'), debug_module=True)
-		Utils.emptyDirectory(output_dir)
 
 # === createStub ===
 	def createStub(self, crypto_data_hex, public_key, drop_file_name, save_name, is_iterating=False, is_last=False, convert=False):

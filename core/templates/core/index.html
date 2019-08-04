@@ -178,7 +178,6 @@
                       {{name}}
                       {% if funct.items %}
                         {% for funct_name, funct_params in funct.items %}
-
                           {% for tool, function in modules_functions_modals.items %}
                             {% for functi, data in function.items %}
                               {% if functi in funct_name and name in tool %}
@@ -205,6 +204,19 @@
                                             <div class="modal-footer">
                                               <input type="submit" class="btn btn-primary" value="Test {{functi}}"></button>
                                             </div>
+                                              <script>
+                                                $.ajax({
+                                                  url: '/{% url data_value %}',
+                                                  cache: false,
+                                                  async: true,
+                                                  success: fuction(){
+                                                    $('#popup').modal('show');
+                                                  },
+                                                  failure(){
+                                                    print('Error')
+                                                  }
+                                                });
+                                              </script>
                                           </form>
                                         {% endif %}
                                       {% endfor %}

@@ -8,3 +8,10 @@ python setup.py build
 python -m twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
 cd ..
 cd ..
+pip install hackingtools -U
+pip install hackingtools -U
+pip install hackingtools -U
+pip install hackingtools -U
+conda env export > environment.yml
+pip freeze > requirements.txt
+python manager.py runserver
