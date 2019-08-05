@@ -1,6 +1,7 @@
 from . import Config, Logger
 config = Config.getConfig(parentKey='core', key='Utils')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
+from colorama import Fore
 
 import random
 import base64
@@ -64,9 +65,11 @@ def emptyDirectory(directory):
             Returns if all was OK
     """
     try:
-        if os.path.isdir(directory):
-            shutil.rmtree(directory)
-            return True
+        Logger.printMessage(message='emptyDirectory', description='Would empty: {path}'.format(path=directory), color=Fore.YELLOW)
+        #if os.path.isdir(directory):
+        #    shutil.rmtree(directory)
+        #    return True
+        # ! Temporary ommited
         return False
     except:
         return False

@@ -274,16 +274,7 @@ def ht_bruteforce_crackZip(request):
             consecutive = request.POST.get('consecutive', False)
             async_execution = request.POST.get('async_execution', False)
             pool_it = request.POST.get('pool_it', False)
-            if pool_it:
-                x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-                if x_forwarded_for:
-                    ip = x_forwarded_for.split(',')[0]
-                else:
-                    ip = request.META.get('REMOTE_ADDR')
-                pool_list = []
-                pool_list += request.POST.get('pool_list', [ip])
-                if not ip in pool_list:
-                    pool_list.append(ip)
+            pool_list = request.POST.get('pool_list', [])
 
             # Get Crypter Module
             bruter = ht.getModule('ht_bruteforce')
@@ -292,9 +283,9 @@ def ht_bruteforce_crackZip(request):
             uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
             
             if pool_it:
-                node, response = ht.sendPool(request=request, function_api_call=function_api_call, params=dict(consecutive=consecutive, async_execution=async_execution, pool_it=pool_it, pool_list=pool_list), files=request.FILES)
+                node, response = ht.sendPool(function_api_call=function_api_call, params=dict(request.POST), files=request.FILES)
                 if response:
-                    return home(request=request, popup_text='Password cracked by {node} : {password}'.format(node=node, password=password))
+                    return home(request=request, popup_text='Password cracked by {node} : {password}'.format(node=node, password=response))
             if uploaded_file_url:
                 password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
             else:

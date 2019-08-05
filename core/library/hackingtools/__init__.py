@@ -1,5 +1,5 @@
 from .core import Logger
-from .core import Config
+from .core import Config, Utils
 config = Config.getConfig(parentKey='core', key='import_modules')
 config_locales = Config.getConfig(parentKey='core', key='locales')
 from colorama import Fore, Back, Style
@@ -18,6 +18,7 @@ from importlib import reload
 modules_loaded = {}
 
 nodes_pool = []
+MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -349,38 +350,46 @@ def getModuleConfig(moduleName):
 
 #TODO Continue documentation here
 
-# TODO Hacer pool para calls a functions en api de otros
 def addNodeToPool(node_ip):
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
-def sendPool(request, function_api_call='', params={}, files=[], pool_list=[]):
+def sendPool(function_api_call='', params={}, files=[], pool_list=[]):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
+    # Get nodes aren't notified into nodes
     for node in nodes_pool:
         if not node in pool_list:
             nodes.append(node)
             pool_list.append(node)
-    for node in nodes:
-        try:
-            node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
-            client = requests.Session()
-            client.get(node_call)
-            if 'csrftoken' in client.cookies:
-                params['csrfmiddlewaretoken'] = client.cookies['csrftoken']
-            else:
-                params['csrfmiddlewaretoken'] = client.cookies['csrf']
-            params['pool_list'] = pool_list
-            r = requests.post(node_call, files=files, data=params, headers=headers)
-            if r.status_code == 200:
-                return (node, r.text)
-            else:
-                return 'Bad request to: {node} - {error}'.join(node=node, error=r.status_code)
-            return (node, None)
-        except Exception as e:
-            print(e)
-            raise
-            return (node, None)
+    # I save pool_list items i don't have yet on my pools 
+    for node in pool_list:
+        if not node in nodes_pool:
+            nodes_pool.append(node)
+    if not MY_NODE_ID in pool_list:
+        for node in nodes:
+            try:
+                node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
+                client = requests.Session()
+                client.get(node_call)
+                if 'csrftoken' in client.cookies:
+                    params['csrfmiddlewaretoken'] = client.cookies['csrftoken']
+                else:
+                    params['csrfmiddlewaretoken'] = client.cookies['csrf']
+                pool_list.append(MY_NODE_ID)
+                params['pool_list'] = pool_list
+                r = requests.post(node_call, files=files, data=params, headers=headers)
+                if r.status_code == 200:
+                    return (node, r.text)
+                else:
+                    return 'Bad request to: {node} - {error}'.join(node=node, error=r.status_code)
+                return (node, None)
+            except Exception as e:
+                print(e)
+                raise
+                return (node, None)
+    else:
+        print('Returned to me my own function called into the pool')
     return (None, None)
 
 # Core method - Usado por: __importModules__()
