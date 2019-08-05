@@ -12,6 +12,7 @@ import types
 import inspect
 import ast
 import progressbar
+import requests
 from importlib import reload
 
 modules_loaded = {}
@@ -353,15 +354,32 @@ def addNodeToPool(node_ip):
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
-def sendPool(function_api_call='', params={}, files=[]):
+def sendPool(request, function_api_call='', params={}, files=[], pool_list=[]):
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+    nodes = []
     for node in nodes_pool:
+        if not node in pool_list:
+            nodes.append(node)
+            pool_list.append(node)
+    for node in nodes:
         try:
-            print('{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call))
-            r = requests.post('{node_ip}{function_api}'.format(node_ip=node, function_api=function_api_call), files=files, params=params)
+            node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
+            client = requests.Session()
+            client.get(node_call)
+            if 'csrftoken' in client.cookies:
+                params['csrfmiddlewaretoken'] = client.cookies['csrftoken']
+            else:
+                params['csrfmiddlewaretoken'] = client.cookies['csrf']
+            params['pool_list'] = pool_list
+            r = requests.post(node_call, files=files, data=params, headers=headers)
             if r.status_code == 200:
                 return (node, r.text)
+            else:
+                return 'Bad request to: {node} - {error}'.join(node=node, error=r.status_code)
             return (node, None)
-        except:
+        except Exception as e:
+            print(e)
+            raise
             return (node, None)
     return (None, None)
 
