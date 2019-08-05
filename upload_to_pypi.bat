@@ -12,6 +12,3 @@ pip install hackingtools -U
 pip install hackingtools -U
 pip install hackingtools -U
 pip install hackingtools -U
-conda env export > environment.yml
-pip freeze > requirements.txt
-python manager.py runserver
