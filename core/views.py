@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.urls import reverse, resolve
+from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
 from importlib import reload
 import os
@@ -261,6 +262,7 @@ def ht_metadata_get_metadata_exif(request):
 
 # ht_bruteforce
 
+@csrf_exempt
 def ht_bruteforce_crackZip(request):
     if len(request.FILES) != 0:
         if request.FILES['zipFile']:
@@ -270,8 +272,18 @@ def ht_bruteforce_crackZip(request):
             function_api_call = resolve(request.path_info).route
 
             consecutive = request.POST.get('consecutive', False)
-            async_execution = request.POST.get('async', False)
+            async_execution = request.POST.get('async_execution', False)
             pool_it = request.POST.get('pool_it', False)
+            if pool_it:
+                x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+                if x_forwarded_for:
+                    ip = x_forwarded_for.split(',')[0]
+                else:
+                    ip = request.META.get('REMOTE_ADDR')
+                pool_list = []
+                pool_list += request.POST.get('pool_list', [ip])
+                if not ip in pool_list:
+                    pool_list.append(ip)
 
             # Get Crypter Module
             bruter = ht.getModule('ht_bruteforce')
@@ -280,7 +292,7 @@ def ht_bruteforce_crackZip(request):
             uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
             
             if pool_it:
-                node, response = ht.sendPool(function_api_call=function_api_call, params={'consecutive':consecutive, 'async':async_execution, 'pool_it':pool_it}, files=[myfile])
+                node, response = ht.sendPool(request=request, function_api_call=function_api_call, params=dict(consecutive=consecutive, async_execution=async_execution, pool_it=pool_it, pool_list=pool_list), files=request.FILES)
                 if response:
                     return home(request=request, popup_text='Password cracked by {node} : {password}'.format(node=node, password=password))
             if uploaded_file_url:

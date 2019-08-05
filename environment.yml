@@ -23,7 +23,7 @@ dependencies:
     - django
     - flask==1.0.2
     - future==0.17.1
-    - hackingtools==0.9.939.41
+    - hackingtools==0.9.939.43
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8
@@ -36,6 +36,7 @@ dependencies:
     - markupsafe==1.1.0
     - mccabe==0.6.1
     - mechanize==0.4.2
+    - msgpack
     - msgpack-python==0.5.6
     - netaddr==0.7.19
     - netifaces==0.10.9
