@@ -10,6 +10,7 @@ output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 class StartModule():
 
 	def __init__(self):
+		Utils.emptyDirectory(output_dir)
 		pass
 
 	def help(self):
@@ -18,7 +19,7 @@ class StartModule():
 	def extractFile(self, zipPathName, password):
 		#ZipFile only works with 7z with ZypCrypto encryption for setting the password
 		try:
-			Logger.printMessage(message="extractFile", description=password, debug_core=True)
+			Logger.printMessage(message="extractFile", description='ZIP - {pwd}'.format(pwd=password), debug_core=True)
 			with ZipFile(zipPathName) as zf:
 				zf.extractall(pwd=str.encode(password))
 			return password

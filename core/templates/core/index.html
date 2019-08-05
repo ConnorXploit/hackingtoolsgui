@@ -34,9 +34,34 @@
       </div>
     {% endif %}
     <!-- Page Heading -->
+    <div class="modal fade" id="pool_list" tabindex="-1" role="dialog" aria-labelledby="pool_list_modal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <form action="{% url 'add_pool_node' %}" method="post">
+            {% csrf_token %}
+            <div class="modal-header">
+              <h5 class="modal-title" id="pool_list_modal">Pool List:</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <input name="pool_ip" class="form-control bg-light border-0 small col-md-6 mb-4" placeholder="https://1.2.3.4:8000" required/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Add pool node"></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-      <a href="{% url 'config_look_for_changes' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Refresh Config</a>
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <a href="#" href="#" data-toggle="modal" data-target="#pool_list" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-upload fa-sm text-white-50"></i> Pool List ({{pool_list|length}})</a> | 
+        <a href="{% url 'config_look_for_changes' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Refresh Config</a>
+      </div>
     </div>
 
     <!-- Content Row -->
@@ -187,7 +212,7 @@
                                     <div class="modal-content">
                                       {% for data_key, data_value in data.items %}
                                         {% if data_key in '__function__' %}
-                                          <form action="{% url data_value %}" method="post" enctype="multipart/form-data">
+                                          <form action="{% url data_value %}" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
                                             {% csrf_token %}
                                             <div class="modal-header">
                                               <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
@@ -204,19 +229,29 @@
                                             <div class="modal-footer">
                                               <input type="submit" class="btn btn-primary" value="Test {{functi}}"></button>
                                             </div>
-                                              <script>
-                                                $.ajax({
-                                                  url: '/{% url data_value %}',
-                                                  cache: false,
-                                                  async: true,
-                                                  success: fuction(){
-                                                    $('#popup').modal('show');
-                                                  },
-                                                  failure(){
-                                                    print('Error')
-                                                  }
-                                                });
-                                              </script>
+                                              {% comment %} <script>
+                                                function upload(event) {
+                                                  event.preventDefault();
+                                                  var data = new FormData($('form_{{data_value}}').get(0));
+
+                                                  $.ajax({
+                                                      url: $(this).attr('action'),
+                                                      type: $(this).attr('method'),
+                                                      data: data,
+                                                      cache: false,
+                                                      processData: false,
+                                                      contentType: false,
+                                                      success: function(data) {
+                                                          alert('success');
+                                                          alert(data)
+                                                      }
+                                                  });
+                                                  return false;
+                                                }
+                                                function submit(){
+                                                  $('form_{{data_value}}').submit(upload);
+                                                }
+                                              </script> {% endcomment %}
                                           </form>
                                         {% endif %}
                                       {% endfor %}

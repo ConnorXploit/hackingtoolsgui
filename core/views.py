@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
-from django.urls import reverse
+from django.urls import reverse, resolve
 from .library import hackingtools as ht
 from importlib import reload
 import os
@@ -17,6 +17,7 @@ def home(request, popup_text=''):
     modules_config_treeview = ht.__getModulesConfig_treeView__()
     modules_functions_modals = ht.getModulesModalTests()
     modules_functions_calls_console_string = ht.getModulesFunctionsCalls()
+    pool_list = ht.nodes_pool
     modules_all = {}
     categories = []
     for mod in modules_and_params:
@@ -24,7 +25,18 @@ def home(request, popup_text=''):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = ht.getModulesNames()
-    return render(request, 'core/index.html', { 'modules':modules_names, 'categories':categories, 'modules_all':modules_all, 'modules_forms':modules_forms, 'modules_forms_modal':modules_forms_modal, 'modules_config':modules_config, 'console_command':modules_functions_calls_console_string, 'modules_config_treeview':modules_config_treeview, 'modules_functions_modals':modules_functions_modals, 'popup_text':popup_text })
+    return render(request, 'core/index.html', { 
+        'modules':modules_names, 
+        'categories':categories, 
+        'modules_all':modules_all,
+        'modules_forms':modules_forms, 
+        'modules_forms_modal':modules_forms_modal, 
+        'modules_config':modules_config, 
+        'console_command':modules_functions_calls_console_string, 
+        'modules_config_treeview':modules_config_treeview, 
+        'modules_functions_modals':modules_functions_modals, 
+        'pool_list':pool_list,
+        'popup_text':popup_text })
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -57,6 +69,16 @@ def saveFileOutput(myfile, module_name, category):
     fs = FileSystemStorage(location=location)
     filename = fs.save(myfile.name, myfile)
     return os.path.join(location, filename)
+
+def add_pool_node(request):
+    try:
+        if request.POST:
+            pool_node = request.POST.get('pool_ip')
+        ht.addNodeToPool(pool_node)
+        return home(request=request, popup_text='\n'.join(ht.nodes_pool))
+    except:
+        return home(request=request, popup_text='Something went wrong')
+    return home(request=request, popup_text='\n'.join(ht.nodes_pool))
 
 # ht_rsa
 def ht_rsa_encrypt(request):
@@ -245,13 +267,11 @@ def ht_bruteforce_crackZip(request):
             # Get file
             myfile = request.FILES['zipFile']
 
-            consecutive = False
-            if request.POST.get('consecutive'):
-                consecutive = True
-                
-            async_execution = False
-            if request.POST.get('async'):
-                async_execution = True
+            function_api_call = resolve(request.path_info).route
+
+            consecutive = request.POST.get('consecutive', False)
+            async_execution = request.POST.get('async', False)
+            pool_it = request.POST.get('pool_it', False)
 
             # Get Crypter Module
             bruter = ht.getModule('ht_bruteforce')
@@ -259,13 +279,48 @@ def ht_bruteforce_crackZip(request):
             # Save the file
             uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
             
-            if async_execution:
-                pass # TODO Threads
+            if pool_it:
+                node, response = ht.sendPool(function_api_call=function_api_call, params={'consecutive':consecutive, 'async':async_execution, 'pool_it':pool_it}, files=[myfile])
+                if response:
+                    return home(request=request, popup_text='Password cracked by {node} : {password}'.format(node=node, password=password))
             if uploaded_file_url:
                 password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
             else:
-                return home(request=request, popup_text='Something wnet wrong. See the log')
+                return home(request=request, popup_text='Something went wrong. See the log')
 
             return home(request=request, popup_text=password)
 
     return home(request=request)
+
+# ht_unzip
+
+def test_ht_unzip_extractFile(request):
+    if len(request.FILES) != 0:
+        if request.FILES['zipFile']:
+            # Get file
+            myfile = request.FILES['zipFile']
+
+            password = ''
+            if request.POST.get('password'):
+                password = request.POST.get('password')
+
+            # Get Crypter Module
+            unzipper = ht.getModule('ht_unzip')
+
+            # Save the file
+            uploaded_file_url = saveFileOutput(myfile, "unzip", "crackers")
+            
+            if uploaded_file_url:
+                password = unzipper.extractFile(uploaded_file_url, password=password)
+            else:
+                return home(request=request, popup_text='Something went wrong. See the log')
+
+            if password:
+                return password
+                #return home(request=request, popup_text='Nice, password is: {pa}'.format(pa=password))
+            else:
+                return home(request=request, popup_text='Bad password')
+
+    return home(request=request)
+
+

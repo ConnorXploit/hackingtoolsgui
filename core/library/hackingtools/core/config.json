@@ -304,6 +304,37 @@
                         "__className__": "custom-control-input",
                         "label_desc": "Async execution",
                         "selected": true
+                    },
+                    "pool_it": {
+                        "__id__": "pool_it",
+                        "__type__": "checkbox",
+                        "__className__": "custom-control-input",
+                        "label_desc": "Pool the execution the the pool list",
+                        "selected": false
+                    }
+                }
+            }
+        },
+        "ht_unzip": {
+            "__gui_label__": "Unzip",
+            "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+            "django_form_module_function": {
+                "extractFile": {
+                    "__function__": "test_ht_unzip_extractFile",
+                    "__return__": "text",
+                    "zipFile": {
+                        "__id__": "zipFile",
+                        "__type__": "file",
+                        "__className__": "file-input",
+                        "label_desc": "Browse zip file for trying to extract",
+                        "required": true
+                    },
+                    "password": {
+                        "__id__": "password",
+                        "__type__": "password",
+                        "__className__": "file-input",
+                        "label_desc": "Password to unzip",
+                        "required": true
                     }
                 }
             }

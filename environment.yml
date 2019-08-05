@@ -1,4 +1,4 @@
-name: hackingtoolsguienv
+name: HT
 channels:
   - defaults
 dependencies:
@@ -26,7 +26,7 @@ dependencies:
     - django==2.2
     - flask==1.0.2
     - future==0.17.1
-    - hackingtools==0.9.938
+    - hackingtools==0.9.939.4
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8
@@ -57,6 +57,7 @@ dependencies:
     - python-utils==2.3.0
     - pytz==2018.9
     - pywin32==224
+    - rarfile==3.0
     - requests==2.21.0
     - shodan==1.11.1
     - smartypants==2.0.1
@@ -67,5 +68,4 @@ dependencies:
     - werkzeug==0.14.1
     - wrapt==1.11.1
     - xlsxwriter==1.1.5
-prefix: C:\Anaconda3\envs\hackingtoolsguienv
 

@@ -290,5 +290,5 @@ def getDict(length=8, maxvalue=10000, alphabet='lalpha', consecutive=False):
     else:
         for i in range(maxvalue):
             res.append(randomText(length=length, alphabet=alphabet))
-    Logger.printMessage(message='getDict', description=res[20:], debug_core=True)
+    Logger.printMessage(message='getDict', description=res[:10], debug_core=True)
     return res

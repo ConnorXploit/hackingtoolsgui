@@ -16,6 +16,8 @@ from importlib import reload
 
 modules_loaded = {}
 
+nodes_pool = []
+
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
 blacklist_extensions = config['blacklist_extensions']
@@ -345,6 +347,23 @@ def getModuleConfig(moduleName):
 # Import Modules
 
 #TODO Continue documentation here
+
+# TODO Hacer pool para calls a functions en api de otros
+def addNodeToPool(node_ip):
+    if not node_ip in nodes_pool:
+        nodes_pool.append(node_ip)
+
+def sendPool(function_api_call='', params={}, files=[]):
+    for node in nodes_pool:
+        try:
+            print('{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call))
+            r = requests.post('{node_ip}{function_api}'.format(node_ip=node, function_api=function_api_call), files=files, params=params)
+            if r.status_code == 200:
+                return (node, r.text)
+            return (node, None)
+        except:
+            return (node, None)
+    return (None, None)
 
 # Core method - Usado por: __importModules__()
 def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):
