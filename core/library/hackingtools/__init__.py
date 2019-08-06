@@ -13,12 +13,17 @@ import inspect
 import ast
 import progressbar
 import requests
+import sys
 from importlib import reload
 
 modules_loaded = {}
 
 nodes_pool = []
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
+
+https = '' # Anytime when adding ssl, shold be with an 's'
+
+listening_port = sys.argv[-1].split(':')[1]
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -355,6 +360,7 @@ def addNodeToPool(node_ip):
         nodes_pool.append(node_ip)
 
 def sendPool(function_api_call='', params={}, files=[]):
+    my_public_ip = Utils.getMyPublicIP()
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
@@ -376,10 +382,11 @@ def sendPool(function_api_call='', params={}, files=[]):
     for node in pool_list:
         if not node in nodes_pool:
             nodes.append(node)
-            nodes_pool.append(node)
+            if not node == my_public_ip:
+                nodes_pool.append(my_public_ip)
     if len(nodes) > 0:
-        if not MY_NODE_ID in pool_list:
-            pool_list.append(MY_NODE_ID)
+        if not my_public_ip in pool_list:
+            pool_list.append('http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port))
             pool_counter += 1
             for node in nodes:
                 try:
@@ -398,10 +405,10 @@ def sendPool(function_api_call='', params={}, files=[]):
                     r = requests.post(node_call, files=files, data=params, headers=headers)
 
                     if r.status_code == 200:
-                        if pool_counter == 1:
-                            Logger.printMessage('POOL_SOLVED', node_call, color=Fore.ORANGE, debug_module=True)
+                        if pool_counter == 1 and params['creator'] == MY_NODE_ID and params['creator_ip'] == my_public_ip:
+                            Logger.printMessage('POOL_SOLVED', node_call, color=Fore.BLUE, debug_module=True)
                             pool_list = []
-                            nodes_pool.remove(MY_NODE_ID)
+                            nodes_pool.remove(my_public_ip)
                             return (node, r.text)
                         return (node, r)
                     if r:

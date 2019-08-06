@@ -1,4 +1,4 @@
-from . import Config, Logger
+from . import Config, Logger, Utils
 import hackingtools as ht
 config = Config.getConfig(parentKey='core', key='Utils')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
@@ -19,8 +19,10 @@ def send(node_request, functionName, pool_nodes):
             if pool_it:
                 params = dict(node_request.POST)
                 params['pool_list'] = pool_nodes
-                if not params['creator']:
+                if not 'creator' in params:
                     params['creator'] = ht.MY_NODE_ID
+                if not 'creator_ip' in params:
+                    params['creator_ip'] = Utils.getMyPublicIP()
                 node, response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
                 if response:
                     return (node, response)
