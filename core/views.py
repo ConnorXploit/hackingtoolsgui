@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.urls import reverse, resolve
 from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
+from .library.hackingtools.core import Utils
 from importlib import reload
 import os
 import json
@@ -106,6 +107,9 @@ def ht_rsa_decrypt(request):
 
 def ht_rsa_getRandomKeypair(request):
     length = None
+    response = Utils.send(request, "getRandomKeypair")
+    if response:
+        return home(request=request, popup_text=response)
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
     crypter = ht.getModule('ht_rsa')
@@ -117,7 +121,11 @@ def ht_rsa_getRandomKeypair(request):
     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
     return home(request=request, popup_text=keypair)
 
+@csrf_exempt
 def ht_rsa_generate_keypair(request):
+    response = Utils.send(request, "generate_keypair")
+    if response:
+        return home(request=request, popup_text=response)
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
@@ -264,35 +272,35 @@ def ht_metadata_get_metadata_exif(request):
 
 @csrf_exempt
 def ht_bruteforce_crackZip(request):
-    if len(request.FILES) != 0:
-        if request.FILES['zipFile']:
-            # Get file
-            myfile = request.FILES['zipFile']
+    try:
+        if len(request.FILES) != 0:
+            if request.FILES['zipFile']:
+                # Get file
+                myfile = request.FILES['zipFile']
 
-            function_api_call = resolve(request.path_info).route
+                consecutive = request.POST.get('consecutive', False)
+                async_execution = request.POST.get('async_execution', False)
+                pool_it = request.POST.get('pool_it_crackZip', False)
+                pool_list = request.POST.get('pool_list', [])
 
-            consecutive = request.POST.get('consecutive', False)
-            async_execution = request.POST.get('async_execution', False)
-            pool_it = request.POST.get('pool_it', False)
-            pool_list = request.POST.get('pool_list', [])
+                # Get Crypter Module
+                bruter = ht.getModule('ht_bruteforce')
 
-            # Get Crypter Module
-            bruter = ht.getModule('ht_bruteforce')
+                # Save the file
+                uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
+                
+                if pool_it:
+                    node, response = ht.sendPool(function_api_call=function_api_call, params=dict(request.POST), files=request.FILES)
+                    if response:
+                        return home(request=request, popup_text='Password cracked by {node} : {password}'.format(node=node, password=response))
+                if uploaded_file_url:
+                    password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
+                else:
+                    return home(request=request, popup_text='Something went wrong. See the log')
 
-            # Save the file
-            uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
-            
-            if pool_it:
-                node, response = ht.sendPool(function_api_call=function_api_call, params=dict(request.POST), files=request.FILES)
-                if response:
-                    return home(request=request, popup_text='Password cracked by {node} : {password}'.format(node=node, password=response))
-            if uploaded_file_url:
-                password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
-            else:
-                return home(request=request, popup_text='Something went wrong. See the log')
-
-            return home(request=request, popup_text=password)
-
+                return home(request=request, popup_text=password)
+    except ConnectionError as conError:
+        print('Connection aborted. Remote end closed connection without response')
     return home(request=request)
 
 # ht_unzip

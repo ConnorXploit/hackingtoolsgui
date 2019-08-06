@@ -245,6 +245,13 @@
                         "label_desc": "Prime B",
                         "value": "2099837",
                         "required": true
+                    },
+                    "__pool_it_generate_keypair__": {
+                        "__id__": "__pool_it_generate_keypair__",
+                        "__type__": "checkbox",
+                        "__className__": "custom-control-input",
+                        "label_desc": "Pool the execution the the pool list",
+                        "selected": false
                     }
                 },
                 "getRandomKeypair": {
@@ -256,6 +263,13 @@
                         "__className__": "form-control",
                         "label_desc": "Prime Length",
                         "value": "8"
+                    },
+                    "__pool_it_getRandomKeypair__": {
+                        "__id__": "__pool_it_getRandomKeypair__",
+                        "__type__": "checkbox",
+                        "__className__": "custom-control-input",
+                        "label_desc": "Pool the execution the the pool list",
+                        "selected": false
                     }
                 }
             }
@@ -305,8 +319,8 @@
                         "label_desc": "Async execution",
                         "selected": true
                     },
-                    "pool_it": {
-                        "__id__": "pool_it",
+                    "__pool_it_crackZip__": {
+                        "__id__": "__pool_it_crackZip__",
                         "__type__": "checkbox",
                         "__className__": "custom-control-input",
                         "label_desc": "Pool the execution the the pool list",
