@@ -14,15 +14,15 @@ def send(node_request, functionName):
     function_api_call = resolve(node_request.path_info).route
     pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
     if pool_it:
-        if node_request.POST:
-            pool_list = node_request.POST.get('pool_list', [])
-            node, response = ht.sendPool(function_api_call=function_api_call, params=dict(node_request.POST), files=node_request.FILES)
-            if response:
-                return response
+        Logger.printMessage(message='send', description='Sending function {f} to {h}'.format(f=functionName, h=ht.nodes_pool))
+        node, response = ht.sendPool(function_api_call=function_api_call, params=dict(node_request.POST), files=node_request.FILES)
+        if response:
+            return response
         return None
     else:
         Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW)
         return None
+
 # File Manipulation
 def getFileContentInByteArray(filePath):
     """Function that returns a ByteArray with the data from a file

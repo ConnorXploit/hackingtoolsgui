@@ -354,9 +354,12 @@ def addNodeToPool(node_ip):
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
-def sendPool(function_api_call='', params={}, files=[], pool_list=[]):
+def sendPool(function_api_call='', params={}, files=[]):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
+    pool_list=[]
+    if params and params['pool_list']:
+        pool_list = params['pool_list']
     # Get nodes aren't notified into nodes
     for node in nodes_pool:
         if not node in pool_list:
@@ -365,6 +368,7 @@ def sendPool(function_api_call='', params={}, files=[], pool_list=[]):
     # I save pool_list items i don't have yet on my pools 
     for node in pool_list:
         if not node in nodes_pool:
+            nodes.append(node)
             nodes_pool.append(node)
     if not MY_NODE_ID in pool_list:
         for node in nodes:
@@ -381,8 +385,6 @@ def sendPool(function_api_call='', params={}, files=[], pool_list=[]):
                 r = requests.post(node_call, files=files, data=params, headers=headers)
                 if r.status_code == 200:
                     return (node, r.text)
-                else:
-                    return 'Bad request to: {node} - {error}'.join(node=node, error=r.status_code)
                 return (node, None)
             except Exception as e:
                 print(e)
