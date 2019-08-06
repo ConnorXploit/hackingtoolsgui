@@ -122,9 +122,9 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    response = Utils.send(request, "getRandomKeypair")
+    response = Utils.send(request, "getRandomKeypair", ht.getPoolNodes())
     if response:
-        return home(request=request, popup_text=response)
+        return response
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
@@ -139,7 +139,7 @@ def ht_rsa_getRandomKeypair(request):
 
 @csrf_exempt
 def ht_rsa_generate_keypair(request):
-    response = Utils.send(request, "generate_keypair")
+    response = Utils.send(request, "generate_keypair", ht.getPoolNodes())
     if response:
         return home(request=request, popup_text=response)
     if request.POST.get('prime_a') and request.POST.get('prime_b'):

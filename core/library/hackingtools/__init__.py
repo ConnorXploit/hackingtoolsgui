@@ -358,8 +358,15 @@ def sendPool(function_api_call='', params={}, files=[]):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
-    if params and params['pool_list']:
+    pool_counter = 0
+    try:
         pool_list = params['pool_list']
+    except:
+        pass
+    try:
+        pool_counter = int(params['pool_counter'])
+    except:
+        pass
     # Get nodes aren't notified into nodes
     for node in nodes_pool:
         if not node in pool_list:
@@ -370,29 +377,40 @@ def sendPool(function_api_call='', params={}, files=[]):
         if not node in nodes_pool:
             nodes.append(node)
             nodes_pool.append(node)
-    if not MY_NODE_ID in pool_list:
-        for node in nodes:
-            try:
-                node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
-                client = requests.Session()
-                client.get(node_call)
-                if 'csrftoken' in client.cookies:
-                    params['csrfmiddlewaretoken'] = client.cookies['csrftoken']
-                else:
-                    params['csrfmiddlewaretoken'] = client.cookies['csrf']
-                pool_list.append(MY_NODE_ID)
-                params['pool_list'] = pool_list
-                r = requests.post(node_call, files=files, data=params, headers=headers)
-                if r.status_code == 200:
-                    return (node, r.text)
-                return (node, None)
-            except Exception as e:
-                print(e)
-                raise
-                return (node, None)
+    if len(nodes) > 0:
+        if not MY_NODE_ID in pool_list:
+            pool_counter += 1
+            for node in nodes:
+                try:
+                    node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
+                    client = requests.Session()
+                    client.get(node_call)
+                    if 'csrftoken' in client.cookies:
+                        params['csrfmiddlewaretoken'] = client.cookies['csrftoken']
+                    else:
+                        params['csrfmiddlewaretoken'] = client.cookies['csrf']
+                    pool_list.append(MY_NODE_ID)
+                    params['pool_list'] = pool_list
+                    params['pool_counter'] = pool_counter
+                    r = requests.post(node_call, files=files, data=params, headers=headers)
+                    if r.status_code == 200:
+                        if pool_counter == 1:
+                            return (node, r.text)
+                        return (node, r)
+                    return (node, None)
+                except Exception as e:
+                    print(e)
+                    raise
+                    return (node, None)
+        else:
+            Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
     else:
-        print('Returned to me my own function called into the pool')
+        Logger.printMessage('There is nobody on the pool list', debug_module=True)
+
     return (None, None)
+
+def getPoolNodes():
+    return nodes_pool
 
 # Core method - Usado por: __importModules__()
 def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):

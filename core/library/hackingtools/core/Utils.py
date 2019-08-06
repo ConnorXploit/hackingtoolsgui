@@ -10,12 +10,13 @@ import base64
 import os
 
 # Nodes Conections
-def send(node_request, functionName):
+def send(node_request, functionName, pool_nodes):
     function_api_call = resolve(node_request.path_info).route
     pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
     if pool_it:
-        Logger.printMessage(message='send', description='Sending function {f} to {h}'.format(f=functionName, h=ht.nodes_pool))
-        node, response = ht.sendPool(function_api_call=function_api_call, params=dict(node_request.POST), files=node_request.FILES)
+        params = dict(node_request.POST)
+        params['pool_list'] = pool_nodes
+        node, response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
         if response:
             return response
         return None
