@@ -34,6 +34,18 @@
       </div>
     {% endif %}
     <!-- Page Heading -->
+    {% comment %} <script>
+      function copyNodeIdToClipboard() {
+        var copyText = document.getElementById("my_pool_id");
+        copyText.select();
+        document.execCommand("copy");
+        temp = copyText.value
+        copyText.value = 'Pool Node copied for sharing'
+        setTimeout(function(){
+          copyText.value = temp
+        }, 2000);
+      }
+    </script> {% endcomment %}
     <div class="modal fade" id="pool_list" tabindex="-1" role="dialog" aria-labelledby="pool_list_modal" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -58,7 +70,8 @@
     </div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <div class="d-sm-flex align-items-center justify-content-between mb-6">
+        {% comment %} <input type="text" class="form-control" id="my_pool_id" value="{{my_node_id_pool}}" size="{{my_node_id_pool|length}}" onfocus="copyNodeIdToClipboard()" readonly/> |  {% endcomment %}
         <a href="#" href="#" data-toggle="modal" data-target="#pool_list" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-upload fa-sm text-white-50"></i> Pool List ({{pool_list|length}})</a> | 
         <a href="{% url 'config_look_for_changes' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Refresh Config</a>
       </div>

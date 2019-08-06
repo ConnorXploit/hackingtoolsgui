@@ -6,23 +6,35 @@ from colorama import Fore
 from django.urls import resolve
 
 import random
+import requests
 import base64
 import os
 
 # Nodes Conections
 def send(node_request, functionName, pool_nodes):
-    function_api_call = resolve(node_request.path_info).route
-    pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
-    if pool_it:
-        params = dict(node_request.POST)
-        params['pool_list'] = pool_nodes
-        node, response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
-        if response:
-            return response
+    try:
+        if config["WANT_TO_BE_IN_POOL"]:
+            function_api_call = resolve(node_request.path_info).route
+            pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
+            if pool_it:
+                params = dict(node_request.POST)
+                params['pool_list'] = pool_nodes
+                if not params['creator']:
+                    params['creator'] = ht.MY_NODE_ID
+                node, response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                if response:
+                    return (node, response)
+                return None
+            else:
+                Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW)
+                return None
+        else:
+            Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
+            return None
+    except Exception as e:
+        Logger.printMessage(message='send', description=str(e), is_error=True)
         return None
-    else:
-        Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW)
-        return None
+
 
 # File Manipulation
 def getFileContentInByteArray(filePath):
@@ -105,6 +117,12 @@ def getValidDictNoEmptyKeys(data):
                 print('Dict encontrado: en ', d)
                 final_data[d] = getValidDictNoEmptyKeys(data[d])
     return final_data
+
+def getMyPublicIP():
+    try:
+        return requests.get('https://api.ipify.org').text
+    except:
+        return '127.0.0.1'
 
 # Maths
 def euclides(a, b):

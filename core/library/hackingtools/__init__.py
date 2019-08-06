@@ -355,7 +355,7 @@ def addNodeToPool(node_ip):
         nodes_pool.append(node_ip)
 
 def sendPool(function_api_call='', params={}, files=[]):
-    headers = {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
     pool_counter = 0
@@ -379,23 +379,29 @@ def sendPool(function_api_call='', params={}, files=[]):
             nodes_pool.append(node)
     if len(nodes) > 0:
         if not MY_NODE_ID in pool_list:
+            pool_list.append(MY_NODE_ID)
             pool_counter += 1
             for node in nodes:
                 try:
                     node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
+
                     client = requests.Session()
                     client.get(node_call)
                     if 'csrftoken' in client.cookies:
                         params['csrfmiddlewaretoken'] = client.cookies['csrftoken']
                     else:
                         params['csrfmiddlewaretoken'] = client.cookies['csrf']
-                    pool_list.append(MY_NODE_ID)
+
                     params['pool_list'] = pool_list
                     params['pool_counter'] = pool_counter
+
                     r = requests.post(node_call, files=files, data=params, headers=headers)
+
                     if r.status_code == 200:
                         if pool_counter == 1:
                             Logger.printMessage('POOL_SOLVED', node_call, color=Fore.ORANGE, debug_module=True)
+                            pool_list = []
+                            nodes_pool.remove(MY_NODE_ID)
                             return (node, r.text)
                         return (node, r)
                     if r:
@@ -403,7 +409,6 @@ def sendPool(function_api_call='', params={}, files=[]):
                     return (node, None)
                 except Exception as e:
                     print(e)
-                    raise
                     return (node, None)
         else:
             Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)

@@ -27,6 +27,7 @@ def home(request, popup_text=''):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = ht.getModulesNames()
+    my_node_id_pool = ht.MY_NODE_ID
     return render(request, 'core/index.html', { 
         'modules':modules_names, 
         'categories':categories, 
@@ -38,7 +39,8 @@ def home(request, popup_text=''):
         'modules_config_treeview':modules_config_treeview, 
         'modules_functions_modals':modules_functions_modals, 
         'pool_list':pool_list,
-        'popup_text':popup_text })
+        'popup_text':popup_text,
+        'my_node_id_pool':my_node_id_pool})
 
 def documentation(request, module_name=''):
     if module_name:
@@ -54,6 +56,13 @@ def documentation(request, module_name=''):
         return home(request=request, popup_text='Module {mod} doesn\'t exist'.format(mod=module_name))
     else:
         return home(request=request, popup_text='You have to select a module for getting it\'s documentation')
+
+def sendPool(request, functionName):
+    response = Utils.send(request, functionName, ht.getPoolNodes())
+    if response:
+        if request.POST.get('creator') == ht.MY_NODE_ID:
+            return home(request=request, popup_text=response)
+        return HttpResponse(response)
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -122,9 +131,7 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    response = Utils.send(request, "getRandomKeypair", ht.getPoolNodes())
-    if response:
-        return HttpResponse(response)
+    sendPool(request, "getRandomKeypair")
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
@@ -139,9 +146,7 @@ def ht_rsa_getRandomKeypair(request):
 
 @csrf_exempt
 def ht_rsa_generate_keypair(request):
-    response = Utils.send(request, "generate_keypair", ht.getPoolNodes())
-    if response:
-        return HttpResponse(response)
+    sendPool(request, "generate_keypair")
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
@@ -292,16 +297,13 @@ def ht_bruteforce_crackZip(request):
         if len(request.FILES) != 0:
             if request.FILES['zipFile']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
-                response = Utils.send(request, "crackZip", ht.getPoolNodes())
-                if response:
-                    return HttpResponse(response)
+                sendPool(request, "crackZip")
 
                 # Get file
                 myfile = request.FILES['zipFile']
 
                 consecutive = request.POST.get('consecutive', False)
                 async_execution = request.POST.get('async_execution', False)
-
 
                 # Get Crypter Module
                 bruter = ht.getModule('ht_bruteforce')
