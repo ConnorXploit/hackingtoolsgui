@@ -13,3 +13,4 @@ pycco core\library\hackingtools\modules\osint\instagram\ht_instagram.py -p
 pycco core\library\hackingtools\modules\osint\nmap\ht_nmap.py -p
 pycco core\library\hackingtools\modules\osint\shodan\ht_shodan.py -p
 pycco core\library\hackingtools\modules\web\sqlinjection\ht_sqlinjection.py -p
+move docs core/static/docs

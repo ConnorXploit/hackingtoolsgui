@@ -60,7 +60,7 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if request.POST.get('creator') == ht.MY_NODE_ID:
+        if request.POST.get('creator') == ht.MY_NODE_ID and request.POST.get('creator_ip') == Utils.getMyPublicIP():
             return home(request=request, popup_text=response)
         return HttpResponse(response)
 
@@ -131,7 +131,9 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    sendPool(request, "getRandomKeypair")
+    thanks_node, response = sendPool(request, "getRandomKeypair")
+    if response:
+        return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=thanks_node, response=response))
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
@@ -146,7 +148,9 @@ def ht_rsa_getRandomKeypair(request):
 
 @csrf_exempt
 def ht_rsa_generate_keypair(request):
-    sendPool(request, "generate_keypair")
+    thanks_node, response = sendPool(request, "generate_keypair")
+    if response:
+        return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=thanks_node, response=response))
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
@@ -297,7 +301,9 @@ def ht_bruteforce_crackZip(request):
         if len(request.FILES) != 0:
             if request.FILES['zipFile']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
-                sendPool(request, "crackZip")
+                thanks_node, response = sendPool(request, "crackZip")
+                if response:
+                    return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=thanks_node, response=response))
 
                 # Get file
                 myfile = request.FILES['zipFile']
