@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+  <script type="text/javascript">
+    function iframeLoaded() {
+        var iFrameID = document.getElementById('encoder_iframe');
+        if(iFrameID) {
+              // here you can make the height, I delete it first, then I make it again
+              iFrameID.height = "";
+              iFrameID.height = iFrameID.contentWindow.document.body.scrollHeight + "px";
+        }   
+    }
+    $(document).ready(function () {
+      $(this).find('.container-fluid').removeClass("container-fluid");
+      $(this).find('.mb-4').removeClass("mb-4");
+    });
+  </script>
+  <iframe id="encoder_iframe" onload="iframeLoaded()" src="{{doc_mod}}" class="iframe-documentation"></iframe>
+{% endblock %}

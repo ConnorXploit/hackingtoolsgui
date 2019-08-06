@@ -108,6 +108,22 @@
           </div>
         </li>
 
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'home' %}" data-toggle="collapse" data-target="#collapseDocumentation" aria-expanded="true" aria-controls="collapseDocumentation">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Documentation</span>
+          </a>
+          <div id="collapseDocumentation" class="collapse" aria-labelledby="headingDocumentation" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Modules:</h6>
+              {% for mod in modules %}
+                <a class="collapse-item" href="{% url 'documentation' mod %}">{{mod}}</a>
+              {% endfor %}
+            </div>
+          </div>
+        </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider" />
 

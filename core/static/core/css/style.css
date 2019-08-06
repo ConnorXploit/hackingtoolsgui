@@ -267,3 +267,11 @@ a:hover {
     border-bottom:none;
     background-color:#FFF;
 }
+.iframe-documentation{
+    display: block; 
+    width: 100%;
+    border: none;
+    overflow: hidden;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}

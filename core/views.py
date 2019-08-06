@@ -40,6 +40,21 @@ def home(request, popup_text=''):
         'pool_list':pool_list,
         'popup_text':popup_text })
 
+def documentation(request, module_name=''):
+    if module_name:
+        for mod in ht.modules_loaded:
+            if module_name == mod.split('.')[-1]:
+                doc_mod = '/static/docs/core/library/hackingtools/modules/{c}/{b}/{a}.html'.format(c=mod.split('.')[-3], b=module_name.split('ht_')[1], a=module_name)
+                categories = []
+                for mod in ht.getModulesJSON():
+                    if not mod.split('.')[1] in categories:
+                        categories.append(mod.split('.')[1])
+                modules_names = ht.getModulesNames()
+                return render(request, 'core/documentation.html', { 'doc_mod' : doc_mod, 'categories' : categories, 'modules' : modules_names })
+        return home(request=request, popup_text='Module {mod} doesn\'t exist'.format(mod=module_name))
+    else:
+        return home(request=request, popup_text='You have to select a module for getting it\'s documentation')
+
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_cat = request.POST.get('category_name')
