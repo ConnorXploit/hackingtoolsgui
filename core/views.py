@@ -105,11 +105,12 @@ def ht_rsa_decrypt(request):
     else:
         return home(request=request)
 
+@csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    length = None
     response = Utils.send(request, "getRandomKeypair")
     if response:
         return home(request=request, popup_text=response)
+    length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
     crypter = ht.getModule('ht_rsa')
