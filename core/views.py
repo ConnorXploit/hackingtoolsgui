@@ -120,6 +120,7 @@ def ht_rsa_decrypt(request):
     else:
         return home(request=request)
 
+@csrf_exempt
 def ht_rsa_getRandomKeypair(request):
     response = Utils.send(request, "getRandomKeypair", ht.getPoolNodes())
     if response:
@@ -136,10 +137,11 @@ def ht_rsa_getRandomKeypair(request):
     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
     return home(request=request, popup_text=keypair)
 
+@csrf_exempt
 def ht_rsa_generate_keypair(request):
     response = Utils.send(request, "generate_keypair", ht.getPoolNodes())
     if response:
-        return home(request=request, popup_text=response)
+        return HttpResponse(response)
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
@@ -284,33 +286,29 @@ def ht_metadata_get_metadata_exif(request):
 
 # ht_bruteforce
 
+@csrf_exempt
 def ht_bruteforce_crackZip(request):
     try:
         if len(request.FILES) != 0:
             if request.FILES['zipFile']:
+                # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
+                response = Utils.send(request, "crackZip", ht.getPoolNodes())
+                if response:
+                    return HttpResponse(response)
+
                 # Get file
                 myfile = request.FILES['zipFile']
 
                 consecutive = request.POST.get('consecutive', False)
                 async_execution = request.POST.get('async_execution', False)
 
-                response = Utils.send(request, "crackZip", ht.getPoolNodes())
-                if response:
-                    return home(request=request, popup_text=response)
-
-                pool_it = request.POST.get('pool_it_crackZip', False)
-                pool_list = request.POST.get('pool_list', [])
 
                 # Get Crypter Module
                 bruter = ht.getModule('ht_bruteforce')
 
                 # Save the file
                 uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
-                
-                if pool_it:
-                    node, response = ht.sendPool(function_api_call=function_api_call, params=dict(request.POST), files=request.FILES)
-                    if response:
-                        return home(request=request, popup_text='Password cracked by {node} : {password}'.format(node=node, password=response))
+
                 if uploaded_file_url:
                     password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
                 else:

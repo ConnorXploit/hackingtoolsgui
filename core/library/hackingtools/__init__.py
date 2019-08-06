@@ -395,6 +395,7 @@ def sendPool(function_api_call='', params={}, files=[]):
                     r = requests.post(node_call, files=files, data=params, headers=headers)
                     if r.status_code == 200:
                         if pool_counter == 1:
+                            Logger.printMessage('POOL_SOLVED', node_call, color=Fore.ORANGE, debug_module=True)
                             return (node, r.text)
                         return (node, r)
                     if r:
