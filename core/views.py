@@ -133,7 +133,7 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    sendPool(request, "generate_keypair")
+    sendPool(request, "getRandomKeypair")
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
@@ -299,7 +299,7 @@ def ht_bruteforce_crackZip(request):
         if len(request.FILES) != 0:
             if request.FILES['zipFile']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
-                sendPool(request, "generate_keypair")
+                sendPool(request, "crackZip")
                     
                 # Get file
                 myfile = request.FILES['zipFile']
