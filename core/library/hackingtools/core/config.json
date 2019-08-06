@@ -268,7 +268,7 @@
                         "__id__": "__pool_it_getRandomKeypair__",
                         "__type__": "checkbox",
                         "__className__": "custom-control-input",
-                        "label_desc": "Pool the execution the the pool list",
+                        "label_desc": "Pool the execution to the pool list",
                         "selected": false
                     }
                 }

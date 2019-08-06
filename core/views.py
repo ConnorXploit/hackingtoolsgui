@@ -120,7 +120,6 @@ def ht_rsa_decrypt(request):
     else:
         return home(request=request)
 
-@csrf_exempt
 def ht_rsa_getRandomKeypair(request):
     response = Utils.send(request, "getRandomKeypair", ht.getPoolNodes())
     if response:
@@ -137,7 +136,6 @@ def ht_rsa_getRandomKeypair(request):
     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
     return home(request=request, popup_text=keypair)
 
-@csrf_exempt
 def ht_rsa_generate_keypair(request):
     response = Utils.send(request, "generate_keypair", ht.getPoolNodes())
     if response:
@@ -286,7 +284,6 @@ def ht_metadata_get_metadata_exif(request):
 
 # ht_bruteforce
 
-@csrf_exempt
 def ht_bruteforce_crackZip(request):
     try:
         if len(request.FILES) != 0:
@@ -296,6 +293,11 @@ def ht_bruteforce_crackZip(request):
 
                 consecutive = request.POST.get('consecutive', False)
                 async_execution = request.POST.get('async_execution', False)
+
+                response = Utils.send(request, "crackZip", ht.getPoolNodes())
+                if response:
+                    return home(request=request, popup_text=response)
+
                 pool_it = request.POST.get('pool_it_crackZip', False)
                 pool_list = request.POST.get('pool_list', [])
 
