@@ -355,7 +355,7 @@ def addNodeToPool(node_ip):
         nodes_pool.append(node_ip)
 
 def sendPool(function_api_call='', params={}, files=[]):
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+    headers = {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
     pool_counter = 0
@@ -396,6 +396,8 @@ def sendPool(function_api_call='', params={}, files=[]):
                     if r.status_code == 200:
                         if pool_counter == 1:
                             return (node, r.text)
+                        return (node, r)
+                    if r:
                         return (node, r)
                     return (node, None)
                 except Exception as e:

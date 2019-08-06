@@ -124,7 +124,7 @@ def ht_rsa_decrypt(request):
 def ht_rsa_getRandomKeypair(request):
     response = Utils.send(request, "getRandomKeypair", ht.getPoolNodes())
     if response:
-        return response
+        return HttpResponse(response)
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
