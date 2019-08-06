@@ -28,14 +28,14 @@ def send(node_request, functionName, pool_nodes):
                     return (node, response)
                 return ('error_pool', 'Nobody could help you..')
             else:
-                Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW)
-                return None
+                Logger.printMessage(message='\'__pool_it_{func}__\''.format(func=functionName), description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW)
+                return ('\'__pool_it_{func}__\''.format(func=functionName), '{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName))
         else:
-            Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
-            return None
+            Logger.printMessage(message='POOL DISABLED', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
+            return ('POOL DISABLED', 'Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true')
     except Exception as e:
         Logger.printMessage(message='send', description=str(e), is_error=True)
-        return None
+        return ('send', str(e))
 
 
 # File Manipulation

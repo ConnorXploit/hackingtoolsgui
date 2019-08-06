@@ -58,10 +58,12 @@ def documentation(request, module_name=''):
         return home(request=request, popup_text='You have to select a module for getting it\'s documentation')
 
 def sendPool(request, functionName):
-    response = Utils.send(request, functionName, ht.getPoolNodes())
+    thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if request.POST.get('creator') == ht.MY_NODE_ID and request.POST.get('creator_ip') == Utils.getMyPublicIP():
-            return home(request=request, popup_text=response)
+        if thanks_node == 'error_pool':
+            return home(request=request, popup_text='{error} = > {message}'.format(error=thanks_node, message=response))
+        if request.POST.get('pool_counter') == 1 and request.POST.get('creator') == ht.MY_NODE_ID and request.POST.get('creator_ip') == Utils.getMyPublicIP():
+            return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=request.POST.get('creator_ip'), response=response))
         return HttpResponse(response)
 
 def createModule(request):
@@ -131,11 +133,7 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    thanks_node, response = sendPool(request, "generate_keypair")
-    if response:
-        if thanks_node == 'error_pool':
-            return home(request=request, popup_text='{error} = > {message}'.format(error=thanks_node, message=response))
-        return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=thanks_node, response=response))
+    sendPool(request, "generate_keypair")
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
@@ -150,11 +148,7 @@ def ht_rsa_getRandomKeypair(request):
 
 @csrf_exempt
 def ht_rsa_generate_keypair(request):
-    thanks_node, response = sendPool(request, "generate_keypair")
-    if response:
-        if thanks_node == 'error_pool':
-            return home(request=request, popup_text='{error} = > {message}'.format(error=thanks_node, message=response))
-        return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=thanks_node, response=response))
+    sendPool(request, "generate_keypair")
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
@@ -305,11 +299,7 @@ def ht_bruteforce_crackZip(request):
         if len(request.FILES) != 0:
             if request.FILES['zipFile']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
-                thanks_node, response = sendPool(request, "generate_keypair")
-                if response:
-                    if thanks_node == 'error_pool':
-                        return home(request=request, popup_text='{error} = > {message}'.format(error=thanks_node, message=response))
-                    return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=thanks_node, response=response))
+                sendPool(request, "generate_keypair")
                     
                 # Get file
                 myfile = request.FILES['zipFile']
