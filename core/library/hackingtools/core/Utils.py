@@ -81,7 +81,7 @@ def emptyDirectory(directory):
             Returns if all was OK
     """
     try:
-        Logger.printMessage(message='emptyDirectory', description='Would empty: {path}'.format(path=directory), color=Fore.YELLOW)
+        #Logger.printMessage(message='emptyDirectory', description='Would empty: {path}'.format(path=directory), color=Fore.YELLOW)
         #if os.path.isdir(directory):
         #    shutil.rmtree(directory)
         #    return True
