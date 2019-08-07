@@ -15,7 +15,7 @@ dependencies:
     - astroid==2.2.5
     - beautifulsoup4==4.8.0
     - cffi==1.12.1
-    - chardet==3.0.4
+    - chardet
     - click==7.0
     - click-plugins==1.0.4
     - colorama==0.4.1
@@ -23,7 +23,7 @@ dependencies:
     - django
     - flask==1.0.2
     - future==0.17.1
-    - hackingtools==0.9.939.463
+    - hackingtools==0.9.939.465
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8
@@ -55,13 +55,13 @@ dependencies:
     - python-utils==2.3.0
     - pytz==2018.9
     - rarfile==3.0
-    - requests==2.21.0
+    - requests==2.22.0
     - shodan==1.11.1
     - smartypants==2.0.1
     - soupsieve==1.9.2
     - sqlparse==0.3.0
     - typed-ast==1.3.1
-    - urllib3==1.25.3
+    - urllib3
     - werkzeug==0.14.1
     - wrapt
     - xlsxwriter==1.1.5

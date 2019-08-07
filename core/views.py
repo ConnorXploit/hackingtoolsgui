@@ -60,10 +60,9 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if request.POST.get('creator') == ht.MY_NODE_ID and request.POST.get('creator_ip') == Utils.getMyPublicIP():
-            return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=request.POST.get('creator_ip'), response=response))
-        return HttpResponse(response)
-    return
+        if request.POST.get('creator') == ht.MY_NODE_ID:
+            return home(request=request, popup_text=response)
+        return (None, HttpResponse(response))
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -95,7 +94,7 @@ def saveFileOutput(myfile, module_name, category):
     location = os.path.join("core", "library", "hackingtools", "modules", category, module_name.split('ht_')[0], "output")
     fs = FileSystemStorage(location=location)
     filename = fs.save(myfile.name, myfile)
-    return os.path.join(location, filename)
+    return (filename, location, os.path.join(location, filename))
 
 def add_pool_node(request):
     try:
@@ -175,7 +174,7 @@ def ht_crypter_cryptFile(request):
             crypter = ht.getModule('ht_crypter')
 
             # Save the file
-            uploaded_file_url = saveFileOutput(myfile, "crypter", "av_evasion")
+            filename, location, uploaded_file_url = saveFileOutput(myfile, "crypter", "av_evasion")
             
             # Compile Exe
             compile_exe = False
@@ -310,7 +309,7 @@ def ht_bruteforce_crackZip(request):
                 bruter = ht.getModule('ht_bruteforce')
 
                 # Save the file
-                uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
+                filename, location, uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
 
                 if uploaded_file_url:
                     password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
@@ -338,7 +337,7 @@ def test_ht_unzip_extractFile(request):
             unzipper = ht.getModule('ht_unzip')
 
             # Save the file
-            uploaded_file_url = saveFileOutput(myfile, "unzip", "crackers")
+            filename, location, uploaded_file_url = saveFileOutput(myfile, "unzip", "crackers")
             
             if uploaded_file_url:
                 password = unzipper.extractFile(uploaded_file_url, password=password)

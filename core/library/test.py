@@ -23,7 +23,7 @@ except:
     import pyreadline as readline # Windows
 
 # Prints the modules loaded on your hackingtools library
-print(ht.getModulesNames())
+# print(ht.getModulesNames())
 
 # From hackingtools, I get a module. In this case, shodan module:
 # nmap = ht.getModule('ht_nmap')
@@ -90,5 +90,16 @@ print(ht.getModulesNames())
 # ! It print in logger but only with "Logger.setDebugCore(True)" set
 #[host.__str__() for host in target.hosts]
 
-zipp = ht.getModule('unzip')
-print(zipp.extractFile(input('File path: '), input('Password:' )))
+# zipp = ht.getModule('unzip')
+# print(zipp.extractFile(input('File path: '), input('Password:' )))
+
+shodan = ht.getModule('ht_shodan')
+nmap = ht.getModule('nmap')
+
+shodan.help()
+
+option = input('Dame un servicio: ')
+
+for ip in shodan.getIPListfromServices(option):
+    print(shodan.shodan_search_host(ip))
+    print(nmap.getDevicePorts(ip))

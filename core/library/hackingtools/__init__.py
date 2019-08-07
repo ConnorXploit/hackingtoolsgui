@@ -23,7 +23,10 @@ MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
 
 https = '' # Anytime when adding ssl, shold be with an 's'
 
-listening_port = sys.argv[-1].split(':')[1]
+try:
+    listening_port = sys.argv[-1].split(':')[1]
+except:
+    listening_port = '8000'
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -329,7 +332,7 @@ def getModule(moduleName):
         if moduleName in m:
             if not 'ht_' in moduleName:
                 moduleName = 'ht_{m}'.format(m=moduleName)
-            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=m.split('_')[1], moduleName=moduleName)
+            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
             return eval(sentence)
     Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), debug_module=True, is_error=True)
 
@@ -405,7 +408,7 @@ def sendPool(function_api_call='', params={}, files=[]):
                     r = requests.post(node_call, files=files, data=params, headers=headers)
 
                     if r.status_code == 200:
-                        if pool_counter == 1 and params['creator'] == MY_NODE_ID and params['creator_ip'] == my_public_ip:
+                        if pool_counter == 1 and params['creator'] == MY_NODE_ID:
                             Logger.printMessage('POOL_SOLVED', node_call, color=Fore.BLUE, debug_module=True)
                             pool_list = []
                             nodes_pool.remove(my_public_ip)
