@@ -61,8 +61,8 @@ def sendPool(request, functionName):
     thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
         if request.POST.get('creator') == ht.MY_NODE_ID:
-            return home(request=request, popup_text=response)
-        return (None, HttpResponse(response))
+            return HttpResponse(response)
+        return (None, response)
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
