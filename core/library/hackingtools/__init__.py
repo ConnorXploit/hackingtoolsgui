@@ -409,23 +409,20 @@ def sendPool(function_api_call='', params={}, files=[]):
                             Logger.printMessage('POOL_SOLVED', node_call, color=Fore.BLUE, debug_module=True)
                             pool_list = []
                             nodes_pool.remove(my_public_ip)
-                            if r.text:
-                                return (node, r.text)
-                            return (node, r)
+                            return (node, r.text)
                         return (node, r)
                     if r:
                         return (node, r)
-                    return (node, '')
+                    return (node, None)
                 except Exception as e:
                     print(e)
-                    raise
-                    return (node, '')
+                    return (node, None)
         else:
             Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
     else:
         Logger.printMessage('There is nobody on the pool list', debug_module=True)
 
-    return ('', '')
+    return (None, None)
 
 def getPoolNodes():
     return nodes_pool

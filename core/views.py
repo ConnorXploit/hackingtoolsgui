@@ -60,11 +60,10 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if thanks_node == 'error_pool':
-            return home(request=request, popup_text='{error} = > {message}'.format(error=thanks_node, message=response))
-        if request.POST.get('pool_counter') == 1 and request.POST.get('creator') == ht.MY_NODE_ID and request.POST.get('creator_ip') == Utils.getMyPublicIP():
+        if request.POST.get('creator') == ht.MY_NODE_ID and request.POST.get('creator_ip') == Utils.getMyPublicIP():
             return home(request=request, popup_text='Thanks to {thanks_node} = > {response}'.format(thanks_node=request.POST.get('creator_ip'), response=response))
         return HttpResponse(response)
+    return
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -300,7 +299,7 @@ def ht_bruteforce_crackZip(request):
             if request.FILES['zipFile']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
                 sendPool(request, "crackZip")
-                    
+
                 # Get file
                 myfile = request.FILES['zipFile']
 
