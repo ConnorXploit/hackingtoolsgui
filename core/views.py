@@ -8,6 +8,7 @@ from .library.hackingtools.core import Utils
 from importlib import reload
 import os
 import json
+from requests import Response
 
 # Create your views here.
 
@@ -58,11 +59,13 @@ def documentation(request, module_name=''):
         return home(request=request, popup_text='You have to select a module for getting it\'s documentation')
 
 def sendPool(request, functionName):
+    # ! changes here affect all nodes on the network, so should be careful with this
+    # ! It loop inside all nodes's known nodes
     thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if request.POST.get('creator') == ht.MY_NODE_ID:
-            return HttpResponse(response)
-        return (None, response)
+        if isinstance(response, Response):
+            return response
+        return home(request=request, popup_text=response)
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
