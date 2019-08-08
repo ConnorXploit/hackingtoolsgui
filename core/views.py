@@ -9,6 +9,7 @@ from importlib import reload
 import os
 import json
 from requests import Response
+from colorama import Fore
 
 # Create your views here.
 
@@ -64,8 +65,8 @@ def sendPool(request, functionName):
     thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
         if isinstance(response, Response):
-            Logger.printMessage(message='Solved a request from {from_url} to {func}: {res}'.format(from_url=request.url, func=functionName, res=str(response)))
             return response
+        Logger.printMessage(message='Solved a request on to {func}: {res}'.format(func=functionName, res=str(response)), description='Well done!', color=Fore.GREEN)
         return home(request=request, popup_text=response)
 
 def createModule(request):
