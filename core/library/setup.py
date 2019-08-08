@@ -8,7 +8,7 @@ except:
     print('You should install on Python 3.7+')
 
 setup(name='hackingtools',
-        version='0.9.939.469',
+        version='0.9.939.471',
         description='All Hacking Tools in this Python with Manually Created Modules',
         url='http://github.com/ConnorXploit/hackingtools-py',
         author='Connor',

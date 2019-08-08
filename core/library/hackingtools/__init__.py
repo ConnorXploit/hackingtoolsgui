@@ -386,10 +386,10 @@ def sendPool(function_api_call='', params={}, files=[]):
     for node in pool_list:
         if not node in nodes_pool:
             nodes.append(node)
-            if not my_public_ip in node:
+            if not my_service_api in node:
                 nodes_pool.append(node)
     if len(nodes) > 0:
-        if not my_public_ip in pool_list:
+        if not my_service_api in pool_list:
             pool_list.append(my_service_api)
             pool_counter += 1
             for node in nodes:
@@ -410,9 +410,7 @@ def sendPool(function_api_call='', params={}, files=[]):
 
                     if r.status_code == 200:
                         if pool_counter == 1 and params['creator'] == MY_NODE_ID:
-                            Logger.printMessage('POOL_SOLVED', node_call, color=Fore.BLUE, debug_module=True)
-                            pool_list = []
-                            nodes_pool.remove(my_service_api)
+                            Logger.printMessage(message='POOL_SOLVED', description=node_call, color=Fore.BLUE, debug_module=True)
                             return (node, r.text) # node=1 => me
                         return (node, r) # node_2 => node=1 => me
                     return (node, None)
