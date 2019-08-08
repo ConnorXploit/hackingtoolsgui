@@ -26,7 +26,7 @@ def send(node_request, functionName, pool_nodes):
                     return (node, response)
                 return (None, None)
             else:
-                Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW)
+                Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW, debug_core=True)
                 return (None, None)
         else:
             Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)

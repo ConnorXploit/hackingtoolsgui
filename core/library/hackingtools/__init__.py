@@ -419,6 +419,7 @@ def sendPool(function_api_call='', params={}, files=[]):
                     return (node, None)
         else:
             Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
+            return (None, None)
     else:
         Logger.printMessage('There is nobody on the pool list', debug_module=True)
 

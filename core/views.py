@@ -65,8 +65,8 @@ def sendPool(request, functionName):
     thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
         if isinstance(response, Response):
+            Logger.printMessage(message='Solved a request on {func} for a Node in the pool: {res}'.format(func=functionName, res=str(response.text)), description='Well done!', color=Fore.GREEN)
             return response
-        Logger.printMessage(message='Solved a request on to {func}: {res}'.format(func=functionName, res=str(response)), description='Well done!', color=Fore.GREEN)
         return home(request=request, popup_text=response)
 
 def createModule(request):
