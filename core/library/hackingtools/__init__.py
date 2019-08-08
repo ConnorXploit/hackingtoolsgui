@@ -364,6 +364,7 @@ def addNodeToPool(node_ip):
 
 def sendPool(function_api_call='', params={}, files=[]):
     my_public_ip = Utils.getMyPublicIP()
+    my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port)
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
@@ -385,11 +386,11 @@ def sendPool(function_api_call='', params={}, files=[]):
     for node in pool_list:
         if not node in nodes_pool:
             nodes.append(node)
-            if not node == my_public_ip:
-                nodes_pool.append(my_public_ip)
+            if not my_public_ip in node:
+                nodes_pool.append(node)
     if len(nodes) > 0:
         if not my_public_ip in pool_list:
-            pool_list.append('http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port))
+            pool_list.append(my_service_api)
             pool_counter += 1
             for node in nodes:
                 try:
@@ -411,6 +412,7 @@ def sendPool(function_api_call='', params={}, files=[]):
                         if pool_counter == 1 and params['creator'] == MY_NODE_ID:
                             Logger.printMessage('POOL_SOLVED', node_call, color=Fore.BLUE, debug_module=True)
                             pool_list = []
+                            nodes_pool.remove(my_service_api)
                             return (node, r.text) # node=1 => me
                         return (node, r) # node_2 => node=1 => me
                     return (node, None)
