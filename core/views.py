@@ -65,7 +65,7 @@ def sendPool(request, functionName):
     thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
         if isinstance(response, Response):
-            Logger.printMessage(message='Solved a request on {func} for a Node in the pool: {res}'.format(func=functionName, res=str(response.text)), description='Well done!', color=Fore.GREEN)
+            Logger.printMessage(message='POOL_SOLVED_RESPONDING', description=response.text, color=Fore.BLUE, debug_module=True)
             return response
         return home(request=request, popup_text=response)
 

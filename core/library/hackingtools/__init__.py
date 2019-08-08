@@ -365,6 +365,10 @@ def addNodeToPool(node_ip):
 def sendPool(function_api_call='', params={}, files=[]):
     my_public_ip = Utils.getMyPublicIP()
     my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port)
+    try:
+        nodes_pool.remove(my_service_api)
+    except:
+        print(nodes_pool)
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
@@ -419,7 +423,6 @@ def sendPool(function_api_call='', params={}, files=[]):
                     return (node, None)
         else:
             Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
-            return (None, None)
     else:
         Logger.printMessage('There is nobody on the pool list', debug_module=True)
 
