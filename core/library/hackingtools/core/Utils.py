@@ -21,9 +21,9 @@ def send(node_request, functionName, pool_nodes):
                 params['pool_list'] = pool_nodes
                 if not 'creator' in params:
                     params['creator'] = ht.MY_NODE_ID
-                node, response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                creator_node_id, response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
                 if response:
-                    return (node, response)
+                    return (creator_node_id, response)
                 return (None, None)
             else:
                 Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW, debug_core=True)

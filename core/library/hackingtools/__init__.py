@@ -1,6 +1,7 @@
 from .core import Logger
 from .core import Config, Utils
 config = Config.getConfig(parentKey='core', key='import_modules')
+config_utils = Config.getConfig(parentKey='core', key='Utils')
 config_locales = Config.getConfig(parentKey='core', key='locales')
 from colorama import Fore, Back, Style
 
@@ -20,6 +21,8 @@ modules_loaded = {}
 
 nodes_pool = []
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
+if config_utils["WANT_TO_BE_IN_POOL"]:
+    Logger.printMessage('Loaded in pool as', MY_NODE_ID, debug_module=True)
 
 https = '' # Anytime when adding ssl, shold be with an 's'
 
@@ -415,12 +418,12 @@ def sendPool(function_api_call='', params={}, files=[]):
                     if r.status_code == 200:
                         if pool_counter == 2 and params['creator'] == MY_NODE_ID:
                             Logger.printMessage(message='POOL_SOLVED', description='{node_call} - {value}'.format(url=node_call, value=r.text), color=Fore.BLUE, debug_module=True)
-                            return (node, str(r.text)) # node=1 => me
-                        return (node, r) # node_2 => node=1 => me
-                    return (node, None)
+                            return (params['creator'], str(r.text)) # node=1 => me
+                        return (params['creator'], r) # node_2 => node=1 => me
+                    return (params['creator'], None)
                 except Exception as e:
                     Logger.printMessage(str(e), color=Fore.YELLOW)
-                    return (node, None)
+                    return (params['creator'], None)
         else:
             Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
     else:

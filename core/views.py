@@ -62,9 +62,9 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
-    thanks_node, response = Utils.send(request, functionName, ht.getPoolNodes())
+    creator_node_id, response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if isinstance(response, Response):
+        if creator_node_id and not creator_node_id == ht.MY_NODE_ID:
             return response
         return home(request=request, popup_text=response)
 
