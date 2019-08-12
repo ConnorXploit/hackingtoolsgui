@@ -62,22 +62,11 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
-    try:
-        if not "creator" in dict(request.POST):
-            dict(request.POST)["creator"] = ht.MY_NODE_ID
-    except:
-        dict(request.POST)["creator"] = ht.MY_NODE_ID
-    response, creator = Utils.send(request, functionName, ht.getPoolNodes())
+    response, creator = Utils.send(ht.MY_NODE_ID, request, functionName, ht.getPoolNodes())
     if response:
-        print(response.text)
-        print(dict(request.POST))
-        print(creator)
-        print(ht.MY_NODE_ID)
-        if creator == ht.MY_NODE_ID and "creator" in dict(request.POST) and dict(request.POST)["creator"] == ht.MY_NODE_ID:
-            print('IM THE BOSS')
-            return home(request=request, popup_text=response)
-        print('IM A NODE')
-        return HttpResponse(response)
+        if creator == ht.MY_NODE_ID:
+            return response, False
+        return response, True
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -146,7 +135,11 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    sendPool(request, "getRandomKeypair")
+    response, repool = sendPool(request, "getRandomKeypair")
+    if repool:
+        return HttpResponse(response)
+    if response:
+        return home(request=request, popup_text=response.text)
     length = None
     if request.POST.get('prime_length'):
         length = request.POST.get('prime_length')
@@ -161,7 +154,11 @@ def ht_rsa_getRandomKeypair(request):
 
 @csrf_exempt
 def ht_rsa_generate_keypair(request):
-    sendPool(request, "generate_keypair")
+    response, repool = sendPool(request, "generate_keypair")
+    if repool:
+        return HttpResponse(response)
+    if response:
+        return home(request=request, popup_text=response.text)
     if request.POST.get('prime_a') and request.POST.get('prime_b'):
         prime_a = request.POST.get('prime_a')
         prime_b = request.POST.get('prime_b')
@@ -312,7 +309,11 @@ def ht_bruteforce_crackZip(request):
         if len(request.FILES) != 0:
             if request.FILES['zipFile']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
-                sendPool(request, "crackZip")
+                response, repool = sendPool(request, "crackZip")
+                if repool:
+                    return HttpResponse(response)
+                if response:
+                    return home(request=request, popup_text=response.text)
 
                 # Get file
                 myfile = request.FILES['zipFile']

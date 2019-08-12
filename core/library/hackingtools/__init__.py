@@ -365,7 +365,7 @@ def addNodeToPool(node_ip):
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
-def sendPool(function_api_call='', params={}, files=[]):
+def sendPool(creator, function_api_call='', params={}, files=[]):
     my_public_ip = Utils.getMyPublicIP()
     my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port)
     try:
@@ -416,7 +416,7 @@ def sendPool(function_api_call='', params={}, files=[]):
                     r = requests.post(node_call, files=files, data=params, headers=headers)
 
                     if r.status_code == 200:
-                        if pool_counter == 2 and params['creator'] == MY_NODE_ID:
+                        if pool_counter == 2 and params['creator'] == creator:
                             Logger.printMessage(message='POOL_SOLVED', description='{node_call} - {value}'.format(url=node_call, value=r.text), color=Fore.BLUE, debug_module=True)
                             return (str(r.text), params['creator']) # node=1 => me
                         return (r, params['creator']) # node_2 => node=1 => me

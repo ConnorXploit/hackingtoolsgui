@@ -11,7 +11,7 @@ import base64
 import os
 
 # Nodes Conections
-def send(node_request, functionName, pool_nodes):
+def send(creator_id, node_request, functionName, pool_nodes):
     try:
         if config["WANT_TO_BE_IN_POOL"]:
             function_api_call = resolve(node_request.path_info).route
@@ -21,8 +21,8 @@ def send(node_request, functionName, pool_nodes):
                     params = dict(node_request.POST)
                     params['pool_list'] = pool_nodes
                     if not 'creator' in params:
-                        params['creator'] = ht.MY_NODE_ID
-                    response, creator = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                        params['creator'] = creator_id
+                    response, creator = ht.sendPool(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
                     if response:
                         return response, creator
                     return None, None
