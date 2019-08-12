@@ -63,15 +63,17 @@ def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
     try:
-        if not dict(request.POST)["creator"]:
+        if not "creator" in dict(request.POST):
             dict(request.POST)["creator"] = ht.MY_NODE_ID
     except:
         dict(request.POST)["creator"] = ht.MY_NODE_ID
     response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if dict(request.POST)["creator"] == ht.MY_NODE_ID:
+        if "creator" in dict(request.POST) and dict(request.POST)["creator"] == ht.MY_NODE_ID:
+            print('IM THE BOSS')
             return home(request=request, popup_text=response)
-        return response
+        print('IM A NODE')
+        return HttpResponse(response)
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
