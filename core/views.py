@@ -67,9 +67,13 @@ def sendPool(request, functionName):
             dict(request.POST)["creator"] = ht.MY_NODE_ID
     except:
         dict(request.POST)["creator"] = ht.MY_NODE_ID
-    response = Utils.send(request, functionName, ht.getPoolNodes())
+    response, creator = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if "creator" in dict(request.POST) and dict(request.POST)["creator"] == ht.MY_NODE_ID:
+        print(response.text)
+        print(dict(request.POST))
+        print(creator)
+        print(ht.MY_NODE_ID)
+        if creator == ht.MY_NODE_ID and "creator" in dict(request.POST) and dict(request.POST)["creator"] == ht.MY_NODE_ID:
             print('IM THE BOSS')
             return home(request=request, popup_text=response)
         print('IM A NODE')

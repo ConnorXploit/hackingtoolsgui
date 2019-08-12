@@ -22,21 +22,21 @@ def send(node_request, functionName, pool_nodes):
                     params['pool_list'] = pool_nodes
                     if not 'creator' in params:
                         params['creator'] = ht.MY_NODE_ID
-                    response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                    response, creator = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
                     if response:
-                        return response
-                    return None
+                        return response, creator
+                    return None, None
                 else:
-                    return None
+                    return None, None
             else:
                 Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW, debug_core=True)
-                return None
+                return None, None
         else:
             Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
-            return None
+            return None, None
     except Exception as e:
         Logger.printMessage(message='send', description=str(e), is_error=True)
-        return None
+        return None, None
 
 
 # File Manipulation
