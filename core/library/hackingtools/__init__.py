@@ -418,18 +418,16 @@ def sendPool(function_api_call='', params={}, files=[]):
                     if r.status_code == 200:
                         if pool_counter == 2 and params['creator'] == MY_NODE_ID:
                             Logger.printMessage(message='POOL_SOLVED', description='{node_call} - {value}'.format(url=node_call, value=r.text), color=Fore.BLUE, debug_module=True)
-                            return (params['creator'], str(r.text)) # node=1 => me
-                        return (params['creator'], r) # node_2 => node=1 => me
-                    return (params['creator'], None)
+                            return str(r.text) # node=1 => me
+                        return r # node_2 => node=1 => me
                 except Exception as e:
                     Logger.printMessage(str(e), color=Fore.YELLOW)
-                    return (params['creator'], None)
         else:
             Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
     else:
         Logger.printMessage('There is nobody on the pool list', debug_module=True)
 
-    return (None, None)
+    return None
 
 def getPoolNodes():
     return nodes_pool

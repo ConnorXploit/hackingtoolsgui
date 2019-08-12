@@ -17,23 +17,26 @@ def send(node_request, functionName, pool_nodes):
             function_api_call = resolve(node_request.path_info).route
             pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
             if pool_it:
-                params = dict(node_request.POST)
-                params['pool_list'] = pool_nodes
-                if not 'creator' in params:
-                    params['creator'] = ht.MY_NODE_ID
-                creator_node_id, response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
-                if response:
-                    return (creator_node_id, response)
-                return (None, None)
+                if pool_nodes:
+                    params = dict(node_request.POST)
+                    params['pool_list'] = pool_nodes
+                    if not 'creator' in params:
+                        params['creator'] = ht.MY_NODE_ID
+                    response = ht.sendPool(function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                    if response:
+                        return response
+                    return None
+                else:
+                    return None
             else:
                 Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW, debug_core=True)
-                return (None, None)
+                return None
         else:
             Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
-            return (None, None)
+            return None
     except Exception as e:
         Logger.printMessage(message='send', description=str(e), is_error=True)
-        return (None, None)
+        return None
 
 
 # File Manipulation

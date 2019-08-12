@@ -62,11 +62,16 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
-    creator_node_id, response = Utils.send(request, functionName, ht.getPoolNodes())
+    try:
+        if not dict(request.POST)["creator"]:
+            dict(request.POST)["creator"] = ht.MY_NODE_ID
+    except:
+        dict(request.POST)["creator"] = ht.MY_NODE_ID
+    response = Utils.send(request, functionName, ht.getPoolNodes())
     if response:
-        if creator_node_id and not creator_node_id == ht.MY_NODE_ID:
-            return response
-        return home(request=request, popup_text=response)
+        if dict(request.POST)["creator"] == ht.MY_NODE_ID:
+            return home(request=request, popup_text=response)
+        return response
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
