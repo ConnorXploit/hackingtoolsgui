@@ -67,6 +67,7 @@ def sendPool(request, functionName):
         if creator == ht.MY_NODE_ID:
             return response, False
         return response, True
+    return None, None
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -136,42 +137,46 @@ def ht_rsa_decrypt(request):
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
     response, repool = sendPool(request, "getRandomKeypair")
-    if repool:
-        return HttpResponse(response)
-    if response:
-        return home(request=request, popup_text=response.text)
-    length = None
-    if request.POST.get('prime_length'):
-        length = request.POST.get('prime_length')
-    crypter = ht.getModule('ht_rsa')
-    keypair = (0, 0)
-    if length:
-        keypair = crypter.getRandomKeypair(int(length))
+    if response or repool:
+        if repool:
+            return HttpResponse(response)
+        if response:
+            return home(request=request, popup_text=response.text)
     else:
-        keypair = crypter.getRandomKeypair()
-    keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
-    return home(request=request, popup_text=keypair)
+        length = None
+        if request.POST.get('prime_length'):
+            length = request.POST.get('prime_length')
+        crypter = ht.getModule('ht_rsa')
+        keypair = (0, 0)
+        if length:
+            keypair = crypter.getRandomKeypair(int(length))
+        else:
+            keypair = crypter.getRandomKeypair()
+        keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
+        return home(request=request, popup_text=keypair)
 
 @csrf_exempt
 def ht_rsa_generate_keypair(request):
     response, repool = sendPool(request, "generate_keypair")
-    if repool:
-        return HttpResponse(response)
-    if response:
-        return home(request=request, popup_text=response.text)
-    if request.POST.get('prime_a') and request.POST.get('prime_b'):
-        prime_a = request.POST.get('prime_a')
-        prime_b = request.POST.get('prime_b')
-        crypter = ht.getModule('ht_rsa')
-        keypair = crypter.generate_keypair(int(prime_a), int(prime_b))
-        if not isinstance(keypair, str):
-            try: 
-                keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
-            except:
-                pass
-        return home(request=request, popup_text=keypair)
+    if response or repool:
+        if repool:
+            return HttpResponse(response)
+        if response:
+            return home(request=request, popup_text=response.text)
     else:
-        return home(request=request)
+        if request.POST.get('prime_a') and request.POST.get('prime_b'):
+            prime_a = request.POST.get('prime_a')
+            prime_b = request.POST.get('prime_b')
+            crypter = ht.getModule('ht_rsa')
+            keypair = crypter.generate_keypair(int(prime_a), int(prime_b))
+            if not isinstance(keypair, str):
+                try: 
+                    keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
+                except:
+                    pass
+            return home(request=request, popup_text=keypair)
+        else:
+            return home(request=request)
 
 # End ht_rsa
 
@@ -310,29 +315,30 @@ def ht_bruteforce_crackZip(request):
             if request.FILES['zipFile']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
                 response, repool = sendPool(request, "crackZip")
-                if repool:
-                    return HttpResponse(response)
-                if response:
-                    return home(request=request, popup_text=response.text)
-
-                # Get file
-                myfile = request.FILES['zipFile']
-
-                consecutive = request.POST.get('consecutive', False)
-                async_execution = request.POST.get('async_execution', False)
-
-                # Get Crypter Module
-                bruter = ht.getModule('ht_bruteforce')
-
-                # Save the file
-                filename, location, uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
-
-                if uploaded_file_url:
-                    password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
+                if response or repool:
+                    if repool:
+                        return HttpResponse(response)
+                    if response:
+                        return home(request=request, popup_text=response.text)
                 else:
-                    return home(request=request, popup_text='Something went wrong. See the log')
+                    # Get file
+                    myfile = request.FILES['zipFile']
 
-                return home(request=request, popup_text=password)
+                    consecutive = request.POST.get('consecutive', False)
+                    async_execution = request.POST.get('async_execution', False)
+
+                    # Get Crypter Module
+                    bruter = ht.getModule('ht_bruteforce')
+
+                    # Save the file
+                    filename, location, uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
+
+                    if uploaded_file_url:
+                        password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
+                    else:
+                        return home(request=request, popup_text='Something went wrong. See the log')
+
+                    return home(request=request, popup_text=password)
     except ConnectionError as conError:
         print('Connection aborted. Remote end closed connection without response')
     return home(request=request)
