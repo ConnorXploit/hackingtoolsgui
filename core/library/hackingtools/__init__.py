@@ -368,7 +368,7 @@ def sendPool(function_api_call='', params={}, files=[]):
     try:
         nodes_pool.remove(my_service_api)
     except:
-        print(nodes_pool)
+        pass
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
@@ -413,9 +413,9 @@ def sendPool(function_api_call='', params={}, files=[]):
                     r = requests.post(node_call, files=files, data=params, headers=headers)
 
                     if r.status_code == 200:
-                        if pool_counter == 1 and params['creator'] == MY_NODE_ID:
-                            Logger.printMessage(message='POOL_SOLVED', description=node_call, color=Fore.BLUE, debug_module=True)
-                            return (node, r.text) # node=1 => me
+                        if pool_counter == 2 and params['creator'] == MY_NODE_ID:
+                            Logger.printMessage(message='POOL_SOLVED', description='{node_call} - {value}'.format(url=node_call, value=r.text), color=Fore.BLUE, debug_module=True)
+                            return (node, str(r.text)) # node=1 => me
                         return (node, r) # node_2 => node=1 => me
                     return (node, None)
                 except Exception as e:
