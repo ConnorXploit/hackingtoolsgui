@@ -36,6 +36,8 @@ urlpatterns = [
     path('modules/ht_bruteforce/crackZip/', views.ht_bruteforce_crackZip, name="test_ht_bruteforce_crackZip"),
     # ht_unzip
     path('modules/ht_unzip/extractFile/', views.test_ht_unzip_extractFile, name="test_ht_unzip_extractFile"),
+    # ht_virustotal
+    path('modules/ht_virustotal/isBadFile/', views.test_ht_virustotal_isBadFile, name="test_ht_virustotal_isBadFile")
 ]
 
 # for mod in ht.getModulesNames():

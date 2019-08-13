@@ -13,11 +13,11 @@
           $('#popup').modal('hide');
         }
       </script>
-      <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="testModuleLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
+      <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="responseLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-pop-up" role="document">
+          <div class="modal-content" style="height: 500px;">
             <div class="modal-header">
-              <h5 class="modal-title" id="testModuleLabel">Response:</h5>
+              <h5 class="modal-title" id="responseLabel">Response:</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -218,7 +218,7 @@
                         {% for funct_name, funct_params in funct.items %}
                           {% for tool, function in modules_functions_modals.items %}
                             {% for functi, data in function.items %}
-                              {% if functi in funct_name and name in tool %}
+                              {% if functi == funct_name and 'ht_'|add:name == tool %}
                                 <!-- MODAL PARA LA FUNCTION -->
                                 <div class="modal fade" id="testModuleFunctionModal_{{tool}}_{{functi}}" tabindex="-1" role="dialog" aria-labelledby="testModuleFunctionModalLabel_{{tool}}_{{functi}}" aria-hidden="true">
                                   <div class="modal-dialog" role="document">

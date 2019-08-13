@@ -275,3 +275,9 @@ a:hover {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+.modal-dialog-pop-up {
+    max-width: 60% !important;
+}
+textarea.form-control {
+    height: 100% !important;
+}

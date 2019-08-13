@@ -26,36 +26,33 @@ except:
 # print(ht.getModulesNames())
 
 # From hackingtools, I get a module. In this case, shodan module:
-# nmap = ht.getModule('ht_nmap')
+shodan = ht.getModule('ht_shodan')
 
-# # I get help method from the shodan module
-# # ! This returns the methods in console!
-# # ! For this options, you should have: "Logger.setDebugModule(True)" set
-# # shodan.help()
+# I get help method from the shodan module
+# ! This returns the methods in console!
+# ! For this options, you should have: "Logger.setDebugModule(True)" set
+# shodan.help()
 
-# # Ask for an option for using later in a shodan function
-# option = input('Service to search (e.g: apache): ')
+# Ask for an option for using later in a shodan function
+option = input('Service to search (e.g: apache): ')
 
-# # Create a Target with an ID for later adding some hosts
-# target = Target(option, 1)
+# Create a Target with an ID for later adding some hosts
+target = Target(option, 1)
 
-# # Set the API for shodan
-# shodan.settingApi('lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl')
+# Set the API for shodan
+shodan.settingApi('lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl')
 
-# # Ask shodan for getting a list of IPs from a service name
-# for ip in shodan.getIPListfromServices(option):
-#     # For any IP we get, create a Host object, with the Target ID
-#     # Add it to target with addHost function
-#     if not target.existsHostWithIp(ip):
-#         host = Host(1, ip)
-#         target.addHost(host)
-#         host.addScanResult(shodan.shodan_search_host(host.ip))
-#         host.ports = nmap.getDevicePorts(host.ip)
-#         hosts_with_cpe = target.getHostsWithKey('cpe')
-#         for h in hosts_with_cpe:
-#             print(h.__str__())
-#     else:
-#         print('IP Repeated... Host registered yet on the Target - {i}'.format(i=ip))
+# Ask shodan for getting a list of IPs from a service name
+for ip in shodan.getIPListfromServices(option):
+    # For any IP we get, create a Host object, with the Target ID
+    # Add it to target with addHost function
+    if not target.existsHostWithIp(ip):
+        host = Host(1, ip)
+        target.addHost(host)
+        host.addScanResult(shodan.shodan_search_host(host.ip))
+        print(host.__str__())
+    else:
+        print('IP Repeated... Host registered yet on the Target - {i}'.format(i=ip))
 
 # For all the host we have:
 # for host in target.hosts:

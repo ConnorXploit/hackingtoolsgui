@@ -375,3 +375,16 @@ def test_ht_unzip_extractFile(request):
     return home(request=request)
 
 
+# ht_virustotal
+
+def test_ht_virustotal_isBadFile(request):
+    try:
+        if len(request.FILES) != 0:
+            if request.FILES['filename']:
+                virustotal = ht.getModule('ht_virustotal')
+                # Save the file
+                filename, location, uploaded_file_url = saveFileOutput(request.FILES['filename'], "virustotal", "forensic")
+                response = virustotal.isBadFile(uploaded_file_url)
+                return home(request=request, popup_text=response)
+    except Exception as e:
+        return home(request=request, popup_text=str(e))
