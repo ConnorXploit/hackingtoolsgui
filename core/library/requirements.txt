@@ -14,7 +14,7 @@ docutils==0.14
 entrypoints==0.3
 Flask==1.0.2
 future==0.17.1
-hackingtools==0.9.939.480
+hackingtools==0.9.939.487
 html5lib==1.0.1
 httplib2==0.12.0
 idna==2.8
@@ -61,6 +61,7 @@ tqdm==4.31.1
 twine==1.13.0
 typed-ast==1.3.1
 urllib3
+virustotal-python==0.0.7
 webencodings==0.5.1
 Werkzeug==0.14.1
 wincertstore==0.2

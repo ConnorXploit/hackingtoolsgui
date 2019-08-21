@@ -23,7 +23,7 @@ dependencies:
     - django
     - flask==1.0.2
     - future==0.17.1
-    - hackingtools==0.9.939.480
+    - hackingtools==0.9.939.487
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8
@@ -62,6 +62,7 @@ dependencies:
     - sqlparse==0.3.0
     - typed-ast==1.3.1
     - urllib3
+    - virustotal-python==0.0.7
     - werkzeug==0.14.1
     - wrapt
     - xlsxwriter==1.1.5

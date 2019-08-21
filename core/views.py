@@ -136,12 +136,13 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    response, repool = sendPool(request, "getRandomKeypair")
+    response, repool = (None, None)
+    if not request.POST.get('is_pool', False):
+        response, repool = sendPool(request, "getRandomKeypair")
     if response or repool:
         if repool:
             return HttpResponse(response)
-        if response:
-            return home(request=request, popup_text=response.text)
+        return home(request=request, popup_text=response.text)
     else:
         length = None
         if request.POST.get('prime_length'):
@@ -153,6 +154,8 @@ def ht_rsa_getRandomKeypair(request):
         else:
             keypair = crypter.getRandomKeypair()
         keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
+        if request.POST.get('is_pool', False):
+            return home(request=request, popup_text=keypair)
         return home(request=request, popup_text=keypair)
 
 @csrf_exempt
@@ -161,8 +164,7 @@ def ht_rsa_generate_keypair(request):
     if response or repool:
         if repool:
             return HttpResponse(response)
-        if response:
-            return home(request=request, popup_text=response.text)
+        return home(request=request, popup_text=response.text)
     else:
         if request.POST.get('prime_a') and request.POST.get('prime_b'):
             prime_a = request.POST.get('prime_a')
@@ -174,8 +176,12 @@ def ht_rsa_generate_keypair(request):
                     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
                 except:
                     pass
+            if request.POST.get('is_pool', False):
+                return HttpResponse(keypair)
             return home(request=request, popup_text=keypair)
         else:
+            if request.POST.get('is_pool', False):
+                return HttpResponse(None)
             return home(request=request)
 
 # End ht_rsa
@@ -318,8 +324,7 @@ def ht_bruteforce_crackZip(request):
                 if response or repool:
                     if repool:
                         return HttpResponse(response)
-                    if response:
-                        return home(request=request, popup_text=response.text)
+                    return home(request=request, popup_text=response.text)
                 else:
                     # Get file
                     myfile = request.FILES['zipFile']
@@ -336,8 +341,12 @@ def ht_bruteforce_crackZip(request):
                     if uploaded_file_url:
                         password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
                     else:
+                        if request.POST.get('is_pool', False):
+                            return HttpResponse(None)
                         return home(request=request, popup_text='Something went wrong. See the log')
 
+                    if request.POST.get('is_pool', False):
+                        return HttpResponse(password)
                     return home(request=request, popup_text=password)
     except ConnectionError as conError:
         print('Connection aborted. Remote end closed connection without response')

@@ -9,6 +9,7 @@ import random
 import requests
 import base64
 import os
+import socket
 
 # Nodes Conections
 def send(creator_id, node_request, functionName, pool_nodes):
@@ -23,21 +24,23 @@ def send(creator_id, node_request, functionName, pool_nodes):
                     if not 'creator' in params:
                         params['creator'] = creator_id
                     response, creator = ht.sendPool(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                    if 'creator' in params and params['creator'] == creator_id and response:
+                        return (str(response.text), False)
                     if response:
-                        return response, creator
-                    return None, None
+                        return (response, creator)
+                    return (None, None)
                 else:
-                    return None, None
+                    return (None, None)
             else:
                 Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW, debug_core=True)
-                return None, None
+                return (None, None)
         else:
             Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
-            return None, None
+            return (None, None)
     except Exception as e:
+        raise
         Logger.printMessage(message='send', description=str(e), is_error=True)
-        return None, None
-
+        return (None, None)
 
 # File Manipulation
 def getFileContentInByteArray(filePath):
@@ -126,6 +129,12 @@ def getMyPublicIP():
         return requests.get('https://api.ipify.org').text
     except:
         return '127.0.0.1'
+
+def getMyLanIP():
+    return str(socket.gethostbyname(socket.gethostname()))
+
+def getMyLocalIP():
+    return '127.0.0.1'
 
 # Maths
 def euclides(a, b):

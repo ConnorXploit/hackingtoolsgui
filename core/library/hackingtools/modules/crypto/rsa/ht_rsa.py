@@ -69,6 +69,7 @@ class StartModule():
 				prime_a = Utils.getRandomPrimeByLength(length)
 			while prime_b == '':
 				prime_b = Utils.getRandomPrimeByLength(length)
+		print(prime_a, prime_b)
 		return (prime_a, prime_b)
 	
 	def encrypt(self, private_key, plaintext):

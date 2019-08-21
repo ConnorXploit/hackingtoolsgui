@@ -26,6 +26,10 @@ if config_utils["WANT_TO_BE_IN_POOL"]:
 
 https = '' # Anytime when adding ssl, shold be with an 's'
 
+public_ip = Utils.getMyPublicIP()
+lan_ip = Utils.getMyLanIP()
+local_ip = Utils.getMyLocalIP()
+
 try:
     listening_port = sys.argv[-1].split(':')[1]
 except:
@@ -357,16 +361,16 @@ def getModuleConfig(moduleName):
                 return actualConf[mod]
     return None
 
-# Import Modules
-
 #TODO Continue documentation here
+
+# Nodes Pool Treatment
 
 def addNodeToPool(node_ip):
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
 def sendPool(creator, function_api_call='', params={}, files=[]):
-    my_public_ip = Utils.getMyPublicIP()
+    my_public_ip = local_ip
     my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port)
     try:
         nodes_pool.remove(my_service_api)
@@ -381,9 +385,9 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
     except:
         pass
     try:
-        pool_counter = int(params['pool_counter'])
+        pool_list.remove(my_service_api)
     except:
-        pass
+        pass    
     # Get nodes aren't notified into nodes
     for node in nodes_pool:
         if not node in pool_list:
@@ -397,40 +401,39 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
                 nodes_pool.append(node)
     if len(nodes) > 0:
         if not my_service_api in pool_list:
-            pool_list.append(my_service_api)
             pool_counter += 1
             for node in nodes:
                 try:
-                    node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
+                    if not node in (public_ip, lan_ip) and not node == 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port):
+                        node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
 
-                    client = requests.Session()
-                    client.get(node_call)
-                    if 'csrftoken' in client.cookies:
-                        params['csrfmiddlewaretoken'] = client.cookies['csrftoken']
-                    else:
-                        params['csrfmiddlewaretoken'] = client.cookies['csrf']
+                        params['pool_list'] = pool_list
+                        try:
+                            params['pool_list'].append(my_service_api)
+                            params['pool_list'].remove(node)
+                        except:
+                            pass
+                            
+                        params['is_pool'] = True
 
-                    params['pool_list'] = pool_list
-                    params['pool_counter'] = pool_counter
+                        r = requests.post(node_call, files=files, data=params, headers=headers)
 
-                    r = requests.post(node_call, files=files, data=params, headers=headers)
-
-                    if r.status_code == 200:
-                        if pool_counter == 2 and params['creator'] == creator:
-                            Logger.printMessage(message='POOL_SOLVED', description='{node_call} - {value}'.format(url=node_call, value=r.text), color=Fore.BLUE, debug_module=True)
-                            return (str(r.text), params['creator']) # node=1 => me
-                        return (r, params['creator']) # node_2 => node=1 => me
+                        if r.status_code == 200:
+                            return (r, params['creator'])
                 except Exception as e:
+                    raise
                     Logger.printMessage(str(e), color=Fore.YELLOW)
         else:
             Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
     else:
         Logger.printMessage('There is nobody on the pool list', debug_module=True)
 
-    return None, None
+    return (None, None)
 
 def getPoolNodes():
     return nodes_pool
+
+# Import Modules
 
 # Core method - Usado por: __importModules__()
 def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):
