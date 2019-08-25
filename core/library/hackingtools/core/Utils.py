@@ -1,46 +1,14 @@
 from . import Config, Logger, Utils
-import hackingtools as ht
 config = Config.getConfig(parentKey='core', key='Utils')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
 from colorama import Fore
-from django.urls import resolve
 
 import random
 import requests
 import base64
 import os
 import socket
-
-# Nodes Conections
-def send(creator_id, node_request, functionName, pool_nodes):
-    try:
-        if config["WANT_TO_BE_IN_POOL"]:
-            function_api_call = resolve(node_request.path_info).route
-            pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
-            if pool_it:
-                if pool_nodes:
-                    params = dict(node_request.POST)
-                    params['pool_list'] = pool_nodes
-                    if not 'creator' in params:
-                        params['creator'] = creator_id
-                    response, creator = ht.sendPool(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
-                    if 'creator' in params and params['creator'] == creator_id and response:
-                        return (str(response.text), False)
-                    if response:
-                        return (response, creator)
-                    return (None, None)
-                else:
-                    return (None, None)
-            else:
-                Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW, debug_core=True)
-                return (None, None)
-        else:
-            Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
-            return (None, None)
-    except Exception as e:
-        raise
-        Logger.printMessage(message='send', description=str(e), is_error=True)
-        return (None, None)
+from itertools import product 
 
 # File Manipulation
 def getFileContentInByteArray(filePath):
@@ -332,13 +300,10 @@ def randomText(length=8, alphabet='lalpha'):
     except Exception as e:
         Logger.printMessage(message=randomText, description=e, is_error=True)
 
-def getDict(length=8, maxvalue=10000, alphabet='lalpha', consecutive=False):
-    res = []
-    if 'numeric'in alphabet and consecutive:
-        for i in range(maxvalue):
-            res.append(str(str(i).zfill(int(length))))
-    else:
-        for i in range(maxvalue):
-            res.append(randomText(length=length, alphabet=alphabet))
-    Logger.printMessage(message='getDict', description=res[:10], debug_core=True)
+def getCombinationPosibilitiesLength(alphabet, length):
+    return [''.join(x) for x in product(config_utils[alphabet], repeat=length)]
+
+def getDict(length=8, maxvalue=10000, alphabet='lalpha'):
+    res = getCombinationPosibilitiesLength(alphabet=alphabet, length=length)
+    Logger.printMessage(message='getDict', description='{data} - {count}'.format(data=res[:10], count=len(res)), debug_core=True)
     return res

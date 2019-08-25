@@ -62,7 +62,7 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
-    response, creator = Utils.send(ht.MY_NODE_ID, request, functionName, ht.getPoolNodes())
+    response, creator = ht.send(request, functionName)
     if response:
         if creator == ht.MY_NODE_ID:
             return response, False
@@ -111,6 +111,56 @@ def add_pool_node(request):
         return home(request=request, popup_text='Something went wrong')
     return home(request=request, popup_text='\n'.join(ht.nodes_pool))
 
+def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=False, simbolsAll=False):
+    used_alphabet = 'numeric'
+    if numeric and not lower and not upper and not simbols14 and not simbolsAll:
+        used_alphabet = 'numeric'
+    if not numeric and lower and not upper and not simbols14 and not simbolsAll:
+        used_alphabet = 'lalpha'
+    if not numeric and not lower and upper and not simbols14 and not simbolsAll:
+        used_alphabet = 'ualpha'
+    if not numeric and lower and upper and not simbols14 and not simbolsAll:
+        used_alphabet = 'mixalpha'
+    if not numeric and not lower and not upper and simbols14 and not simbolsAll:
+        used_alphabet = 'symbols14'
+    if not numeric and not lower and not upper and not simbols14 and simbolsAll:
+        used_alphabet = 'symbols-all'
+
+    if not numeric and lower and not upper and simbols14 and not simbolsAll:
+        used_alphabet = 'lalpha-symbol14'
+    if not numeric and lower and not upper and not simbols14 and simbolsAll:
+        used_alphabet = 'lalpha-all'
+    if numeric and lower and not upper and not simbols14 and not simbolsAll:
+        used_alphabet = 'lalpha-numeric'
+    if numeric and lower and not upper and simbols14 and not simbolsAll:
+        used_alphabet = 'lalpha-numeric-symbol14'
+    if numeric and lower and not upper and not simbols14 and simbolsAll:
+        used_alphabet = 'lalpha-numeric-all'
+
+    if not numeric and not lower and upper and simbols14 and not simbolsAll:
+        used_alphabet = 'ualpha-symbol14'
+    if not numeric and not lower and upper and not simbols14 and simbolsAll:
+        used_alphabet = 'ualpha-all'
+    if numeric and not lower and upper and not simbols14 and not simbolsAll:
+        used_alphabet = 'ualpha-numeric'
+    if numeric and not lower and upper and simbols14 and not simbolsAll:
+        used_alphabet = 'ualpha-numeric-symbol14'
+    if numeric and not lower and upper and not simbols14 and simbolsAll:
+        used_alphabet = 'ualpha-numeric-all'
+
+    if not numeric and lower and upper and simbols14 and not simbolsAll:
+        used_alphabet = 'mixalpha-symbol14'
+    if not numeric and lower and upper and not simbols14 and simbolsAll:
+        used_alphabet = 'mixalpha-all'
+    if numeric and lower and upper and not simbols14 and not simbolsAll:
+        used_alphabet = 'mixalpha-numeric'
+    if numeric and lower and upper and simbols14 and not simbolsAll:
+        used_alphabet = 'mixalpha-numeric-symbol14'
+    if numeric and lower and upper and not simbols14 and simbolsAll:
+        used_alphabet = 'mixalpha-numeric-all'
+
+    return used_alphabet
+
 # ht_rsa
 def ht_rsa_encrypt(request):
     if request.POST.get('private_key_keynumber') and request.POST.get('private_key_keymod') and request.POST.get('cipher_text'):
@@ -136,9 +186,7 @@ def ht_rsa_decrypt(request):
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
-    response, repool = (None, None)
-    if not request.POST.get('is_pool', False):
-        response, repool = sendPool(request, "getRandomKeypair")
+    response, repool = sendPool(request, "getRandomKeypair")
     if response or repool:
         if repool:
             return HttpResponse(response)
@@ -154,8 +202,6 @@ def ht_rsa_getRandomKeypair(request):
         else:
             keypair = crypter.getRandomKeypair()
         keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
-        if request.POST.get('is_pool', False):
-            return home(request=request, popup_text=keypair)
         return home(request=request, popup_text=keypair)
 
 @csrf_exempt
@@ -176,12 +222,8 @@ def ht_rsa_generate_keypair(request):
                     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
                 except:
                     pass
-            if request.POST.get('is_pool', False):
-                return HttpResponse(keypair)
             return home(request=request, popup_text=keypair)
         else:
-            if request.POST.get('is_pool', False):
-                return HttpResponse(None)
             return home(request=request)
 
 # End ht_rsa
@@ -329,24 +371,31 @@ def ht_bruteforce_crackZip(request):
                     # Get file
                     myfile = request.FILES['zipFile']
 
-                    consecutive = request.POST.get('consecutive', False)
                     async_execution = request.POST.get('async_execution', False)
+                    password_length = request.POST.get('password_length', 4)
+
+                    used_alphabet = 'numeric'
+
+                    bruteforce_numeric = request.POST.get('bruteforce_numeric', False)
+                    bruteforce_lower = request.POST.get('bruteforce_lower', False)
+                    bruteforce_upper = request.POST.get('bruteforce_upper', False)
+                    bruteforce_simbols = request.POST.get('bruteforce_simbols', False)
+                    bruteforce_simbols_all = request.POST.get('bruteforce_simbols_all', False)
+
+                    used_alphabet = getDictionaryAlphabet(numeric=bruteforce_numeric, lower=bruteforce_lower, upper=bruteforce_upper, simbols14=bruteforce_simbols, simbolsAll=bruteforce_simbols_all)
 
                     # Get Crypter Module
                     bruter = ht.getModule('ht_bruteforce')
+                    unzipper = ht.getModule('ht_unzip')
 
                     # Save the file
                     filename, location, uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
 
                     if uploaded_file_url:
-                        password = bruter.crackZip(uploaded_file_url, alphabet='numeric', consecutive=consecutive, log=True)
+                        password = bruter.crackZip(uploaded_file_url, unzipper=unzipper, alphabet=used_alphabet, password_length=password_length, log=False)
                     else:
-                        if request.POST.get('is_pool', False):
-                            return HttpResponse(None)
                         return home(request=request, popup_text='Something went wrong. See the log')
 
-                    if request.POST.get('is_pool', False):
-                        return HttpResponse(password)
                     return home(request=request, popup_text=password)
     except ConnectionError as conError:
         print('Connection aborted. Remote end closed connection without response')

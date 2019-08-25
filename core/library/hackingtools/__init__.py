@@ -1,7 +1,5 @@
-from .core import Logger
-from .core import Config, Utils
+from .core import Config, Utils, Logger
 config = Config.getConfig(parentKey='core', key='import_modules')
-config_utils = Config.getConfig(parentKey='core', key='Utils')
 config_locales = Config.getConfig(parentKey='core', key='locales')
 from colorama import Fore, Back, Style
 
@@ -15,13 +13,15 @@ import ast
 import progressbar
 import requests
 import sys
+from django.urls import resolve
 from importlib import reload
 
 modules_loaded = {}
 
 nodes_pool = []
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
-if config_utils["WANT_TO_BE_IN_POOL"]:
+WANT_TO_BE_IN_POOL = Config.getConfig(parentKey='core', key='WANT_TO_BE_IN_POOL')
+if WANT_TO_BE_IN_POOL:
     Logger.printMessage('Loaded in pool as', MY_NODE_ID, debug_module=True)
 
 https = '' # Anytime when adding ssl, shold be with an 's'
@@ -69,7 +69,7 @@ def getModulesJSON():
             conf[mod] = '1 function'
         else:
             conf[mod] = '{func} functions'.format(func=len(modules_loaded[mod]))
-    Logger.printMessage('Modules loaded as JSON automatically:', conf, debug_module=True)
+    #Logger.printMessage('Modules loaded as JSON automatically:', conf, debug_module=True)
     return modules_loaded
 
 def getFunctionsNamesFromModule(module_name):
@@ -341,7 +341,7 @@ def getModule(moduleName):
                 moduleName = 'ht_{m}'.format(m=moduleName)
             sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
             return eval(sentence)
-    Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), debug_module=True, is_error=True)
+    Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), is_error=True)
 
 def getModuleConfig(moduleName):
     """Return's an Array with the config of a module passed as parameter
@@ -368,6 +368,38 @@ def getModuleConfig(moduleName):
 def addNodeToPool(node_ip):
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
+
+def send(node_request, functionName):
+    creator_id = MY_NODE_ID
+    pool_nodes = getPoolNodes()
+    try:
+        if WANT_TO_BE_IN_POOL:
+            function_api_call = resolve(node_request.path_info).route
+            pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
+            if pool_it:
+                if pool_nodes:
+                    params = dict(node_request.POST)
+                    params['pool_list'] = pool_nodes
+                    if not 'creator' in params:
+                        params['creator'] = creator_id
+                    response, creator = sendPool(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                    if 'creator' in params and params['creator'] == creator_id and response:
+                        return (str(response.text), False)
+                    if response:
+                        return (response, creator)
+                    return (None, None)
+                else:
+                    return (None, None)
+            else:
+                Logger.printMessage(message='send', description='{n} - {f} - Your config should have activated "__pool_it_{f}__" for pooling the function to other nodes'.format(n=node_request, f=functionName), color=Fore.YELLOW, debug_core=True)
+                return (None, None)
+        else:
+            Logger.printMessage(message='send', description='Disabled pool... If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
+            return (None, None)
+    except Exception as e:
+        raise
+        Logger.printMessage(message='send', description=str(e), is_error=True)
+        return (None, None)
 
 def sendPool(creator, function_api_call='', params={}, files=[]):
     my_public_ip = local_ip
@@ -582,10 +614,13 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 if input_type == 'file':
                     html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
                 elif input_type == 'checkbox':
+                    checkbox_disabled = ''
+                    if '__pool_it_' in input_id and not WANT_TO_BE_IN_POOL:
+                        checkbox_disabled = 'disabled'
                     if checkbox_selected:
-                        html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} checked><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" id=\"{id}\" name=\"{id}\" {required} checked {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                     else:
-                        html += "<div class=\"custom-control custom-checkbox\"><input type=\"checkbox\" class=\"{className}\" id=\"{id}\" name=\"{id}\" {required} ><label class=\"custom-control-label\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, className=input_class, input_label_desc=input_label_desc, required=required)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" id=\"{id}\" name=\"{id}\" {required} {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                 elif input_type == 'button':
                     footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
                 elif input_type == 'submit':
@@ -691,7 +726,6 @@ def __importModules__():
                             modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
                     except Exception as e:
                         print("{a} - [ERROR] - {msg}".format(a=module_import_string, msg=str(e)))
-    #return True
 
 def getModules():
     data = []
