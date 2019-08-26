@@ -21,7 +21,6 @@ def home(request, popup_text=''):
     modules_config_treeview = ht.__getModulesConfig_treeView__()
     modules_functions_modals = ht.getModulesModalTests()
     modules_functions_calls_console_string = ht.getModulesFunctionsCalls()
-    pool_list = ht.nodes_pool
     modules_all = {}
     categories = []
     for mod in modules_and_params:
@@ -29,7 +28,9 @@ def home(request, popup_text=''):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = ht.getModulesNames()
+    pool_list = ht.nodes_pool
     my_node_id_pool = ht.MY_NODE_ID
+    status_pool = ht.WANT_TO_BE_IN_POOL
     return render(request, 'core/index.html', { 
         'modules':modules_names, 
         'categories':categories, 
@@ -41,8 +42,9 @@ def home(request, popup_text=''):
         'modules_config_treeview':modules_config_treeview, 
         'modules_functions_modals':modules_functions_modals, 
         'pool_list':pool_list,
-        'popup_text':popup_text,
-        'my_node_id_pool':my_node_id_pool})
+        'my_node_id_pool':my_node_id_pool,
+        'status_pool':status_pool,
+        'popup_text':popup_text})
 
 def documentation(request, module_name=''):
     if module_name:

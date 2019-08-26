@@ -618,9 +618,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     if '__pool_it_' in input_id and not WANT_TO_BE_IN_POOL:
                         checkbox_disabled = 'disabled'
                     if checkbox_selected:
-                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" id=\"{id}\" name=\"{id}\" {required} checked {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" {required} checked {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                     else:
-                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" id=\"{id}\" name=\"{id}\" {required} {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" {required} {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                 elif input_type == 'button':
                     footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
                 elif input_type == 'submit':

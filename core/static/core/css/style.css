@@ -281,7 +281,3 @@ a:hover {
 textarea.form-control {
     height: 100% !important;
 }
-.toggle-off{
-    border-radius: 10% !important;
-    border: 2px solid #4e73df !important;
-}
