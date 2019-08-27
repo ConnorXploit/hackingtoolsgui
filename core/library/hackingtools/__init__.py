@@ -20,6 +20,7 @@ modules_loaded = {}
 
 nodes_pool = []
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
+global WANT_TO_BE_IN_POOL
 WANT_TO_BE_IN_POOL = Config.getConfig(parentKey='core', key='WANT_TO_BE_IN_POOL')
 if WANT_TO_BE_IN_POOL:
     Logger.printMessage('Loaded in pool as', MY_NODE_ID, debug_module=True)
@@ -365,6 +366,13 @@ def getModuleConfig(moduleName):
 
 # Nodes Pool Treatment
 
+def switchPool():
+    global WANT_TO_BE_IN_POOL
+    if WANT_TO_BE_IN_POOL:
+        WANT_TO_BE_IN_POOL = False
+    else:
+        WANT_TO_BE_IN_POOL = True
+
 def addNodeToPool(node_ip):
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
@@ -615,12 +623,16 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
                 elif input_type == 'checkbox':
                     checkbox_disabled = ''
+                    color_on = 'primary'
+                    color_off = 'warning'
                     if '__pool_it_' in input_id and not WANT_TO_BE_IN_POOL:
                         checkbox_disabled = 'disabled'
+                        color_on = 'default'
+                        color_off = 'default'
                     if checkbox_selected:
-                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" {required} checked {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"{color_on}\" data-offstyle=\"{color_off}\" id=\"{id}\" name=\"{id}\" {required} checked {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(color_on=color_on, color_off=color_off, id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                     else:
-                        html += "<div class=\"checkbox\"><input type=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" {required} {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"{color_on}\" data-offstyle=\"{color_off}\" id=\"{id}\" name=\"{id}\" {required} {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(color_on=color_on, color_off=color_off, id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                 elif input_type == 'button':
                     footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
                 elif input_type == 'submit':
@@ -725,7 +737,7 @@ def __importModules__():
                         else:
                             modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
                     except Exception as e:
-                        print("{a} - [ERROR] - {msg}".format(a=module_import_string, msg=str(e)))
+                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
 
 def getModules():
     data = []

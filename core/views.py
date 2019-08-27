@@ -71,6 +71,10 @@ def sendPool(request, functionName):
         return response, True
     return None, None
 
+def switchPool(request):
+    ht.switchPool()
+    return home(request=request)
+
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_cat = request.POST.get('category_name')
@@ -176,10 +180,10 @@ def ht_rsa_encrypt(request):
         return home(request=request)
 
 def ht_rsa_decrypt(request):
-    if request.POST.get('public_key_keynumber') and request.POST.get('public_key_keymod') and request.POST.get('cipher_text'):
+    if request.POST.get('public_key_keynumber') and request.POST.get('public_key_keymod') and request.POST.get('decipher_text'):
         pub_key_k = request.POST.get('public_key_keynumber')
         pub_key_n = request.POST.get('public_key_keymod')
-        text = request.POST.get('cipher_text')
+        text = request.POST.get('decipher_text')
         crypter = ht.getModule('ht_rsa')
         decrypted_text = crypter.decrypt(public_key=(int(pub_key_k), int(pub_key_n)), ciphertext=text)
         return home(request=request, popup_text=decrypted_text)

@@ -15,6 +15,7 @@ urlpatterns = [
     path('core/script/save/', views.createScript, name="createscript"),
     path('core/category/create/', views.createCategory, name="createcat"),
     path('core/config/look_for_changes/', views.config_look_for_changes, name="config_look_for_changes"),
+    path('core/pool/switchPool/', views.switchPool, name="switchPool"),
     path('core/pool/add_pool_node/', views.add_pool_node, name="add_pool_node"),
     # Modules URLs
     # ht_crypter

@@ -281,3 +281,6 @@ a:hover {
 textarea.form-control {
     height: 100% !important;
 }
+.toggle input[type=checkbox][disabled] > * {
+    border: 2px solid grey;
+}

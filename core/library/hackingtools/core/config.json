@@ -219,8 +219,8 @@
                         "value": 0,
                         "required": true
                     },
-                    "cipher_text": {
-                        "__id__": "cipher_text",
+                    "decipher_text": {
+                        "__id__": "decipher_text",
                         "__type__": "textarea",
                         "__className__": "form-control",
                         "placeholder": "Text to decipher",
