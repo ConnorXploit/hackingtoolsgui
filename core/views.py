@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
@@ -73,7 +73,10 @@ def sendPool(request, functionName):
 
 def switchPool(request):
     ht.switchPool()
-    return home(request=request)
+    data = {
+        'status' : ht.WANT_TO_BE_IN_POOL
+    }
+    return JsonResponse(data)
 
 def createModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()

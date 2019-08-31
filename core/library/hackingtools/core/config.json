@@ -69,7 +69,7 @@
                     "value": "Close"
                 },
                 "submit": {
-                    "__id__": "crypt_file_button",
+                    "__id__": "find",
                     "__type__": "submit",
                     "__className__": "btn btn-primary",
                     "value": "Search",
@@ -250,7 +250,7 @@
                         "__id__": "__pool_it_generate_keypair__",
                         "__type__": "checkbox",
                         "__className__": "custom-control-input",
-                        "label_desc": "Pool the execution the the pool list",
+                        "label_desc": "Pool the execution to the pool list",
                         "selected": false
                     }
                 },

@@ -73,14 +73,39 @@
       <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
       <div class="d-sm-flex align-items-center justify-content-between mb-6">
         {% comment %} <input type="text" class="form-control" id="my_pool_id" value="{{my_node_id_pool}}" size="{{my_node_id_pool|length}}" onfocus="copyNodeIdToClipboard()" readonly/> |  {% endcomment %}
-        <form action="{% url 'switchPool' %}" method="POST" id="switchPoolForm">
+        <form id="switchPoolForm">
           {% csrf_token %}
           <input id="checkSwitchPool" type="checkbox" style="border: 0px !important;" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size="small" data-offstyle="danger" data-onstyle="{% if pool_list|length > 0 %}success{% else %}primary{% endif %}" {% if status_pool %}checked{% endif %}>
         </form> | 
         <script>
           $(function() {
-            $('#checkSwitchPool').change(function() {
-              $("#switchPoolForm").submit();      
+            $('#checkSwitchPool').change(function(e) {
+              e.preventDefault();
+              //$("#switchPoolForm").submit();
+              $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                url : "{% url 'switchPool' %}", // the endpoint
+                type : "POST", // http method
+                async: true,
+                // handle a successful response
+                success : function(res) {
+                    console.log("success"); // another sanity check
+                    if('status' in res && res.status == true){
+                      $('input:checkbox[id^="__pool_it_"]').each(function(){
+                        document.getElementById($(this).attr('id')).parentElement.parentElement.style.display = "block";
+                      });
+                    } else {
+                      if('status' in res && res.status == false){
+                        $('input:checkbox[id^="__pool_it_"]').each(function(){
+                          var a = document.getElementById($(this).attr('id')).parentElement.parentElement.style.display = "None";
+                        });
+                      }
+                    }
+                },
+                error : function(xhr,errmsg,err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+                }
+              });
             })
           })
         </script>
