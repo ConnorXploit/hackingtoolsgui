@@ -95,6 +95,7 @@ def __createModuleTemplateConfig__(module_name):
         "_django_form_module_function_" : {
             "_PUBLIC_FUNCTION_" : {
                 "__function__" : "_FUNCTION_CALLABLE_NAME_",
+                "__async__" : False,
                 "__return__" : "_IF_RETURNS_LIKE_TEXT_",
                 "_PARAM_TO_USE_IN_VIEWS_PY_" : {
                     "__id__" : "_HTML_FIELD_NAME_",

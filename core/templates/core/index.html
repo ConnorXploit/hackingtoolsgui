@@ -87,9 +87,7 @@
                 url : "{% url 'switchPool' %}", // the endpoint
                 type : "POST", // http method
                 async: true,
-                // handle a successful response
                 success : function(res) {
-                    console.log("success"); // another sanity check
                     if('status' in res && res.status == true){
                       $('input:checkbox[id^="__pool_it_"]').each(function(){
                         document.getElementById($(this).attr('id')).parentElement.parentElement.style.display = "block";
@@ -277,7 +275,7 @@
                                               {% endfor %}
                                             </div>
                                             <div class="modal-footer">
-                                              <input type="submit" class="btn btn-primary" value="Test {{functi}}"></button>
+                                              <input type="submit" class="btn btn-primary" id="submit_test_{{functi}}" value="Test {{functi}}"></button>
                                             </div>
                                               {% comment %} <script>
                                                 function upload(event) {

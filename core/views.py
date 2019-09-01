@@ -108,6 +108,7 @@ def saveFileOutput(myfile, module_name, category):
     location = os.path.join("core", "library", "hackingtools", "modules", category, module_name.split('ht_')[0], "output")
     fs = FileSystemStorage(location=location)
     filename = fs.save(myfile.name, myfile)
+    Logger.printMessage(message='saveFileOutput', description='Saving to {fi}'.format(fi=os.path.join(location,myfile.name)))
     return (filename, location, os.path.join(location, filename))
 
 def add_pool_node(request):
@@ -369,7 +370,7 @@ def ht_metadata_get_metadata_exif(request):
 def ht_bruteforce_crackZip(request):
     try:
         if len(request.FILES) != 0:
-            if request.FILES['zipFile']:
+            if request.FILES['zipFileBruteforce']:
                 # If it is a pool request... :) in config.json have to be a param to work: __pool_it_crackZip__
                 response, repool = sendPool(request, "crackZip")
                 if response or repool:
@@ -378,7 +379,7 @@ def ht_bruteforce_crackZip(request):
                     return home(request=request, popup_text=response.text)
                 else:
                     # Get file
-                    myfile = request.FILES['zipFile']
+                    myfile = request.FILES['zipFileBruteforce']
 
                     async_execution = request.POST.get('async_execution', False)
                     password_length = request.POST.get('password_length', 4)
@@ -399,12 +400,23 @@ def ht_bruteforce_crackZip(request):
 
                     # Save the file
                     filename, location, uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
-
                     if uploaded_file_url:
                         password = bruter.crackZip(uploaded_file_url, unzipper=unzipper, alphabet=used_alphabet, password_length=password_length, log=False)
                     else:
+                        if request.POST.get('is_async', False):
+                            data = {
+                                'data' : 'Something went wrong. See the log'
+                            }
+                            return JsonResponse(data)
                         return home(request=request, popup_text='Something went wrong. See the log')
 
+                    if 'is_async' in request.POST and request.POST.get('is_async') == True:
+                        data = {
+                            'data' : password
+                        }
+                        return JsonResponse(data)
+                    if not password:
+                        return home(request=request, popup_text='Something want wrong')
                     return home(request=request, popup_text=password)
     except ConnectionError as conError:
         print('Connection aborted. Remote end closed connection without response')
@@ -427,7 +439,7 @@ def test_ht_unzip_extractFile(request):
 
             # Save the file
             filename, location, uploaded_file_url = saveFileOutput(myfile, "unzip", "crackers")
-            
+
             if uploaded_file_url:
                 password = unzipper.extractFile(uploaded_file_url, password=password)
             else:
@@ -454,4 +466,51 @@ def test_ht_virustotal_isBadFile(request):
                 response = virustotal.isBadFile(uploaded_file_url)
                 return home(request=request, popup_text=response)
     except Exception as e:
+        return home(request=request, popup_text=str(e))
+
+# ht_facedetection
+
+def test_ht_facedetection_test_image(request):
+    try:
+        if len(request.FILES) != 0:
+
+            if 'image_file_test' in request.FILES:
+                facedetection = ht.getModule('ht_facedetection')
+                image_to_test = request.FILES['image_file_test']
+                filename, location, uploaded_file_url = saveFileOutput(image_to_test, "facedetection", "ai")
+
+            first_folder_name = None
+            filenameZip = None
+            uploaded_file_urlZip = 'trained.clf'
+            modelfile = request.POST.get('dropdown_modelfile')
+
+            if 'image_models_zip' in request.FILES:
+                zip_to_train = request.FILES['image_models_zip']
+                first_folder_name = request.POST.get('first_folder_name', None)
+                if not first_folder_name:
+                    first_folder_name = zip_to_train.name.split('.')[0]
+                filenameZip, location, uploaded_file_urlZip = saveFileOutput(zip_to_train, "facedetection", "ai")
+
+            n_neighbors = int(request.POST.get('neighbors', 1))
+
+            if filenameZip:
+                image_final = facedetection.test_image(
+                    uploaded_file_url, 
+                    model_path='{f}.clf'.format(f=filenameZip.split('.')[0]), 
+                    trainZipFile=uploaded_file_urlZip, 
+                    first_folder_name=first_folder_name,
+                    n_neighbors=n_neighbors)
+            else:
+                image_final = facedetection.test_image(
+                    uploaded_file_url, 
+                    model_path=modelfile)
+            
+            with open(image_final, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/{type}".format(type=filename.split('.')[1]))
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(image_final)
+                return response
+
+    except Exception as e:
+        Logger.printMessage(message='test_ht_facedetection_test_image', description=str(e), is_error=True)
+        raise
         return home(request=request, popup_text=str(e))

@@ -24,7 +24,6 @@ class StartModule():
 		if log:
 			Logger.setDebugCore(True)
 		texts = Utils.getDict(length=int(password_length), alphabet=alphabet)
-		passwords = []
 		if len(texts) > 10000:
 			texts_list = numpy.array_split(texts,10000)
 		else:
@@ -39,6 +38,9 @@ class StartModule():
 					Logger.printMessage(message='crackZip', description='File doesnt exists {a}'.format(a=zipPathName), is_error=True)
 					break
 				if password:
-					passwords.append(password)
+					Logger.printMessage(message='crackZip', description='Password is {a}'.format(a=password))
+					if log:
+						Logger.setDebugCore(False)
+					return password
 		Logger.setDebugCore(False)
-		return passwords
+		return None

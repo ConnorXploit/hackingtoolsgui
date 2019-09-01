@@ -79,6 +79,7 @@
             "django_form_module_function": {
                 "getIPListfromServices": {
                     "__function__": "test_ht_shodan_getIPListfromServices",
+                    "__async__": false,
                     "__return__": "text",
                     "service_name": {
                         "__id__": "service_name",
@@ -165,6 +166,7 @@
             "django_form_module_function": {
                 "encrypt": {
                     "__function__": "test_ht_rsa_encrypt",
+                    "__async__": false,
                     "__return__": "text",
                     "private_key_keynumber": {
                         "__id__": "private_key_keynumber",
@@ -202,6 +204,7 @@
                 },
                 "decrypt": {
                     "__function__": "test_ht_rsa_decrypt",
+                    "__async__": false,
                     "__return__": "text",
                     "public_key_keynumber": {
                         "__id__": "public_key_keynumber",
@@ -229,6 +232,7 @@
                 },
                 "generate_keypair": {
                     "__function__": "test_ht_rsa_generate_keypair",
+                    "__async__": false,
                     "__return__": "text",
                     "prime_a": {
                         "__id__": "prime_a",
@@ -256,6 +260,7 @@
                 },
                 "getRandomKeypair": {
                     "__function__": "test_ht_rsa_getRandomKeypair",
+                    "__async__": false,
                     "__return__": "text",
                     "prime_length": {
                         "__id__": "prime_length",
@@ -280,6 +285,7 @@
             "django_form_module_function": {
                 "get_image_exif": {
                     "__function__": "test_ht_metadata_get_image_exif",
+                    "__async__": false,
                     "__return__": "text",
                     "image_file": {
                         "__id__": "image_file",
@@ -297,9 +303,10 @@
             "django_form_module_function": {
                 "crackZip": {
                     "__function__": "test_ht_bruteforce_crackZip",
+                    "__async__": false,
                     "__return__": "text",
-                    "zipFile": {
-                        "__id__": "zipFile",
+                    "zipFileBruteforce": {
+                        "__id__": "zipFileBruteforce",
                         "__type__": "file",
                         "__className__": "file-input",
                         "label_desc": "Browse zip file for crack it",
@@ -311,13 +318,6 @@
                         "__className__": "form-control",
                         "label_desc": "Password length",
                         "value": 4
-                    },
-                    "async_execution": {
-                        "__id__": "async_execution",
-                        "__type__": "checkbox",
-                        "__className__": "custom-control-input",
-                        "label_desc": "Async execution",
-                        "selected": false
                     },
                     "bruteforce_numeric": {
                         "__id__": "bruteforce_numeric",
@@ -370,6 +370,7 @@
             "django_form_module_function": {
                 "extractFile": {
                     "__function__": "test_ht_unzip_extractFile",
+                    "__async__": false,
                     "__return__": "text",
                     "zipFile": {
                         "__id__": "zipFile",
@@ -415,6 +416,7 @@
             "django_form_module_function": {
                 "getConnectedDevices": {
                     "__function__": "test_ht_nmap_getConnectedDevices",
+                    "__async__": false,
                     "__return__": "text",
                     "ip": {
                         "__id__": "ip",
@@ -453,6 +455,7 @@
             "_django_form_module_function_": {
                 "_PUBLIC_FUNCTION_": {
                     "__function__": "_FUNCTION_CALLABLE_NAME_",
+                    "__async__": false,
                     "__return__": "_IF_RETURNS_LIKE_TEXT_",
                     "_PARAM_TO_USE_IN_VIEWS_PY_": {
                         "__id__": "_HTML_FIELD_NAME_",
@@ -487,6 +490,7 @@
             "django_form_module_function": {
                 "isBadFile": {
                     "__function__": "test_ht_virustotal_isBadFile",
+                    "__async__": false,
                     "__return__": "text",
                     "filename": {
                         "__id__": "filename",
@@ -495,6 +499,64 @@
                         "label_desc": "Select a file to test if is a bad file",
                         "required": true
                     }
+                }
+            }
+        },
+        "ht_facedetection": {
+            "__gui_label__": "Face Detection",
+            "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+            "django_form_main_function": {
+                "image_file_test": {
+                    "__id__": "image_file_test",
+                    "__type__": "file",
+                    "__className__": "file-input",
+                    "label_desc": "File to test",
+                    "required": true
+                },
+                "modelfile": {
+                    "__id__": "modelfile",
+                    "__type__": "select",
+                    "__className__": "form-control",
+                    "placeholder": "Trained Model in .clf",
+                    "required": true,
+                    "options_from_function": {
+                        "ht_facedetection": "getTestsModelsDir"
+                    }
+                },
+                "image_models_zip": {
+                    "__id__": "image_models_zip",
+                    "__type__": "file",
+                    "__className__": "file-input",
+                    "label_desc": "Models into a zip",
+                    "required": true
+                },
+                "first_folder_name": {
+                    "__id__": "first_folder_name",
+                    "__type__": "text",
+                    "__className__": "form-control",
+                    "label_desc": "Main folder's name for image dataset",
+                    "placeholder": "Empty if same name as ZIP file",
+                    "required": false
+                },
+                "neighbors": {
+                    "__id__": "neighbors",
+                    "__type__": "number",
+                    "__className__": "form-control",
+                    "label_desc": "Count objects recognize",
+                    "value": "1"
+                },
+                "close": {
+                    "__id__": "image_test_close",
+                    "__type__": "button",
+                    "__className__": "btn btn-secondary",
+                    "value": "Close"
+                },
+                "submit": {
+                    "__id__": "image_test_submit",
+                    "__type__": "submit",
+                    "__className__": "btn btn-primary",
+                    "value": "Test Image",
+                    "loading_text": "Testing with AI..."
                 }
             }
         }
