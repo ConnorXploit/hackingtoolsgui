@@ -11,10 +11,4 @@ class StartModule():
         pass
         
     def help(self):
-        functions = ht.getFunctionsNamesFromModule('ht_instagram')
-        Logger.printMessage(message=functions)
-        return functions
-
-    def getEdad(self):
-        Logger.printMessage(message='{methodName}'.format(methodName='getEdad'), debug_module=True)
-        return 23
+        return ht.getFunctionsNamesFromModule('ht_instagram')

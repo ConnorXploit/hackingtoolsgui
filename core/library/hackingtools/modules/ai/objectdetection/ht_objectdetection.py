@@ -19,11 +19,11 @@ from PIL import Image, ImageDraw
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
 
-config = Config.getConfig(parentKey='modules', key='ht_facedetection')
+config = Config.getConfig(parentKey='modules', key='ht_objectdetection')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 output_dir_models = os.path.abspath(os.path.join(os.path.dirname(__file__), 'tests_models'))
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {}
 
 class StartModule():
 
@@ -31,12 +31,12 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_facedetection'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_objectdetection'))
 
 	def getTestsModelsDir(self):
 		models = []
 		for fileName in os.listdir(output_dir_models):
-			if fileName.endswith(".clf"):
+			if fileName.endswith(".{clf}".format(clf=config['models_tests_extension'])):
 				models.append(fileName)
 		return models
 
@@ -65,7 +65,7 @@ class StartModule():
 		:param verbose: verbosity of training
 		:return: returns knn classifier that was trained on the given data.
 		"""
-		Logger.printMessage(message="train", description="Training directory: {d}".format(d=train_dir), debug_module=True)
+		Logger.printMessage(message="train", description="{msg}: {d}".format(msg=config['training_log_message'], d=train_dir), debug_module=True)
 		X = []
 		y = []
 
@@ -82,7 +82,13 @@ class StartModule():
 				if len(face_bounding_boxes) != 1:
 					# If there are no people (or too many people) in a training image, skip the image.
 					if verbose:
-						Logger.printMessage(message="train", description="Image {} not suitable for training: {}".format(img_path, "Didn't find a face" if len(face_bounding_boxes) < 1 else "Found more than one face"), debug_module=True)
+						Logger.printMessage(
+							message="train", 
+							description="{img} {bad_image}: {msg}".format(
+								img=img_path, 
+								bad_image=config['training_log_bad_image'], 
+								msg=config['training_log_no_recognition'] if len(face_bounding_boxes) < 1 else config['training_log_much_recognition']), 
+								debug_module=True)
 				else:
 					# Add face encoding for current image to the training set
 					X.append(face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes)[0])
@@ -92,7 +98,10 @@ class StartModule():
 		if n_neighbors is None:
 			n_neighbors = int(round(math.sqrt(len(X))))
 			if verbose:
-				Logger.printMessage(message="train", description="Chose n_neighbors automatically: {d}".format(d=n_neighbors), debug_module=True)
+				Logger.printMessage(
+					message="train", 
+					description="{neig}: {d}".format(neig=config['training_log_n_neighbors'], d=n_neighbors), 
+					debug_module=True)
 		
 		# Create and train the KNN classifier
 		knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
@@ -118,10 +127,11 @@ class StartModule():
 			For faces of unrecognized persons, the name 'unknown' will be returned.
 		"""
 		if not os.path.isfile(X_img_path) or os.path.splitext(X_img_path)[1][1:] not in ALLOWED_EXTENSIONS:
-			Logger.printMessage(message="predict", description="Invalid image path: {}".format(X_img_path))
+			Logger.printMessage(message="predict", description="{invalid_path}: {im}".format(invalid_path=config['predicting_invalid_path'], im=X_img_path))
 		
 		if knn_clf is None and model_path is None:
-			Logger.printMessage(message="predict", description="Must supply knn classifier either thourgh knn_clf or model_path")
+			Logger.printMessage(message="predict", description=config['predicting_no_knn_or_model_path'])
+
 		# Load a trained KNN model (if one was passed in)
 		if knn_clf is None:
 			with open(model_path, 'rb') as f:
@@ -184,12 +194,11 @@ class StartModule():
 		classifier = self.train(os.path.join(output_dir, first_folder_name), model_save_path=new_model, n_neighbors=int(n_neighbors), verbose=True)
 		return new_model
 	
-	def test_image(self, imageFile, model_path='trained.clf', trainZipFile=None, first_folder_name=None, n_neighbors=1):
+	def predictImage(self, imageFile, model_path='trained.clf', trainZipFile=None, first_folder_name=None, n_neighbors=1):
 		if trainZipFile:
 			if not first_folder_name:
 				_, first_folder_name = os.path.split(trainZipFile.split('.')[0])
-			model_path = self.trainFromZip(zipFile=trainZipFile, new_model_name='{f}.clf'.format(f=first_folder_name), first_folder_name=first_folder_name, n_neighbors=int(n_neighbors))
-			Logger.printMessage(message="test_image", description="Model saved as {f}".format(f=model_path), debug_module=True)
+			model_path = self.trainFromZip(zipFile=trainZipFile, new_model_name='{f}.{clf}'.format(f=first_folder_name, clf=config['models_tests_extension']), first_folder_name=first_folder_name, n_neighbors=int(n_neighbors))
 		else:
 			model_path = os.path.join(output_dir_models, model_path)
 
@@ -197,6 +206,6 @@ class StartModule():
 		
 		# Print results on the console
 		for name, (top, right, bottom, left) in predictions:
-			Logger.printMessage(message="test_image", description="Found {} at ({}, {})".format(name, left, top), debug_module=True)
+			Logger.printMessage(message="predictImage", description="Found {} at ({}, {})".format(name, left, top), debug_module=True)
 
 		return self.show_prediction_labels_on_image(imageFile, predictions)

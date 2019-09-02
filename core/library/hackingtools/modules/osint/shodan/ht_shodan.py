@@ -43,10 +43,8 @@ class StartModule():
                     dict_obj.append(res['ip_str'].encode('utf-8').decode('utf-8'))
                 return dict_obj
             except:
-                print('----')
                 return []
         else:
-            print('....')
             return []
 
     def queryShodan(self, category=''):

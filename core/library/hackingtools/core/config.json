@@ -299,6 +299,8 @@
         },
         "ht_bruteforce": {
             "__gui_label__": "Bruteforce",
+            "max_for_chunk": 10000,
+            "msg_password_is": "Password is",
             "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
             "django_form_module_function": {
                 "crackZip": {
@@ -366,6 +368,7 @@
         },
         "ht_unzip": {
             "__gui_label__": "Unzip",
+            "posible_combinations" : "Posible Combinations",
             "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
             "django_form_module_function": {
                 "extractFile": {
@@ -502,9 +505,18 @@
                 }
             }
         },
-        "ht_facedetection": {
-            "__gui_label__": "Face Detection",
+        "ht_objectdetection": {
+            "__gui_label__": "Object Detection",
             "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+            "allowed_extensions" : ["png", "jpg", "jpeg"],
+            "models_tests_extension": "clf",
+            "training_log_message" : "Training directory",
+            "training_log_bad_image" : "not suitable for training",
+            "training_log_no_recognition" : "Didn't find a recognition object",
+            "training_log_much_recognition" : "Found more than one recognition object",
+            "training_log_n_neighbors" : "Chose n_neighbors automatically",
+            "predicting_invalid_path" : "Invalid image path",
+            "predicting_no_knn_or_model_path" : "Must supply knn classifier either thourgh knn_clf or model_path",
             "django_form_main_function": {
                 "image_file_test": {
                     "__id__": "image_file_test",
@@ -520,7 +532,7 @@
                     "placeholder": "Trained Model in .clf",
                     "required": true,
                     "options_from_function": {
-                        "ht_facedetection": "getTestsModelsDir"
+                        "ht_objectdetection": "getTestsModelsDir"
                     }
                 },
                 "image_models_zip": {
@@ -557,6 +569,79 @@
                     "__className__": "btn btn-primary",
                     "value": "Test Image",
                     "loading_text": "Testing with AI..."
+                }
+            },
+            "django_form_module_function": {
+                "predictImage": {
+                    "__function__": "test_ht_objectdetection_predictImage",
+                    "__async__": false,
+                    "__return__": "text",
+                    "image_file_test": {
+                        "__id__": "image_file_test",
+                        "__type__": "file",
+                        "__className__": "file-input",
+                        "label_desc": "File to test",
+                        "required": true
+                    },
+                    "modelfile": {
+                        "__id__": "modelfile",
+                        "__type__": "select",
+                        "__className__": "form-control",
+                        "placeholder": "Trained Model in .clf",
+                        "required": true,
+                        "options_from_function": {
+                            "ht_objectdetection": "getTestsModelsDir"
+                        }
+                    },
+                    "image_models_zip": {
+                        "__id__": "image_models_zip",
+                        "__type__": "file",
+                        "__className__": "file-input",
+                        "label_desc": "Models into a zip",
+                        "required": true
+                    },
+                    "first_folder_name": {
+                        "__id__": "first_folder_name",
+                        "__type__": "text",
+                        "__className__": "form-control",
+                        "label_desc": "Main folder's name for image dataset",
+                        "placeholder": "Empty if same name as ZIP file",
+                        "required": false
+                    },
+                    "neighbors": {
+                        "__id__": "neighbors",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Count objects recognize",
+                        "value": "1"
+                    }
+                },
+                "trainFromZip": {
+                    "__function__": "test_ht_objectdetection_trainFromZip",
+                    "__async__": false,
+                    "__return__": "text",
+                    "image_models_zip": {
+                        "__id__": "image_models_zip",
+                        "__type__": "file",
+                        "__className__": "file-input",
+                        "label_desc": "Models into a zip",
+                        "required": true
+                    },
+                    "first_folder_name": {
+                        "__id__": "first_folder_name",
+                        "__type__": "text",
+                        "__className__": "form-control",
+                        "label_desc": "Main folder's name for image dataset",
+                        "placeholder": "Empty if same name as ZIP file",
+                        "required": false
+                    },
+                    "neighbors": {
+                        "__id__": "neighbors",
+                        "__type__": "number",
+                        "__className__": "form-control",
+                        "label_desc": "Count objects recognize",
+                        "value": "1"
+                    }
                 }
             }
         }

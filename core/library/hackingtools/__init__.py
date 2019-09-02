@@ -608,9 +608,8 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 input_type = temp_m_form[m]['__type__']
                 input_id = temp_m_form[m]['__id__']
                 input_class = temp_m_form[m]['__className__']
-                input_placeholder = ''
                 
-                loading_text = ''
+                input_placeholder = ''
                 if 'placeholder' in temp_m_form[m]:
                     input_placeholder = temp_m_form[m]['placeholder']
                 
@@ -640,7 +639,6 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     for optModuleName in options_from_function:
                         if optModuleName in getModulesNames():
                             functionCall = 'getModule(\'{mod}\').{func}()'.format(mod=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
-                            Logger.printMessage(message='__createHtmlModalForm__', description='Loading options_from_function calling {ca}'.format(ca=functionCall))
                             options_from_function = eval(functionCall)
                 
                 if input_type == 'file':

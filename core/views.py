@@ -468,16 +468,16 @@ def test_ht_virustotal_isBadFile(request):
     except Exception as e:
         return home(request=request, popup_text=str(e))
 
-# ht_facedetection
+# ht_objectdetection
 
-def test_ht_facedetection_test_image(request):
+def test_ht_objectdetection_predictImage(request):
     try:
         if len(request.FILES) != 0:
 
             if 'image_file_test' in request.FILES:
-                facedetection = ht.getModule('ht_facedetection')
+                objectdetection = ht.getModule('ht_objectdetection')
                 image_to_test = request.FILES['image_file_test']
-                filename, location, uploaded_file_url = saveFileOutput(image_to_test, "facedetection", "ai")
+                filename, location, uploaded_file_url = saveFileOutput(image_to_test, "objectdetection", "ai")
 
             first_folder_name = None
             filenameZip = None
@@ -489,19 +489,19 @@ def test_ht_facedetection_test_image(request):
                 first_folder_name = request.POST.get('first_folder_name', None)
                 if not first_folder_name:
                     first_folder_name = zip_to_train.name.split('.')[0]
-                filenameZip, location, uploaded_file_urlZip = saveFileOutput(zip_to_train, "facedetection", "ai")
+                filenameZip, location, uploaded_file_urlZip = saveFileOutput(zip_to_train, "objectdetection", "ai")
 
             n_neighbors = int(request.POST.get('neighbors', 1))
 
             if filenameZip:
-                image_final = facedetection.test_image(
+                image_final = objectdetection.predictImage(
                     uploaded_file_url, 
                     model_path='{f}.clf'.format(f=filenameZip.split('.')[0]), 
                     trainZipFile=uploaded_file_urlZip, 
                     first_folder_name=first_folder_name,
                     n_neighbors=n_neighbors)
             else:
-                image_final = facedetection.test_image(
+                image_final = objectdetection.predictImage(
                     uploaded_file_url, 
                     model_path=modelfile)
             
@@ -511,6 +511,36 @@ def test_ht_facedetection_test_image(request):
                 return response
 
     except Exception as e:
-        Logger.printMessage(message='test_ht_facedetection_test_image', description=str(e), is_error=True)
-        raise
+        Logger.printMessage(message='test_ht_objectdetection_predictImage', description=str(e), is_error=True)
         return home(request=request, popup_text=str(e))
+
+def test_ht_objectdetection_trainFromZip(request):
+    try:
+        if len(request.FILES) != 0:
+            first_folder_name = None
+            filenameZip = None
+            uploaded_file_urlZip = 'trained.clf'
+
+            if 'image_models_zip' in request.FILES:
+                zip_to_train = request.FILES['image_models_zip']
+                first_folder_name = request.POST.get('first_folder_name', None)
+                if not first_folder_name:
+                    first_folder_name = zip_to_train.name.split('.')[0]
+                filenameZip, location, uploaded_file_urlZip = saveFileOutput(zip_to_train, "objectdetection", "ai")
+
+            n_neighbors = int(request.POST.get('neighbors', 1))
+
+            if filenameZip:
+                image_final = objectdetection.trainFromZip(
+                    uploaded_file_url, 
+                    model_path='{f}.clf'.format(f=filenameZip.split('.')[0]), 
+                    trainZipFile=uploaded_file_urlZip, 
+                    first_folder_name=first_folder_name,
+                    n_neighbors=n_neighbors)
+                return home(request=request, popup_text=image_final)
+            return home(request=request)
+
+    except Exception as e:
+        Logger.printMessage(message='test_ht_objectdetection_trainFromZip', description=str(e), is_error=True)
+        return home(request=request, popup_text=str(e))
+

@@ -249,86 +249,88 @@
                 {% for name, funct in modules_all.items %}
                   <div class="col-lg-3 mb-3">
                       {{name}}
-                      {% if funct.items %}
+                      {% if funct.items|length > 1 %}
                         {% for funct_name, funct_params in funct.items %}
-                          {% for tool, function in modules_functions_modals.items %}
-                            {% for functi, data in function.items %}
-                              {% if functi == funct_name and 'ht_'|add:name == tool %}
-                                <!-- MODAL PARA LA FUNCTION -->
-                                <div class="modal fade" id="testModuleFunctionModal_{{tool}}_{{functi}}" tabindex="-1" role="dialog" aria-labelledby="testModuleFunctionModalLabel_{{tool}}_{{functi}}" aria-hidden="true">
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      {% for data_key, data_value in data.items %}
-                                        {% if data_key in '__function__' %}
-                                          <form action="{% url data_value %}" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
-                                            {% csrf_token %}
-                                            <div class="modal-header">
-                                              <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
-                                            </div>
-                                            <div class="modal-body">
-                                              {% for mod, modform in modules_forms_modal.items %}
-                                                {% for f_name, f_data_form in modform.items %}
-                                                  {% if f_name == functi %}
-                                                    {{f_data_form|safe}}
-                                                  {% endif %}
+                          {% if funct_name != 'help' %}
+                            {% for tool, function in modules_functions_modals.items %}
+                              {% for functi, data in function.items %}
+                                {% if functi == funct_name and 'ht_'|add:name == tool %}
+                                  <!-- MODAL PARA LA FUNCTION -->
+                                  <div class="modal fade" id="testModuleFunctionModal_{{tool}}_{{functi}}" tabindex="-1" role="dialog" aria-labelledby="testModuleFunctionModalLabel_{{tool}}_{{functi}}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        {% for data_key, data_value in data.items %}
+                                          {% if data_key in '__function__' %}
+                                            <form action="{% url data_value %}" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
+                                              {% csrf_token %}
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
+                                              </div>
+                                              <div class="modal-body">
+                                                {% for mod, modform in modules_forms_modal.items %}
+                                                  {% for f_name, f_data_form in modform.items %}
+                                                    {% if f_name == functi %}
+                                                      {{f_data_form|safe}}
+                                                    {% endif %}
+                                                  {% endfor %}
                                                 {% endfor %}
-                                              {% endfor %}
-                                            </div>
-                                            <div class="modal-footer">
-                                              <input type="submit" class="btn btn-primary" id="submit_test_{{functi}}" value="Test {{functi}}"></button>
-                                            </div>
-                                              {% comment %} <script>
-                                                function upload(event) {
-                                                  event.preventDefault();
-                                                  var data = new FormData($('form_{{data_value}}').get(0));
+                                              </div>
+                                              <div class="modal-footer">
+                                                <input type="submit" class="btn btn-primary" id="submit_test_{{functi}}" value="Test {{functi}}"></button>
+                                              </div>
+                                                {% comment %} <script>
+                                                  function upload(event) {
+                                                    event.preventDefault();
+                                                    var data = new FormData($('form_{{data_value}}').get(0));
 
-                                                  $.ajax({
-                                                      url: $(this).attr('action'),
-                                                      type: $(this).attr('method'),
-                                                      data: data,
-                                                      cache: false,
-                                                      processData: false,
-                                                      contentType: false,
-                                                      success: function(data) {
-                                                          alert('success');
-                                                          alert(data)
-                                                      }
-                                                  });
-                                                  return false;
-                                                }
-                                                function submit(){
-                                                  $('form_{{data_value}}').submit(upload);
-                                                }
-                                              </script> {% endcomment %}
-                                          </form>
-                                        {% endif %}
-                                      {% endfor %}
+                                                    $.ajax({
+                                                        url: $(this).attr('action'),
+                                                        type: $(this).attr('method'),
+                                                        data: data,
+                                                        cache: false,
+                                                        processData: false,
+                                                        contentType: false,
+                                                        success: function(data) {
+                                                            alert('success');
+                                                            alert(data)
+                                                        }
+                                                    });
+                                                    return false;
+                                                  }
+                                                  function submit(){
+                                                    $('form_{{data_value}}').submit(upload);
+                                                  }
+                                                </script> {% endcomment %}
+                                            </form>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                                <script>
-                                  $("#function_background_{{name}}_{{funct_name}}").ready(function(){
-                                    $("#function_background_{{name}}_{{funct_name}}").removeClass("bg-dark");
-                                    $("#function_background_{{name}}_{{funct_name}}").addClass("bg-info");
-                                  });
-                                </script>
-                              {% endif %}
+                                  <script>
+                                    $("#function_background_{{name}}_{{funct_name}}").ready(function(){
+                                      $("#function_background_{{name}}_{{funct_name}}").removeClass("bg-dark");
+                                      $("#function_background_{{name}}_{{funct_name}}").addClass("bg-info");
+                                    });
+                                  </script>
+                                {% endif %}
+                              {% endfor %}
                             {% endfor %}
-                          {% endfor %}
-                          <a href="#" data-toggle="modal" data-target="#testModuleFunctionModal_ht_{{name}}_{{funct_name}}">
-                            <div class="card bg-dark text-white shadow mouseOverFunction" id="function_background_{{name}}_{{funct_name}}">
-                              <div class="card-body">
-                                {{funct_name}}
-                                {% for i, param in funct_params.items %}
-                                  {% if param %}
-                                  <div class="text-white-50 small">{{param}}</div>
-                                  {% else %}
-                                  <div class="text-white-50 small">No params</div>
-                                  {% endif %}
-                                {% endfor %}
+                            <a href="#" data-toggle="modal" data-target="#testModuleFunctionModal_ht_{{name}}_{{funct_name}}">
+                              <div class="card bg-dark text-white shadow mouseOverFunction" id="function_background_{{name}}_{{funct_name}}">
+                                <div class="card-body">
+                                  {{funct_name}}
+                                  {% for i, param in funct_params.items %}
+                                    {% if param %}
+                                    <div class="text-white-50 small">{{param}}</div>
+                                    {% else %}
+                                    <div class="text-white-50 small">No params</div>
+                                    {% endif %}
+                                  {% endfor %}
+                                </div>
                               </div>
-                            </div>
-                          </a>
+                            </a>
+                          {% endif %}
                         {% endfor %}
                       {% else %}
                         <div class="card bg-secondary text-white shadow mouseOverFunction">

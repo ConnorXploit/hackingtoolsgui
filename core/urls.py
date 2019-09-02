@@ -39,8 +39,10 @@ urlpatterns = [
     path('modules/ht_unzip/extractFile/', views.test_ht_unzip_extractFile, name="test_ht_unzip_extractFile"),
     # ht_virustotal
     path('modules/ht_virustotal/isBadFile/', views.test_ht_virustotal_isBadFile, name="test_ht_virustotal_isBadFile"),
-    # ht_facedetection
-    path('modules/ht_facedetection/test_image/', views.test_ht_facedetection_test_image, name="test_ht_facedetection")
+    # ht_objectdetection
+    path('modules/ht_objectdetection/predictImage/', views.test_ht_objectdetection_predictImage, name="test_ht_objectdetection"),
+    path('modules/ht_objectdetection/predictImage/', views.test_ht_objectdetection_predictImage, name="test_ht_objectdetection_predictImage"),
+    path('modules/ht_objectdetection/trainFromZip/', views.test_ht_objectdetection_trainFromZip, name="test_ht_objectdetection_trainFromZip")
 ]
 
 # for mod in ht.getModulesNames():
