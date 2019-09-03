@@ -116,6 +116,11 @@ def add_pool_node(request):
         if request.POST:
             pool_node = request.POST.get('pool_ip')
         ht.addNodeToPool(pool_node)
+        if request.POST.get('is_async', False):
+            data = {
+                'data' : ht.nodes_pool
+            }
+            return JsonResponse(data)
         return home(request=request, popup_text='\n'.join(ht.nodes_pool))
     except:
         return home(request=request, popup_text='Something went wrong')
@@ -179,6 +184,11 @@ def ht_rsa_encrypt(request):
         text = request.POST.get('cipher_text')
         crypter = ht.getModule('ht_rsa')
         crypted_text = crypter.encrypt(private_key=(int(priv_key_k), int(priv_key_n)), plaintext=text.encode())
+        if request.POST.get('is_async', False):
+            data = {
+                'data' : crypted_text
+            }
+            return JsonResponse(data)
         return home(request=request, popup_text=crypted_text)
     else:
         return home(request=request)
@@ -190,6 +200,11 @@ def ht_rsa_decrypt(request):
         text = request.POST.get('decipher_text')
         crypter = ht.getModule('ht_rsa')
         decrypted_text = crypter.decrypt(public_key=(int(pub_key_k), int(pub_key_n)), ciphertext=text)
+        if request.POST.get('is_async', False):
+            data = {
+                'data' : decrypted_text
+            }
+            return JsonResponse(data)
         return home(request=request, popup_text=decrypted_text)
     else:
         return home(request=request)
@@ -212,6 +227,11 @@ def ht_rsa_getRandomKeypair(request):
         else:
             keypair = crypter.getRandomKeypair()
         keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
+        if request.POST.get('is_async', False):
+            data = {
+                'data' : keypair
+            }
+            return JsonResponse(data)
         return home(request=request, popup_text=keypair)
 
 @csrf_exempt
@@ -232,6 +252,11 @@ def ht_rsa_generate_keypair(request):
                     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
                 except:
                     pass
+            if request.POST.get('is_async', False):
+                data = {
+                    'data' : keypair
+                }
+                return JsonResponse(data)
             return home(request=request, popup_text=keypair)
         else:
             return home(request=request)
@@ -319,6 +344,11 @@ def ht_shodan_getIPListfromServices(request):
         shodan = ht.getModule('ht_shodan')
         response_shodan = shodan.getIPListfromServices(serviceName=service_name, shodanKeyString=shodan_key)
         resp_text = ','.join(response_shodan)
+        if request.POST.get('is_async', False):
+            data = {
+                'data' : resp_text
+            }
+            return JsonResponse(data)
         return home(request=request, popup_text=resp_text)
     else:
         return home(request=request)
@@ -333,6 +363,11 @@ def ht_nmap_getConnectedDevices(request):
         nmap = ht.getModule('ht_nmap')
         response_nmap = nmap.getConnectedDevices(ip=ip_to_scan)
         resp_text = ','.join(response_nmap)
+        if request.POST.get('is_async', False):
+            data = {
+                'data' : resp_text
+            }
+            return JsonResponse(data)
         return home(request=request, popup_text=resp_text)
     else:
         return home(request=request)
@@ -359,7 +394,12 @@ def ht_metadata_get_metadata_exif(request):
             data = metadata.get_pdf_exif(uploaded_file_url)
 
             print(str(json.dumps(data)))
-
+            
+            if request.POST.get('is_async', False):
+                data = {
+                    'data' : data
+                }
+                return JsonResponse(data)
             return home(request=request, popup_text=str(json.dumps(data)))
     else:
         return home(request=request)
@@ -416,7 +456,17 @@ def ht_bruteforce_crackZip(request):
                         }
                         return JsonResponse(data)
                     if not password:
+                        if request.POST.get('is_async', False):
+                            data = {
+                                'data' : 'Something want wrong'
+                            }
+                            return JsonResponse(data)
                         return home(request=request, popup_text='Something want wrong')
+                    if request.POST.get('is_async', False):
+                        data = {
+                            'data' : password
+                        }
+                        return JsonResponse(data)
                     return home(request=request, popup_text=password)
     except ConnectionError as conError:
         print('Connection aborted. Remote end closed connection without response')
@@ -431,8 +481,8 @@ def test_ht_unzip_extractFile(request):
             myfile = request.FILES['zipFile']
 
             password = ''
-            if request.POST.get('password'):
-                password = request.POST.get('password')
+            if request.POST.get('passwordFile'):
+                password = request.POST.get('passwordFile')
 
             # Get Crypter Module
             unzipper = ht.getModule('ht_unzip')
@@ -446,6 +496,11 @@ def test_ht_unzip_extractFile(request):
                 return home(request=request, popup_text='Something went wrong. See the log')
 
             if password:
+                if request.POST.get('is_async', False):
+                    data = {
+                        'data' : password
+                    }
+                    return JsonResponse(data)
                 return password
                 #return home(request=request, popup_text='Nice, password is: {pa}'.format(pa=password))
             else:
@@ -464,6 +519,11 @@ def test_ht_virustotal_isBadFile(request):
                 # Save the file
                 filename, location, uploaded_file_url = saveFileOutput(request.FILES['filename'], "virustotal", "forensic")
                 response = virustotal.isBadFile(uploaded_file_url)
+                if request.POST.get('is_async', False):
+                    data = {
+                        'data' : response
+                    }
+                    return JsonResponse(data)
                 return home(request=request, popup_text=response)
     except Exception as e:
         return home(request=request, popup_text=str(e))
@@ -479,39 +539,107 @@ def test_ht_objectdetection_predictImage(request):
                 image_to_test = request.FILES['image_file_test']
                 filename, location, uploaded_file_url = saveFileOutput(image_to_test, "objectdetection", "ai")
 
-            first_folder_name = None
-            filenameZip = None
-            uploaded_file_urlZip = 'trained.clf'
-            modelfile = request.POST.get('dropdown_modelfile')
+                first_folder_name = None
+                filenameZip = None
+                uploaded_file_urlZip = 'trained.clf'
+                modelfile = request.POST.get('dropdown_modelfile')
+                
+                if not modelfile:
+                    modelfile = request.POST.get('dropdown_modelfile_main')
 
-            if 'image_models_zip' in request.FILES:
-                zip_to_train = request.FILES['image_models_zip']
-                first_folder_name = request.POST.get('first_folder_name', None)
-                if not first_folder_name:
-                    first_folder_name = zip_to_train.name.split('.')[0]
-                filenameZip, location, uploaded_file_urlZip = saveFileOutput(zip_to_train, "objectdetection", "ai")
+                if 'image_models_zip' in request.FILES:
+                    zip_to_train = request.FILES['image_models_zip']
+                    first_folder_name = request.POST.get('first_folder_name', None)
+                    if not first_folder_name:
+                        first_folder_name = zip_to_train.name.split('.')[0]
+                    filenameZip, location, uploaded_file_urlZip = saveFileOutput(zip_to_train, "objectdetection", "ai")
 
-            n_neighbors = int(request.POST.get('neighbors', 1))
+                n_neighbors = int(request.POST.get('neighbors', 1))
 
-            if filenameZip:
-                image_final = objectdetection.predictImage(
-                    uploaded_file_url, 
-                    model_path='{f}.clf'.format(f=filenameZip.split('.')[0]), 
-                    trainZipFile=uploaded_file_urlZip, 
-                    first_folder_name=first_folder_name,
-                    n_neighbors=n_neighbors)
-            else:
-                image_final = objectdetection.predictImage(
-                    uploaded_file_url, 
-                    model_path=modelfile)
+                if filenameZip:
+                    image_final = objectdetection.predictImage(
+                        uploaded_file_url, 
+                        model_path='{f}.clf'.format(f=filenameZip.split('.')[0]), 
+                        trainZipFile=uploaded_file_urlZip, 
+                        first_folder_name=first_folder_name,
+                        n_neighbors=n_neighbors)
+                else:
+                    image_final = objectdetection.predictImage(
+                        uploaded_file_url, 
+                        model_path=modelfile)
+                
+                with open(image_final, 'rb') as fh:
+                    response = HttpResponse(fh.read(), content_type="application/{type}".format(type=filename.split('.')[1]))
+                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(image_final)
+                    return response
             
-            with open(image_final, 'rb') as fh:
-                response = HttpResponse(fh.read(), content_type="application/{type}".format(type=filename.split('.')[1]))
-                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(image_final)
-                return response
-
+            if request.POST.get('is_async', False):
+                data = {
+                    'data' : 'test_ht_objectdetection_predictImage needs a param'
+                }
+                return JsonResponse(data)
+            return home(request=request, popup_text='test_ht_objectdetection_predictImage needs a param')
+        return home(request=request, popup_text='No files given as param')
     except Exception as e:
         Logger.printMessage(message='test_ht_objectdetection_predictImage', description=str(e), is_error=True)
+        return home(request=request, popup_text=str(e))
+
+def test_ht_objectdetection_predictFromZip(request):
+    try:
+        if len(request.FILES) != 0:
+
+            if 'image_file_test_zip' in request.FILES:
+                objectdetection = ht.getModule('ht_objectdetection')
+
+                image_to_test_zip = request.FILES['image_file_test_zip']
+                first_folder_name = request.POST.get('first_folder_name', None)
+
+                filename, location, uploaded_file_url = saveFileOutput(image_to_test_zip, "objectdetection", "ai")
+
+                if not first_folder_name:
+                    first_folder_name = image_to_test_zip.split('.')[0]
+
+                filenameZip = None
+                uploaded_file_urlZip = 'trained.clf'
+                modelfile = request.POST.get('dropdown_modelfile_pred')
+
+                if 'image_models_zip_pred' in request.FILES:
+                    zip_to_train = request.FILES['image_models_zip_pred']
+                    first_folder_name_zip = request.POST.get('first_folder_name_zip', None)
+                    if not first_folder_name_zip:
+                        first_folder_name_zip = zip_to_train.name.split('.')[0]
+                    filenameZip, location, uploaded_file_urlZip = saveFileOutput(zip_to_train, "objectdetection", "ai")
+
+                n_neighbors = int(request.POST.get('neighbors_pred', 1))
+
+                if filenameZip:
+                    image_final = objectdetection.predictFromZip(
+                        uploaded_file_url, 
+                        model_path='{f}.clf'.format(f=filenameZip.split('.')[0]),
+                        first_folder_name=first_folder_name,
+                        trainZipFile=uploaded_file_urlZip,
+                        first_folder_name_training_zip=first_folder_name_zip,
+                        n_neighbors=n_neighbors)
+                else:
+                    image_final = objectdetection.predictFromZip(
+                        uploaded_file_url, 
+                        model_path=modelfile,
+                        first_folder_name=first_folder_name)
+                
+                with open(img, 'rb') as fh:
+                    response = HttpResponse(fh.read(), content_type="application/{type}".format(type=filename.split('.')[1]))
+                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(img)
+                    return response
+            if request.POST.get('is_async', False):
+                data = {
+                    'data' : 'test_ht_objectdetection_predictFromZip needs a param'
+                }
+                return JsonResponse(data)
+            return home(request=request, popup_text='test_ht_objectdetection_predictFromZip needs a param')
+
+    except Exception as e:
+        Logger.printMessage(message='test_ht_objectdetection_predictFromZip', description=str(e), is_error=True)
+        raise
         return home(request=request, popup_text=str(e))
 
 def test_ht_objectdetection_trainFromZip(request):
@@ -537,10 +665,16 @@ def test_ht_objectdetection_trainFromZip(request):
                     trainZipFile=uploaded_file_urlZip, 
                     first_folder_name=first_folder_name,
                     n_neighbors=n_neighbors)
+                if request.POST.get('is_async', False):
+                    data = {
+                        'data' : image_final
+                    }
+                    return JsonResponse(data)
                 return home(request=request, popup_text=image_final)
             return home(request=request)
 
     except Exception as e:
         Logger.printMessage(message='test_ht_objectdetection_trainFromZip', description=str(e), is_error=True)
         return home(request=request, popup_text=str(e))
+
 

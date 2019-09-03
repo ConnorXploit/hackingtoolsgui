@@ -18,12 +18,13 @@ import pickle
 from PIL import Image, ImageDraw
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
+import cv2
 
 config = Config.getConfig(parentKey='modules', key='ht_objectdetection')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 output_dir_models = os.path.abspath(os.path.join(os.path.dirname(__file__), 'tests_models'))
 
-ALLOWED_EXTENSIONS = {}
+ALLOWED_EXTENSIONS = config['allowed_extensions']
 
 class StartModule():
 
@@ -128,9 +129,11 @@ class StartModule():
 		"""
 		if not os.path.isfile(X_img_path) or os.path.splitext(X_img_path)[1][1:] not in ALLOWED_EXTENSIONS:
 			Logger.printMessage(message="predict", description="{invalid_path}: {im}".format(invalid_path=config['predicting_invalid_path'], im=X_img_path))
+			return []
 		
 		if knn_clf is None and model_path is None:
 			Logger.printMessage(message="predict", description=config['predicting_no_knn_or_model_path'])
+			return []
 
 		# Load a trained KNN model (if one was passed in)
 		if knn_clf is None:
@@ -155,7 +158,31 @@ class StartModule():
 		# Predict classes and remove classifications that aren't within the threshold
 		return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
 
-	def show_prediction_labels_on_image(self, img_path, predictions):
+	def saveCroppedImage(self, img_path, coords, model_path, name, counter=1):
+		# Crop the image
+		try:
+			top, right, bottom, left = coords
+			image = cv2.imread(img_path)
+			crop_img = image[top:bottom, left:right]
+
+			path, n = os.path.split(img_path)
+			path2, n2 = os.path.split(model_path)
+
+			first_dir = os.path.join(output_dir, n2.split('.')[0])
+			path_dir = os.path.join(first_dir, name.decode("UTF-8"))
+
+			if not os.path.isdir(first_dir):
+				os.mkdir(first_dir)
+			
+			if not os.path.isdir(path_dir):
+				os.mkdir(path_dir)
+
+			cropped_file = os.path.join(path_dir, 'cropped_{c}_{n}'.format(c=counter, n=n))
+			cv2.imwrite(cropped_file, crop_img)
+		except Exception as e:
+			Logger.printMessage(message='saveCroppedImage', description=str(e), is_error=True)
+
+	def show_prediction_labels_on_image(self, img_path, predictions, model_path):
 		"""
 		Shows the face recognition results visually.
 
@@ -165,15 +192,27 @@ class StartModule():
 		"""
 		Logger.printMessage(message="show_prediction_labels_on_image", description="Testing: {d}".format(d=img_path), debug_module=True)
 		pil_image = Image.open(img_path).convert("RGB")
+		mask = Image.new('L', pil_image.size, 0)
 		draw = ImageDraw.Draw(pil_image)
-
+		counter = 0
 		for name, (top, right, bottom, left) in predictions:
+			counter += 1
 			# Draw a box around the face using the Pillow module
 			draw.rectangle(((left, top), (right, bottom)), outline=(0, 0, 255))
 
 			# There's a bug in Pillow where it blows up with non-UTF-8 text
 			# when using the default bitmap font
 			name = name.encode("UTF-8")
+
+			self.saveCroppedImage(img_path, (top, right, bottom, left), model_path, name, counter)
+
+			if 'unknown' == name.decode("UTF-8"):
+				# apply a gaussian blur on this unknown face
+				pass
+				# im = cv2.imread(img_path)
+				# draw.ellipse([left,top,right,bottom],fill=(255,255,255))
+				# blurred = im.filter(ImageFilter.GaussianBlur(radius=15))
+				# blurred.paste(pil_image, mask=mask)
 
 			# Draw a label with a name below the face
 			text_width, text_height = draw.textsize(name)
@@ -183,7 +222,7 @@ class StartModule():
 		# Remove the drawing library from memory as per the Pillow docs
 		del draw
 
-		# Display the resulting image
+		# Return the resulting image
 		pil_image.save(img_path)
 		return Image.open(img_path).filename
 
@@ -194,13 +233,45 @@ class StartModule():
 		classifier = self.train(os.path.join(output_dir, first_folder_name), model_save_path=new_model, n_neighbors=int(n_neighbors), verbose=True)
 		return new_model
 	
+	def predictFromZip(self, zipFile, first_folder_name='', model_path='trained.clf', trainZipFile=None, first_folder_name_training_zip=None, n_neighbors=1):
+		if trainZipFile:
+			if not first_folder_name_training_zip:
+				_, first_folder_name_training_zip = os.path.split(trainZipFile)
+				first_folder_name_training_zip = first_folder_name_training_zip.split('.')[0]
+			new_model_name = '{f}.{clf}'.format(f=first_folder_name_training_zip, clf=config['models_tests_extension'])
+			new_model_path = os.path.join(output_dir_models, new_model_name)
+			model_path = self.trainFromZip(zipFile=trainZipFile, new_model_name=new_model_path, first_folder_name=first_folder_name_training_zip, n_neighbors=int(n_neighbors))
+		else:
+			model_path = os.path.join(output_dir_models, model_path)
+
+		unzipper = ht.getModule('ht_unzip')
+		unzipper.extractFile(zipFile, output_dir_new=output_dir)
+
+		if not first_folder_name:
+			first_folder_name = zipFile.split('.')[0]
+
+		folder = os.path.join(output_dir, first_folder_name)
+
+		images = []
+
+		for imageFile in os.listdir(folder):
+			if not os.path.isdir(os.path.join(folder, imageFile)):
+				images.append(self.predictImage(os.path.join(folder, imageFile), model_path=model_path))
+		
+		return unzipper.zipFiles(images, 'predicted_{n}'.format(n=zipFile))
+
 	def predictImage(self, imageFile, model_path='trained.clf', trainZipFile=None, first_folder_name=None, n_neighbors=1):
 		if trainZipFile:
 			if not first_folder_name:
-				_, first_folder_name = os.path.split(trainZipFile.split('.')[0])
+				_, first_folder_name = os.path.split(trainZipFile)
+				first_folder_name = first_folder_name.split('.')[0]
 			model_path = self.trainFromZip(zipFile=trainZipFile, new_model_name='{f}.{clf}'.format(f=first_folder_name, clf=config['models_tests_extension']), first_folder_name=first_folder_name, n_neighbors=int(n_neighbors))
 		else:
-			model_path = os.path.join(output_dir_models, model_path)
+			if model_path == 'trained.clf':
+				model_path = os.path.join(output_dir_models, model_path)
+			else:
+				_, name = os.path.split(model_path)
+				model_path = os.path.join(output_dir_models, name)
 
 		predictions = self.predict(imageFile, model_path=model_path)
 		
@@ -208,4 +279,4 @@ class StartModule():
 		for name, (top, right, bottom, left) in predictions:
 			Logger.printMessage(message="predictImage", description="Found {} at ({}, {})".format(name, left, top), debug_module=True)
 
-		return self.show_prediction_labels_on_image(imageFile, predictions)
+		return self.show_prediction_labels_on_image(imageFile, predictions, model_path)

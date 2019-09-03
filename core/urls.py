@@ -42,7 +42,8 @@ urlpatterns = [
     # ht_objectdetection
     path('modules/ht_objectdetection/predictImage/', views.test_ht_objectdetection_predictImage, name="test_ht_objectdetection"),
     path('modules/ht_objectdetection/predictImage/', views.test_ht_objectdetection_predictImage, name="test_ht_objectdetection_predictImage"),
-    path('modules/ht_objectdetection/trainFromZip/', views.test_ht_objectdetection_trainFromZip, name="test_ht_objectdetection_trainFromZip")
+    path('modules/ht_objectdetection/trainFromZip/', views.test_ht_objectdetection_trainFromZip, name="test_ht_objectdetection_trainFromZip"),
+    path('modules/ht_objectdetection/predictFromZip/', views.test_ht_objectdetection_predictFromZip, name="test_ht_objectdetection_predictFromZip")
 ]
 
 # for mod in ht.getModulesNames():

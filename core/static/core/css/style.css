@@ -284,3 +284,16 @@ textarea.form-control {
 .toggle input[type=checkbox][disabled] > * {
     border: 2px solid grey;
 }
+.input-group>.custom-file:not(:first-child) .custom-file-label {
+    overflow: hidden !important;
+}
+/* Modal Form Inputs Style */
+.md-form, .input-group, input.es-input, .my-separator, .form-control {
+    margin-bottom: 20px !important;
+}
+#switchPoolForm {
+    margin-right: 5px !important;
+}
+#switchPoolForm > label[for=switchPoolForm]:after { 
+    background-color: #e60b0b !important;
+}

@@ -75,8 +75,12 @@
         {% comment %} <input type="text" class="form-control" id="my_pool_id" value="{{my_node_id_pool}}" size="{{my_node_id_pool|length}}" onfocus="copyNodeIdToClipboard()" readonly/> |  {% endcomment %}
         <form id="switchPoolForm">
           {% csrf_token %}
-          <input id="checkSwitchPool" type="checkbox" style="border: 0px !important;" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size="small" data-offstyle="danger" data-onstyle="{% if pool_list|length > 0 %}success{% else %}primary{% endif %}" {% if status_pool %}checked{% endif %}>
-        </form> | 
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="checkSwitchPool" {% if status_pool %} checked {% endif %}>
+            <label class="custom-control-label" for="checkSwitchPool">On/Off the Pool</label>
+          </div>
+          <!--<input id="checkSwitchPool" type="checkbox" style="border: 0px !important;" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size="small" data-offstyle="danger" data-onstyle="{% if pool_list|length > 0 %}success{% else %}primary{% endif %}" {% if status_pool %}checked{% endif %}>-->
+        </form>
         <script>
           $(function() {
             $('#checkSwitchPool').change(function(e) {

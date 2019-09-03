@@ -603,7 +603,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
 
     for m in m_form:
         temp_m_form = m_form
-        if not m == '__async__' and (('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m]):
+        if not m == '__async__' and not '__separator' in m and (('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m]):
             if '__type__' in temp_m_form[m] and '__id__' in temp_m_form[m] and '__className__' in temp_m_form[m]:
                 input_type = temp_m_form[m]['__type__']
                 input_id = temp_m_form[m]['__id__']
@@ -630,7 +630,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     loading_text = temp_m_form[m]['loading_text']
                 
                 required = ''
-                if 'required' in temp_m_form[m] and temp_m_form[m] == True:
+                if 'required' in temp_m_form[m] and temp_m_form[m]['required'] == True:
                     required = 'required'
                 
                 options_from_function = []
@@ -642,8 +642,17 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                             options_from_function = eval(functionCall)
                 
                 if input_type == 'file':
-                    html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
-                
+                    #html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
+                    html += "<div class='input-group'>"
+                    html += "<div class='input-group-prepend'>"
+                    html += "<span class='input-group-text' id='inputGroupFileAddon01{id}'>{input_label_desc}</span>".format(id=input_id, input_label_desc=input_label_desc)
+                    html += "</div>"
+                    html += "<div class='custom-file'>"
+                    html += "<input type='file' class='custom-file-input' name='{id}' aria-describedby='inputGroupFileAddon01{id}' {required}>".format(id=input_id, required=required)
+                    html += "<label class='custom-file-label' for='{id}'>Choose file</label>".format(id=input_id)
+                    html += "</div>"
+                    html += "</div>"
+
                 elif input_type == 'checkbox':
                     checkbox_disabled = ''
                     color_on = 'primary'
@@ -661,12 +670,18 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 
                 elif input_type == 'select':
 
-                    html += "<span class=\"name-select\"></span><select id=\"editable-select-{id}\" name=\"dropdown_{id}\"placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(placeholder=input_placeholder, className=input_class, id=input_id, required=required)
-                    
+                    html += "<span class=\"name-select\" value=\"{placeholder}\"></span><select id=\"editable-select-{id}\" name=\"dropdown_{id}\" placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(placeholder=input_placeholder, className=input_class, id=input_id, required=required)
+                    html += "<option value='{input_value}' selected></option>".format(input_value=input_value)
+
                     for func in options_from_function:
                         html += "<option value='{cat}'>{cat}</option>".format(cat=func)
                     
-                    html += "</select><script>$('#editable-select-{id}').editableSelect();</script>".format(id=input_id)
+                    html += "</select><script>$('#editable-select-{id}').editableSelect();".format(id=input_id)
+
+                    if required != '':
+                        html += "$('#editable-select-{id}').prop('required',true);".format(id=input_id)
+
+                    html += "</script>"
 
                 elif input_type == 'button':
 
@@ -688,13 +703,16 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 elif input_type == 'textarea':
 
                     if input_label_desc:
-                        html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea></div></div>".format(className=input_class, id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc)
+                        html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label label-description\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea></div></div>".format(className=input_class, id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc)
                     else:
                         html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_class, id=input_id, placeholder=input_placeholder)
-                
+
                 else:
-                    html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label\">{input_label_desc}</label><div class=\"col-4\"><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" placeholder=\"{placeholder}\" name=\"{id}\" {required}/></div></div>".format(id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc, className=input_class, input_type=input_type, input_value=input_value, required=required)
-    
+                    html += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" placeholder=\"{placeholder}\" name=\"{id}\" {required}/></div>".format(id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc, className=input_class, input_type=input_type, input_value=input_value, required=required)
+
+        if '__separator' in m and '__' == m[-2:] and m_form[m] == True:
+            html += "<hr class='sidebar-divider my-0 my-separator'>"
+
     for m in m_form:
         if '__async__' == m and m_form[m]:
             html += "<input type='text' value='true' id='is_async' hidden />"
@@ -704,21 +722,23 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     html += '</div>'
 
     for m in m_form:
-        if '__async__' == m and m_form[m]:
+        if '__async__' == m and m_form[m] == True:
             async_script = "<script> $(function() { "
             if config_extrasubkey:
                 async_script += "$('#submit_test_{submit_id}').click(function(e)".format(submit_id=config_extrasubkey)
             else:
                 async_script += "$('#submit_test_{submit_id}').click(function(e)".format(submit_id=mod)
             async_script += "{ e.preventDefault();"
-            async_script += "$.ajax({ headers: { 'X-CSRFToken': '{"
+            async_script += "$.ajax({"
+            async_script += "headers: { 'X-CSRFToken': '{"
             async_script += "{csrf_token"
             async_script += "}"
             async_script += "}' }, "
+            async_script += "cache: false, contentType: false, processData: false, "
             if config_extrasubkey:
-                async_script += "url : '/modules/{mod}/{functionName}/', type : 'POST', async: true, ".format(mod=mod, functionName=config_extrasubkey)
+                async_script += "url : '/modules/{mod}/{functionName}/', type : 'POST', async: true, data: $('#form_test_{mod}_{functionName}').serializeArray(), ".format(mod=mod, functionName=config_extrasubkey)
             else:
-                async_script += "url : '/modules/{mod}/test_{mod}/', type : 'POST', async: true, ".format(mod=mod)
+                async_script += "url : '/modules/{mod}/test_{mod}/', type : 'POST', async: true, data: $('#form_test_{mod}').serializeArray(), ".format(mod=mod)
             async_script += "success : function(res) {"
             async_script += "if('data' in res){"
             async_script += "alert(res.data)"
