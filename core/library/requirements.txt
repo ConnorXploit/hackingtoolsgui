@@ -10,11 +10,14 @@ click-plugins==1.0.4
 colorama==0.4.1
 dis3==0.1.3
 Django
+dlib==19.17.0
 docutils==0.14
 entrypoints==0.3
+face-recognition==1.2.3
+face-recognition-models==0.3.0
 Flask==1.0.2
 future==0.17.1
-hackingtools==0.9.939.515
+hackingtools==0.9.939.516
 html5lib==1.0.1
 httplib2==0.12.0
 idna==2.8
@@ -32,6 +35,7 @@ msgpack
 msgpack-python==0.5.6
 netaddr==0.7.19
 netifaces==0.10.9
+numpy==1.17.0
 opencv-python==4.1.0.25
 pefile==2018.8.8
 Pillow==6.1.0
@@ -55,6 +59,7 @@ requests==2.22.0
 requests-toolbelt==0.9.1
 shodan==1.11.1
 six==1.12.0
+sklearn
 smartypants==2.0.1
 soupsieve==1.9.2
 sqlparse==0.3.0
