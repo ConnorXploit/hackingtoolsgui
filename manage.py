@@ -21,11 +21,15 @@ def main():
 
 def checkPackages():
     # If Windows NT
-    windows_extra_packages = ('pywin32', 'pywin32-ctypes')
-    if os.name in 'nt':
-        for package in windows_extra_packages:
-            if not package in sys.modules:
-                pipmain(['install', package])
+    extra_packages = {
+        "nt" : ['pywin32', 'pywin32-ctypes', 'opencv-python'],
+        "linux" : ['opencv-python'],
+    }
+    for system in extra_packages:
+        if system in os.name:
+            for package in extra_packages[system]:
+                if not package in sys.modules:
+                    pipmain(['install', package])
 
 if __name__ == '__main__':
     checkPackages()

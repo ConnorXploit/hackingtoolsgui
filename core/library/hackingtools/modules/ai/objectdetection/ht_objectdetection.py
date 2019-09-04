@@ -18,11 +18,14 @@ import pickle
 from PIL import Image, ImageDraw
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
-import cv2
 
 config = Config.getConfig(parentKey='modules', key='ht_objectdetection')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 output_dir_models = os.path.abspath(os.path.join(os.path.dirname(__file__), 'tests_models'))
+
+valid_systems = list(Config.getConfig(parentKey='modules', key='ht_objectdetection', subkey="systems"))
+if os.name in valid_systems:
+	import cv2
 
 ALLOWED_EXTENSIONS = config['allowed_extensions']
 
@@ -160,27 +163,28 @@ class StartModule():
 
 	def saveCroppedImage(self, img_path, coords, model_path, name, counter=1):
 		# Crop the image
-		try:
-			top, right, bottom, left = coords
-			image = cv2.imread(img_path)
-			crop_img = image[top:bottom, left:right]
+		if os.name in valid_systems:
+			try:
+				top, right, bottom, left = coords
+				image = cv2.imread(img_path)
+				crop_img = image[top:bottom, left:right]
 
-			path, n = os.path.split(img_path)
-			path2, n2 = os.path.split(model_path)
+				path, n = os.path.split(img_path)
+				path2, n2 = os.path.split(model_path)
 
-			first_dir = os.path.join(output_dir, n2.split('.')[0])
-			path_dir = os.path.join(first_dir, name.decode("UTF-8"))
+				first_dir = os.path.join(output_dir, n2.split('.')[0])
+				path_dir = os.path.join(first_dir, name.decode("UTF-8"))
 
-			if not os.path.isdir(first_dir):
-				os.mkdir(first_dir)
-			
-			if not os.path.isdir(path_dir):
-				os.mkdir(path_dir)
+				if not os.path.isdir(first_dir):
+					os.mkdir(first_dir)
+				
+				if not os.path.isdir(path_dir):
+					os.mkdir(path_dir)
 
-			cropped_file = os.path.join(path_dir, 'cropped_{c}_{n}'.format(c=counter, n=n))
-			cv2.imwrite(cropped_file, crop_img)
-		except Exception as e:
-			Logger.printMessage(message='saveCroppedImage', description=str(e), is_error=True)
+				cropped_file = os.path.join(path_dir, 'cropped_{c}_{n}'.format(c=counter, n=n))
+				cv2.imwrite(cropped_file, crop_img)
+			except Exception as e:
+				Logger.printMessage(message='saveCroppedImage', description=str(e), is_error=True)
 
 	def show_prediction_labels_on_image(self, img_path, predictions, model_path):
 		"""

@@ -507,6 +507,7 @@
         },
         "ht_objectdetection": {
             "__gui_label__": "Object Detection",
+            "systems": [ "nt" ],
             "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
             "allowed_extensions" : ["png", "jpg", "jpeg"],
             "models_tests_extension": "clf",
