@@ -3,6 +3,7 @@ import hackingtools as ht
 import os
 
 import zipfile
+import shutil
 from zipfile import ZipFile
 
 config = Config.getConfig(parentKey='modules', key='ht_unzip')

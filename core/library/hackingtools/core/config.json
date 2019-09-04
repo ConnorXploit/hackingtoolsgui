@@ -630,10 +630,18 @@
                         "__type__": "text",
                         "__className__": "form-control",
                         "label_desc": "Zip's main folder name",
-                        "placeholder": "Empty",
-                        "required": false
+                        "placeholder": "Empty"
                     },
                     "__separator1__" : true,
+                    "pepe": {
+                        "__id__": "pepe",
+                        "__type__": "select",
+                        "__className__": "form-control",
+                        "placeholder": "Modulos cargados",
+                        "options_from_function": {
+                            "core": "getModulesNames"
+                        }
+                    },
                     "modelfile_pred": {
                         "__id__": "modelfile_pred",
                         "__type__": "select",
@@ -641,8 +649,7 @@
                         "placeholder": "Trained Model in .clf",
                         "options_from_function": {
                             "ht_objectdetection": "getTestsModelsDir"
-                        },
-                        "required": true
+                        }
                     },
                     "__separator2__" : true,
                     "image_models_zip_pred": {
@@ -682,8 +689,7 @@
                         "__type__": "text",
                         "__className__": "form-control",
                         "label_desc": "Main folder's name for image dataset",
-                        "placeholder": "Empty if same name as ZIP file",
-                        "required": false
+                        "placeholder": "Empty if same name as ZIP file"
                     },
                     "neighbors": {
                         "__id__": "neighbors",

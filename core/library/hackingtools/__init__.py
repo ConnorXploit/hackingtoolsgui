@@ -23,6 +23,7 @@ except ImportError:
 
 modules_loaded = {}
 
+global nodes_pool
 nodes_pool = []
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
 global WANT_TO_BE_IN_POOL
@@ -379,6 +380,7 @@ def switchPool():
         WANT_TO_BE_IN_POOL = True
 
 def addNodeToPool(node_ip):
+    global nodes_pool
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
@@ -386,6 +388,7 @@ def send(node_request, functionName):
     creator_id = MY_NODE_ID
     pool_nodes = getPoolNodes()
     try:
+        global WANT_TO_BE_IN_POOL
         if WANT_TO_BE_IN_POOL:
             function_api_call = resolve(node_request.path_info).route
             pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
@@ -415,8 +418,15 @@ def send(node_request, functionName):
         return (None, None)
 
 def sendPool(creator, function_api_call='', params={}, files=[]):
+    global nodes_pool
     my_public_ip = local_ip
+
     my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port)
+
+    public_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=public_ip, port=listening_port)
+    lan_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=lan_ip, port=listening_port)
+    local_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
+
     try:
         nodes_pool.remove(my_service_api)
     except:
@@ -432,24 +442,35 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
     try:
         pool_list.remove(my_service_api)
     except:
-        pass    
+        pass
+    
     # Get nodes aren't notified into nodes
-    for node in nodes_pool:
-        if not node in pool_list:
-            nodes.append(node)
-            pool_list.append(node)
+    if nodes_pool:
+        pool_list = pool_list + list(set(nodes_pool) - set(pool_list))
+    else:
+        nodes_pool = pool_list
+
     # I save pool_list items i don't have yet on my pools 
-    for node in pool_list:
-        if not node in nodes_pool:
-            nodes.append(node)
-            if not my_service_api in node:
-                nodes_pool.append(node)
+    nodes_pool = nodes_pool + list(set(pool_list) - set(nodes_pool))
+
+    # Remove any posible service with my public, local or lan IP
+    if nodes_pool:
+        for service in (public_ip_full, lan_ip_full, local_ip_full):
+            try: 
+                nodes_pool.remove(service) 
+            except: 
+                pass
+
+    nodes = pool_list
+
+    nodes_pool = nodes
+
     if len(nodes) > 0:
         if not my_service_api in pool_list:
             pool_counter += 1
             for node in nodes:
                 try:
-                    if not node in (public_ip, lan_ip) and not node == 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port):
+                    if not node in (public_ip_full, lan_ip_full, local_ip_full):
                         node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
 
                         params['pool_list'] = pool_list
@@ -476,6 +497,7 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
     return (None, None)
 
 def getPoolNodes():
+    global nodes_pool
     return nodes_pool
 
 # Import Modules
@@ -640,6 +662,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                         if optModuleName in getModulesNames():
                             functionCall = 'getModule(\'{mod}\').{func}()'.format(mod=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
                             options_from_function = eval(functionCall)
+                        if 'core' == optModuleName:
+                            functionCall = '{func}()'.format(func=temp_m_form[m]['options_from_function'][optModuleName])
+                            options_from_function = eval(functionCall)
                 
                 if input_type == 'file':
                     #html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
@@ -658,6 +683,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     color_on = 'primary'
                     color_off = 'warning'
                     
+                    global WANT_TO_BE_IN_POOL
                     if '__pool_it_' in input_id and not WANT_TO_BE_IN_POOL:
                         checkbox_disabled = 'disabled'
                         color_on = 'default'
