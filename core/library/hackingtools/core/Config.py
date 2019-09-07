@@ -29,19 +29,49 @@ import json
 global config
 config = {}
 
-# === __readConfig__ ===
-def __readConfig__():
-    """
-    Read's all the configuration included in 
-    your config.json file
-    """
-    global config
+def __readFilesAuto__():
     config = {}
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
         config = json.load(json_data_file)
 
+    if config["core"]["LOAD_DJANGO_CONF"] == True:
+        django = True
+
+    if django:
+        # Load the basic config for Django
+        with open(os.path.join(os.path.dirname(__file__) , 'config_django.json')) as json_data_file_django:
+            config['django'] = {}
+            config_django = json.load(json_data_file_django)
+            for conf in config_django:
+                config['django'][conf] = {}
+                for django_data in config_django[conf]:
+                    config['django'][conf][django_data] = config_django[conf][django_data]
+
+        # Loads the config for the modules into Django as modal forms
+        categories_dir = os.path.join(os.path.dirname(__file__), 'config_modules_django')
+        for mod in config['modules']:
+            categories = os.listdir(categories_dir)
+            for cat in categories:
+                module_config_file = os.path.join(categories_dir, cat, '{mod}.json'.format(mod=mod))
+                if os.path.isfile(module_config_file):
+                    with open(module_config_file) as json_data_file_django:
+                        config_django = json.load(json_data_file_django)
+                        for conf in config_django:
+                            config['modules'][mod][conf] = config_django[conf]
+    return config
+
+# === __readConfig__ ===
+def __readConfig__(django=False):
+    """
+    Read's all the configuration included in 
+    your config.json file and inside config_modules_django directory
+    recursively by your loaded modules into your config.json
+    """
+    global config
+    config = __readFilesAuto__()
+
 # === __save_config__ ===
-def __save_config__(new_conf):
+def __save_config__(new_conf, config_file='config.json'):
     """
     Save configuration passed as parameter
     to this function. This, writes into 
@@ -54,11 +84,11 @@ def __save_config__(new_conf):
             The List with the configuration you 
             want to dump onto the file
     """
-    with open(os.path.join(os.path.dirname(__file__) , 'config.json'), 'w', encoding='utf8') as outfile:  
+    with open(os.path.join(os.path.dirname(__file__) , config_file), 'w', encoding='utf8') as outfile:  
         json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
 # === __createModuleTemplateConfig__ ===
-def __createModuleTemplateConfig__(module_name):
+def __createModuleTemplateConfig__(module_name, category):
     """
     This function creates into config.json a template
     with a simple config for trying in your GUI your 
@@ -74,14 +104,25 @@ def __createModuleTemplateConfig__(module_name):
             A function name in String that is loaded 
             in your hackingtools library
     """
-    global config
-    config_tmp = {}
+    module_name = 'ht_{mod}'.format(mod=module_name)
+
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
         config_tmp = json.load(json_data_file)
-    new_config = {
+        if not module_name in config_tmp['modules']:
+            config_tmp['modules'][module_name] = {}
+            __save_config__(config_tmp)
+            
+    category_dir = os.path.join(os.path.dirname(__file__), 'config_modules_django', category)
+    if not os.path.isdir(category_dir):
+        os.mkdir(category_dir)
+
+    module_config_file = os.path.join(category_dir, '{mod}.json'.format(mod=module_name))
+
+    new_conf = {
         "__gui_label__" : "_MODULE_GUI_LABEL_",
         "_comment" : "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
         "_django_form_main_function_" : {
+            "__function__" : "test_{mod}_FUNCTION_NAME".format(mod=module_name),
             "_HTML_FIELD_NAME_" : {
                 "__id__" : "_HTML_FIELD_NAME_",
                 "__type__" : "_HTML_INPUT_TYPE_",
@@ -108,17 +149,19 @@ def __createModuleTemplateConfig__(module_name):
                         "_MODULE_CALL_FOR_" : [
                             "_THAT_MODULES_FUNCTION"
                         ]
+                    },
+                    "options_from_function": {
+                        "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
                     }
                 }
             }
         }
     }
-    new_key_module = 'ht_{mod}'.format(mod=module_name)
-    config_tmp['modules'][new_key_module] = new_config
-    __save_config__(config_tmp)
+    with open(module_config_file, 'w', encoding='utf8') as outfile:  
+        json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
 # === __look_for_changes__ ===
-def __look_for_changes__():
+def __look_for_changes__(django=False):
     """
     Reloads the configuration loaded
     
@@ -128,11 +171,9 @@ def __look_for_changes__():
             
             Tell's if there where any changes
     """
-    global config
-    config_tmp = {}
-    with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
-        config_tmp = json.load(json_data_file)
+    config_tmp = __readFilesAuto__()
 
+    global config
     if not sorted(config.items()) == sorted(config_tmp.items()):
         config = config_tmp
         return True

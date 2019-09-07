@@ -1,0 +1,187 @@
+{
+    "__gui_label__": "Object Detection",
+    "django_form_main_function": {
+        "__function__": "test_ht_objectdetection_predictImage",
+        "image_file_test": {
+            "__id__": "image_file_test",
+            "__type__": "file",
+            "__className__": "file-input",
+            "label_desc": "File to test",
+            "required": true
+        },
+        "__separator1__" : true,
+        "modelfile_main": {
+            "__id__": "modelfile_main",
+            "__type__": "select",
+            "__className__": "form-control",
+            "placeholder": "Trained Model in .clf",
+            "required": true,
+            "options_from_function": {
+                "ht_objectdetection": "getTestsModelsDir"
+            }
+        },
+        "__separator2__" : true,
+        "image_models_zip": {
+            "__id__": "image_models_zip",
+            "__type__": "file",
+            "__className__": "file-input",
+            "label_desc": "Models into a zip"
+        },
+        "first_folder_name": {
+            "__id__": "first_folder_name",
+            "__type__": "text",
+            "__className__": "form-control",
+            "label_desc": "Main folder's name for image dataset",
+            "placeholder": "Empty if same name as ZIP file"
+        },
+        "neighbors": {
+            "__id__": "neighbors",
+            "__type__": "number",
+            "__className__": "form-control",
+            "label_desc": "Count objects recognize",
+            "value": "1"
+        },
+        "close": {
+            "__id__": "image_test_close",
+            "__type__": "button",
+            "__className__": "btn btn-secondary",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "image_test_submit",
+            "__type__": "submit",
+            "__className__": "btn btn-primary",
+            "value": "Test Image",
+            "loading_text": "Testing with AI..."
+        }
+    },
+    "django_form_module_function": {
+        "predictImage": {
+            "__function__": "test_ht_objectdetection_predictImage",
+            "__async__": false,
+            "__return__": "text",
+            "image_file_test": {
+                "__id__": "image_file_test",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "File to test",
+                "required": true
+            },
+            "modelfile": {
+                "__id__": "modelfile",
+                "__type__": "select",
+                "__className__": "form-control",
+                "placeholder": "Trained Model in .clf",
+                "options_from_function": {
+                    "ht_objectdetection": "getTestsModelsDir"
+                }
+            },
+            "__separator__" : true,
+            "image_models_zip": {
+                "__id__": "image_models_zip",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "Models into a zip"
+            },
+            "first_folder_name": {
+                "__id__": "first_folder_name",
+                "__type__": "text",
+                "__className__": "form-control",
+                "label_desc": "Main folder's name for image dataset",
+                "placeholder": "Empty if same name as ZIP file"
+            },
+            "neighbors": {
+                "__id__": "neighbors",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Count objects recognize",
+                "value": "1"
+            }
+        },
+        "predictFromZip": {
+            "__function__": "test_ht_objectdetection_predictFromZip",
+            "__async__": false,
+            "__return__": "text",
+            "image_file_test_zip": {
+                "__id__": "image_file_test_zip",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "Zip to test images",
+                "required": true
+            },
+            "first_folder_name": {
+                "__id__": "first_folder_name",
+                "__type__": "text",
+                "__className__": "form-control",
+                "label_desc": "Zip's main folder name",
+                "placeholder": "Empty"
+            },
+            "__separator1__" : true,
+            "pepe": {
+                "__id__": "pepe",
+                "__type__": "select",
+                "__className__": "form-control",
+                "placeholder": "Modulos cargados",
+                "options_from_function": {
+                    "core": "getModulesNames"
+                }
+            },
+            "modelfile_pred": {
+                "__id__": "modelfile_pred",
+                "__type__": "select",
+                "__className__": "form-control",
+                "placeholder": "Trained Model in .clf",
+                "options_from_function": {
+                    "ht_objectdetection": "getTestsModelsDir"
+                }
+            },
+            "__separator2__" : true,
+            "image_models_zip_pred": {
+                "__id__": "image_models_zip_pred",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "Zip to train images"
+            },
+            "first_folder_name_zip": {
+                "__id__": "first_folder_name_zip",
+                "__type__": "text",
+                "__className__": "form-control",
+                "label_desc": "Main folder's name training",
+                "placeholder": "Empty"
+            },
+            "neighbors_pred": {
+                "__id__": "neighbors_pred",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Count objects recognize",
+                "value": "1"
+            }
+        },
+        "trainFromZip": {
+            "__function__": "test_ht_objectdetection_trainFromZip",
+            "__async__": false,
+            "__return__": "text",
+            "image_models_zip": {
+                "__id__": "image_models_zip",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "Models into a zip",
+                "required": true
+            },
+            "first_folder_name": {
+                "__id__": "first_folder_name",
+                "__type__": "text",
+                "__className__": "form-control",
+                "label_desc": "Main folder's name for image dataset",
+                "placeholder": "Empty if same name as ZIP file"
+            },
+            "neighbors": {
+                "__id__": "neighbors",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Count objects recognize",
+                "value": "1"
+            }
+        }
+    }
+}

@@ -22,7 +22,7 @@ class StartModule():
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_spider'))
 
-	def crawl(self, url=None, proxies=None, depth=100, proxyhost=None, proxyuser=None, proxypassword=None, proxyport=None, proxysecure="http"):
+	def crawl(self, url, depth=100, proxies=None, proxyhost=None, proxyuser=None, proxypassword=None, proxyport=None, proxysecure="http"):
 		Logger.printMessage(message='{methodName}'.format(methodName='crawl'), debug_module=True)
 		try:
 			depth = int(depth)
@@ -51,17 +51,17 @@ class StartModule():
 			contents = urlRootSite.read()
 			rootSite = BeautifulSoup(contents, features="html5lib")
 			links = rootSite.find_all("a")
-			webForms[url] = self.storeWebSiteForms(url=url, proxies=proxies, forms=webForms)
+			webForms[url] = self.__storeWebSiteForms__(url=url, proxies=proxies, forms=webForms)
 
 			try:
 				for link in links:
-					#process = multiprocessing.Process(target=handleLink, args=[link])
+					#process = multiprocessing.Process(target=__handleLink__, args=[link])
 					#process.daemon = True
 					#process.start()	
 					#process.join()
 					if not "http" in link["href"]:
 						link["href"] = '{url}{subdomain}'.format(url=url, subdomain=link["href"])
-					self.handleLink(link=link, depth=depth, webForms=webForms, proxies=proxies, linksVisited=linksVisited, totalProfundity=totalProfundity)				
+					self.__handleLink__(link=link, depth=depth, webForms=webForms, proxies=proxies, linksVisited=linksVisited, totalProfundity=totalProfundity)				
 					totalProfundity = 0
 			finally:
 				pass
@@ -70,8 +70,8 @@ class StartModule():
 			Logger.printMessage(message='{methodName}'.format(methodName='crawl'), description='{param}'.format(param=e), is_error=True, color=Fore.YELLOW)
 			raise
 		
-	def handleLink(self, link, depth=100, webForms={}, proxies=None, linksVisited=[], totalProfundity=0):
-		Logger.printMessage(message='{methodName}'.format(methodName='handleLink'), description='{param}'.format(param=link), debug_module=True)
+	def __handleLink__(self, link, depth=100, webForms={}, proxies=None, linksVisited=[], totalProfundity=0):
+		Logger.printMessage(message='{methodName}'.format(methodName='__handleLink__'), description='{param}'.format(param=link), debug_module=True)
 		totalProfundity += 1	
 		if ('href' in dict(link.attrs) and "http" in link['href']):
 			try:
@@ -87,20 +87,20 @@ class StartModule():
 				if totalProfundity <= depth:
 					linkSite = BeautifulSoup(urlLink, "lxml")
 					depthLinks = linkSite.find_all("a")				
-					webForms[link['href']] = self.storeWebSiteForms(url=link['href'], proxies=proxies, forms=webForms)
+					webForms[link['href']] = self.__storeWebSiteForms__(url=link['href'], proxies=proxies, forms=webForms)
 					for sublink in depthLinks:
-						#processLink = multiprocessing.Process(target=self.handleLink, args=[sublink])
+						#processLink = multiprocessing.Process(target=self.__handleLink__, args=[sublink])
 						#processLink.daemon = True
 						#processLink.start()
-						self.handleLink(link=sublink, depth=depth, webForms=webForms, proxies=proxies, linksVisited=linksVisited, totalProfundity=totalProfundity)
+						self.__handleLink__(link=sublink, depth=depth, webForms=webForms, proxies=proxies, linksVisited=linksVisited, totalProfundity=totalProfundity)
 				else:
 					totalProfundity -= 1
 					return
 			except:
 				pass
 	
-	def storeWebSiteForms(self, url, proxies=None, forms={}):
-		Logger.printMessage(message='{methodName}'.format(methodName='storeWebSiteForms'), description='{param}'.format(param=url), debug_module=True)
+	def __storeWebSiteForms__(self, url, proxies=None, forms={}):
+		Logger.printMessage(message='{methodName}'.format(methodName='__storeWebSiteForms__'), description='{param}'.format(param=url), debug_module=True)
 		browser = mechanize.Browser()		
 		if proxies:
 			browser.set_proxies(proxies)

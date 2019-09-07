@@ -419,10 +419,12 @@
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <form action="{% url 'test_'|add:mod %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{modform|safe}}
-                  </form>
+                  {% for urlmodform, form in modform.items %}
+                    <form action="{% url urlmodform %}" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      {{form|safe}}
+                    </form>
+                  {% endfor %}
                   <!--<div id="console_command">{{console_command}}</div>-->
                 </div>
               </div>

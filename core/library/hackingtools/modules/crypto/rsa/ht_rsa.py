@@ -69,7 +69,7 @@ class StartModule():
 				prime_a = Utils.getRandomPrimeByLength(length)
 			while prime_b == '':
 				prime_b = Utils.getRandomPrimeByLength(length)
-		print(prime_a, prime_b)
+		Logger.printMessage(message='getRandomKeypair', description=(prime_a, prime_b), debug_module=True)
 		return (prime_a, prime_b)
 	
 	def encrypt(self, private_key, plaintext):

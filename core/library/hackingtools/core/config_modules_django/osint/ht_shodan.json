@@ -1,0 +1,60 @@
+{
+    "__gui_label__": "Shodan",
+    "django_form_main_function": {
+        "__function__": "test_ht_shodan_getIPListfromServices",
+        "service_name": {
+            "__id__": "service_name",
+            "__type__": "text",
+            "__className__": "form-control",
+            "placeholder": "apache",
+            "value": "",
+            "label_desc": "Search query",
+            "required": true
+        },
+        "shodanKeyString": {
+            "__id__": "shodanKeyString",
+            "__type__": "text",
+            "__className__": "form-control",
+            "placeholder": "abcdef0123456789",
+            "value": "",
+            "label_desc": "Shodan API Key"
+        },
+        "close": {
+            "__id__": "close",
+            "__type__": "button",
+            "__className__": "btn btn-secondary",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "find",
+            "__type__": "submit",
+            "__className__": "btn btn-primary",
+            "value": "Search",
+            "loading_text": "Searching..."
+        }
+    },
+    "django_form_module_function": {
+        "getIPListfromServices": {
+            "__function__": "test_ht_shodan_getIPListfromServices",
+            "__async__": false,
+            "__return__": "text",
+            "service_name": {
+                "__id__": "service_name",
+                "__type__": "text",
+                "__className__": "form-control",
+                "placeholder": "apache",
+                "value": "",
+                "label_desc": "Search query",
+                "required": true
+            },
+            "shodanKeyString": {
+                "__id__": "shodanKeyString",
+                "__type__": "text",
+                "__className__": "form-control",
+                "placeholder": "abcdef0123456789",
+                "value": "",
+                "label_desc": "Shodan API Key"
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "__gui_label__": "Unzip",
+    "django_form_main_function": {
+        "__function__": "test_ht_crypter_cryptFile",
+        "zipFile": {
+            "__id__": "zipFile",
+            "__type__": "file",
+            "__className__": "file-input",
+            "label_desc": "File to extract",
+            "required": true
+        },
+        "passwordFile": {
+            "__id__": "passwordFile",
+            "__type__": "password",
+            "__className__": "form-control",
+            "label_desc": "Password to unzip",
+            "required": true
+        }
+    },
+    "django_form_module_function": {
+        "extractFile": {
+            "__function__": "test_ht_unzip_extractFile",
+            "__async__": false,
+            "__return__": "text",
+            "zipFile": {
+                "__id__": "zipFile",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "File to extract",
+                "required": true
+            },
+            "passwordFile": {
+                "__id__": "passwordFile",
+                "__type__": "password",
+                "__className__": "form-control",
+                "label_desc": "Password to unzip",
+                "required": true
+            }
+        }
+    }
+}

@@ -63,6 +63,5 @@ class StartModule():
 				resp = self.isBadFileHash(scan_id)
 				return resp
 		except Exception as e:
-			print(e)
 			Logger.printMessage(message="isBadFile", description=str(e), is_error=True)
 			return str(e)

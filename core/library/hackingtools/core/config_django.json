@@ -1,0 +1,72 @@
+{
+    "views": {
+        "home": {},
+        "documentation": {
+            "documents_dir": "/static/docs/core/library/hackingtools/modules/",
+            "html_template": "core/documentation.html",
+            "bad_module": "Module {mod} doesn't exist",
+            "no_module_selected" : "You have to select a module for getting it's documentation"
+        },
+        "add_pool_node" : {
+            "error": "Something went wrong"
+        },
+        "ht_crypter_cryptFile": {
+            "bad_saved": "No se ha guardado correctamente"
+        },
+        "ht_bruteforce_crackZip" : {
+            "error_see_log": "Something went wrong. See the log",
+            "not_solved": "Something want wrong",
+            "conn_closed": "Connection aborted. Remote end closed connection without response"
+        },
+        "ht_unzip_extractFile": {
+            "error_see_log": "Something went wrong. See the log",
+            "bad_pass": "Bad password"
+        },
+        "ht_objectdetection_predictImage": {
+            "default_model": "trained.clf",
+            "need_params": "ht_objectdetection_predictImage needs a param",
+            "need_file": "No files given as param"
+        },
+        "ht_objectdetection_predictFromZip": {
+            "default_model": "trained.clf",
+            "need_params": "ht_objectdetection_predictFromZip needs a param",
+            "need_file": "No files given as param"
+        }
+    },
+    "urls": {
+
+    },
+    "html": {
+        "modal_forms": {
+            "default_types": {
+                "text": {
+                    "__className__": "form-control"
+                },
+                "number": {
+                    "__className__": "form-control"
+                },
+                "password": {
+                    "__className__": "form-control"
+                },
+                "textarea": {
+                    "__className__": "file-input"
+                },
+                "file": {
+                    "__className__": "file-input"
+                },
+                "select": {
+                    "__className__": "form-control"
+                },
+                "button": {
+                    "__className__": "btn btn-secondary"
+                },
+                "submit": {
+                    "__className__": "btn btn-primary"
+                },
+                "checkbox": {
+                    "__className__": "custom-control-input"
+                }
+            }
+        }
+    }
+}

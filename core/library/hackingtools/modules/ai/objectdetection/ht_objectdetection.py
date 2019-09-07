@@ -19,13 +19,11 @@ from PIL import Image, ImageDraw
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
 
+
 config = Config.getConfig(parentKey='modules', key='ht_objectdetection')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 output_dir_models = os.path.abspath(os.path.join(os.path.dirname(__file__), 'tests_models'))
 
-valid_systems = list(Config.getConfig(parentKey='modules', key='ht_objectdetection', subkey="systems"))
-if os.name in valid_systems:
-	import cv2
 
 ALLOWED_EXTENSIONS = config['allowed_extensions']
 
@@ -163,6 +161,9 @@ class StartModule():
 
 	def saveCroppedImage(self, img_path, coords, model_path, name, counter=1):
 		# Crop the image
+		valid_systems = list(Config.getConfig(parentKey='modules', key='ht_objectdetection', subkey="systems"))
+		if os.name in valid_systems:
+			import cv2
 		if os.name in valid_systems:
 			try:
 				top, right, bottom, left = coords

@@ -27,7 +27,7 @@ dependencies:
     - face-recognition-models==0.3.0
     - flask==1.0.2
     - future==0.17.1
-    - hackingtools==0.9.939.520
+    - hackingtools==0.9.939.526
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8
@@ -62,6 +62,7 @@ dependencies:
     - pytz==2018.9
     - rarfile==3.0
     - requests==2.22.0
+    - scikit-build
     - shodan==1.11.1
     - sklearn
     - smartypants==2.0.1

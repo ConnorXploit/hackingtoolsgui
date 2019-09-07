@@ -1,0 +1,17 @@
+{
+    "__gui_label__": "Metadata",
+    "django_form_module_function": {
+        "get_metadata_exif": {
+            "__function__": "test_ht_metadata_get_metadata_exif",
+            "__async__": false,
+            "__return__": "text",
+            "image_file": {
+                "__id__": "image_file",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "Browse image to extract metadata",
+                "required": true
+            }
+        }
+    }
+}

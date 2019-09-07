@@ -1,0 +1,66 @@
+{
+    "__gui_label__": "Bruteforce",
+    "django_form_module_function": {
+        "crackZip": {
+            "__function__": "test_ht_bruteforce_crackZip",
+            "__async__": false,
+            "__return__": "text",
+            "zipFileBruteforce": {
+                "__id__": "zipFileBruteforce",
+                "__type__": "file",
+                "__className__": "file-input",
+                "label_desc": "Browse zip file for crack it",
+                "required": true
+            },
+            "password_length": {
+                "__id__": "password_length",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Password length",
+                "value": 4
+            },
+            "bruteforce_numeric": {
+                "__id__": "bruteforce_numeric",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "0123456789",
+                "selected": false
+            },
+            "bruteforce_lower": {
+                "__id__": "bruteforce_lower",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "abcdefghijklmnopqrstuvwxyz",
+                "selected": false
+            },
+            "bruteforce_upper": {
+                "__id__": "bruteforce_upper",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                "selected": false
+            },
+            "bruteforce_simbols": {
+                "__id__": "bruteforce_simbols",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "!@#$%^&*()-_+:",
+                "selected": false
+            },
+            "bruteforce_simbols_all": {
+                "__id__": "bruteforce_simbols_all",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "selected": false
+            },
+            "__pool_it_crackZip__": {
+                "__id__": "__pool_it_crackZip__",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "Pool the execution the the pool list",
+                "selected": false
+            }
+        }
+    }
+}

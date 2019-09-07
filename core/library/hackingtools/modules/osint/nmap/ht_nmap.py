@@ -59,6 +59,6 @@ class StartModule():
 				if not exists:
 					exists = results[host].has_udp(port)
 		except:
-			print(results)
+			Logger.printMessage(message="isBadFile", description=results, is_error=True)
 			raise
 		return exists

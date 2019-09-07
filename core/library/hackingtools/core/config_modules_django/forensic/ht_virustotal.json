@@ -1,0 +1,24 @@
+{
+    "__gui_label__": "Virus Total",
+    "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+    "django_form_main_function": {
+        "__function__": "test_ht_virustotal_isBadFile",
+        "filename": {
+            "__type__": "file",
+            "label_desc": "Select a file to test if is a bad file",
+            "required": true
+        }
+    },
+    "django_form_module_function": {
+        "isBadFile": {
+            "__function__": "test_ht_virustotal_isBadFile",
+            "__async__": false,
+            "__return__": "text",
+            "filename": {
+                "__type__": "file",
+                "label_desc": "Select a file to test if is a bad file",
+                "required": true
+            }
+        }
+    }
+}

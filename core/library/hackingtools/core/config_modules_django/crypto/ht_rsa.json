@@ -1,0 +1,118 @@
+{
+    "__gui_label__": "RSA Cypher",
+    "django_form_module_function": {
+        "encrypt": {
+            "__function__": "test_ht_rsa_encrypt",
+            "__async__": false,
+            "__return__": "text",
+            "private_key_keynumber": {
+                "__id__": "private_key_keynumber",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Private Key",
+                "value": 10000,
+                "required": true,
+                "returnable_modules_functions": {
+                    "ht_crypter": [
+                        "getRandomKeypair"
+                    ]
+                }
+            },
+            "private_key_keymod": {
+                "__id__": "private_key_keymod",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Private Mod",
+                "value": 0,
+                "required": true,
+                "returnable_modules_functions": {
+                    "ht_crypter": [
+                        "getRandomKeypair"
+                    ]
+                }
+            },
+            "cipher_text": {
+                "__id__": "cipher_text",
+                "__type__": "textarea",
+                "__className__": "form-control rounded-0",
+                "placeholder": "Text to cipher",
+                "required": true
+            }
+        },
+        "decrypt": {
+            "__function__": "test_ht_rsa_decrypt",
+            "__async__": false,
+            "__return__": "text",
+            "public_key_keynumber": {
+                "__id__": "public_key_keynumber",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Public Key",
+                "value": 0,
+                "required": true
+            },
+            "public_key_keymod": {
+                "__id__": "public_key_keymod",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Public Mod",
+                "value": 0,
+                "required": true
+            },
+            "decipher_text": {
+                "__id__": "decipher_text",
+                "__type__": "textarea",
+                "__className__": "form-control",
+                "placeholder": "Text to decipher",
+                "required": true
+            }
+        },
+        "generate_keypair": {
+            "__function__": "test_ht_rsa_generate_keypair",
+            "__async__": false,
+            "__return__": "text",
+            "prime_a": {
+                "__id__": "prime_a",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Prime A",
+                "value": "1299853",
+                "required": true
+            },
+            "prime_b": {
+                "__id__": "prime_b",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Prime B",
+                "value": "2099837",
+                "required": true
+            },
+            "__pool_it_generate_keypair__": {
+                "__id__": "__pool_it_generate_keypair__",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getRandomKeypair": {
+            "__function__": "test_ht_rsa_getRandomKeypair",
+            "__async__": false,
+            "__return__": "text",
+            "prime_length": {
+                "__id__": "prime_length",
+                "__type__": "number",
+                "__className__": "form-control",
+                "label_desc": "Prime Length",
+                "value": "8"
+            },
+            "__pool_it_getRandomKeypair__": {
+                "__id__": "__pool_it_getRandomKeypair__",
+                "__type__": "checkbox",
+                "__className__": "custom-control-input",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

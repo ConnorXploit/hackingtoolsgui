@@ -1,0 +1,38 @@
+{
+    "__gui_label__": "File Crypter",
+    "django_form_main_function": {
+        "__function__": "test_ht_crypter_cryptFile",
+        "filename": {
+            "__type__": "file",
+            "label_desc": "Browse file to crypt",
+            "required": true
+        },
+        "iteratecount": {
+            "__type__": "number",
+            "label_desc": "Iterate count",
+            "value": "1"
+        },
+        "prime_length": {
+            "__type__": "number",
+            "label_desc": "Prime's Length",
+            "value": "2"
+        },
+        "compile_exe": {
+            "__type__": "checkbox",
+            "label_desc": "Compile to EXE",
+            "systems": [
+                "nt"
+            ]
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "cryptFile",
+            "__type__": "submit",
+            "value": "Crypt File",
+            "loading_text": "Crypting..."
+        }
+    }
+}

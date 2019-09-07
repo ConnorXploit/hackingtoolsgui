@@ -3,7 +3,7 @@ from datetime import datetime
 import colorama
 from colorama import Fore, Back, Style
 
-from . import Config
+from . import Config, Utils
 config = Config.getConfig(parentKey='core', key='Logger')
 
 colorama.init()
@@ -80,7 +80,7 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
     else:
         methodCalledFrom = '{file}.{function}()'.format(file=filename.split('\\')[-1], function=methodName)
     
-    time_now = datetime.utcnow().strftime(config['log_print_date_format'])[:-3]
+    time_now = Utils.getTime()
 
     colorMessage = Fore.LIGHTMAGENTA_EX
 

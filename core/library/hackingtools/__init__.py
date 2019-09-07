@@ -13,6 +13,7 @@ import ast
 import progressbar
 import requests
 import sys
+import readline
 from django.urls import resolve
 from importlib import reload
 
@@ -23,10 +24,10 @@ except ImportError:
 
 modules_loaded = {}
 
-global nodes_pool
+
 nodes_pool = []
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
-global WANT_TO_BE_IN_POOL
+
 WANT_TO_BE_IN_POOL = Config.getConfig(parentKey='core', key='WANT_TO_BE_IN_POOL')
 if WANT_TO_BE_IN_POOL:
     Logger.printMessage('Loaded in pool as', MY_NODE_ID, debug_module=True)
@@ -373,14 +374,13 @@ def getModuleConfig(moduleName):
 # Nodes Pool Treatment
 
 def switchPool():
-    global WANT_TO_BE_IN_POOL
+    
     if WANT_TO_BE_IN_POOL:
         WANT_TO_BE_IN_POOL = False
     else:
         WANT_TO_BE_IN_POOL = True
 
 def addNodeToPool(node_ip):
-    global nodes_pool
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
@@ -388,7 +388,6 @@ def send(node_request, functionName):
     creator_id = MY_NODE_ID
     pool_nodes = getPoolNodes()
     try:
-        global WANT_TO_BE_IN_POOL
         if WANT_TO_BE_IN_POOL:
             function_api_call = resolve(node_request.path_info).route
             pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
@@ -485,20 +484,48 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
                         r = requests.post(node_call, files=files, data=params, headers=headers)
 
                         if r.status_code == 200:
+                            Logger.printMessage(message='sendPool', description=('Solved by', node, 'Pool List', pool_list), color=Fore.YELLOW)
+                            Logger.printMessage(message='sendPool', description=('Solved by', node, 'Nodes Pool', getPoolNodes()), color=Fore.YELLOW)
                             return (r, params['creator'])
                 except Exception as e:
                     raise
-                    Logger.printMessage(str(e), color=Fore.YELLOW)
+                    Logger.printMessage(message='sendPool', description=str(e), color=Fore.YELLOW)
         else:
-            Logger.printMessage('Returned to me my own function called into the pool', debug_module=True)
+            Logger.printMessage(message='sendPool', description='Returned to me my own function called into the pool', debug_module=True)
     else:
-        Logger.printMessage('There is nobody on the pool list', debug_module=True)
+        Logger.printMessage(message='sendPool', description='There is nobody on the pool list', debug_module=True)
 
     return (None, None)
 
 def getPoolNodes():
-    global nodes_pool
+    
     return nodes_pool
+
+def removeNodeFromPool(node_ip):
+    
+    if node_ip in nodes_pool:
+        nodes_pool.remove(node_ip)
+
+def executeCommand(command):
+    try:
+        if '=' in command:
+            vari, _ = command.split('=')[0]
+            global_var = 'global {vari}'.format(vari=vari)
+            exec(global_var) 
+        return exec(command)
+    except Exception as e:
+        return str(e)
+
+def startCommandLine():
+    Logger.printMessage(message='startCommandLine', description='Starting iteraction with command line into HackingTools', debug_module=True)
+    while True:
+        command = str(input('> '))
+        res = executeCommand(command) if command != 'exit' else None
+        if not res and command == 'exit':
+            Logger.printMessage(message='startCommandLine', description='Exiting interactive console', debug_module=True)
+            break
+        print('[RESP] : {res}'.format(res=res))
+
 
 # Import Modules
 
@@ -613,6 +640,8 @@ def __classNameFromModule__(cls):
 
 def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', config_extrasubkey=None):
     module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
+    functionModal = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey='__function__')
+    default_classnames_per_type = Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
     if not module_form:
         return
     
@@ -623,14 +652,21 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     # For ajax
     submit_id = ''
 
+    if '__function__' in m_form:
+        submit_id = 'submit_{name}'.format(name=m_form['__function__'])
+
     for m in m_form:
         temp_m_form = m_form
-        if not m == '__async__' and not '__separator' in m and (('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m]):
-            if '__type__' in temp_m_form[m] and '__id__' in temp_m_form[m] and '__className__' in temp_m_form[m]:
+        if not m == '__async__' and not m == '__function__' and not '__separator' in m and (('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m]):
+            if '__type__' in temp_m_form[m]:
                 input_type = temp_m_form[m]['__type__']
-                input_id = temp_m_form[m]['__id__']
-                input_class = temp_m_form[m]['__className__']
                 
+                input_className = ''
+                if not input_type in default_classnames_per_type:
+                    Logger.printMessage(message='__createHtmlModalForm__', description='There is no __className__ defined for this type of input \'{input_type}\''.format(input_type=input_type), color=Logger.Fore.YELLOW)
+                else:
+                    input_className = default_classnames_per_type[input_type]['__className__']
+
                 input_placeholder = ''
                 if 'placeholder' in temp_m_form[m]:
                     input_placeholder = temp_m_form[m]['placeholder']
@@ -665,16 +701,16 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                         if 'core' == optModuleName:
                             functionCall = '{func}()'.format(func=temp_m_form[m]['options_from_function'][optModuleName])
                             options_from_function = eval(functionCall)
-                
+
                 if input_type == 'file':
-                    #html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_class, id=input_id, required=required)
+                    #html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_className, id=m, required=required)
                     html += "<div class='input-group'>"
                     html += "<div class='input-group-prepend'>"
-                    html += "<span class='input-group-text' id='inputGroupFileAddon01{id}'>{input_label_desc}</span>".format(id=input_id, input_label_desc=input_label_desc)
+                    html += "<span class='input-group-text' id='inputGroupFileAddon01{id}'>{input_label_desc}</span>".format(id=m, input_label_desc=input_label_desc)
                     html += "</div>"
                     html += "<div class='custom-file'>"
-                    html += "<input type='file' class='custom-file-input' name='{id}' aria-describedby='inputGroupFileAddon01{id}' {required}>".format(id=input_id, required=required)
-                    html += "<label class='custom-file-label' for='{id}'>Choose file</label>".format(id=input_id)
+                    html += "<input type='file' class='custom-file-input' name='{id}' aria-describedby='inputGroupFileAddon01{id}' {required}>".format(id=m, required=required)
+                    html += "<label class='custom-file-label' for='{id}'>Choose file</label>".format(id=m)
                     html += "</div>"
                     html += "</div>"
 
@@ -683,58 +719,58 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     color_on = 'primary'
                     color_off = 'warning'
                     
-                    global WANT_TO_BE_IN_POOL
-                    if '__pool_it_' in input_id and not WANT_TO_BE_IN_POOL:
+                    
+                    if '__pool_it_' in m and not WANT_TO_BE_IN_POOL:
                         checkbox_disabled = 'disabled'
                         color_on = 'default'
                         color_off = 'default'
                     
                     if checkbox_selected:
-                        html += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"{color_on}\" data-offstyle=\"{color_off}\" id=\"{id}\" name=\"{id}\" {required} checked {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(color_on=color_on, color_off=color_off, id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"{color_on}\" data-offstyle=\"{color_off}\" id=\"{id}\" name=\"{id}\" {required} checked {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(color_on=color_on, color_off=color_off, id=m, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                     else:
-                        html += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"{color_on}\" data-offstyle=\"{color_off}\" id=\"{id}\" name=\"{id}\" {required} {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(color_on=color_on, color_off=color_off, id=input_id, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
+                        html += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"{color_on}\" data-offstyle=\"{color_off}\" id=\"{id}\" name=\"{id}\" {required} {disabled}><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(color_on=color_on, color_off=color_off, id=m, input_label_desc=input_label_desc, required=required, disabled=checkbox_disabled)
                 
                 elif input_type == 'select':
 
-                    html += "<span class=\"name-select\" value=\"{placeholder}\"></span><select id=\"editable-select-{id}\" name=\"dropdown_{id}\" placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(placeholder=input_placeholder, className=input_class, id=input_id, required=required)
+                    html += "<span class=\"name-select\" value=\"{placeholder}\"></span><select id=\"editable-select-{id}\" name=\"dropdown_{id}\" placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(placeholder=input_placeholder, className=input_className, id=m, required=required)
                     html += "<option value='{input_value}' selected></option>".format(input_value=input_value)
 
                     for func in options_from_function:
                         html += "<option value='{cat}'>{cat}</option>".format(cat=func)
                     
-                    html += "</select><script>$('#editable-select-{id}').editableSelect();".format(id=input_id)
+                    html += "</select><script>$('#editable-select-{id}').editableSelect();".format(id=m)
 
                     if required != '':
-                        html += "$('#editable-select-{id}').prop('required',true);".format(id=input_id)
+                        html += "$('#editable-select-{id}').prop('required',true);".format(id=m)
 
                     html += "</script>"
 
                 elif input_type == 'button':
 
-                    footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_class, input_value=input_value)
+                    footer += "<button type=\"button\" class=\"{className}\" data-dismiss=\"modal\">{input_value}</button>".format(className=input_className, input_value=input_value)
 
                 elif input_type == 'submit':
 
-                    submit_id = input_id
-                    footer += "<input type=\"submit\" class=\"{className}\" value=\"{input_value}\" id=\"{id}\" />".format(className=input_class, input_value=input_value, id=input_id)
+                    submit_id = m
+                    footer += "<input type=\"submit\" class=\"{className}\" value=\"{input_value}\" id=\"{id}\" />".format(className=input_className, input_value=input_value, id=submit_id)
                     
                     if loading_text:
                         footer += "<script>$('#"
-                        footer += input_id
+                        footer += m
                         footer += "').on('click', function(e){$('#"
-                        footer += input_id
+                        footer += m
                         footer += "').attr('value', '{loading_text}'); e.preventDevault();".format(loading_text=loading_text)
                         footer += "});</script>"
 
                 elif input_type == 'textarea':
 
                     if input_label_desc:
-                        html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label label-description\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea></div></div>".format(className=input_class, id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc)
+                        html += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label label-description\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea></div></div>".format(className=input_className, id=m, placeholder=input_placeholder, input_label_desc=input_label_desc)
                     else:
-                        html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_class, id=input_id, placeholder=input_placeholder)
+                        html += "<textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\" placeholder=\"{placeholder}\"></textarea>".format(className=input_className, id=m, placeholder=input_placeholder)
 
                 else:
-                    html += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" placeholder=\"{placeholder}\" name=\"{id}\" {required}/></div>".format(id=input_id, placeholder=input_placeholder, input_label_desc=input_label_desc, className=input_class, input_type=input_type, input_value=input_value, required=required)
+                    html += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"{input_type}\" value=\"{input_value}\" placeholder=\"{placeholder}\" name=\"{id}\" {required}/></div>".format(id=m, placeholder=input_placeholder, input_label_desc=input_label_desc, className=input_className, input_type=input_type, input_value=input_value, required=required)
 
         if '__separator' in m and '__' == m[-2:] and m_form[m] == True:
             html += "<hr class='sidebar-divider my-0 my-separator'>"
@@ -750,10 +786,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     for m in m_form:
         if '__async__' == m and m_form[m] == True:
             async_script = "<script> $(function() { "
-            if config_extrasubkey:
-                async_script += "$('#submit_test_{submit_id}').click(function(e)".format(submit_id=config_extrasubkey)
-            else:
-                async_script += "$('#submit_test_{submit_id}').click(function(e)".format(submit_id=mod)
+            async_script += "$('#{submit_id}').click(function(e)".format(submit_id=submit_id)
             async_script += "{ e.preventDefault();"
             async_script += "$.ajax({"
             async_script += "headers: { 'X-CSRFToken': '{"
@@ -773,6 +806,8 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
             async_script += "}"
             async_script += "}, error : function(xhr,errmsg,err) { console.log(xhr.status + ': ' + xhr.responseText); } }); }); }); </script>"
             html += async_script
+    if config_subkey == 'django_form_main_function':
+        return {functionModal : html}
     return html
 
 def __getModulesDjangoForms__():
@@ -780,7 +815,9 @@ def __getModulesDjangoForms__():
     for mod in getModulesNames():
         form = __createHtmlModalForm__(mod)
         if form:
-            forms[mod] = form
+            for url in form:
+                if form[url]:
+                    forms[mod] = form
     return forms
 
 def __getModulesDjangoFormsModal__():
@@ -864,6 +901,7 @@ def __importModules__():
                                 pass
 
                         Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                        raise
 
 def getModules():
     data = []
@@ -901,7 +939,7 @@ def createModule(moduleName, category):
     # Reload variables on client side
     global hackingtools
     #reload(hackingtools)
-    Config.__createModuleTemplateConfig__(moduleName)
+    Config.__createModuleTemplateConfig__(moduleName, category)
     trying_something = __importModules__()
     return
 

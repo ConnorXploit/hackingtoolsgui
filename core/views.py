@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
-from .library.hackingtools.core import Utils, Logger
+from .library.hackingtools.core import Utils, Logger, Config
 from importlib import reload
 import os
 import json
@@ -13,10 +13,12 @@ from colorama import Fore
 
 # Create your views here.
 
+config = Config.getConfig(parentKey='django', key='views')
+
 def home(request, popup_text=''):
     modules_and_params = ht.getModulesJSON()
-    modules_forms = ht.__getModulesDjangoForms__() # Corregir template config vacios
-    modules_forms_modal = ht.__getModulesDjangoFormsModal__() # Corregir template config vacios
+    modules_forms = ht.__getModulesDjangoForms__()
+    modules_forms_modal = ht.__getModulesDjangoFormsModal__()
     modules_config = ht.getModulesConfig()
     modules_config_treeview = ht.__getModulesConfig_treeView__()
     modules_functions_modals = ht.getModulesModalTests()
@@ -28,7 +30,7 @@ def home(request, popup_text=''):
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = ht.getModulesNames()
-    pool_list = ht.nodes_pool
+    pool_list = ht.getPoolNodes()
     my_node_id_pool = ht.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
     return render(request, 'core/index.html', { 
@@ -47,19 +49,20 @@ def home(request, popup_text=''):
         'popup_text':popup_text})
 
 def documentation(request, module_name=''):
+    this_conf = config['documentation']
     if module_name:
         for mod in ht.modules_loaded:
             if module_name == mod.split('.')[-1]:
-                doc_mod = '/static/docs/core/library/hackingtools/modules/{c}/{b}/{a}.html'.format(c=mod.split('.')[-3], b=module_name.split('ht_')[1], a=module_name)
+                doc_mod = '{documents_dir}/{c}/{b}/{a}.html'.format(documents_dir=this_conf['documents_dir'], c=mod.split('.')[-3], b=module_name.split('ht_')[1], a=module_name)
                 categories = []
                 for mod in ht.getModulesJSON():
                     if not mod.split('.')[1] in categories:
                         categories.append(mod.split('.')[1])
                 modules_names = ht.getModulesNames()
-                return render(request, 'core/documentation.html', { 'doc_mod' : doc_mod, 'categories' : categories, 'modules' : modules_names })
-        return home(request=request, popup_text='Module {mod} doesn\'t exist'.format(mod=module_name))
+                return render(request, this_conf['html_template'], { 'doc_mod' : doc_mod, 'categories' : categories, 'modules' : modules_names })
+        return home(request=request, popup_text=this_conf['bad_module'].format(mod=module_name))
     else:
-        return home(request=request, popup_text='You have to select a module for getting it\'s documentation')
+        return home(request=request, popup_text=this_conf['no_module_selected'])
 
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
@@ -112,19 +115,20 @@ def saveFileOutput(myfile, module_name, category):
     return (filename, location, os.path.join(location, filename))
 
 def add_pool_node(request):
+    this_conf = config['add_pool_node']
     try:
         if request.POST:
             pool_node = request.POST.get('pool_ip')
         ht.addNodeToPool(pool_node)
         if request.POST.get('is_async', False):
             data = {
-                'data' : ht.nodes_pool
+                'data' : ht.getPoolNodes()
             }
             return JsonResponse(data)
-        return home(request=request, popup_text='\n'.join(ht.nodes_pool))
+        return home(request=request, popup_text='\n'.join(ht.getPoolNodes()))
     except:
-        return home(request=request, popup_text='Something went wrong')
-    return home(request=request, popup_text='\n'.join(ht.nodes_pool))
+        return home(request=request, popup_text=this_conf['error'])
+    return home(request=request, popup_text='\n'.join(ht.getPoolNodes()))
 
 def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=False, simbolsAll=False):
     used_alphabet = 'numeric'
@@ -265,6 +269,7 @@ def ht_rsa_generate_keypair(request):
 
 # ht_crypter
 def ht_crypter_cryptFile(request):
+    this_conf = config['ht_crypter_cryptFile']
     if len(request.FILES) != 0:
         if request.FILES['filename']:
             # Get file
@@ -326,7 +331,7 @@ def ht_crypter_cryptFile(request):
                         os.remove(uploaded_file_url)
                         os.remove(crypted_file)
             else:
-                print('No se ha guardado correctamente')
+                Logger.printMessage(message='ht_crypter_cryptFile', description=this_conf['bad_saved'], is_error=True)
             return redirect(reverse('home'))
 
     return redirect(reverse('home'))
@@ -392,8 +397,6 @@ def ht_metadata_get_metadata_exif(request):
             uploaded_file_url = os.path.join(location, filename)
 
             data = metadata.get_pdf_exif(uploaded_file_url)
-
-            print(str(json.dumps(data)))
             
             if request.POST.get('is_async', False):
                 data = {
@@ -408,6 +411,7 @@ def ht_metadata_get_metadata_exif(request):
 
 @csrf_exempt
 def ht_bruteforce_crackZip(request):
+    this_conf = config['ht_bruteforce_crackZip']
     try:
         if len(request.FILES) != 0:
             if request.FILES['zipFileBruteforce']:
@@ -445,10 +449,10 @@ def ht_bruteforce_crackZip(request):
                     else:
                         if request.POST.get('is_async', False):
                             data = {
-                                'data' : 'Something went wrong. See the log'
+                                'data' : this_conf['error_see_log']
                             }
                             return JsonResponse(data)
-                        return home(request=request, popup_text='Something went wrong. See the log')
+                        return home(request=request, popup_text=this_conf['error_see_log'])
 
                     if 'is_async' in request.POST and request.POST.get('is_async') == True:
                         data = {
@@ -458,10 +462,10 @@ def ht_bruteforce_crackZip(request):
                     if not password:
                         if request.POST.get('is_async', False):
                             data = {
-                                'data' : 'Something want wrong'
+                                'data' : this_conf['not_solved']
                             }
                             return JsonResponse(data)
-                        return home(request=request, popup_text='Something want wrong')
+                        return home(request=request, popup_text=this_conf['not_solved'])
                     if request.POST.get('is_async', False):
                         data = {
                             'data' : password
@@ -469,12 +473,13 @@ def ht_bruteforce_crackZip(request):
                         return JsonResponse(data)
                     return home(request=request, popup_text=password)
     except ConnectionError as conError:
-        print('Connection aborted. Remote end closed connection without response')
+        Logger.printMessage(message='ht_bruteforce_crackZip', description=this_conf['conn_closed'])
     return home(request=request)
 
 # ht_unzip
 
-def test_ht_unzip_extractFile(request):
+def ht_unzip_extractFile(request):
+    this_conf = config['ht_unzip_extractFile']
     if len(request.FILES) != 0:
         if request.FILES['zipFile']:
             # Get file
@@ -493,7 +498,7 @@ def test_ht_unzip_extractFile(request):
             if uploaded_file_url:
                 password = unzipper.extractFile(uploaded_file_url, password=password)
             else:
-                return home(request=request, popup_text='Something went wrong. See the log')
+                return home(request=request, popup_text=this_conf['error_see_log'])
 
             if password:
                 if request.POST.get('is_async', False):
@@ -504,14 +509,14 @@ def test_ht_unzip_extractFile(request):
                 return password
                 #return home(request=request, popup_text='Nice, password is: {pa}'.format(pa=password))
             else:
-                return home(request=request, popup_text='Bad password')
+                return home(request=request, popup_text=this_conf['bad_pass'])
 
     return home(request=request)
 
 
 # ht_virustotal
 
-def test_ht_virustotal_isBadFile(request):
+def ht_virustotal_isBadFile(request):
     try:
         if len(request.FILES) != 0:
             if request.FILES['filename']:
@@ -530,7 +535,8 @@ def test_ht_virustotal_isBadFile(request):
 
 # ht_objectdetection
 
-def test_ht_objectdetection_predictImage(request):
+def ht_objectdetection_predictImage(request):
+    this_conf = config['ht_objectdetection_predictImage']
     try:
         if len(request.FILES) != 0:
 
@@ -541,7 +547,7 @@ def test_ht_objectdetection_predictImage(request):
 
                 first_folder_name = None
                 filenameZip = None
-                uploaded_file_urlZip = 'trained.clf'
+                uploaded_file_urlZip = this_conf['default_model']
                 modelfile = request.POST.get('dropdown_modelfile')
                 
                 if not modelfile:
@@ -575,16 +581,17 @@ def test_ht_objectdetection_predictImage(request):
             
             if request.POST.get('is_async', False):
                 data = {
-                    'data' : 'test_ht_objectdetection_predictImage needs a param'
+                    'data' : this_conf['need_params']
                 }
                 return JsonResponse(data)
-            return home(request=request, popup_text='test_ht_objectdetection_predictImage needs a param')
-        return home(request=request, popup_text='No files given as param')
+            return home(request=request, popup_text=this_conf['need_params'])
+        return home(request=request, popup_text=this_conf['need_file'])
     except Exception as e:
-        Logger.printMessage(message='test_ht_objectdetection_predictImage', description=str(e), is_error=True)
+        Logger.printMessage(message='ht_objectdetection_predictImage', description=str(e), is_error=True)
         return home(request=request, popup_text=str(e))
 
-def test_ht_objectdetection_predictFromZip(request):
+def ht_objectdetection_predictFromZip(request):
+    this_conf = config['ht_objectdetection_predictFromZip']
     try:
         if len(request.FILES) != 0:
 
@@ -600,7 +607,7 @@ def test_ht_objectdetection_predictFromZip(request):
                     first_folder_name = image_to_test_zip.split('.')[0]
 
                 filenameZip = None
-                uploaded_file_urlZip = 'trained.clf'
+                uploaded_file_urlZip = this_conf['default_model']
                 modelfile = request.POST.get('dropdown_modelfile_pred')
 
                 if 'image_models_zip_pred' in request.FILES:
@@ -626,25 +633,26 @@ def test_ht_objectdetection_predictFromZip(request):
                         model_path=modelfile,
                         first_folder_name=first_folder_name)
                 
-                with open(img, 'rb') as fh:
+                with open(image_final, 'rb') as fh:
                     response = HttpResponse(fh.read(), content_type="application/{type}".format(type=filename.split('.')[1]))
-                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(img)
+                    response['Content-Disposition'] = 'inline; filename=' + os.path.basename(image_final)
                     return response
             if request.POST.get('is_async', False):
                 data = {
-                    'data' : 'test_ht_objectdetection_predictFromZip needs a param'
+                    'data' : this_conf['need_params']
                 }
                 return JsonResponse(data)
-            return home(request=request, popup_text='test_ht_objectdetection_predictFromZip needs a param')
+            return home(request=request, popup_text=this_conf['need_params'])
 
     except Exception as e:
-        Logger.printMessage(message='test_ht_objectdetection_predictFromZip', description=str(e), is_error=True)
+        Logger.printMessage(message='ht_objectdetection_predictFromZip', description=str(e), is_error=True)
         raise
         return home(request=request, popup_text=str(e))
 
-def test_ht_objectdetection_trainFromZip(request):
+def ht_objectdetection_trainFromZip(request):
     try:
         if len(request.FILES) != 0:
+            objectdetection = ht.getModule('ht_objectdetection')
             first_folder_name = None
             filenameZip = None
             uploaded_file_urlZip = 'trained.clf'
@@ -660,7 +668,7 @@ def test_ht_objectdetection_trainFromZip(request):
 
             if filenameZip:
                 image_final = objectdetection.trainFromZip(
-                    uploaded_file_url, 
+                    uploaded_file_urlZip, 
                     model_path='{f}.clf'.format(f=filenameZip.split('.')[0]), 
                     trainZipFile=uploaded_file_urlZip, 
                     first_folder_name=first_folder_name,
@@ -674,7 +682,7 @@ def test_ht_objectdetection_trainFromZip(request):
             return home(request=request)
 
     except Exception as e:
-        Logger.printMessage(message='test_ht_objectdetection_trainFromZip', description=str(e), is_error=True)
+        Logger.printMessage(message='ht_objectdetection_trainFromZip', description=str(e), is_error=True)
         return home(request=request, popup_text=str(e))
 
 

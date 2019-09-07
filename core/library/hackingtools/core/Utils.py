@@ -1,5 +1,6 @@
 from . import Config, Logger, Utils
 config = Config.getConfig(parentKey='core', key='Utils')
+config_logger = Config.getConfig(parentKey='core', key='Logger')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
 from colorama import Fore
 
@@ -9,6 +10,8 @@ import base64
 import os
 import socket
 from itertools import product 
+
+from datetime import datetime
 
 # File Manipulation
 def getFileContentInByteArray(filePath):
@@ -78,17 +81,14 @@ def emptyDirectory(directory):
         return False
 
 def getValidDictNoEmptyKeys(data):
-    print(data)
     final_data = {}
     if isinstance(data, str):
         return data
     for d in data:
         if data[d]:
             if isinstance(data[d], str):
-                print('Texto encontrado: ', data[d], ' en ', d)
                 final_data[d] = data[d]
             else:
-                print('Dict encontrado: en ', d)
                 final_data[d] = getValidDictNoEmptyKeys(data[d])
     return final_data
 
@@ -103,6 +103,9 @@ def getMyLanIP():
 
 def getMyLocalIP():
     return '127.0.0.1'
+
+def getTime():
+    return datetime.utcnow().strftime(config_logger['log_print_date_format'])[:-3]
 
 # Maths
 def euclides(a, b):
