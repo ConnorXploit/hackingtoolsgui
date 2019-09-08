@@ -14,8 +14,11 @@ from colorama import Fore
 # Create your views here.
 
 config = Config.getConfig(parentKey='django', key='views')
+global ht_data
+ht_data = {}
 
-def home(request, popup_text=''):
+def load_data():
+    global ht_data
     modules_and_params = ht.getModulesJSON()
     modules_forms = ht.__getModulesDjangoForms__()
     modules_forms_modal = ht.__getModulesDjangoFormsModal__()
@@ -33,7 +36,7 @@ def home(request, popup_text=''):
     pool_list = ht.getPoolNodes()
     my_node_id_pool = ht.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
-    return render(request, 'core/index.html', { 
+    ht_data =  { 
         'modules':modules_names, 
         'categories':categories, 
         'modules_all':modules_all,
@@ -45,8 +48,20 @@ def home(request, popup_text=''):
         'modules_functions_modals':modules_functions_modals, 
         'pool_list':pool_list,
         'my_node_id_pool':my_node_id_pool,
-        'status_pool':status_pool,
-        'popup_text':popup_text})
+        'status_pool':status_pool}
+
+def renderMainPanel(request, popup_text=''):
+    global ht_data
+    if popup_text != '':
+        ht_data['popup_text'] = popup_text
+    return render(request, 'core/index.html', dict(ht_data))
+
+def home(request, popup_text=''):
+    global ht_data
+    load_data()
+    if popup_text != '':
+        ht_data['popup_text'] = popup_text
+    return renderMainPanel(request=request)
 
 def documentation(request, module_name=''):
     this_conf = config['documentation']
@@ -60,9 +75,9 @@ def documentation(request, module_name=''):
                         categories.append(mod.split('.')[1])
                 modules_names = ht.getModulesNames()
                 return render(request, this_conf['html_template'], { 'doc_mod' : doc_mod, 'categories' : categories, 'modules' : modules_names })
-        return home(request=request, popup_text=this_conf['bad_module'].format(mod=module_name))
+        return renderMainPanel(request=request, popup_text=this_conf['bad_module'])
     else:
-        return home(request=request, popup_text=this_conf['no_module_selected'])
+        return renderMainPanel(request=request, popup_text=this_conf['no_module_selected'])
 
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
@@ -87,25 +102,26 @@ def createModule(request):
     created = ht.createModule(mod_name, mod_cat)
     if created:
         modules_and_params = ht.getModulesJSON()
-    return home(request=request) #TODO create a param for html to popup bootstrap in green or red if all ok
+    return renderMainPanel(request=request)
 
 def configModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_conf = ht.getModuleConfig(mod_name)
     reload(ht)
-    return redirect('home')
+    return renderMainPanel(request=request)
 
 def createCategory(request):
     mod_cat = request.POST.get('category_name').replace(" ", "_").lower()
     ht.createCategory(mod_cat)
-    return redirect('home')
+    return renderMainPanel(request=request)
 
 def createScript(request):
-    return redirect('home')
+    return renderMainPanel(request=request)
 
 def config_look_for_changes(request):
     ht.Config.__look_for_changes__()
-    return redirect('home')
+    load_data()
+    return renderMainPanel(request=request)
 
 def saveFileOutput(myfile, module_name, category):
     location = os.path.join("core", "library", "hackingtools", "modules", category, module_name.split('ht_')[0], "output")
@@ -125,10 +141,10 @@ def add_pool_node(request):
                 'data' : ht.getPoolNodes()
             }
             return JsonResponse(data)
-        return home(request=request, popup_text='\n'.join(ht.getPoolNodes()))
+        return renderMainPanel(request=request, popup_text='\n'.join(ht.getPoolNodes()))
     except:
-        return home(request=request, popup_text=this_conf['error'])
-    return home(request=request, popup_text='\n'.join(ht.getPoolNodes()))
+        return renderMainPanel(request=request, popup_text=this_conf['error'])
+    return renderMainPanel(request=request, popup_text='\n'.join(ht.getPoolNodes()))
 
 def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=False, simbolsAll=False):
     used_alphabet = 'numeric'
@@ -193,9 +209,9 @@ def ht_rsa_encrypt(request):
                 'data' : crypted_text
             }
             return JsonResponse(data)
-        return home(request=request, popup_text=crypted_text)
+        return renderMainPanel(request=request, popup_text=crypted_text)
     else:
-        return home(request=request)
+        return renderMainPanel(request=request)
 
 def ht_rsa_decrypt(request):
     if request.POST.get('public_key_keynumber') and request.POST.get('public_key_keymod') and request.POST.get('decipher_text'):
@@ -209,9 +225,9 @@ def ht_rsa_decrypt(request):
                 'data' : decrypted_text
             }
             return JsonResponse(data)
-        return home(request=request, popup_text=decrypted_text)
+        return renderMainPanel(request=request, popup_text=decrypted_text)
     else:
-        return home(request=request)
+        return renderMainPanel(request=request)
 
 @csrf_exempt
 def ht_rsa_getRandomKeypair(request):
@@ -219,7 +235,7 @@ def ht_rsa_getRandomKeypair(request):
     if response or repool:
         if repool:
             return HttpResponse(response)
-        return home(request=request, popup_text=response.text)
+        return renderMainPanel(request=request, popup_text=response.text)
     else:
         length = None
         if request.POST.get('prime_length'):
@@ -236,7 +252,7 @@ def ht_rsa_getRandomKeypair(request):
                 'data' : keypair
             }
             return JsonResponse(data)
-        return home(request=request, popup_text=keypair)
+        return renderMainPanel(request=request, popup_text=keypair)
 
 @csrf_exempt
 def ht_rsa_generate_keypair(request):
@@ -244,7 +260,7 @@ def ht_rsa_generate_keypair(request):
     if response or repool:
         if repool:
             return HttpResponse(response)
-        return home(request=request, popup_text=response.text)
+        return renderMainPanel(request=request, popup_text=response.text)
     else:
         if request.POST.get('prime_a') and request.POST.get('prime_b'):
             prime_a = request.POST.get('prime_a')
@@ -261,9 +277,9 @@ def ht_rsa_generate_keypair(request):
                     'data' : keypair
                 }
                 return JsonResponse(data)
-            return home(request=request, popup_text=keypair)
+            return renderMainPanel(request=request, popup_text=keypair)
         else:
-            return home(request=request)
+            return renderMainPanel(request=request)
 
 # End ht_rsa
 
@@ -332,9 +348,9 @@ def ht_crypter_cryptFile(request):
                         os.remove(crypted_file)
             else:
                 Logger.printMessage(message='ht_crypter_cryptFile', description=this_conf['bad_saved'], is_error=True)
-            return redirect(reverse('home'))
+            return renderMainPanel(request=request)
 
-    return redirect(reverse('home'))
+    return renderMainPanel(request=request)
 
 # End ht_crypter
 
@@ -354,9 +370,9 @@ def ht_shodan_getIPListfromServices(request):
                 'data' : resp_text
             }
             return JsonResponse(data)
-        return home(request=request, popup_text=resp_text)
+        return renderMainPanel(request=request, popup_text=resp_text)
     else:
-        return home(request=request)
+        return renderMainPanel(request=request)
 
 # End ht_shodan
 
@@ -373,9 +389,9 @@ def ht_nmap_getConnectedDevices(request):
                 'data' : resp_text
             }
             return JsonResponse(data)
-        return home(request=request, popup_text=resp_text)
+        return renderMainPanel(request=request, popup_text=resp_text)
     else:
-        return home(request=request)
+        return renderMainPanel(request=request)
 
 # End ht_nmap
 
@@ -389,13 +405,9 @@ def ht_metadata_get_metadata_exif(request):
             # Get Crypter Module
             metadata = ht.getModule('ht_metadata')
             
-            location = os.path.join("core", "library", "hackingtools", "modules", "forensic", "metadata", "output")
-            fs = FileSystemStorage(location=location)
-
-            # Save file
-            filename = fs.save(myfile.name, myfile)
-            uploaded_file_url = os.path.join(location, filename)
-
+            # Save the file
+            filename, location, uploaded_file_url = saveFileOutput(myfile, "metadata", "forensic")
+            
             data = metadata.get_pdf_exif(uploaded_file_url)
             
             if request.POST.get('is_async', False):
@@ -403,9 +415,9 @@ def ht_metadata_get_metadata_exif(request):
                     'data' : data
                 }
                 return JsonResponse(data)
-            return home(request=request, popup_text=str(json.dumps(data)))
+            return renderMainPanel(request=request, popup_text=str(json.dumps(data)))
     else:
-        return home(request=request)
+        return renderMainPanel(request=request)
 
 # ht_bruteforce
 
@@ -420,7 +432,7 @@ def ht_bruteforce_crackZip(request):
                 if response or repool:
                     if repool:
                         return HttpResponse(response)
-                    return home(request=request, popup_text=response.text)
+                    return renderMainPanel(request=request, popup_text=response.text)
                 else:
                     # Get file
                     myfile = request.FILES['zipFileBruteforce']
@@ -452,7 +464,7 @@ def ht_bruteforce_crackZip(request):
                                 'data' : this_conf['error_see_log']
                             }
                             return JsonResponse(data)
-                        return home(request=request, popup_text=this_conf['error_see_log'])
+                        return renderMainPanel(request=request, popup_text=this_conf['error_see_log'])
 
                     if 'is_async' in request.POST and request.POST.get('is_async') == True:
                         data = {
@@ -465,16 +477,16 @@ def ht_bruteforce_crackZip(request):
                                 'data' : this_conf['not_solved']
                             }
                             return JsonResponse(data)
-                        return home(request=request, popup_text=this_conf['not_solved'])
+                        return renderMainPanel(request=request, popup_text=this_conf['not_solved'])
                     if request.POST.get('is_async', False):
                         data = {
                             'data' : password
                         }
                         return JsonResponse(data)
-                    return home(request=request, popup_text=password)
+                    return renderMainPanel(request=request, popup_text=password)
     except ConnectionError as conError:
         Logger.printMessage(message='ht_bruteforce_crackZip', description=this_conf['conn_closed'])
-    return home(request=request)
+    return renderMainPanel(request=request)
 
 # ht_unzip
 
@@ -498,7 +510,7 @@ def ht_unzip_extractFile(request):
             if uploaded_file_url:
                 password = unzipper.extractFile(uploaded_file_url, password=password)
             else:
-                return home(request=request, popup_text=this_conf['error_see_log'])
+                return renderMainPanel(request=request, popup_text=this_conf['error_see_log'])
 
             if password:
                 if request.POST.get('is_async', False):
@@ -506,12 +518,11 @@ def ht_unzip_extractFile(request):
                         'data' : password
                     }
                     return JsonResponse(data)
-                return password
-                #return home(request=request, popup_text='Nice, password is: {pa}'.format(pa=password))
+                return renderMainPanel(request=request, popup_text=password)
             else:
-                return home(request=request, popup_text=this_conf['bad_pass'])
+                return renderMainPanel(request=request, popup_text=this_conf['bad_pass'])
 
-    return home(request=request)
+    return renderMainPanel(request=request)
 
 
 # ht_virustotal
@@ -529,9 +540,9 @@ def ht_virustotal_isBadFile(request):
                         'data' : response
                     }
                     return JsonResponse(data)
-                return home(request=request, popup_text=response)
+                return renderMainPanel(request=request, popup_text=response)
     except Exception as e:
-        return home(request=request, popup_text=str(e))
+        return renderMainPanel(request=request, popup_text=str(e))
 
 # ht_objectdetection
 
@@ -584,11 +595,11 @@ def ht_objectdetection_predictImage(request):
                     'data' : this_conf['need_params']
                 }
                 return JsonResponse(data)
-            return home(request=request, popup_text=this_conf['need_params'])
-        return home(request=request, popup_text=this_conf['need_file'])
+            return renderMainPanel(request=request, popup_text=this_conf['need_params'])
+        return renderMainPanel(request=request, popup_text=this_conf['need_file'])
     except Exception as e:
         Logger.printMessage(message='ht_objectdetection_predictImage', description=str(e), is_error=True)
-        return home(request=request, popup_text=str(e))
+        return renderMainPanel(request=request, popup_text=str(e))
 
 def ht_objectdetection_predictFromZip(request):
     this_conf = config['ht_objectdetection_predictFromZip']
@@ -642,12 +653,11 @@ def ht_objectdetection_predictFromZip(request):
                     'data' : this_conf['need_params']
                 }
                 return JsonResponse(data)
-            return home(request=request, popup_text=this_conf['need_params'])
+            return renderMainPanel(request=request, popup_text=this_conf['need_params'])
 
     except Exception as e:
         Logger.printMessage(message='ht_objectdetection_predictFromZip', description=str(e), is_error=True)
-        raise
-        return home(request=request, popup_text=str(e))
+        return renderMainPanel(request=request, popup_text=str(e))
 
 def ht_objectdetection_trainFromZip(request):
     try:
@@ -678,11 +688,11 @@ def ht_objectdetection_trainFromZip(request):
                         'data' : image_final
                     }
                     return JsonResponse(data)
-                return home(request=request, popup_text=image_final)
-            return home(request=request)
+                return renderMainPanel(request=request, popup_text=image_final)
+            return renderMainPanel(request=request)
 
     except Exception as e:
         Logger.printMessage(message='ht_objectdetection_trainFromZip', description=str(e), is_error=True)
-        return home(request=request, popup_text=str(e))
+        return renderMainPanel(request=request, popup_text=str(e))
 
 

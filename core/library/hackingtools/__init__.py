@@ -374,13 +374,14 @@ def getModuleConfig(moduleName):
 # Nodes Pool Treatment
 
 def switchPool():
-    
+    global WANT_TO_BE_IN_POOL
     if WANT_TO_BE_IN_POOL:
         WANT_TO_BE_IN_POOL = False
     else:
         WANT_TO_BE_IN_POOL = True
 
 def addNodeToPool(node_ip):
+    global nodes_pool
     if not node_ip in nodes_pool:
         nodes_pool.append(node_ip)
 
@@ -417,6 +418,12 @@ def send(node_request, functionName):
         return (None, None)
 
 def sendPool(creator, function_api_call='', params={}, files=[]):
+    # We have 3 diferent nodes list:
+    #   1- nodes_pool : We know those nodes for any call
+    #   2- pool_list : is inside params['pool_list'] and has the list of all pools that know this pool request
+    #   3- nodes : Are the nodes we can call from out nodes_pool and that the aren't inside pool_list
+    # Finally we add all pool_list nodes that aren't inside our nodes_pool to nodes_pool list
+
     global nodes_pool
     my_public_ip = local_ip
 
@@ -426,20 +433,11 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
     lan_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=lan_ip, port=listening_port)
     local_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
 
-    try:
-        nodes_pool.remove(my_service_api)
-    except:
-        pass
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
     nodes = []
     pool_list=[]
-    pool_counter = 0
     try:
         pool_list = params['pool_list']
-    except:
-        pass
-    try:
-        pool_list.remove(my_service_api)
     except:
         pass
     
@@ -454,9 +452,10 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
 
     # Remove any posible service with my public, local or lan IP
     if nodes_pool:
-        for service in (public_ip_full, lan_ip_full, local_ip_full):
+        for service in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
             try: 
                 nodes_pool.remove(service) 
+                pool_list.remove(service)
             except: 
                 pass
 
@@ -466,7 +465,6 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
 
     if len(nodes) > 0:
         if not my_service_api in pool_list:
-            pool_counter += 1
             for node in nodes:
                 try:
                     if not node in (public_ip_full, lan_ip_full, local_ip_full):
@@ -488,7 +486,6 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
                             Logger.printMessage(message='sendPool', description=('Solved by', node, 'Nodes Pool', getPoolNodes()), color=Fore.YELLOW)
                             return (r, params['creator'])
                 except Exception as e:
-                    raise
                     Logger.printMessage(message='sendPool', description=str(e), color=Fore.YELLOW)
         else:
             Logger.printMessage(message='sendPool', description='Returned to me my own function called into the pool', debug_module=True)
@@ -498,7 +495,7 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
     return (None, None)
 
 def getPoolNodes():
-    
+    global nodes_pool
     return nodes_pool
 
 def removeNodeFromPool(node_ip):

@@ -124,13 +124,19 @@ def __createModuleTemplateConfig__(module_name, category):
         "_django_form_main_function_" : {
             "__function__" : "test_{mod}_FUNCTION_NAME".format(mod=module_name),
             "_HTML_FIELD_NAME_" : {
-                "__id__" : "_HTML_FIELD_NAME_",
                 "__type__" : "_HTML_INPUT_TYPE_",
-                "__className__" : "_HTML_INPUT_CLASS_",
                 "label_desc" : "_DESCRIPTION_LABEL_",
                 "required" : "_IF_REQUIRED_",
                 "value" : "_INPUT_VALUE_",
-                "loading_text" : "_INPUT_LOADING_TEXT_"
+                "loading_text" : "_INPUT_LOADING_TEXT_",
+                "returnable_modules_functions" : {
+                    "_MODULE_CALL_FOR_" : [
+                        "_THAT_MODULES_FUNCTION"
+                    ]
+                },
+                "options_from_function": {
+                    "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
+                }
             }
         },
         "_django_form_module_function_" : {
@@ -139,9 +145,7 @@ def __createModuleTemplateConfig__(module_name, category):
                 "__async__" : False,
                 "__return__" : "_IF_RETURNS_LIKE_TEXT_",
                 "_PARAM_TO_USE_IN_VIEWS_PY_" : {
-                    "__id__" : "_HTML_FIELD_NAME_",
                     "__type__" : "_HTML_INPUT_TYPE_",
-                    "__className__" : "_HTML_INPUT_CLASS_",
                     "label_desc" : "_DESCRIPTION_LABEL_",
                     "value" : "_INPUT_VALUE_",
                     "required" : "_IF_REQUIRED_",

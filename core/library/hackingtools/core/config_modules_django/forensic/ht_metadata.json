@@ -6,9 +6,7 @@
             "__async__": false,
             "__return__": "text",
             "image_file": {
-                "__id__": "image_file",
                 "__type__": "file",
-                "__className__": "file-input",
                 "label_desc": "Browse image to extract metadata",
                 "required": true
             }

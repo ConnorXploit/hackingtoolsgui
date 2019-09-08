@@ -4,9 +4,7 @@
     "_django_form_main_function_": {
         "__function__": "test_ht_twitter_FUNCTION_NAME",
         "_HTML_FIELD_NAME_": {
-            "__id__": "_HTML_FIELD_NAME_",
             "__type__": "_HTML_INPUT_TYPE_",
-            "__className__": "_HTML_INPUT_CLASS_",
             "label_desc": "_DESCRIPTION_LABEL_",
             "required": "_IF_REQUIRED_",
             "value": "_INPUT_VALUE_",
@@ -19,9 +17,7 @@
             "__async__": false,
             "__return__": "_IF_RETURNS_LIKE_TEXT_",
             "_PARAM_TO_USE_IN_VIEWS_PY_": {
-                "__id__": "_HTML_FIELD_NAME_",
                 "__type__": "_HTML_INPUT_TYPE_",
-                "__className__": "_HTML_INPUT_CLASS_",
                 "label_desc": "_DESCRIPTION_LABEL_",
                 "value": "_INPUT_VALUE_",
                 "required": "_IF_REQUIRED_",

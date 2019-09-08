@@ -3,22 +3,17 @@
     "django_form_main_function": {
         "__function__": "test_ht_nmap_getConnectedDevices",
         "ip": {
-            "__id__": "ip",
             "__type__": "text",
-            "__className__": "form-control",
             "label_desc": "Enter an IP range to scan",
             "required": true
         },
         "close": {
-            "__id__": "close",
             "__type__": "button",
-            "__className__": "btn btn-secondary",
             "value": "Close"
         },
         "submit": {
-            "__id__": "getConnectedDevice_button",
+            "__id__": "getConnectedDevices",
             "__type__": "submit",
-            "__className__": "btn btn-primary",
             "value": "Scan",
             "loading_text": "Scanning..."
         }
@@ -29,18 +24,14 @@
             "__async__": false,
             "__return__": "text",
             "ip": {
-                "__id__": "ip",
                 "__type__": "text",
-                "__className__": "form-control",
                 "placeholder": "0.0.0.0",
                 "value": "",
                 "label_desc": "Search IP",
                 "required": true
             },
             "shodanKeyString": {
-                "__id__": "shodanKeyString",
                 "__type__": "text",
-                "__className__": "form-control",
                 "placeholder": "abcdef0123456789",
                 "value": "",
                 "label_desc": "Shodan API Key"
