@@ -122,7 +122,7 @@ def __createModuleTemplateConfig__(module_name, category):
         "__gui_label__" : "_MODULE_GUI_LABEL_",
         "_comment" : "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
         "_django_form_main_function_" : {
-            "__function__" : "test_{mod}_FUNCTION_NAME".format(mod=module_name),
+            "__function__" : "_FUNCTION_NAME_",
             "_HTML_FIELD_NAME_" : {
                 "__type__" : "_HTML_INPUT_TYPE_",
                 "label_desc" : "_DESCRIPTION_LABEL_",
@@ -141,7 +141,7 @@ def __createModuleTemplateConfig__(module_name, category):
         },
         "_django_form_module_function_" : {
             "_PUBLIC_FUNCTION_" : {
-                "__function__" : "_FUNCTION_CALLABLE_NAME_",
+                "__function__" : "_FUNCTION_NAME_",
                 "__async__" : False,
                 "__return__" : "_IF_RETURNS_LIKE_TEXT_",
                 "_PARAM_TO_USE_IN_VIEWS_PY_" : {

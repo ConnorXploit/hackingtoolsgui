@@ -1,5 +1,7 @@
 
 core/__pycache__/
+core/views_modules/__pycache__/
+core/views_modules/*/__pycache__/
 
 *.pyc
 
@@ -9,6 +11,9 @@ core/__pycache__/
 
 *.zip
 
+hackingtoolsgui/__pycache__/
+
 build/*
 dist/*
-core/library/hackingtools/modules/av_evasion/crypter/output/
+core/library/hackingtools/modules/*/*/output/
+core/migrations/*

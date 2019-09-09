@@ -2,7 +2,7 @@
     "__gui_label__": "RSA Cypher",
     "django_form_module_function": {
         "encrypt": {
-            "__function__": "test_ht_rsa_encrypt",
+            "__function__": "encrypt",
             "__async__": false,
             "__return__": "text",
             "private_key_keynumber": {
@@ -34,7 +34,7 @@
             }
         },
         "decrypt": {
-            "__function__": "test_ht_rsa_decrypt",
+            "__function__": "decrypt",
             "__async__": false,
             "__return__": "text",
             "public_key_keynumber": {
@@ -56,7 +56,7 @@
             }
         },
         "generate_keypair": {
-            "__function__": "test_ht_rsa_generate_keypair",
+            "__function__": "generate_keypair",
             "__async__": false,
             "__return__": "text",
             "prime_a": {
@@ -78,7 +78,7 @@
             }
         },
         "getRandomKeypair": {
-            "__function__": "test_ht_rsa_getRandomKeypair",
+            "__function__": "getRandomKeypair",
             "__async__": false,
             "__return__": "text",
             "prime_length": {

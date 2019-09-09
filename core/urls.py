@@ -28,12 +28,16 @@ for mod in ht.getModulesNames():
                 func_call = main_function_config['__function__']
 
                 url_path = 'modules/{mod}/{func_call}/'.format(mod=mod, func_call=func_call)
-                view_object = eval('views.{func_call}'.format(func_call=func_call.split('test_')[1]))
+                to_import = 'from .views_modules.{category} import views_{mod}'.format(category=ht.getModuleCategory(mod), mod=mod)
+                exec(to_import)
+                to_execute = 'views_{mod}.{func_call}'.format(mod=mod, func_call=func_call)
+                view_object = eval(to_execute)
 
                 urlpatterns.append(path(url_path, view_object, name=func_call))
 
-            except:
-                Logger.printMessage(message='urls.py', description='There is no View for the URL \'{mod_url}\''.format(mod_url=func_call), color=Logger.Fore.YELLOW)
+            except Exception as e:
+                Logger.printMessage(message='urls.py', description='There is no View for the URL \'{mod_url}\' Sure is well written?'.format(mod_url=func_call), is_error=True)
+                
 
     functions_config = Config.getConfig(parentKey='modules', key=mod, subkey='django_form_module_function')
     
@@ -43,9 +47,13 @@ for mod in ht.getModulesNames():
                 try:
                     func_call = functions_config[function_conf]["__function__"]
                     url_path = 'modules/{mod}/{func_call}/'.format(mod=function_conf, func_call=func_call)
-                    view_object = eval('views.{func_call}'.format(func_call=func_call.split('test_')[1]))
+                    to_import = 'from .views_modules.{category} import views_{mod}'.format(category=ht.getModuleCategory(mod), mod=mod)
+                    exec(to_import)
+                    to_execute = 'views_{mod}.{func_call}'.format(mod=mod, func_call=func_call)
+                    view_object = eval(to_execute)
 
                     urlpatterns.append(path(url_path, view_object, name=func_call))
 
                 except Exception as e:
-                    Logger.printMessage(message='urls.py', description='There is no View for the URL \'{mod_url}\''.format(mod_url=func_call), color=Logger.Fore.YELLOW)
+                    Logger.printMessage(message='urls.py', description='There is no View for the URL \'{mod_url}\' Sure is well written?'.format(mod_url=func_call), is_error=True)
+                    

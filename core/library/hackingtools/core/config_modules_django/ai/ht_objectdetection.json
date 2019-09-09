@@ -1,7 +1,7 @@
 {
     "__gui_label__": "Object Detection",
     "django_form_main_function": {
-        "__function__": "test_ht_objectdetection_predictImage",
+        "__function__": "predictImage",
         "image_file_test": {
             "__type__": "file",
             "label_desc": "File to test",
@@ -44,7 +44,7 @@
     },
     "django_form_module_function": {
         "predictImage": {
-            "__function__": "test_ht_objectdetection_predictImage",
+            "__function__": "predictImage",
             "__async__": false,
             "__return__": "text",
             "image_file_test": {
@@ -76,7 +76,7 @@
             }
         },
         "predictFromZip": {
-            "__function__": "test_ht_objectdetection_predictFromZip",
+            "__function__": "predictFromZip",
             "__async__": false,
             "__return__": "text",
             "image_file_test_zip": {
@@ -121,7 +121,7 @@
             }
         },
         "trainFromZip": {
-            "__function__": "test_ht_objectdetection_trainFromZip",
+            "__function__": "trainFromZip",
             "__async__": false,
             "__return__": "text",
             "image_models_zip": {

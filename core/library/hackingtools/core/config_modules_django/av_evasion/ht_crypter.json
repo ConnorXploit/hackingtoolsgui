@@ -1,10 +1,10 @@
 {
     "__gui_label__": "File Crypter",
     "django_form_main_function": {
-        "__function__": "test_ht_crypter_cryptFile",
+        "__function__": "cryptFile",
         "filename": {
             "__type__": "file",
-            "label_desc": "Browse file to crypt",
+            "label_desc": "Brooooowse file to crypt",
             "required": true
         },
         "iteratecount": {

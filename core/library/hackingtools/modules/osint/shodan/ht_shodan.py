@@ -84,10 +84,10 @@ class StartModule():
             Logger.printMessage(message='{error}: {error_msg}'.format(error=config['error'], error_msg=e), debug_module=True)
             return []
 
-    def shodan_search_host(self, ip):
+    def search_host(self, ip):
         res = {}
         try:
-            Logger.printMessage(message='{methodName}'.format(methodName='shodan_search_host'), description='{param}'.format(param=ip), debug_module=True)
+            Logger.printMessage(message='{methodName}'.format(methodName='search_host'), description='{param}'.format(param=ip), debug_module=True)
             host = self.api.host(ip)
 
             interesting_data = config['scan_interesting_data_keys']
@@ -104,19 +104,19 @@ class StartModule():
                                 res[posibe_data] = host[posibe_data][0]
                         else:
                             res[posibe_data] = host[posibe_data]
-                    elif host.get(posible_data):
-                        res[posibe_data] = host.get(posible_data)
+                    elif host.get(posibe_data):
+                        res[posibe_data] = host.get(posibe_data)
                 except:
                     try:
-                        if host.get(posible_data):
-                            res[posibe_data] = host.get(posible_data)
+                        if host.get(posibe_data):
+                            res[posibe_data] = host.get(posibe_data)
                     except:
                         pass
 
         except Exception as e:
             Logger.printMessage(message='Warning: {0}... Retrying in 0,5 seconds...'.format(e), color=Fore.YELLOW, debug_module=True)
             time.sleep(0.4)
-            return self.shodan_search_host(ip)
+            return self.search_host(ip)
         return res
 
     def getSSLCerts(self, ip):

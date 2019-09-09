@@ -1,7 +1,7 @@
 {
     "__gui_label__": "Unzip",
     "django_form_main_function": {
-        "__function__": "test_ht_crypter_cryptFile",
+        "__function__": "extractFile",
         "zipFile": {
             "__type__": "file",
             "label_desc": "File to extract",
@@ -15,7 +15,7 @@
     },
     "django_form_module_function": {
         "extractFile": {
-            "__function__": "test_ht_unzip_extractFile",
+            "__function__": "extractFile",
             "__async__": false,
             "__return__": "text",
             "zipFile": {

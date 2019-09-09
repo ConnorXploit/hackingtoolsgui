@@ -2,7 +2,7 @@
     "__gui_label__": "Bruteforce",
     "django_form_module_function": {
         "crackZip": {
-            "__function__": "test_ht_bruteforce_crackZip",
+            "__function__": "crackZip",
             "__async__": false,
             "__return__": "text",
             "zipFileBruteforce": {

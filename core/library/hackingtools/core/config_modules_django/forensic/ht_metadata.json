@@ -2,7 +2,7 @@
     "__gui_label__": "Metadata",
     "django_form_module_function": {
         "get_metadata_exif": {
-            "__function__": "test_ht_metadata_get_metadata_exif",
+            "__function__": "get_metadata_exif",
             "__async__": false,
             "__return__": "text",
             "image_file": {

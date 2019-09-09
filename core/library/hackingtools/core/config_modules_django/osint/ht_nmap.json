@@ -1,7 +1,7 @@
 {
     "__gui_label__": "Scan for hosts",
     "django_form_main_function": {
-        "__function__": "test_ht_nmap_getConnectedDevices",
+        "__function__": "getConnectedDevices",
         "ip": {
             "__type__": "text",
             "label_desc": "Enter an IP range to scan",
@@ -20,7 +20,7 @@
     },
     "django_form_module_function": {
         "getConnectedDevices": {
-            "__function__": "test_ht_nmap_getConnectedDevices",
+            "__function__": "getConnectedDevices",
             "__async__": false,
             "__return__": "text",
             "ip": {

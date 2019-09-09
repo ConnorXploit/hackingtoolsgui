@@ -43,6 +43,14 @@ try:
 except:
     listening_port = '8000'
 
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+
+my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
+
+public_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=public_ip, port=listening_port)
+lan_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=lan_ip, port=listening_port)
+local_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
+
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
 blacklist_extensions = config['blacklist_extensions']
@@ -369,6 +377,12 @@ def getModuleConfig(moduleName):
                 return actualConf[mod]
     return None
 
+def getModuleCategory(moduleName):
+    for m in modules_loaded:
+        if moduleName.split('ht_')[1] == m.split('.')[3].split('ht_')[1]:
+            return m.split('.')[1]
+    return None
+
 #TODO Continue documentation here
 
 # Nodes Pool Treatment
@@ -395,10 +409,22 @@ def send(node_request, functionName):
             if pool_it:
                 if pool_nodes:
                     params = dict(node_request.POST)
-                    params['pool_list'] = pool_nodes
+                    if 'pool_list' in params:
+                        if not params['pool_list']:
+                            params['pool_list'] = []
                     if not 'creator' in params:
                         params['creator'] = creator_id
                     response, creator = sendPool(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                    
+                    global nodes_pool
+                    for n in nodes_pool:
+                        # Call to inform about my services
+                        for serv in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+                            service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=n)
+                            add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv},  headers=headers)
+                            if add_me_to_theis_pool.status_code == 200:
+                                Logger.printMessage(message="send", description='Saving my service API REST into {n} - {s} '.format(n=n, s=serv), color=Fore.YELLOW)
+
                     if 'creator' in params and params['creator'] == creator_id and response:
                         return (str(response.text), False)
                     if response:
@@ -425,46 +451,47 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
     # Finally we add all pool_list nodes that aren't inside our nodes_pool to nodes_pool list
 
     global nodes_pool
-    my_public_ip = local_ip
 
-    my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=my_public_ip, port=listening_port)
+    nodes = [] # Nodes to send this call. Thay have to be nodes that haven't received this yet.
+    pool_list=[] # The pool_list is a list for getting all the nodes that have been notified by this call.
 
-    public_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=public_ip, port=listening_port)
-    lan_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=lan_ip, port=listening_port)
-    local_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
+    mine_function_call = False
 
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
-    nodes = []
-    pool_list=[]
     try:
         pool_list = params['pool_list']
+        for service in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+            if service in pool_list:
+                mine_function_call = True
+                Logger.printMessage(message='sendPool', description='It\'s my own call', color=Fore.YELLOW)
+                return (None, None)
     except:
         pass
     
-    # Get nodes aren't notified into nodes
-    if nodes_pool:
-        pool_list = pool_list + list(set(nodes_pool) - set(pool_list))
-    else:
+    nodes = nodes_pool
+    if pool_list:
+        nodes = list(set(nodes_pool) - set(pool_list))
+
+    # Get all nodes in pool_list as known for us if we don't have any
+    if not nodes_pool:
         nodes_pool = pool_list
 
-    # I save pool_list items i don't have yet on my pools 
+    # I save pool_list items i don't have yet on my pools
+
     nodes_pool = nodes_pool + list(set(pool_list) - set(nodes_pool))
+
+    if pool_list:
+        for service in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+            if service in pool_list:
+                pool_list.remove(service)
 
     # Remove any posible service with my public, local or lan IP
     if nodes_pool:
         for service in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
-            try: 
-                nodes_pool.remove(service) 
-                pool_list.remove(service)
-            except: 
-                pass
-
-    nodes = pool_list
-
-    nodes_pool = nodes
+            if service in nodes_pool:
+                nodes_pool.remove(service)
 
     if len(nodes) > 0:
-        if not my_service_api in pool_list:
+        if not mine_function_call and (not my_service_api in pool_list and not public_ip_full in pool_list and not lan_ip_full in pool_list and not local_ip_full in pool_list):
             for node in nodes:
                 try:
                     if not node in (public_ip_full, lan_ip_full, local_ip_full):
@@ -472,6 +499,9 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
 
                         params['pool_list'] = pool_list
                         try:
+                            params['pool_list'].append(public_ip_full)
+                            params['pool_list'].append(lan_ip_full)
+                            params['pool_list'].append(local_ip_full)
                             params['pool_list'].append(my_service_api)
                             params['pool_list'].remove(node)
                         except:
@@ -482,9 +512,12 @@ def sendPool(creator, function_api_call='', params={}, files=[]):
                         r = requests.post(node_call, files=files, data=params, headers=headers)
 
                         if r.status_code == 200:
-                            Logger.printMessage(message='sendPool', description=('Solved by', node, 'Pool List', pool_list), color=Fore.YELLOW)
-                            Logger.printMessage(message='sendPool', description=('Solved by', node, 'Nodes Pool', getPoolNodes()), color=Fore.YELLOW)
+                            for n in pool_list:
+                                if not n in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+                                    addNodeToPool(n)
+                            Logger.printMessage(message='sendPool', description=('Solved by {n}'.format(n=node)))
                             return (r, params['creator'])
+
                 except Exception as e:
                     Logger.printMessage(message='sendPool', description=str(e), color=Fore.YELLOW)
         else:
@@ -499,7 +532,7 @@ def getPoolNodes():
     return nodes_pool
 
 def removeNodeFromPool(node_ip):
-    
+    global nodes_pool
     if node_ip in nodes_pool:
         nodes_pool.remove(node_ip)
 
@@ -650,7 +683,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     submit_id = ''
 
     if '__function__' in m_form:
-        submit_id = 'submit_{name}'.format(name=m_form['__function__'])
+        submit_id = 'submit_{mod}_{name}'.format(mod=mod, name=m_form['__function__'])
 
     for m in m_form:
         temp_m_form = m_form
@@ -792,9 +825,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
             async_script += "}' }, "
             async_script += "cache: false, contentType: false, processData: false, "
             if config_extrasubkey:
-                async_script += "url : '/modules/{mod}/{functionName}/', type : 'POST', async: true, data: $('#form_test_{mod}_{functionName}').serializeArray(), ".format(mod=mod, functionName=config_extrasubkey)
+                async_script += "url : '/modules/{mod}/{functionName}/', type : 'POST', async: true, data: $('#form_{mod}_{functionName}').serializeArray(), ".format(mod=mod, functionName=config_extrasubkey)
             else:
-                async_script += "url : '/modules/{mod}/test_{mod}/', type : 'POST', async: true, data: $('#form_test_{mod}').serializeArray(), ".format(mod=mod)
+                async_script += "url : '/modules/{mod}/{mod}/', type : 'POST', async: true, data: $('#form_{mod}').serializeArray(), ".format(mod=mod)
             async_script += "success : function(res) {"
             async_script += "if('data' in res){"
             async_script += "alert(res.data)"
@@ -854,52 +887,55 @@ def __importModules__():
         for modu in modules:
             for submod in modules[modu]:
                 for files in modules[modu][submod]:
-                    module_name = modules[modu][submod][files][0].split(".")[0]
-                    #Logger.printMessage(message='{category}'.format(category=submod), description=module_name, debug_module=True) 
-                    module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
-                    module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
                     try:
-                        exec(module_import_string)
-                        #globals()[module_name] = importlib.import_module(module_import_string)
-                        module_className = __classNameFromModule__(eval(module_name))
-                        module_functions = __methodsFromModule__(eval(module_name))
-                        #Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
-                        bar.update(1)
-                        if len(module_functions) > 0:
-                            modules_loaded[module_import_string_no_from] = {}
-                            for mod_func in module_functions:
-                                function = '{module}.{callClass}().{function}'.format(module=module_name, callClass=default_class_name_for_all, function=mod_func)
+                        module_name = modules[modu][submod][files][0].split(".")[0]
+                        #Logger.printMessage(message='{category}'.format(category=submod), description=module_name, debug_module=True) 
+                        module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
+                        module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
+                        try:
+                            exec(module_import_string)
+                            #globals()[module_name] = importlib.import_module(module_import_string)
+                            module_className = __classNameFromModule__(eval(module_name))
+                            module_functions = __methodsFromModule__(eval(module_name))
+                            #Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
+                            bar.update(1)
+                            if len(module_functions) > 0:
+                                modules_loaded[module_import_string_no_from] = {}
+                                for mod_func in module_functions:
+                                    function = '{module}.{callClass}().{function}'.format(module=module_name, callClass=default_class_name_for_all, function=mod_func)
 
+                                    try:
+                                        params_func = inspect.getfullargspec(eval(function))[0]
+                                    except:
+                                        pass
+
+                                    clean_params = []
+                                    if params_func:
+                                        for param_func in params_func:
+                                            if param_func not in function_param_exclude:
+                                                clean_params.append(param_func)
+
+                                    modules_loaded[module_import_string_no_from][mod_func] = {}
+
+                                    if clean_params and len(clean_params) > 0:
+                                        modules_loaded[module_import_string_no_from][mod_func]['params'] = clean_params
+                                    else:
+                                        modules_loaded[module_import_string_no_from][mod_func]['params'] = False
+                            else:
+                                modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
+                        except Exception as e:
+                            if 'No module named' in str(e):
                                 try:
-                                    params_func = inspect.getfullargspec(eval(function))[0]
+                                    Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=str(e).split("'")[1]), color=Fore.YELLOW)
+                                    pipmain(['install', '--user', str(e).split("'")[1]])
                                 except:
                                     pass
 
-                                clean_params = []
-                                if params_func:
-                                    for param_func in params_func:
-                                        if param_func not in function_param_exclude:
-                                            clean_params.append(param_func)
-
-                                modules_loaded[module_import_string_no_from][mod_func] = {}
-
-                                if clean_params and len(clean_params) > 0:
-                                    modules_loaded[module_import_string_no_from][mod_func]['params'] = clean_params
-                                else:
-                                    modules_loaded[module_import_string_no_from][mod_func]['params'] = False
-                        else:
-                            modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
+                            Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                            raise
                     except Exception as e:
-                        if 'No module named' in str(e):
-                            try:
-                                Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=str(e).split("'")[1]), color=Fore.YELLOW)
-                                pipmain(['install', '--user', str(e).split("'")[1]])
-                            except:
-                                pass
-
-                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
-                        raise
-
+                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                        
 def getModules():
     data = []
     for mods in modules_loaded:

@@ -1,7 +1,7 @@
 {
     "__gui_label__": "Shodan",
     "django_form_main_function": {
-        "__function__": "test_ht_shodan_getIPListfromServices",
+        "__function__": "getIPListfromServices",
         "service_name": {
             "__type__": "text",
             "placeholder": "apache",
@@ -29,7 +29,7 @@
     },
     "django_form_module_function": {
         "getIPListfromServices": {
-            "__function__": "test_ht_shodan_getIPListfromServices",
+            "__function__": "getIPListfromServices",
             "__async__": false,
             "__return__": "text",
             "service_name": {
@@ -44,6 +44,18 @@
                 "placeholder": "abcdef0123456789",
                 "value": "",
                 "label_desc": "Shodan API Key"
+            }
+        },
+        "search_host": {
+            "__function__": "search_host",
+            "__async__": false,
+            "__return__": "text",
+            "service_ip": {
+                "__type__": "text",
+                "placeholder": "8.8.8.8",
+                "value": "",
+                "label_desc": "Search for ip info",
+                "required": true
             }
         }
     }
