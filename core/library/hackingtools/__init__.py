@@ -27,12 +27,13 @@ modules_loaded = {}
 WANT_TO_BE_IN_POOL = Config.getConfig(parentKey='core', key='WANT_TO_BE_IN_POOL')
 if WANT_TO_BE_IN_POOL:
     from .core import Pool
+else:
+    Logger.printMessage('Pool not loaded', 'Change config or execute ht.Pool.switchPool() when you want it', color=Fore.YELLOW)
 
 # If it's Django, import it's Functions
 amidjango = Utils.amIdjango(__name__)
 if amidjango:
     from .core import DjangoFunctions
-    Logger.printMessage('HackingTools Initialize', 'Loaded Django Functions', debug_module=True)
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -219,29 +220,6 @@ def getModuleCategory(moduleName):
     return None
 
 #TODO Continue documentation here
-
-# def executeCommand(command):
-#     # In tests and not working yet
-#     try:
-#         if '=' in command:
-#             vari, _ = command.split('=')[0]
-#             global_var = 'global {vari}'.format(vari=vari)
-#             exec(global_var) 
-#         return exec(command)
-#     except Exception as e:
-#         return str(e)
-
-# def startCommandLine():
-#     # In tests and not working yet
-#     Logger.printMessage(message='startCommandLine', description='Starting iteraction with command line into HackingTools', debug_module=True)
-#     while True:
-#         command = str(input('> '))
-#         res = executeCommand(command) if command != 'exit' else None
-#         if not res and command == 'exit':
-#             Logger.printMessage(message='startCommandLine', description='Exiting interactive console', debug_module=True)
-#             break
-#         print('[RESP] : {res}'.format(res=res))
-
 
 # Import Modules
 

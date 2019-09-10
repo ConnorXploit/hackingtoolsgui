@@ -1,4 +1,4 @@
-from core.library import hackingtools as ht
+from .. import __init__ as ht
 from . import Config, Logger, Utils
 from django.urls import resolve
 from colorama import Fore
