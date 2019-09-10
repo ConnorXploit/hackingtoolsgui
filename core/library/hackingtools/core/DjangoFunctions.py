@@ -1,5 +1,7 @@
 from core.library import hackingtools as ht
 from . import Config, Logger
+Logger.setDebugModule(True)
+
 from colorama import Fore
 import os
 

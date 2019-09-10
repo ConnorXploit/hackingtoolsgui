@@ -56,7 +56,7 @@ for ip in shodan.getIPListfromServices(option):
 for host in target.hosts:
     # Add to host's data the response of the call to the shodan function.
     # In this case, we get some public info of that IP
-    host.addScanResult(shodan.shodan_search_host(host.ip))
+    host.addScanResult(shodan.search_host(host.ip))
 
 [host.__str__() for host in target.hosts]
 

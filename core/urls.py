@@ -2,6 +2,10 @@ from django.urls import path, include
 from . import views
 
 import hackingtools as ht
+
+ht.setDebugCore(True)
+ht.setDebugModule(True)
+
 from hackingtools.core import Config, Logger
 
 urlpatterns = [
