@@ -49,16 +49,16 @@ for ip in shodan.getIPListfromServices(option):
     if not target.existsHostWithIp(ip):
         host = Host(1, ip)
         target.addHost(host)
-        host.addScanResult(shodan.shodan_search_host(host.ip))
-        print(host.__str__())
     else:
         print('IP Repeated... Host registered yet on the Target - {i}'.format(i=ip))
 
 # For all the host we have:
-# for host in target.hosts:
-#     # Add to host's data the response of the call to the shodan function.
-#     # In this case, we get some public info of that IP
-#     host.addScanResult(shodan.shodan_search_host(host.ip))
+for host in target.hosts:
+    # Add to host's data the response of the call to the shodan function.
+    # In this case, we get some public info of that IP
+    host.addScanResult(shodan.shodan_search_host(host.ip))
+
+[host.__str__() for host in target.hosts]
 
 # Import nmap module
 # nmap = ht.getModule('ht_nmap')
@@ -90,13 +90,13 @@ for ip in shodan.getIPListfromServices(option):
 # zipp = ht.getModule('unzip')
 # print(zipp.extractFile(input('File path: '), input('Password:' )))
 
-shodan = ht.getModule('ht_shodan')
-nmap = ht.getModule('nmap')
+# shodan = ht.getModule('ht_shodan')
+# nmap = ht.getModule('nmap')
 
-shodan.help()
+# shodan.help()
 
-option = input('Dame un servicio: ')
+# option = input('Dame un servicio: ')
 
-for ip in shodan.getIPListfromServices(option):
-    print(shodan.shodan_search_host(ip))
-    print(nmap.getDevicePorts(ip))
+# for ip in shodan.getIPListfromServices(option):
+#     print(shodan.shodan_search_host(ip))
+#     print(nmap.getDevicePorts(ip))

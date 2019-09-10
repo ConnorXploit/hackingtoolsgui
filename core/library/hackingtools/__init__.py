@@ -146,6 +146,13 @@ def getModulesFullConfig():
             modules_conf[module] = module_conf
     return modules_conf
 
+def getCategories():
+    data = []
+    for mods in modules_loaded:
+        if mods not in data:
+            data.append(mods.split('.')[3])
+    return data
+
 def setDebugCore(on=True):
     """Set Debug Log from Core to on/off
 
@@ -209,6 +216,12 @@ def getModuleConfig(moduleName):
             if moduleName in mod.split('.')[-1]:
                 return actualConf[mod]
     return None
+                        
+def getModules():
+    data = []
+    for mods in modules_loaded:
+        data.append('modules.{name}.{classInit}()'.format(name=mods.split('.')[-1], classInit=default_class_name_for_all))
+    return data
 
 def getModulesConfig():
     return [{m:Config.getConfig(parentKey='modules', key=m.split('.')[-1])} for m in modules_loaded]
@@ -218,6 +231,48 @@ def getModuleCategory(moduleName):
         if moduleName.split('ht_')[1] == m.split('.')[3].split('ht_')[1]:
             return m.split('.')[1]
     return None
+
+def createModule(moduleName, category):
+    """
+    Iniciamos con el comando anterior la instancia del modulo
+    """
+    Logger.printMessage('Creating {moduleName} on {category}'.format(moduleName=moduleName, category=category), debug_module=True)
+    moduleName = moduleName.replace(" ", "_").lower()
+    category = category.lower()
+    categories = getCategories()
+    if category not in categories:
+        createCategory(category)
+    dir_actual = os.path.dirname(__file__)
+    if not os.path.isdir('{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName)):
+        os.makedirs('{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName))
+    if not os.path.exists('{dir}/modules/{category}/__init__.py'.format(dir=dir_actual, category=category)):
+        f = open('{dir}/modules/{category}/__init__.py'.format(dir=dir_actual, category=category), "w")
+        f.write('')
+    if not os.path.exists('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
+        f = open('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
+        f.write(default_template_modules_ht.format(moduleName=moduleName))
+    if not os.path.exists('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
+        f = open('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
+        f.write('')
+    # temp_path, hackingtools_dir = os.path.split(dir_actual)
+    # temp_path, library_dir = os.path.split(temp_path)
+    # urls_file = os.path.join(temp_path, 'urls.py')
+    # insert_url_django(urls_file, moduleName) # TODO edit urls for auto URLs when creating module
+    # print("{msg}".format(msg=urls_file))
+    # Reload variables on client side
+    #global hackingtools
+    #reload(hackingtools)
+    Config.__createModuleTemplateConfig__(moduleName, category)
+    trying_something = __importModules__()
+    return
+
+def createCategory(categoryName):
+    categoryName = categoryName.lower()
+    categories = getCategories()
+    dir_actual = os.path.dirname(__file__)
+    if categoryName not in categories:
+        if not os.path.isdir('{dir}/modules/{category}/'.format(dir=dir_actual, category=categoryName)):
+            os.makedirs('{dir}/modules/{category}'.format(dir=dir_actual, category=categoryName))
 
 #TODO Continue documentation here
 
@@ -390,64 +445,5 @@ def __importModules__():
                             raise
                     except Exception as e:
                         Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
-                        
-def getModules():
-    data = []
-    for mods in modules_loaded:
-        data.append('modules.{name}.{classInit}()'.format(name=mods.split('.')[-1], classInit=default_class_name_for_all))
-    return data
-
-def createModule(moduleName, category):
-    """
-    Iniciamos con el comando anterior la instancia del modulo
-    """
-    Logger.printMessage('Creating {moduleName} on {category}'.format(moduleName=moduleName, category=category), debug_module=True)
-    moduleName = moduleName.replace(" ", "_").lower()
-    category = category.lower()
-    categories = getCategories()
-    if category not in categories:
-        createCategory(category)
-    dir_actual = os.path.dirname(__file__)
-    if not os.path.isdir('{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName)):
-        os.makedirs('{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName))
-    if not os.path.exists('{dir}/modules/{category}/__init__.py'.format(dir=dir_actual, category=category)):
-        f = open('{dir}/modules/{category}/__init__.py'.format(dir=dir_actual, category=category), "w")
-        f.write('')
-    if not os.path.exists('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
-        f = open('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
-        f.write(default_template_modules_ht.format(moduleName=moduleName))
-    if not os.path.exists('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
-        f = open('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
-        f.write('')
-    # temp_path, hackingtools_dir = os.path.split(dir_actual)
-    # temp_path, library_dir = os.path.split(temp_path)
-    # urls_file = os.path.join(temp_path, 'urls.py')
-    # insert_url_django(urls_file, moduleName) # TODO edit urls for auto URLs when creating module
-    # print("{msg}".format(msg=urls_file))
-    # Reload variables on client side
-    global hackingtools
-    #reload(hackingtools)
-    Config.__createModuleTemplateConfig__(moduleName, category)
-    trying_something = __importModules__()
-    return
-
-def insert_url_django(url, name):
-    print(url)
-    print(name)
-
-def createCategory(categoryName):
-    categoryName = categoryName.lower()
-    categories = getCategories()
-    dir_actual = os.path.dirname(__file__)
-    if categoryName not in categories:
-        if not os.path.isdir('{dir}/modules/{category}/'.format(dir=dir_actual, category=categoryName)):
-            os.makedirs('{dir}/modules/{category}'.format(dir=dir_actual, category=categoryName))
-
-def getCategories():
-    data = []
-    for mods in modules_loaded:
-        if mods not in data:
-            data.append(mods.split('.')[3])
-    return data
 
 __importModules__()
