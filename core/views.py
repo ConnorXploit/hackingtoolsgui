@@ -22,12 +22,13 @@ ht_data = {}
 def load_data():
     global ht_data
     modules_and_params = ht.getModulesJSON()
-    modules_forms = ht.__getModulesDjangoForms__()
-    modules_forms_modal = ht.__getModulesDjangoFormsModal__()
+    modules_forms = ht.DjangoFunctions.__getModulesDjangoForms__()
+    modules_forms_modal = ht.DjangoFunctions.__getModulesDjangoFormsModal__()
     modules_config = ht.getModulesConfig()
-    modules_config_treeview = ht.__getModulesConfig_treeView__()
-    modules_functions_modals = ht.getModulesModalTests()
-    modules_functions_calls_console_string = ht.getModulesFunctionsCalls()
+    modules_config_treeview = ht.DjangoFunctions.__getModulesConfig_treeView__()
+    # TODO 
+    modules_functions_modals = ht.DjangoFunctions.getModulesModalTests()
+    modules_functions_calls_console_string = ht.DjangoFunctions.getModulesFunctionsCalls()
     modules_all = {}
     categories = []
     for mod in modules_and_params:
@@ -35,8 +36,8 @@ def load_data():
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = ht.getModulesNames()
-    pool_list = ht.getPoolNodes()
-    my_node_id_pool = ht.MY_NODE_ID
+    pool_list = ht.Pool.getPoolNodes()
+    my_node_id_pool = ht.Pool.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
     ht_data =  { 
         'modules':modules_names, 
@@ -86,18 +87,18 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
-    response, creator, = ht.send(request, functionName)
+    response, creator, = ht.Pool.send(request, functionName)
     if response:
-        if creator == ht.MY_NODE_ID:
+        if creator == ht.Pool.MY_NODE_ID:
             if 'nodes_pool' in response:
                 for n in response['nodes_pool']:
-                    ht.addNodeToPool(n)
+                    ht.Pool.addNodeToPool(n)
             return response, False
         return response, True
     return None, None
 
 def switchPool(request):
-    ht.switchPool()
+    ht.Pool.switchPool()
     data = {
         'status' : ht.WANT_TO_BE_IN_POOL
     }
@@ -143,16 +144,16 @@ def add_pool_node(request):
     try:
         if request.POST:
             pool_node = request.POST.get('pool_ip')
-        ht.addNodeToPool(pool_node)
+        ht.Pool.addNodeToPool(pool_node)
         if request.POST.get('is_async', False):
             data = {
-                'data' : ht.getPoolNodes()
+                'data' : ht.Pool.getPoolNodes()
             }
             return JsonResponse(data)
-        return renderMainPanel(request=request, popup_text='\n'.join(ht.getPoolNodes()))
+        return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
     except:
         return renderMainPanel(request=request, popup_text=this_conf['error'])
-    return renderMainPanel(request=request, popup_text='\n'.join(ht.getPoolNodes()))
+    return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
 
 def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=False, simbolsAll=False):
     used_alphabet = 'numeric'

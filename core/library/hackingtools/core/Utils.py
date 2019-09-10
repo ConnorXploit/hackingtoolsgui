@@ -92,6 +92,7 @@ def getValidDictNoEmptyKeys(data):
                 final_data[d] = getValidDictNoEmptyKeys(data[d])
     return final_data
 
+# Network
 def getMyPublicIP():
     try:
         return requests.get('https://api.ipify.org').text
@@ -104,8 +105,13 @@ def getMyLanIP():
 def getMyLocalIP():
     return '127.0.0.1'
 
+# Others
 def getTime():
     return datetime.utcnow().strftime(config_logger['log_print_date_format'])[:-3]
+
+def amIdjango(fileCall):
+    # Used by core on init for initialaizing Django Functions if needed
+    return True if 'core.library.hackingtools' == fileCall else False
 
 # Maths
 def euclides(a, b):
