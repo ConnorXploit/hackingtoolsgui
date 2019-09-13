@@ -1,11 +1,44 @@
 from core.library import hackingtools as ht
-from . import Config, Logger
+from . import Config, Logger, Utils
 Logger.setDebugModule(True)
 
 from colorama import Fore
 import os
 
 config_locales = Config.getConfig(parentKey='core', key='locales')
+
+def createModuleFunctionView(moduleName, functionName):
+    Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_module=True)
+    # Creates the JSON config for the view modal form
+    category = ht.getModuleCategory(moduleName)
+    functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
+    moduleViewConfig = {}
+
+    moduleViewConfig['__function__'] = functionName
+    moduleViewConfig['__async__'] = False
+    if Utils.doesFunctionContainsExplicitReturn(Utils.getFunctionFullCall(moduleName, functionName)):
+        moduleViewConfig['__return__'] = 'text'
+    else:
+        moduleViewConfig['__return__'] = False
+    if functionParams:
+        if 'params' in functionParams:
+            for param in functionParams['params']:
+                moduleViewConfig[param] = {}
+                moduleViewConfig[param]['__type__'] = 'text'
+                moduleViewConfig[param]['label_desc'] = param
+                moduleViewConfig[param]['placeholder'] = param
+                moduleViewConfig[param]['required'] = True
+
+        if 'defaults' in functionParams:
+            for param in functionParams['defaults']:
+                moduleViewConfig[param] = {}
+                moduleViewConfig[param]['__type__'] = Utils.getValueType(functionParams['defaults'][param])
+                moduleViewConfig[param]['label_desc'] = param
+                moduleViewConfig[param]['placeholder'] = param
+                moduleViewConfig[param]['value'] = functionParams['defaults'][param]
+
+    Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
+    return {functionName : moduleViewConfig}
 
 def getModulesGuiNames():
     """Return's an Array with the Label for GUI for that module
@@ -91,6 +124,7 @@ def __getModulesConfig_treeView__():
 global __treeview_counter__
 __treeview_counter__ = 0
 
+# ! Slows down the first load of HT in Django or the calls to "home"
 def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
     """Loads the GUI Treeview with the config of all the modules loaded
 

@@ -1,13 +1,18 @@
+import hackingtools as ht
 from . import Config, Logger, Utils
 config = Config.getConfig(parentKey='core', key='Utils')
 config_logger = Config.getConfig(parentKey='core', key='Logger')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
+
+function_param_exclude = Config.getConfig(parentKey='core', key='import_modules', subkey='function_param_exclude')
+default_class_name_for_all = Config.getConfig(parentKey='core', key='import_modules', subkey='default_class_name_for_all')  
+
 from colorama import Fore
 
 import random
 import requests
 import base64
-import os
+import os, inspect, ast
 import socket
 from itertools import product 
 
@@ -91,6 +96,70 @@ def getValidDictNoEmptyKeys(data):
             else:
                 final_data[d] = getValidDictNoEmptyKeys(data[d])
     return final_data
+
+def getFunctionFullCall(moduleName, functionName):
+    return 'ht.modules.{category}.{modDir}.{module}.{callClass}().{function}'.format(category=ht.getModuleCategory(moduleName), modDir=moduleName.replace('ht_', ''), module=moduleName, callClass=default_class_name_for_all, function=functionName)
+
+def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
+    params_func = None
+    function = getFunctionFullCall(moduleName=moduleName, functionName=functionName)
+    try:
+        params_func = inspect.getfullargspec(eval(function))[0]
+        params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
+
+        args, varargs, keywords, defaults = inspect.getargspec(eval(function))
+        args = [param for param in args if not param in function_param_exclude] if args else []
+
+        if defaults:
+            new_params_func = params_func[:-len(defaults)]
+            args_defaults = dict(zip(params_func[-len(defaults)+1:], defaults))
+
+        if i_want_list:
+            if defaults:
+                # urls.py
+                return new_params_func + [i for i in args_defaults.keys()]
+
+            return {"params":params_func}
+
+        if defaults:
+            return {"params":new_params_func,"defaults": args_defaults}
+
+        return {"params":params_func}
+    except Exception as e:
+        pass
+    return []
+
+def getValueType(value):
+    try:
+        if isinstance(eval(value), int):
+            return 'number'
+    except:
+        pass
+    try:
+        if isinstance(eval(value), list):
+            return 'select'
+    except:
+        pass
+    try:
+        if isinstance(eval(value), bool):
+            return 'checkbox'
+    except:
+        pass
+    try:
+        if isinstance(eval(value), str):
+            if '.' in value and len(value.split('.')[1] in range(1,4)):
+                return 'file'
+            if 'pass' in value or 'password' in value:
+                return 'password'
+            if 'data' in value:
+                return 'textarea'
+            return 'text'
+    except:
+        pass
+    return 'text'
+
+def doesFunctionContainsExplicitReturn(functionCall):
+    return True if 'return' in inspect.getsource(eval(functionCall)) else False
 
 # Network
 def getMyPublicIP():

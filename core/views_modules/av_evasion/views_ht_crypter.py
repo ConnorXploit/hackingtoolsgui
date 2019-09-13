@@ -78,4 +78,3 @@ def cryptFile(request):
 
     return renderMainPanel(request=request)
 
-# End ht_crypter

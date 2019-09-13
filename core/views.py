@@ -25,7 +25,9 @@ def load_data():
     modules_forms = ht.DjangoFunctions.__getModulesDjangoForms__()
     modules_forms_modal = ht.DjangoFunctions.__getModulesDjangoFormsModal__()
     modules_config = ht.getModulesConfig()
-    modules_config_treeview = ht.DjangoFunctions.__getModulesConfig_treeView__()
+    # ! Slows down a lot the charge of Django home view
+    #modules_config_treeview = ht.DjangoFunctions.__getModulesConfig_treeView__()
+    modules_config_treeview = {}
     # TODO 
     modules_functions_modals = ht.DjangoFunctions.getModulesModalTests()
     modules_functions_calls_console_string = ht.DjangoFunctions.getModulesFunctionsCalls()
@@ -73,7 +75,7 @@ def documentation(request, module_name=''):
     if module_name:
         for mod in ht.modules_loaded:
             if module_name == mod.split('.')[-1]:
-                doc_mod = '{documents_dir}/{c}/{b}/{a}.html'.format(documents_dir=this_conf['documents_dir'], c=mod.split('.')[-3], b=module_name.split('ht_')[1], a=module_name)
+                doc_mod = '{documents_dir}/{c}/{b}/{a}.html'.format(documents_dir=this_conf['documents_dir'], c=mod.split('.')[-3], b=module_name.replace('ht_', ''), a=module_name)
                 categories = []
                 for mod in ht.getModulesJSON():
                     if not mod.split('.')[1] in categories:

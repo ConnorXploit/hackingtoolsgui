@@ -87,6 +87,46 @@ def __save_config__(new_conf, config_file='config.json'):
     with open(os.path.join(os.path.dirname(__file__) , config_file), 'w', encoding='utf8') as outfile:  
         json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
+# === __save_config__ ===
+def __save_django_module_config__(new_conf, category, moduleName, functionName):
+    """
+    Save configuration passed as parameter
+    to this function. This, writes into 
+    your module view config ht_moduleName.json
+    
+    Arguments
+    ---------
+        new_conf : List
+            
+            The List with the configuration you 
+            want to dump onto the file
+    """
+    config_file='ht_{moduleName}.json'.format(moduleName=moduleName.replace('ht_', ''))
+    module_views_config_file = os.path.join(os.path.dirname(__file__) , 'config_modules_django', category, config_file)
+    
+    config = {}
+    config['__gui_label__'] = moduleName
+    config['django_form_module_function'] = {}
+
+    if os.path.isfile(module_views_config_file):
+        with open(module_views_config_file, 'r', encoding='utf8') as outfile:
+            if outfile:
+                config = json.load(outfile)
+
+    if '_django_form_module_function_' in config:
+        del(config['_django_form_module_function_'])
+
+    if not 'django_form_module_function' in config:
+        config['django_form_module_function'] = {}
+    config['django_form_module_function'][functionName] = new_conf
+
+    file_path, _ = os.path.split(module_views_config_file)
+    if not os.path.isdir(file_path):
+        os.mkdir(file_path)
+
+    with open(module_views_config_file, 'w', encoding='utf8') as outfile:  
+        json.dump(config, outfile, indent=4, ensure_ascii=False)
+
 # === __createModuleTemplateConfig__ ===
 def __createModuleTemplateConfig__(module_name, category):
     """

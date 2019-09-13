@@ -43,7 +43,6 @@ ignore_files = config['ignore_files']
 ignore_folders = config['ignore_folders']
 class_name_starts_with_modules = config['class_name_starts_with_modules']
 function_name_starts_with_modules = config['function_name_starts_with_modules']
-function_param_exclude = config['function_param_exclude']
 default_class_name_for_all = config['default_class_name_for_all']
 
 default_template_modules_ht = config['default_template_modules_ht']
@@ -228,7 +227,7 @@ def getModulesConfig():
 
 def getModuleCategory(moduleName):
     for m in modules_loaded:
-        if moduleName.split('ht_')[1] == m.split('.')[3].split('ht_')[1]:
+        if moduleName.replace('ht_', '') == m.split('.')[3].replace('ht_', ''):
             return m.split('.')[1]
     return None
 
@@ -412,25 +411,11 @@ def __importModules__():
                             if len(module_functions) > 0:
                                 modules_loaded[module_import_string_no_from] = {}
                                 for mod_func in module_functions:
-                                    function = '{module}.{callClass}().{function}'.format(module=module_name, callClass=default_class_name_for_all, function=mod_func)
-
-                                    try:
-                                        params_func = inspect.getfullargspec(eval(function))[0]
-                                    except:
-                                        pass
-
-                                    clean_params = []
-                                    if params_func:
-                                        for param_func in params_func:
-                                            if param_func not in function_param_exclude:
-                                                clean_params.append(param_func)
+                                    functionParams = Utils.getFunctionsParams(category=submod, moduleName=module_name, functionName=mod_func, i_want_list=True)
 
                                     modules_loaded[module_import_string_no_from][mod_func] = {}
+                                    modules_loaded[module_import_string_no_from][mod_func]['params'] = functionParams if len(functionParams) > 0 else False
 
-                                    if clean_params and len(clean_params) > 0:
-                                        modules_loaded[module_import_string_no_from][mod_func]['params'] = clean_params
-                                    else:
-                                        modules_loaded[module_import_string_no_from][mod_func]['params'] = False
                             else:
                                 modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
                         except Exception as e:
@@ -445,5 +430,6 @@ def __importModules__():
                             raise
                     except Exception as e:
                         Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                        raise
 
 __importModules__()
