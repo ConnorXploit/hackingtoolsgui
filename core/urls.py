@@ -37,10 +37,8 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger
 """
 
 default_view_function_init = """
-
 def {funcName}(request):
     return renderMainPanel(request=request, popup_text='Tried and working {funcName} function. It works. Lets do something with this. Edit in "views_ht_{mod}" file')
-
 """
 
 lastly_added_func = ["help"]
