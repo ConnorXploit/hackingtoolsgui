@@ -32,3 +32,14 @@ def get_metadata_exif(request):
             return renderMainPanel(request=request, popup_text=str(json.dumps(data)))
     else:
         return renderMainPanel(request=request)
+
+def get_pdf_exif(request):
+	pdf_file = request.POST.get('pdf_file')
+	result = ht.getModule('ht_metadata').get_pdf_exif( pdf_file=pdf_file )
+	return renderMainPanel(request=request, popup_text=result)
+
+def get_image_exif(request):
+    f = request.POST.get('filename')
+    filename, location, uploaded_file_url = saveFileOutput(f, "metadata", "forensic")
+    result = ht.getModule('ht_metadata').get_image_exif( filename=uploaded_file_url )
+    return renderMainPanel(request=request, popup_text=result)

@@ -57,6 +57,62 @@
                 "label_desc": "Search for ip info",
                 "required": true
             }
+        },
+        "getSSLCerts": {
+            "__function__": "getSSLCerts",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
+            }
+        },
+        "queryShodan": {
+            "__function__": "queryShodan",
+            "__async__": false,
+            "__return__": "text",
+            "category": {
+                "__type__": "text",
+                "label_desc": "category",
+                "placeholder": "category",
+                "value": ""
+            },
+            "osintDays": {
+                "__type__": "number",
+                "label_desc": "osintDays",
+                "placeholder": "osintDays",
+                "value": 100
+            }
+        },
+        "searchFromConfig": {
+            "__function__": "searchFromConfig",
+            "__async__": false,
+            "__return__": "text",
+            "search": {
+                "__type__": "text",
+                "label_desc": "search",
+                "placeholder": "search",
+                "value": ""
+            },
+            "keyword": {
+                "__type__": "text",
+                "label_desc": "keyword",
+                "placeholder": "keyword",
+                "value": ""
+            }
+        },
+        "setApi": {
+            "__function__": "setApi",
+            "__async__": false,
+            "__return__": "",
+            "shodanKeyString": {
+                "__type__": "text",
+                "label_desc": "shodanKeyString",
+                "placeholder": "shodanKeyString",
+                "value": null
+            }
         }
     }
 }

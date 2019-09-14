@@ -6,36 +6,35 @@ from hackingtools.core import Logger, Config
 import time
 from colorama import init, Fore
 import os
+import datetime
 
 config = Config.getConfig(parentKey='modules', key='ht_shodan')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 class StartModule():
 
-    api = None
-
     def __init__(self):
-        self.settingApi()
+        self.setApi()
 
     def help(self):
         Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_shodan'))
         
-    def settingApi(self, shodanKeyString=None):
+    def setApi(self, shodanKeyString=None):
         try:
             if not shodanKeyString:
                 shodanKeyString = config['api_key']
-            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=shodanKeyString, debug_core=True)
+            Logger.printMessage(message='{methodName}'.format(methodName='setApi'), description=shodanKeyString, debug_core=True)
             self.api = Shodan(shodanKeyString)
         except:
-            Logger.printMessage(message='{methodName}'.format(methodName='settingApi'), description=config['bad_api_key_error'], debug_core=True, is_error=True) 
+            Logger.printMessage(message='{methodName}'.format(methodName='setApi'), description=config['bad_api_key_error'], debug_core=True, is_error=True) 
 
     def getIPListfromServices(self, serviceName, shodanKeyString=None):
         Logger.printMessage(message='{methodName}'.format(methodName='getIPListfromServices'), description='{param}'.format(param=serviceName), debug_module=True)
         if not self.api and not shodanKeyString:
-            self.settingApi(Config.getApiKey('shodan_api'))
+            self.setApi(Config.getApiKey('shodan_api'))
         if self.api or shodanKeyString:
             if shodanKeyString:
-                self.settingApi(shodanKeyString=shodanKeyString)
+                self.setApi(shodanKeyString=shodanKeyString)
             try:
                 result = self.api.search(serviceName)
                 dict_obj = []
@@ -47,11 +46,11 @@ class StartModule():
         else:
             return []
 
-    def queryShodan(self, category=''):
+    def queryShodan(self, category='', osintDays=100):
         try:
             Logger.printMessage(message='{methodName}'.format(methodName='queryShodan'), debug_module=True)
 
-            days_back = int(baseConfig.osintDays) + 1
+            days_back = int(osintDays) + 1
             limit_date = (datetime.date.today() - datetime.timedelta(days=days_back)).strftime(config['search_limit_date_format'])
             search_term = 'category:{category} after:{time}'.format(category=category, time=limit_date)
 
@@ -80,7 +79,7 @@ class StartModule():
             else:
                 return []
 
-        except shodan.APIError as e:
+        except Exception as e:
             Logger.printMessage(message='{error}: {error_msg}'.format(error=config['error'], error_msg=e), debug_module=True)
             return []
 

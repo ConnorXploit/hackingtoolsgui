@@ -24,6 +24,7 @@ except ImportError:
 modules_loaded = {}
 
 # If we want to be en Pool, import its Functions
+global WANT_TO_BE_IN_POOL
 WANT_TO_BE_IN_POOL = Config.getConfig(parentKey='core', key='WANT_TO_BE_IN_POOL')
 if WANT_TO_BE_IN_POOL:
     from .core import Pool
@@ -272,6 +273,17 @@ def createCategory(categoryName):
     if categoryName not in categories:
         if not os.path.isdir('{dir}/modules/{category}/'.format(dir=dir_actual, category=categoryName)):
             os.makedirs('{dir}/modules/{category}'.format(dir=dir_actual, category=categoryName))
+
+def switchPool():
+    global WANT_TO_BE_IN_POOL
+    if WANT_TO_BE_IN_POOL:
+        WANT_TO_BE_IN_POOL = False
+    else:
+        WANT_TO_BE_IN_POOL = True
+
+def wantPool():
+    global WANT_TO_BE_IN_POOL
+    return WANT_TO_BE_IN_POOL
 
 #TODO Continue documentation here
 

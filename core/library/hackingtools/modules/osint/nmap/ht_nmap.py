@@ -1,4 +1,4 @@
-from hackingtools.core import Logger, Config
+from hackingtools.core import Logger, Config, Utils
 import hackingtools as ht
 
 import nmap
@@ -8,17 +8,12 @@ config = Config.getConfig(parentKey='modules', key='ht_nmap')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 class StartModule():
-
-	cacheSearchInfo = []
 	
 	def __init__(self):
 		pass
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_nmap'))
-
-	def saveCacheSearchInfo(self, activate=False):
-		pass
 
 	def getConnectedDevices(self, ip):
 		Logger.printMessage(message='{methodName}'.format(methodName='getConnectedDevices'), description='{param}'.format(param=ip), debug_module=True)

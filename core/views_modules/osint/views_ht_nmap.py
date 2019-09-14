@@ -27,3 +27,17 @@ def getConnectedDevices(request):
         return renderMainPanel(request=request)
 
 # End ht_nmap
+
+def getDevicePorts(request):
+	ip = request.POST.get('ip')
+	tcp = request.POST.get('tcp', True)
+	udp = request.POST.get('udp', False)
+	result = ht.getModule('ht_nmap').getDevicePorts( ip=ip, tcp=tcp, udp=udp )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def hasDevicePortOpened(request):
+	ip = request.POST.get('ip')
+	port = request.POST.get('port')
+	result = ht.getModule('ht_nmap').hasDevicePortOpened( ip=ip, port=port )
+	return renderMainPanel(request=request, popup_text=result)
+	

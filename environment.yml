@@ -27,7 +27,7 @@ dependencies:
     - face-recognition-models==0.3.0
     - flask==1.0.2
     - future==0.17.1
-    - hackingtools==0.9.939.542
+    - hackingtools==0.9.939.549
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8

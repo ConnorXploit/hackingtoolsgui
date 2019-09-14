@@ -36,6 +36,46 @@
                 "value": "",
                 "label_desc": "Shodan API Key"
             }
+        },
+        "getDevicePorts": {
+            "__function__": "getDevicePorts",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
+            },
+            "tcp": {
+                "__type__": "checkbox",
+                "label_desc": "tcp",
+                "placeholder": "tcp",
+                "value": true
+            },
+            "udp": {
+                "__type__": "checkbox",
+                "label_desc": "udp",
+                "placeholder": "udp",
+                "value": false
+            }
+        },
+        "hasDevicePortOpened": {
+            "__function__": "hasDevicePortOpened",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
+            },
+            "port": {
+                "__type__": "text",
+                "label_desc": "port",
+                "placeholder": "port",
+                "required": true
+            }
         }
     }
 }

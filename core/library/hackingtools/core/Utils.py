@@ -112,7 +112,7 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
 
         if defaults:
             new_params_func = params_func[:-len(defaults)]
-            args_defaults = dict(zip(params_func[-len(defaults)+1:], defaults))
+            args_defaults = dict(zip(params_func[-len(defaults):], defaults))
 
         if i_want_list:
             if defaults:
@@ -131,6 +131,11 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
 
 def getValueType(value):
     try:
+        if isinstance(eval(value), bool):
+            return 'checkbox'
+    except:
+        pass
+    try:
         if isinstance(eval(value), int):
             return 'number'
     except:
@@ -141,11 +146,6 @@ def getValueType(value):
     except:
         pass
     try:
-        if isinstance(eval(value), bool):
-            return 'checkbox'
-    except:
-        pass
-    try:
         if isinstance(eval(value), str):
             if '.' in value and len(value.split('.')[1] in range(1,4)):
                 return 'file'
@@ -153,13 +153,16 @@ def getValueType(value):
                 return 'password'
             if 'data' in value:
                 return 'textarea'
-            return 'text'
+            return 'select'
     except:
         pass
     return 'text'
 
 def doesFunctionContainsExplicitReturn(functionCall):
-    return True if 'return' in inspect.getsource(eval(functionCall)) else False
+    try:
+        return True if 'return' in inspect.getsource(eval(functionCall)) else False
+    except:
+        return False
 
 # Network
 def getMyPublicIP():

@@ -78,3 +78,31 @@ def cryptFile(request):
 
     return renderMainPanel(request=request)
 
+
+def convertToExe(request):
+	stub_name = request.POST.get('stub_name')
+	ht.getModule('ht_crypter').convertToExe( stub_name=stub_name )
+
+def createStub(request):
+	crypto_data_hex = request.POST.get('crypto_data_hex')
+	public_key = request.POST.get('public_key')
+	drop_file_name = request.POST.get('drop_file_name')
+	save_name = request.POST.get('save_name')
+	is_iterating = request.POST.get('is_iterating', False)
+	is_last = request.POST.get('is_last', False)
+	convert = request.POST.get('convert', False)
+	result = ht.getModule('ht_crypter').createStub( crypto_data_hex=crypto_data_hex, public_key=public_key, drop_file_name=drop_file_name, save_name=save_name, is_iterating=is_iterating, is_last=is_last, convert=convert )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def crypt_file(request):
+	filename = request.POST.get('filename')
+	new_file_name = request.POST.get('new_file_name')
+	drop_file_name = request.POST.get('drop_file_name', 'dropped.py')
+	prime_length = request.POST.get('prime_length', 4)
+	compile_exe = request.POST.get('compile_exe', False)
+	is_iterating = request.POST.get('is_iterating', False)
+	iterate_count = request.POST.get('iterate_count', 1)
+	is_last = request.POST.get('is_last', False)
+	result = ht.getModule('ht_crypter').crypt_file( filename=filename, new_file_name=new_file_name, drop_file_name=drop_file_name, prime_length=prime_length, compile_exe=compile_exe, is_iterating=is_iterating, iterate_count=iterate_count, is_last=is_last )
+	return renderMainPanel(request=request, popup_text=result)
+	

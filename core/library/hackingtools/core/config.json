@@ -90,7 +90,8 @@
             "predicting_invalid_path": "Invalid image path",
             "predicting_no_knn_or_model_path": "Must supply knn classifier either thourgh knn_clf or model_path"
         },
-        "ht_spider" : {}
+        "ht_spider": {},
+        "ht_test": {}
     },
     "core": {
         "WANT_TO_BE_IN_POOL": true,

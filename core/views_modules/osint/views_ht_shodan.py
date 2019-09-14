@@ -44,3 +44,24 @@ def search_host(request):
         return renderMainPanel(request=request)
 
 # End ht_shodan
+
+def getSSLCerts(request):
+	ip = request.POST.get('ip')
+	result = ht.getModule('ht_shodan').getSSLCerts( ip=ip )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def queryShodan(request):
+	category = request.POST.get('category', '')
+	osintDays = request.POST.get('osintDays', 100)
+	result = ht.getModule('ht_shodan').queryShodan( category=category, osintDays=osintDays )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def searchFromConfig(request):
+	search = request.POST.get('search', '')
+	keyword = request.POST.get('keyword', '')
+	result = ht.getModule('ht_shodan').searchFromConfig( search=search, keyword=keyword )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def setApi(request):
+	shodanKeyString = request.POST.get('shodanKeyString', None)
+	ht.getModule('ht_shodan').setApi( shodanKeyString=shodanKeyString )

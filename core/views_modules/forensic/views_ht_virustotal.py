@@ -27,3 +27,10 @@ def isBadFile(request):
                 return renderMainPanel(request=request, popup_text=response)
     except Exception as e:
         return renderMainPanel(request=request, popup_text=str(e))
+
+
+def isBadFileHash(request):
+	fileHash = request.POST.get('fileHash')
+	result = ht.getModule('ht_virustotal').isBadFileHash( fileHash=fileHash )
+	return renderMainPanel(request=request, popup_text=result)
+	

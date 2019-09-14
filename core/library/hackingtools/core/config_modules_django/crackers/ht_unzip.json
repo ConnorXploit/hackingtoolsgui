@@ -28,6 +28,23 @@
                 "label_desc": "Password to unzip",
                 "required": true
             }
+        },
+        "zipFiles": {
+            "__function__": "zipFiles",
+            "__async__": false,
+            "__return__": "text",
+            "files": {
+                "__type__": "text",
+                "label_desc": "files",
+                "placeholder": "files",
+                "required": true
+            },
+            "new_folder_name": {
+                "__type__": "text",
+                "label_desc": "new_folder_name",
+                "placeholder": "new_folder_name",
+                "required": true
+            }
         }
     }
 }

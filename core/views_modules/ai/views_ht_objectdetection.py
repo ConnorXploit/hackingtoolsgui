@@ -160,3 +160,40 @@ def trainFromZip(request):
         Logger.printMessage(message='trainFromZip', description=str(e), is_error=True)
         return renderMainPanel(request=request, popup_text=str(e))
 
+
+def getTestsModelsDir(request):
+	result = ht.getModule('ht_objectdetection').getTestsModelsDir( )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def predict(request):
+	X_img_path = request.POST.get('X_img_path')
+	knn_clf = request.POST.get('knn_clf', None)
+	model_path = request.POST.get('model_path', None)
+	distance_threshold = request.POST.get('distance_threshold', 0.6)
+	result = ht.getModule('ht_objectdetection').predict( X_img_path=X_img_path, knn_clf=knn_clf, model_path=model_path, distance_threshold=distance_threshold )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def saveCroppedImage(request):
+	img_path = request.POST.get('img_path')
+	coords = request.POST.get('coords')
+	model_path = request.POST.get('model_path')
+	name = request.POST.get('name')
+	counter = request.POST.get('counter', 1)
+	ht.getModule('ht_objectdetection').saveCroppedImage( img_path=img_path, coords=coords, model_path=model_path, name=name, counter=counter )
+
+def show_prediction_labels_on_image(request):
+	img_path = request.POST.get('img_path')
+	predictions = request.POST.get('predictions')
+	model_path = request.POST.get('model_path')
+	result = ht.getModule('ht_objectdetection').show_prediction_labels_on_image( img_path=img_path, predictions=predictions, model_path=model_path )
+	return renderMainPanel(request=request, popup_text=result)
+	
+def train(request):
+	train_dir = request.POST.get('train_dir')
+	model_save_path = request.POST.get('model_save_path', None)
+	n_neighbors = request.POST.get('n_neighbors', None)
+	knn_algo = request.POST.get('knn_algo', 'ball_tree')
+	verbose = request.POST.get('verbose', False)
+	result = ht.getModule('ht_objectdetection').train( train_dir=train_dir, model_save_path=model_save_path, n_neighbors=n_neighbors, knn_algo=knn_algo, verbose=verbose )
+	return renderMainPanel(request=request, popup_text=result)
+	

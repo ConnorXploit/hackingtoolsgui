@@ -1,13 +1,25 @@
 {
     "__gui_label__": "Metadata",
     "django_form_module_function": {
-        "get_metadata_exif": {
-            "__function__": "get_metadata_exif",
+        "get_image_exif": {
+            "__function__": "get_image_exif",
             "__async__": false,
             "__return__": "text",
-            "image_file": {
+            "filename": {
                 "__type__": "file",
-                "label_desc": "Browse image to extract metadata",
+                "label_desc": "filename",
+                "placeholder": "filename",
+                "required": true
+            }
+        },
+        "get_pdf_exif": {
+            "__function__": "get_pdf_exif",
+            "__async__": false,
+            "__return__": "text",
+            "pdf_file": {
+                "__type__": "file",
+                "label_desc": "pdf_file",
+                "placeholder": "pdf_file",
                 "required": true
             }
         }

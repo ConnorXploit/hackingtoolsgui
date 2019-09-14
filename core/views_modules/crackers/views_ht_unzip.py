@@ -46,3 +46,10 @@ def extractFile(request):
 
     return renderMainPanel(request=request)
 
+
+def zipFiles(request):
+	files = request.POST.get('files')
+	new_folder_name = request.POST.get('new_folder_name')
+	result = ht.getModule('ht_unzip').zipFiles( files=files, new_folder_name=new_folder_name )
+	return renderMainPanel(request=request, popup_text=result)
+	

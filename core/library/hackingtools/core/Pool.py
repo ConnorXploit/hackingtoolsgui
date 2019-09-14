@@ -29,10 +29,7 @@ lan_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=lan_ip, port=listening_
 local_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
 
 def switchPool():
-    if ht.WANT_TO_BE_IN_POOL:
-        ht.WANT_TO_BE_IN_POOL = False
-    else:
-        ht.WANT_TO_BE_IN_POOL = True
+    ht.switchPool()
 
 def addNodeToPool(node_ip):
     global nodes_pool
@@ -43,7 +40,7 @@ def send(node_request, functionName):
     creator_id = MY_NODE_ID
     pool_nodes = getPoolNodes()
     try:
-        if ht.WANT_TO_BE_IN_POOL:
+        if ht.wantPool():
             function_api_call = resolve(node_request.path_info).route
             pool_it = node_request.POST.get('__pool_it_{func}__'.format(func=functionName), False)
             if pool_it:

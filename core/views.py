@@ -136,7 +136,14 @@ def config_look_for_changes(request):
 def saveFileOutput(myfile, module_name, category):
     location = os.path.join("core", "library", "hackingtools", "modules", category, module_name.split('ht_')[0], "output")
     fs = FileSystemStorage(location=location)
-    filename = fs.save(myfile.name, myfile)
+    if not os.path.isdir(location):
+        os.mkdir(location)
+    try:
+        print(myfile)
+        filename = fs.save(myfile.name, myfile)
+    except Exception as e:
+        Logger.printMessage(message='saveFileOutput', description=str(e))
+        return (None, None, None)
     Logger.printMessage(message='saveFileOutput', description='Saving to {fi}'.format(fi=os.path.join(location,myfile.name)))
     return (filename, location, os.path.join(location, filename))
 

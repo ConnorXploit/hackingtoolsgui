@@ -1,6 +1,6 @@
 from core.library import hackingtools as ht
 from . import Config, Logger, Utils
-Logger.setDebugModule(True)
+ht.Logger.setDebugModule(True)
 
 from colorama import Fore
 import os
@@ -8,37 +8,40 @@ import os
 config_locales = Config.getConfig(parentKey='core', key='locales')
 
 def createModuleFunctionView(moduleName, functionName):
-    Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_module=True)
-    # Creates the JSON config for the view modal form
-    category = ht.getModuleCategory(moduleName)
-    functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
-    moduleViewConfig = {}
+    try:
+        ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_module=True)
+        # Creates the JSON config for the view modal form
+        category = ht.getModuleCategory(moduleName)
+        functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
+        moduleViewConfig = {}
 
-    moduleViewConfig['__function__'] = functionName
-    moduleViewConfig['__async__'] = False
-    if Utils.doesFunctionContainsExplicitReturn(Utils.getFunctionFullCall(moduleName, functionName)):
-        moduleViewConfig['__return__'] = 'text'
-    else:
-        moduleViewConfig['__return__'] = False
-    if functionParams:
-        if 'params' in functionParams:
-            for param in functionParams['params']:
-                moduleViewConfig[param] = {}
-                moduleViewConfig[param]['__type__'] = 'text'
-                moduleViewConfig[param]['label_desc'] = param
-                moduleViewConfig[param]['placeholder'] = param
-                moduleViewConfig[param]['required'] = True
+        moduleViewConfig['__function__'] = functionName
+        moduleViewConfig['__async__'] = False
+        if Utils.doesFunctionContainsExplicitReturn(Utils.getFunctionFullCall(moduleName, functionName)):
+            moduleViewConfig['__return__'] = 'text'
+        else:
+            moduleViewConfig['__return__'] = ''
+        if functionParams:
+            if 'params' in functionParams:
+                for param in functionParams['params']:
+                    moduleViewConfig[param] = {}
+                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else Utils.getValueType(str(functionParams['defaults'][param]))
+                    moduleViewConfig[param]['label_desc'] = param
+                    moduleViewConfig[param]['placeholder'] = param
+                    moduleViewConfig[param]['required'] = True
 
-        if 'defaults' in functionParams:
-            for param in functionParams['defaults']:
-                moduleViewConfig[param] = {}
-                moduleViewConfig[param]['__type__'] = Utils.getValueType(functionParams['defaults'][param])
-                moduleViewConfig[param]['label_desc'] = param
-                moduleViewConfig[param]['placeholder'] = param
-                moduleViewConfig[param]['value'] = functionParams['defaults'][param]
+            if 'defaults' in functionParams:
+                for param in functionParams['defaults']:
+                    moduleViewConfig[param] = {}
+                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else Utils.getValueType(str(functionParams['defaults'][param]))
+                    moduleViewConfig[param]['label_desc'] = param
+                    moduleViewConfig[param]['placeholder'] = param
+                    moduleViewConfig[param]['value'] = functionParams['defaults'][param]
 
-    Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
-    return {functionName : moduleViewConfig}
+        ht.Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
+        return {functionName : moduleViewConfig}
+    except:
+        return None
 
 def getModulesGuiNames():
     """Return's an Array with the Label for GUI for that module
@@ -147,7 +150,7 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
         count += 1
         count = __treeview_count__(count)
         result_text.append(__treeview_createJSON__(conf_key=config[c], key=c, count=count, pid=count_pid))
-        Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW, debug_core=True)
+        ht.Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW, debug_core=True)
         if not isinstance(config[c], str) and not isinstance(config[c], bool) and not isinstance(config[c], int) and not isinstance(config[c], float):
             try:
                 __treeview_load_all__(config=config[c],result_text=result_text, count=count, count_pid=count-1)
@@ -156,9 +159,9 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
                 try:
                     __treeview_load_all__(config=tuple(config[c]),result_text=result_text, count=count, count_pid=count-1)
                     count += 1
-                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), color=Fore.YELLOW, debug_core=True)
+                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), color=Fore.YELLOW, debug_core=True)
                 except:
-                    Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED, debug_core=True)
+                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED, debug_core=True)
         count += 1
 
 def __treeview_count__(count):
@@ -191,7 +194,7 @@ def __treeview_createJSON__(conf_key, key, count=1, pid=0):
         else:
             return '{open_key}id:{count},name:"{name}",pid:{pid},value:""{close_key}'.format(open_key=open_key, count=count, name=key, pid=pid, close_key=close_key)
     except:
-        Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_load_json_data'], key=key, conf_key=conf_key), color=Fore.RED)
+        ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_load_json_data'], key=key, conf_key=conf_key), color=Fore.RED)
 
 # End of TreeView
 
@@ -211,6 +214,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
     module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
     functionModal = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey='__function__')
     default_classnames_per_type = Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
+
     if not module_form:
         return
     
@@ -226,13 +230,13 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
 
     for m in m_form:
         temp_m_form = m_form
-        if not m == '__async__' and not m == '__function__' and not '__separator' in m and (('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m]):
+        if not m == '__async__' and not m == '__function__' and not '__separator' in m and (isinstance(temp_m_form, dict) and (('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m])):
             if '__type__' in temp_m_form[m]:
                 input_type = temp_m_form[m]['__type__']
                 
                 input_className = ''
                 if not input_type in default_classnames_per_type:
-                    Logger.printMessage(message='__createHtmlModalForm__', description='There is no __className__ defined for this type of input \'{input_type}\''.format(input_type=input_type), color=Logger.Fore.YELLOW)
+                    ht.Logger.printMessage(message='__createHtmlModalForm__', description='There is no __className__ defined for this type of input \'{input_type}\''.format(input_type=input_type), color=ht.Logger.Fore.YELLOW)
                 else:
                     input_className = default_classnames_per_type[input_type]['__className__']
 

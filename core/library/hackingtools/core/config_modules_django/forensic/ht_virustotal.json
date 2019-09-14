@@ -19,6 +19,17 @@
                 "label_desc": "Select a file to test if is a bad file",
                 "required": true
             }
+        },
+        "isBadFileHash": {
+            "__function__": "isBadFileHash",
+            "__async__": false,
+            "__return__": "text",
+            "fileHash": {
+                "__type__": "text",
+                "label_desc": "fileHash",
+                "placeholder": "fileHash",
+                "required": true
+            }
         }
     }
 }

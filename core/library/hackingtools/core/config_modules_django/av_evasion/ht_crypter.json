@@ -34,5 +34,118 @@
             "value": "Crypt File",
             "loading_text": "Crypting..."
         }
+    },
+    "django_form_module_function": {
+        "convertToExe": {
+            "__function__": "convertToExe",
+            "__async__": false,
+            "__return__": "",
+            "stub_name": {
+                "__type__": "text",
+                "label_desc": "stub_name",
+                "placeholder": "stub_name",
+                "required": true
+            }
+        },
+        "createStub": {
+            "__function__": "createStub",
+            "__async__": false,
+            "__return__": "text",
+            "crypto_data_hex": {
+                "__type__": "text",
+                "label_desc": "crypto_data_hex",
+                "placeholder": "crypto_data_hex",
+                "required": true
+            },
+            "public_key": {
+                "__type__": "text",
+                "label_desc": "public_key",
+                "placeholder": "public_key",
+                "required": true
+            },
+            "drop_file_name": {
+                "__type__": "text",
+                "label_desc": "drop_file_name",
+                "placeholder": "drop_file_name",
+                "required": true
+            },
+            "save_name": {
+                "__type__": "text",
+                "label_desc": "save_name",
+                "placeholder": "save_name",
+                "required": true
+            },
+            "is_iterating": {
+                "__type__": "checkbox",
+                "label_desc": "is_iterating",
+                "placeholder": "is_iterating",
+                "value": false
+            },
+            "is_last": {
+                "__type__": "checkbox",
+                "label_desc": "is_last",
+                "placeholder": "is_last",
+                "value": false
+            },
+            "convert": {
+                "__type__": "checkbox",
+                "label_desc": "convert",
+                "placeholder": "convert",
+                "value": false
+            }
+        },
+        "crypt_file": {
+            "__function__": "crypt_file",
+            "__async__": false,
+            "__return__": "text",
+            "filename": {
+                "__type__": "text",
+                "label_desc": "filename",
+                "placeholder": "filename",
+                "required": true
+            },
+            "new_file_name": {
+                "__type__": "text",
+                "label_desc": "new_file_name",
+                "placeholder": "new_file_name",
+                "required": true
+            },
+            "drop_file_name": {
+                "__type__": "file",
+                "label_desc": "drop_file_name",
+                "placeholder": "drop_file_name",
+                "value": "dropped.py"
+            },
+            "prime_length": {
+                "__type__": "number",
+                "label_desc": "prime_length",
+                "placeholder": "prime_length",
+                "value": 4
+            },
+            "compile_exe": {
+                "__type__": "checkbox",
+                "label_desc": "compile_exe",
+                "placeholder": "compile_exe",
+                "value": false
+            },
+            "is_iterating": {
+                "__type__": "checkbox",
+                "label_desc": "is_iterating",
+                "placeholder": "is_iterating",
+                "value": false
+            },
+            "iterate_count": {
+                "__type__": "number",
+                "label_desc": "iterate_count",
+                "placeholder": "iterate_count",
+                "value": 1
+            },
+            "is_last": {
+                "__type__": "checkbox",
+                "label_desc": "is_last",
+                "placeholder": "is_last",
+                "value": false
+            }
+        }
     }
 }
