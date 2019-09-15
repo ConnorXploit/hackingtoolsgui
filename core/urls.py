@@ -54,26 +54,38 @@ def getModuleViewCategoryDir(moduleName):
 def getViewTemplateByFunctionParams(moduleName, functionName):
     category = ht.getModuleCategory(moduleName)
     params = ht.Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
-    template = ""
+    template = '\t# Init of the view {f}\n'.format(f=functionName)
     functionParamsForCallInStr = ""
 
     if params:
 
         if 'params' in params:
             for p in params['params']:
-
-                template = '{temp}\t{p} = request.POST.get(\'{p}\')\n'.format(temp=template, p=p)
+                
+                if 'file' in p:
+                    template = '{temp}\t\n\t# Save file {p}\n'.format(temp=template, p=p)
+                    template = '{temp}\tfilename, location, {p} = saveFileOutput(request.POST.get(\'{p}\'), {mod_no_extensiom}, {category})\n'.format(temp=template, p=p, mod_no_extension=moduleName.replace('ht_', ''), category=ht.getModuleCategory(moduleName))
+                else:
+                    template = '{temp}\t\n\t# Parameter {p}\n'.format(temp=template, p=p)
+                    template = '{temp}\t{p} = request.POST.get(\'{p}\')\n'.format(temp=template, p=p)
                 functionParamsForCallInStr = '{f} {p}={p},'.format(f=functionParamsForCallInStr, p=p)
 
         if 'defaults' in params:
             for p in params['defaults']:
 
-                val = params['defaults'][p]
-
-                if isinstance(val, str):
-                    template = '{temp}\t{p} = request.POST.get(\'{p}\', \'{v}\')\n'.format(temp=template, p=p, v=val)
+                if 'file' in p:
+                    template = '{temp}\tfilename, location, {p} = saveFileOutput(request.POST.get(\'{p}\'), {mod_no_extensiom}, {category})\n'.format(temp=template, p=p, mod_no_extension=moduleName.replace('ht_', ''), category=ht.getModuleCategory(moduleName))
                 else:
-                    template = '{temp}\t{p} = request.POST.get(\'{p}\', {v})\n'.format(temp=template, p=p, v=val)
+                    val = params['defaults'][p]
+                    template = '{temp}\t\n\t# Parameter {p} (Optional - Default {v})\n'.format(temp=template, v=val, p=p)
+
+                    if isinstance(val, str):
+                        template = '{temp}\t{p} = request.POST.get(\'{p}\', \'{v}\')\n'.format(temp=template, p=p, v=val)
+                    else:
+                        template = '{temp}\t{p} = request.POST.get(\'{p}\', {v})\n'.format(temp=template, p=p, v=val)
+                    if not val:
+                        template = '{temp}\tif not {p}:\n'.format(temp=template, p=p)
+                        template = '{temp}\t\t{p} = None\n'.format(temp=template, p=p)
 
                 if not p in functionParamsForCallInStr:
                     functionParamsForCallInStr = '{f} {p}={p},'.format(f=functionParamsForCallInStr, p=p)
@@ -81,7 +93,8 @@ def getViewTemplateByFunctionParams(moduleName, functionName):
     functionParamsForCallInStr = functionParamsForCallInStr[:-1]
 
     if ht.Utils.doesFunctionContainsExplicitReturn(ht.Utils.getFunctionFullCall(moduleName, functionName)):
-
+        
+        template = '{temp}\t\n\t# Execute, get result and show it\n'.format(temp=template)
         template = '{temp}\t{r}\n'.format(temp=template, r="result = ht.getModule('{moduleName}').{functionName}({functionParamsForCallInStr} )".format(moduleName=moduleName, functionName=functionName, functionParamsForCallInStr=functionParamsForCallInStr))
         example_return = "return renderMainPanel(request=request, popup_text=result)"
         template = '{temp}\t{r}\n\t'.format(temp=template, r=example_return)
@@ -129,6 +142,12 @@ def loadModuleFunctionsToView(moduleName):
         loadModuleUrls(moduleName)
     except:
         Logger.printMessage(message='loadModuleFunctionsToView', description='Something wen\'t wrong creating views file for {m}'.format(m=moduleName))
+
+def regenerateModal(moduleName):
+    pass
+
+def reviewChangesViewFunctionsParams():
+    pass
 
 def loadModuleUrls(moduleName):
     main_function_config = ht.Config.getConfig(parentKey='modules', key=moduleName, subkey='django_form_main_function')
@@ -216,13 +235,17 @@ def loadModuleUrls(moduleName):
         pass
         #Logger.printMessage(message='loadModuleUrls', description='{mod} has no functions on views config definition'.format(mod=mod), color=ht.Fore.YELLOW)
 
+    # Review params in all functions views for reloading the json and recreating the view function
+    reviewChangesViewFunctionsParams()
+
     if functions_not_loaded:
         Logger.printMessage(message='CORE VIEWS', description='Loaded new function{s} views: {d}'.format(s='s' if len(functions_not_loaded) > 1 else '', d=','.join(functions_not_loaded)))
         Logger.printMessage(message='CORE VIEWS', description='YOU HAVE TO RESTART EXIT AND RUN SERVER AGAIN', is_error=True)
+
 # Automatically creates the URL's get by the modules and the configurations
 try:
     for mod in ht.getModulesNames():
-        Logger.printMessage(message='Initialize', description='Loading mod \'{mod}\''.format(mod=mod))
+        #Logger.printMessage(message='Initialize', description='Loading mod \'{mod}\''.format(mod=mod))
         loadModuleUrls(mod)
 except:
     raise

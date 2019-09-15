@@ -1,31 +1,34 @@
 from core.library import hackingtools as ht
-from . import Config, Logger, Utils
 ht.Logger.setDebugModule(True)
 
 from colorama import Fore
 import os
 
-config_locales = Config.getConfig(parentKey='core', key='locales')
+config_locales = ht.Config.getConfig(parentKey='core', key='locales')
 
 def createModuleFunctionView(moduleName, functionName):
     try:
         ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_module=True)
         # Creates the JSON config for the view modal form
         category = ht.getModuleCategory(moduleName)
-        functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
+        functionParams = ht.Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
         moduleViewConfig = {}
 
         moduleViewConfig['__function__'] = functionName
         moduleViewConfig['__async__'] = False
-        if Utils.doesFunctionContainsExplicitReturn(Utils.getFunctionFullCall(moduleName, functionName)):
+
+        if ht.Utils.doesFunctionContainsExplicitReturn(ht.Utils.getFunctionFullCall(moduleName, functionName)):
             moduleViewConfig['__return__'] = 'text'
         else:
             moduleViewConfig['__return__'] = ''
+        if not functionParams:
+            # Retry for reload
+            functionParams = ht.Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
         if functionParams:
             if 'params' in functionParams:
                 for param in functionParams['params']:
                     moduleViewConfig[param] = {}
-                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else Utils.getValueType(str(functionParams['defaults'][param]))
+                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(functionParams['defaults'][param]))
                     moduleViewConfig[param]['label_desc'] = param
                     moduleViewConfig[param]['placeholder'] = param
                     moduleViewConfig[param]['required'] = True
@@ -33,12 +36,13 @@ def createModuleFunctionView(moduleName, functionName):
             if 'defaults' in functionParams:
                 for param in functionParams['defaults']:
                     moduleViewConfig[param] = {}
-                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else Utils.getValueType(str(functionParams['defaults'][param]))
+                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(functionParams['defaults'][param]))
                     moduleViewConfig[param]['label_desc'] = param
                     moduleViewConfig[param]['placeholder'] = param
                     moduleViewConfig[param]['value'] = functionParams['defaults'][param]
 
         ht.Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
+        ht.Config.__look_for_changes__()
         return {functionName : moduleViewConfig}
     except:
         return None
@@ -56,7 +60,7 @@ def getModulesGuiNames():
     """
     names = {}
     for tool in ht.getModulesNames():
-        label = Config.getConfig(parentKey='modules', key=tool, subkey='__gui_label__')
+        label = ht.Config.getConfig(parentKey='modules', key=tool, subkey='__gui_label__')
         if label:
             names[tool] = label
     return names
@@ -74,7 +78,7 @@ def getModulesModalTests():
     """
     tools_functions = {}
     for tool in ht.getModulesNames():
-        tool_functions = Config.getConfig(parentKey='modules', key=tool, subkey='django_form_module_function')
+        tool_functions = ht.Config.getConfig(parentKey='modules', key=tool, subkey='django_form_module_function')
         if tool_functions:
             tools_functions[tool] = tool_functions
     return tools_functions
@@ -211,9 +215,9 @@ def __getModulesDjangoForms__():
     return forms
 
 def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', config_extrasubkey=None):
-    module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
-    functionModal = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey='__function__')
-    default_classnames_per_type = Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
+    module_form = ht.Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
+    functionModal = ht.Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey='__function__')
+    default_classnames_per_type = ht.Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
 
     if not module_form:
         return
@@ -252,6 +256,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 if 'value' in temp_m_form[m]:
                     input_value = temp_m_form[m]['value']
                 
+                if not input_value or 'None' == input_value or 'null' == input_value:
+                    input_value = ''
+
                 checkbox_selected = False
                 if 'selected' in temp_m_form[m]:
                     checkbox_selected = temp_m_form[m]['selected']
@@ -398,7 +405,7 @@ def __getModulesDjangoFormsModal__():
     return forms
 
 def __getModuleFunctionNamesFromConfig__(mod):
-    functions = Config.getConfig(parentKey='modules', key=mod, subkey='django_form_module_function')
+    functions = ht.Config.getConfig(parentKey='modules', key=mod, subkey='django_form_module_function')
     if functions:
         return [func_name for func_name in functions]
     else:
