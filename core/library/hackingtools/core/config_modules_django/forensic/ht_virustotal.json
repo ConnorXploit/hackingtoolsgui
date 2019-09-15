@@ -25,7 +25,7 @@
             "__async__": false,
             "__return__": "text",
             "fileHash": {
-                "__type__": "text",
+                "__type__": "file",
                 "label_desc": "fileHash",
                 "placeholder": "fileHash",
                 "required": true

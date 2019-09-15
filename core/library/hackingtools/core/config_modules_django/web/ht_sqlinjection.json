@@ -1,6 +1,16 @@
 {
     "__gui_label__": "ht_sqlinjection",
     "django_form_module_function": {
+        "cogerTablas": {
+            "__function__": "cogerTablas",
+            "__async__": false,
+            "__return__": ""
+        },
+        "mostrarUserPass": {
+            "__function__": "mostrarUserPass",
+            "__async__": false,
+            "__return__": ""
+        },
         "cantidadTuplasEnTapla": {
             "__function__": "cantidadTuplasEnTapla",
             "__async__": false,
@@ -63,11 +73,6 @@
                 "placeholder": "campoConocido",
                 "required": true
             }
-        },
-        "cogerTablas": {
-            "__function__": "cogerTablas",
-            "__async__": false,
-            "__return__": ""
         },
         "color": {
             "__function__": "color",
@@ -153,11 +158,6 @@
                 "placeholder": "clave",
                 "required": true
             }
-        },
-        "mostrarUserPass": {
-            "__function__": "mostrarUserPass",
-            "__async__": false,
-            "__return__": ""
         },
         "sacarValorPorTablaColumnaID": {
             "__function__": "sacarValorPorTablaColumnaID",

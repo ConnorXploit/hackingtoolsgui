@@ -58,17 +58,6 @@
                 "required": true
             }
         },
-        "getSSLCerts": {
-            "__function__": "getSSLCerts",
-            "__async__": false,
-            "__return__": "text",
-            "ip": {
-                "__type__": "text",
-                "label_desc": "ip",
-                "placeholder": "ip",
-                "required": true
-            }
-        },
         "queryShodan": {
             "__function__": "queryShodan",
             "__async__": false,
@@ -80,7 +69,7 @@
                 "value": ""
             },
             "osintDays": {
-                "__type__": "number",
+                "__type__": "text",
                 "label_desc": "osintDays",
                 "placeholder": "osintDays",
                 "value": 100
@@ -112,6 +101,17 @@
                 "label_desc": "shodanKeyString",
                 "placeholder": "shodanKeyString",
                 "value": null
+            }
+        },
+        "getSSLCerts": {
+            "__function__": "getSSLCerts",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
             }
         }
     }

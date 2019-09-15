@@ -48,41 +48,12 @@
             "__async__": false,
             "__return__": "text"
         },
-        "predict": {
-            "__function__": "predict",
-            "__async__": false,
-            "__return__": "text",
-            "X_img_path": {
-                "__type__": "text",
-                "label_desc": "X_img_path",
-                "placeholder": "X_img_path",
-                "required": true
-            },
-            "knn_clf": {
-                "__type__": "text",
-                "label_desc": "knn_clf",
-                "placeholder": "knn_clf",
-                "value": null
-            },
-            "model_path": {
-                "__type__": "text",
-                "label_desc": "model_path",
-                "placeholder": "model_path",
-                "value": null
-            },
-            "distance_threshold": {
-                "__type__": "text",
-                "label_desc": "distance_threshold",
-                "placeholder": "distance_threshold",
-                "value": 0.6
-            }
-        },
         "predictFromZip": {
             "__function__": "predictFromZip",
             "__async__": false,
             "__return__": "text",
             "zipFile": {
-                "__type__": "text",
+                "__type__": "file",
                 "label_desc": "zipFile",
                 "placeholder": "zipFile",
                 "required": true
@@ -123,7 +94,7 @@
             "__async__": false,
             "__return__": "text",
             "imageFile": {
-                "__type__": "text",
+                "__type__": "file",
                 "label_desc": "imageFile",
                 "placeholder": "imageFile",
                 "required": true
@@ -151,6 +122,64 @@
                 "label_desc": "n_neighbors",
                 "placeholder": "n_neighbors",
                 "value": 1
+            }
+        },
+        "trainFromZip": {
+            "__function__": "trainFromZip",
+            "__async__": false,
+            "__return__": "text",
+            "zipFile": {
+                "__type__": "file",
+                "label_desc": "zipFile",
+                "placeholder": "zipFile",
+                "required": true
+            },
+            "new_model_name": {
+                "__type__": "text",
+                "label_desc": "new_model_name",
+                "placeholder": "new_model_name",
+                "value": "new_trained.clf"
+            },
+            "first_folder_name": {
+                "__type__": "text",
+                "label_desc": "first_folder_name",
+                "placeholder": "first_folder_name",
+                "value": "model"
+            },
+            "n_neighbors": {
+                "__type__": "number",
+                "label_desc": "n_neighbors",
+                "placeholder": "n_neighbors",
+                "value": 1
+            }
+        },
+        "predict": {
+            "__function__": "predict",
+            "__async__": false,
+            "__return__": "text",
+            "X_img_path": {
+                "__type__": "text",
+                "label_desc": "X_img_path",
+                "placeholder": "X_img_path",
+                "required": true
+            },
+            "knn_clf": {
+                "__type__": "text",
+                "label_desc": "knn_clf",
+                "placeholder": "knn_clf",
+                "value": null
+            },
+            "model_path": {
+                "__type__": "text",
+                "label_desc": "model_path",
+                "placeholder": "model_path",
+                "value": null
+            },
+            "distance_threshold": {
+                "__type__": "text",
+                "label_desc": "distance_threshold",
+                "placeholder": "distance_threshold",
+                "value": 0.6
             }
         },
         "saveCroppedImage": {
@@ -182,7 +211,7 @@
                 "required": true
             },
             "counter": {
-                "__type__": "number",
+                "__type__": "text",
                 "label_desc": "counter",
                 "placeholder": "counter",
                 "value": 1
@@ -240,39 +269,10 @@
                 "value": "ball_tree"
             },
             "verbose": {
-                "__type__": "checkbox",
+                "__type__": "text",
                 "label_desc": "verbose",
                 "placeholder": "verbose",
                 "value": false
-            }
-        },
-        "trainFromZip": {
-            "__function__": "trainFromZip",
-            "__async__": false,
-            "__return__": "text",
-            "zipFile": {
-                "__type__": "text",
-                "label_desc": "zipFile",
-                "placeholder": "zipFile",
-                "required": true
-            },
-            "new_model_name": {
-                "__type__": "text",
-                "label_desc": "new_model_name",
-                "placeholder": "new_model_name",
-                "value": "new_trained.clf"
-            },
-            "first_folder_name": {
-                "__type__": "text",
-                "label_desc": "first_folder_name",
-                "placeholder": "first_folder_name",
-                "value": "model"
-            },
-            "n_neighbors": {
-                "__type__": "number",
-                "label_desc": "n_neighbors",
-                "placeholder": "n_neighbors",
-                "value": 1
             }
         }
     }

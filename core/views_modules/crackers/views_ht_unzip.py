@@ -5,7 +5,7 @@ import json
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, getDictionaryAlphabet
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, getDictionaryAlphabet
 from core.views import sendPool
 
 # Create your views here.
@@ -46,10 +46,26 @@ def extractFile(request):
 
     return renderMainPanel(request=request)
 
-
+# Automatic view function for zipFiles
 def zipFiles(request):
-	files = request.POST.get('files')
-	new_folder_name = request.POST.get('new_folder_name')
-	result = ht.getModule('ht_unzip').zipFiles( files=files, new_folder_name=new_folder_name )
-	return renderMainPanel(request=request, popup_text=result)
+	# Init of the view zipFiles
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'zipFiles')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:			
+	# Save file files
+			filename_files, location_files, files = saveFileOutput(request.POST.get('files'), 'unzip', 'crackers')
+			
+	# Parameter new_folder_name
+			new_folder_name = request.POST.get('new_folder_name')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_unzip').zipFiles( files=files, new_folder_name=new_folder_name )
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
 	

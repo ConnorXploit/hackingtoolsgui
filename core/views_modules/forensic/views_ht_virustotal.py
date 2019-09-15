@@ -5,7 +5,7 @@ import json
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
 
 # Create your views here.
 
@@ -28,9 +28,23 @@ def isBadFile(request):
     except Exception as e:
         return renderMainPanel(request=request, popup_text=str(e))
 
-
+# Automatic view function for isBadFileHash
 def isBadFileHash(request):
-	fileHash = request.POST.get('fileHash')
-	result = ht.getModule('ht_virustotal').isBadFileHash( fileHash=fileHash )
-	return renderMainPanel(request=request, popup_text=result)
+	# Init of the view isBadFileHash
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'isBadFileHash')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:			
+	# Save file fileHash
+			filename_fileHash, location_fileHash, fileHash = saveFileOutput(request.POST.get('fileHash'), 'virustotal', 'forensic')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_virustotal').isBadFileHash( fileHash=fileHash )
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
 	

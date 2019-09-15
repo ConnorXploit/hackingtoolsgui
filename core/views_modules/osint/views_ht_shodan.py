@@ -5,7 +5,7 @@ import json
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
 
 # Create your views here.
 
@@ -45,23 +45,96 @@ def search_host(request):
 
 # End ht_shodan
 
-def getSSLCerts(request):
-	ip = request.POST.get('ip')
-	result = ht.getModule('ht_shodan').getSSLCerts( ip=ip )
-	return renderMainPanel(request=request, popup_text=result)
-	
+# Automatic view function for queryShodan
 def queryShodan(request):
-	category = request.POST.get('category', '')
-	osintDays = request.POST.get('osintDays', 100)
-	result = ht.getModule('ht_shodan').queryShodan( category=category, osintDays=osintDays )
-	return renderMainPanel(request=request, popup_text=result)
+	# Init of the view queryShodan
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'queryShodan')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:
+			# Parameter category (Optional - Default )
+			category = request.POST.get('category', '')
+			if not category:
+				category = None
+
+			# Parameter osintDays (Optional - Default 100)
+			osintDays = request.POST.get('osintDays', 100)
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_shodan').queryShodan( category=category, osintDays=osintDays )
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
 	
+# Automatic view function for searchFromConfig
 def searchFromConfig(request):
-	search = request.POST.get('search', '')
-	keyword = request.POST.get('keyword', '')
-	result = ht.getModule('ht_shodan').searchFromConfig( search=search, keyword=keyword )
-	return renderMainPanel(request=request, popup_text=result)
+	# Init of the view searchFromConfig
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'searchFromConfig')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:
+			# Parameter search (Optional - Default )
+			search = request.POST.get('search', '')
+			if not search:
+				search = None
+
+			# Parameter keyword (Optional - Default )
+			keyword = request.POST.get('keyword', '')
+			if not keyword:
+				keyword = None
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_shodan').searchFromConfig( search=search, keyword=keyword )
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
 	
+# Automatic view function for setApi
 def setApi(request):
-	shodanKeyString = request.POST.get('shodanKeyString', None)
-	ht.getModule('ht_shodan').setApi( shodanKeyString=shodanKeyString )
+	# Init of the view setApi
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'setApi')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:
+			# Parameter shodanKeyString (Optional - Default None)
+			shodanKeyString = request.POST.get('shodanKeyString', None)
+			if not shodanKeyString:
+				shodanKeyString = None
+
+			# Execute the function
+			ht.getModule('ht_shodan').setApi( shodanKeyString=shodanKeyString )
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for getSSLCerts
+def getSSLCerts(request):
+	# Init of the view getSSLCerts
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'getSSLCerts')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:			
+	# Parameter ip
+			ip = request.POST.get('ip')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_shodan').getSSLCerts( ip=ip )
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
+	

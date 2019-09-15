@@ -48,13 +48,13 @@
                 "required": true
             },
             "tcp": {
-                "__type__": "checkbox",
+                "__type__": "text",
                 "label_desc": "tcp",
                 "placeholder": "tcp",
                 "value": true
             },
             "udp": {
-                "__type__": "checkbox",
+                "__type__": "text",
                 "label_desc": "udp",
                 "placeholder": "udp",
                 "value": false

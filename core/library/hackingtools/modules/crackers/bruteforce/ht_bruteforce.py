@@ -3,7 +3,6 @@ import hackingtools as ht
 import os
 
 import time
-import progressbar
 import numpy
 
 config = Config.getConfig(parentKey='modules', key='ht_bruteforce')

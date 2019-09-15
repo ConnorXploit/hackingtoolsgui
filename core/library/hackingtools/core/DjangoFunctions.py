@@ -28,7 +28,7 @@ def createModuleFunctionView(moduleName, functionName):
             if 'params' in functionParams:
                 for param in functionParams['params']:
                     moduleViewConfig[param] = {}
-                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(functionParams['defaults'][param]))
+                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(param))
                     moduleViewConfig[param]['label_desc'] = param
                     moduleViewConfig[param]['placeholder'] = param
                     moduleViewConfig[param]['required'] = True
@@ -36,7 +36,7 @@ def createModuleFunctionView(moduleName, functionName):
             if 'defaults' in functionParams:
                 for param in functionParams['defaults']:
                     moduleViewConfig[param] = {}
-                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(functionParams['defaults'][param]))
+                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(param))
                     moduleViewConfig[param]['label_desc'] = param
                     moduleViewConfig[param]['placeholder'] = param
                     moduleViewConfig[param]['value'] = functionParams['defaults'][param]

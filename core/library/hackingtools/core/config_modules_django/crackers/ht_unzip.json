@@ -34,7 +34,7 @@
             "__async__": false,
             "__return__": "text",
             "files": {
-                "__type__": "text",
+                "__type__": "file",
                 "label_desc": "files",
                 "placeholder": "files",
                 "required": true

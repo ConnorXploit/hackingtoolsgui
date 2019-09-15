@@ -5,7 +5,7 @@ import json
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
 
 # Create your views here.
 
@@ -28,16 +28,54 @@ def getConnectedDevices(request):
 
 # End ht_nmap
 
+# Automatic view function for getDevicePorts
 def getDevicePorts(request):
-	ip = request.POST.get('ip')
-	tcp = request.POST.get('tcp', True)
-	udp = request.POST.get('udp', False)
-	result = ht.getModule('ht_nmap').getDevicePorts( ip=ip, tcp=tcp, udp=udp )
-	return renderMainPanel(request=request, popup_text=result)
+	# Init of the view getDevicePorts
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'getDevicePorts')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:			
+	# Parameter ip
+			ip = request.POST.get('ip')
+
+			# Parameter tcp (Optional - Default True)
+			tcp = request.POST.get('tcp', True)
+
+			# Parameter udp (Optional - Default False)
+			udp = request.POST.get('udp', False)
+			if not udp:
+				udp = None
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_nmap').getDevicePorts( ip=ip, tcp=tcp, udp=udp )
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
 	
+# Automatic view function for hasDevicePortOpened
 def hasDevicePortOpened(request):
-	ip = request.POST.get('ip')
-	port = request.POST.get('port')
-	result = ht.getModule('ht_nmap').hasDevicePortOpened( ip=ip, port=port )
-	return renderMainPanel(request=request, popup_text=result)
+	# Init of the view hasDevicePortOpened
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'hasDevicePortOpened')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:			
+	# Parameter ip
+			ip = request.POST.get('ip')
+			
+	# Parameter port
+			port = request.POST.get('port')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_nmap').hasDevicePortOpened( ip=ip, port=port )
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
 	

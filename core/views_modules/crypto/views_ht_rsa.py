@@ -5,7 +5,7 @@ import json
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
 
 # Create your views here.
 
