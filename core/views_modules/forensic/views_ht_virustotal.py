@@ -29,6 +29,7 @@ def isBadFile(request):
         return renderMainPanel(request=request, popup_text=str(e))
 
 # Automatic view function for isBadFileHash
+@csrf_exempt
 def isBadFileHash(request):
 	# Init of the view isBadFileHash
 	try:
@@ -38,12 +39,14 @@ def isBadFileHash(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Save file fileHash
-			filename_fileHash, location_fileHash, fileHash = saveFileOutput(request.POST.get('fileHash'), 'virustotal', 'forensic')
+		else:
+			# Save file fileHash
+			filename_fileHash, location_fileHash, fileHash = saveFileOutput(request.FILES['fileHash'], 'virustotal', 'forensic')
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_virustotal').isBadFileHash( fileHash=fileHash )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))

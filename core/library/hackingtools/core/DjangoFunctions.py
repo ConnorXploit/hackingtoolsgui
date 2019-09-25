@@ -1,4 +1,8 @@
-from core.library import hackingtools as ht
+from . import Config, Logger, Utils
+if Utils.amIdjango(__name__):
+    from core.library import hackingtools as ht
+else:
+    import hackingtools as ht
 ht.Logger.setDebugModule(True)
 
 from colorama import Fore
@@ -17,13 +21,15 @@ def createModuleFunctionView(moduleName, functionName):
         moduleViewConfig['__function__'] = functionName
         moduleViewConfig['__async__'] = False
 
-        if ht.Utils.doesFunctionContainsExplicitReturn(ht.Utils.getFunctionFullCall(moduleName, functionName)):
+        if ht.Utils.doesFunctionContainsExplicitReturn(ht.Utils.getFunctionFullCall(moduleName, ht.getModuleCategory(moduleName), functionName)):
             moduleViewConfig['__return__'] = 'text'
         else:
             moduleViewConfig['__return__'] = ''
+
         if not functionParams:
             # Retry for reload
             functionParams = ht.Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
+
         if functionParams:
             if 'params' in functionParams:
                 for param in functionParams['params']:
@@ -36,10 +42,29 @@ def createModuleFunctionView(moduleName, functionName):
             if 'defaults' in functionParams:
                 for param in functionParams['defaults']:
                     moduleViewConfig[param] = {}
-                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(param))
+                    moduleViewConfig[param]['__type__'] = 'file' if 'file' in str(param).lower() else ht.Utils.getValueType(str(functionParams['defaults'][param]))
                     moduleViewConfig[param]['label_desc'] = param
                     moduleViewConfig[param]['placeholder'] = param
                     moduleViewConfig[param]['value'] = functionParams['defaults'][param]
+                    if moduleViewConfig[param]['__type__'] == 'checkbox':
+                        moduleViewConfig[param]['selected'] = moduleViewConfig[param]['value']
+        else:
+            ht.Logger.printMessage(message='No function params', description=functionName)
+
+
+        # Is async checkbox
+        __is_async__ = '__is_async__'
+        moduleViewConfig[__is_async__] = {}
+        moduleViewConfig[__is_async__]['__type__'] = 'checkbox'
+        moduleViewConfig[__is_async__]['label_desc'] = 'Want AJAX call'
+        moduleViewConfig[__is_async__]['selected'] = False
+
+        # Add pool it checkbox
+        pool_param = '__pool_it_{p}__'.format(p=functionName)
+        moduleViewConfig[pool_param] = {}
+        moduleViewConfig[pool_param]['__type__'] = 'checkbox'
+        moduleViewConfig[pool_param]['label_desc'] = 'Pool the execution to the pool list'
+        moduleViewConfig[pool_param]['selected'] = False
 
         ht.Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
         ht.Config.__look_for_changes__()

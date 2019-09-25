@@ -58,6 +58,27 @@
                 "required": true
             }
         },
+        "getSSLCerts": {
+            "__function__": "getSSLCerts",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_getSSLCerts__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
         "queryShodan": {
             "__function__": "queryShodan",
             "__async__": false,
@@ -73,6 +94,16 @@
                 "label_desc": "osintDays",
                 "placeholder": "osintDays",
                 "value": 100
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_queryShodan__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "searchFromConfig": {
@@ -90,6 +121,16 @@
                 "label_desc": "keyword",
                 "placeholder": "keyword",
                 "value": ""
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_searchFromConfig__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "setApi": {
@@ -101,17 +142,16 @@
                 "label_desc": "shodanKeyString",
                 "placeholder": "shodanKeyString",
                 "value": null
-            }
-        },
-        "getSSLCerts": {
-            "__function__": "getSSLCerts",
-            "__async__": false,
-            "__return__": "text",
-            "ip": {
-                "__type__": "text",
-                "label_desc": "ip",
-                "placeholder": "ip",
-                "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_setApi__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         }
     }

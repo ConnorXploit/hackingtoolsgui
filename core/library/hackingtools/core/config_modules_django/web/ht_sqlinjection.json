@@ -1,16 +1,6 @@
 {
     "__gui_label__": "ht_sqlinjection",
     "django_form_module_function": {
-        "cogerTablas": {
-            "__function__": "cogerTablas",
-            "__async__": false,
-            "__return__": ""
-        },
-        "mostrarUserPass": {
-            "__function__": "mostrarUserPass",
-            "__async__": false,
-            "__return__": ""
-        },
         "cantidadTuplasEnTapla": {
             "__function__": "cantidadTuplasEnTapla",
             "__async__": false,
@@ -26,6 +16,16 @@
                 "label_desc": "campo",
                 "placeholder": "campo",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_cantidadTuplasEnTapla__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "cogerColumnasTabla": {
@@ -43,6 +43,16 @@
                 "label_desc": "tabla_name",
                 "placeholder": "tabla_name",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_cogerColumnasTabla__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "cogerNombreDeTablaPorID": {
@@ -72,6 +82,31 @@
                 "label_desc": "campoConocido",
                 "placeholder": "campoConocido",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_cogerNombreDeTablaPorID__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "cogerTablas": {
+            "__function__": "cogerTablas",
+            "__async__": false,
+            "__return__": "",
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_cogerTablas__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "color": {
@@ -89,6 +124,16 @@
                 "label_desc": "color",
                 "placeholder": "color",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_color__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "compareTextExistWhereSubstringACII": {
@@ -106,6 +151,16 @@
                 "label_desc": "table",
                 "placeholder": "table",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_compareTextExistWhereSubstringACII__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "ejecutarSQL": {
@@ -117,6 +172,16 @@
                 "label_desc": "sqli",
                 "placeholder": "sqli",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_ejecutarSQL__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "longitudCampoIDtablaCampo": {
@@ -146,6 +211,16 @@
                 "label_desc": "campoConocido",
                 "placeholder": "campoConocido",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_longitudCampoIDtablaCampo__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "md5_decrypt": {
@@ -157,6 +232,31 @@
                 "label_desc": "clave",
                 "placeholder": "clave",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_md5_decrypt__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "mostrarUserPass": {
+            "__function__": "mostrarUserPass",
+            "__async__": false,
+            "__return__": "",
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_mostrarUserPass__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "sacarValorPorTablaColumnaID": {
@@ -180,6 +280,16 @@
                 "label_desc": "nombre_campo_id",
                 "placeholder": "nombre_campo_id",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_sacarValorPorTablaColumnaID__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "setParams": {
@@ -221,6 +331,16 @@
                 "label_desc": "security",
                 "placeholder": "security",
                 "value": ""
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_setParams__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "transformAsciiToHex": {
@@ -232,6 +352,16 @@
                 "label_desc": "ascii_text",
                 "placeholder": "ascii_text",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_transformAsciiToHex__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         }
     }

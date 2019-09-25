@@ -17,13 +17,13 @@ class StartModule():
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_bruteforce'))
 
-	def crackZip(self, zipPathName, unzipper=None, alphabet='lalpha', password_length=4, log=False):
+	def crackZip(self, zipPathName, unzipper=None, alphabet='lalpha', password_length=4, password_pattern=None, log=False):
 		max_length_posibilities = int(config['max_for_chunk'])
 		if not unzipper:
 			unzipper = ht.getModule('ht_unzip')
 		if log:
 			Logger.setDebugCore(True)
-		texts = Utils.getDict(length=int(password_length), alphabet=alphabet)
+		texts = Utils.getDict(length=int(password_length), alphabet=alphabet, try_pattern=password_pattern)
 		if len(texts) > max_length_posibilities:
 			texts_list = numpy.array_split(texts, max_length_posibilities)
 		else:

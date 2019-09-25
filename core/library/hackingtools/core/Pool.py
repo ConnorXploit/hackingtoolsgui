@@ -1,5 +1,8 @@
-from .. import __init__ as ht
 from . import Config, Logger, Utils
+if Utils.amIdjango(__name__):
+    from core.library import hackingtools as ht
+else:
+    import hackingtools as ht
 from django.urls import resolve
 from colorama import Fore
 import sys, requests
@@ -8,25 +11,6 @@ import sys, requests
 
 nodes_pool = []
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
-
-https = '' # Anytime when adding ssl, shold be with an 's'
-
-public_ip = Utils.getMyPublicIP()
-lan_ip = Utils.getMyLanIP()
-local_ip = Utils.getMyLocalIP()
-
-try:
-    listening_port = sys.argv[-1].split(':')[1]
-except:
-    listening_port = '8000'
-
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
-
-my_service_api = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
-
-public_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=public_ip, port=listening_port)
-lan_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=lan_ip, port=listening_port)
-local_ip_full = 'http{s}://{ip}:{port}'.format(s=https, ip=local_ip, port=listening_port)
 
 def switchPool():
     ht.switchPool()
@@ -56,9 +40,9 @@ def send(node_request, functionName):
                     global nodes_pool
                     for n in nodes_pool:
                         # Call to inform about my services
-                        for serv in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+                        for serv in ht.Connections.getMyServices():
                             service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=n)
-                            add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv},  headers=headers)
+                            add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv},  headers=ht.Connections.headers)
                             if add_me_to_theis_pool.status_code == 200:
                                 Logger.printMessage(message="send", description='Saving my service API REST into {n} - {s} '.format(n=n, s=serv), color=Fore.YELLOW)
 
@@ -90,13 +74,13 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
     global nodes_pool
 
     nodes = [] # Nodes to send this call. Thay have to be nodes that haven't received this yet.
-    pool_list=[] # The pool_list is a list for getting all the nodes that have been notified by this call.
+    pool_list = [] # The pool_list is a list for getting all the nodes that have been notified by this call.
 
     mine_function_call = False
 
     try:
         pool_list = params['pool_list']
-        for service in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+        for service in ht.Connections.getMyServices():
             if service in pool_list:
                 mine_function_call = True
                 Logger.printMessage(message='__sendPool__', description='It\'s my own call', color=Fore.YELLOW)
@@ -116,40 +100,38 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
 
     nodes_pool = nodes_pool + list(set(pool_list) - set(nodes_pool))
 
+    my_own_call = False
+
     if pool_list:
-        for service in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+        for service in ht.Connections.getMyServices():
             if service in pool_list:
+                my_own_call = True
                 pool_list.remove(service)
 
     # Remove any posible service with my public, local or lan IP
     if nodes_pool:
-        for service in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+        for service in ht.Connections.getMyServices():
             removeNodeFromPool(service)
 
     if len(nodes) > 0:
-        if not mine_function_call and (not my_service_api in pool_list and not public_ip_full in pool_list and not lan_ip_full in pool_list and not local_ip_full in pool_list):
+        if not mine_function_call and not my_own_call:
             for node in nodes:
                 try:
-                    if not node in (public_ip_full, lan_ip_full, local_ip_full):
+                    if ht.Connections.serviceNotMine(node):
                         node_call = '{node_ip}/{function_api}'.format(node_ip=node, function_api=function_api_call)
 
                         params['pool_list'] = pool_list
-                        try:
-                            params['pool_list'].append(public_ip_full)
-                            params['pool_list'].append(lan_ip_full)
-                            params['pool_list'].append(local_ip_full)
-                            params['pool_list'].append(my_service_api)
-                            params['pool_list'].remove(node)
-                        except:
-                            pass
+
+                        for serv in ht.Connections.getMyServices():
+                            params['pool_list'].append(serv)
                             
                         params['is_pool'] = True
 
-                        r = requests.post(node_call, files=files, data=params, headers=headers)
+                        r = requests.post(node_call, files=files, data=params, headers=ht.Connections.headers)
 
                         if r.status_code == 200:
                             for n in pool_list:
-                                if not n in (public_ip_full, lan_ip_full, local_ip_full, my_service_api):
+                                if ht.Connections.serviceNotMine(n) and not n == node:
                                     addNodeToPool(n)
                             Logger.printMessage(message='__sendPool__', description=('Solved by {n}'.format(n=node)))
                             return (r, params['creator'])

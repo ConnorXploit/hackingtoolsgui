@@ -30,6 +30,7 @@ def crackZip(request):
 
                     async_execution = request.POST.get('async_execution', False)
                     password_length = request.POST.get('password_length', 4)
+                    password_pattern = request.POST.get('password_pattern', None)
 
                     used_alphabet = 'numeric'
 
@@ -48,7 +49,7 @@ def crackZip(request):
                     # Save the file
                     filename, location, uploaded_file_url = saveFileOutput(myfile, "bruteforce", "crackers")
                     if uploaded_file_url:
-                        password = bruter.crackZip(uploaded_file_url, unzipper=unzipper, alphabet=used_alphabet, password_length=password_length, log=False)
+                        password = bruter.crackZip(uploaded_file_url, unzipper=unzipper, alphabet=used_alphabet, password_length=password_length, password_pattern=password_pattern, log=False)
                     else:
                         if request.POST.get('is_async', False):
                             data = {

@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
-from .library.hackingtools.core import Utils, Logger, Config
+from .library.hackingtools.core import Utils, Logger, Config, Connections
 from importlib import reload
 import os
 import json
@@ -39,6 +39,8 @@ def load_data():
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = ht.getModulesNames()
     pool_list = ht.Pool.getPoolNodes()
+    my_services = ht.Connections.getMyServices()
+    ngrokService = ht.Connections.getNgrokServiceUrl()
     my_node_id_pool = ht.Pool.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
     ht_data =  { 
@@ -52,6 +54,8 @@ def load_data():
         'modules_config_treeview':modules_config_treeview, 
         'modules_functions_modals':modules_functions_modals, 
         'pool_list':pool_list,
+        'my_services':my_services,
+        'ngrokService':ngrokService,
         'my_node_id_pool':my_node_id_pool,
         'status_pool':status_pool}
 
@@ -100,9 +104,9 @@ def sendPool(request, functionName):
     return None, None
 
 def switchPool(request):
-    ht.Pool.switchPool()
+    ht.switchPool()
     data = {
-        'status' : ht.WANT_TO_BE_IN_POOL
+        'status' : ht.wantPool()
     }
     return JsonResponse(data)
 
@@ -112,6 +116,13 @@ def createModule(request):
     created = ht.createModule(mod_name, mod_cat)
     if created:
         modules_and_params = ht.getModulesJSON()
+    load_data()
+    # ! Tengo que hacer que llame a las funciones de crear views y json con la config...
+    # ! Aprovechar para solucionar los params que no cogia
+    # ! Creo que se puede solucionar con la Util amIDjango al inicio de los import
+    # ! Hay que sacar las funciones de las urls.py que sirve para ello, a un UtilsDjango.py para ciertas funciones
+    # ! De esta forma, desde aqui, podemos llamar a esas funciones y cargar todo de una sola vez y avisar que las funciones
+    # ! solo serán funcionales una vez se reinicie o intentar hacer que se virtualice de alguna forma esa url y se resuelva sola sin tener que recargar
     return renderMainPanel(request=request)
 
 def configModule(request):
@@ -214,3 +225,11 @@ def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=Fals
 
     return used_alphabet
 
+
+# Connections
+
+def startNgrok(request):
+    ngrok = ht.Connections.startNgrok(Connections.getActualPort())
+    if ngrok:
+        return renderMainPanel(request=request, popup_text=ngrok)
+    return renderMainPanel(request=request)

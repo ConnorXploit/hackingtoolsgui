@@ -45,7 +45,31 @@ def search_host(request):
 
 # End ht_shodan
 
+# Automatic view function for getSSLCerts
+@csrf_exempt
+def getSSLCerts(request):
+	# Init of the view getSSLCerts
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'getSSLCerts')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:
+			# Parameter ip
+			ip = request.POST.get('ip')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_shodan').getSSLCerts( ip=ip )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		return renderMainPanel(request=request, popup_text=str(e))
+	
 # Automatic view function for queryShodan
+@csrf_exempt
 def queryShodan(request):
 	# Init of the view queryShodan
 	try:
@@ -66,11 +90,14 @@ def queryShodan(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').queryShodan( category=category, osintDays=osintDays )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for searchFromConfig
+@csrf_exempt
 def searchFromConfig(request):
 	# Init of the view searchFromConfig
 	try:
@@ -93,11 +120,14 @@ def searchFromConfig(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').searchFromConfig( search=search, keyword=keyword )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for setApi
+@csrf_exempt
 def setApi(request):
 	# Init of the view setApi
 	try:
@@ -115,26 +145,6 @@ def setApi(request):
 
 			# Execute the function
 			ht.getModule('ht_shodan').setApi( shodanKeyString=shodanKeyString )
-	except Exception as e:
-		return renderMainPanel(request=request, popup_text=str(e))
-	
-# Automatic view function for getSSLCerts
-def getSSLCerts(request):
-	# Init of the view getSSLCerts
-	try:
-		# Pool call
-		response, repool = sendPool(request, 'getSSLCerts')
-		if response or repool:
-			if repool:
-				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter ip
-			ip = request.POST.get('ip')
-
-			# Execute, get result and show it
-			result = ht.getModule('ht_shodan').getSSLCerts( ip=ip )
-			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	

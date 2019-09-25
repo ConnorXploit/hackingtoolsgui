@@ -58,6 +58,16 @@
                 "label_desc": "udp",
                 "placeholder": "udp",
                 "value": false
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_getDevicePorts__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "hasDevicePortOpened": {
@@ -75,6 +85,16 @@
                 "label_desc": "port",
                 "placeholder": "port",
                 "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_hasDevicePortOpened__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         }
     }

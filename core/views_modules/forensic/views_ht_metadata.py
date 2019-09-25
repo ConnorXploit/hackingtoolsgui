@@ -34,6 +34,7 @@ def get_metadata_exif(request):
         return renderMainPanel(request=request)
 
 # Automatic view function for get_image_exif
+@csrf_exempt
 def get_image_exif(request):
 	# Init of the view get_image_exif
 	try:
@@ -43,17 +44,20 @@ def get_image_exif(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Save file filename
-			filename_filename, location_filename, filename = saveFileOutput(request.POST.get('filename'), 'metadata', 'forensic')
+		else:
+			# Save file filename
+			filename_filename, location_filename, filename = saveFileOutput(request.FILES['filename'], 'metadata', 'forensic')
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_metadata').get_image_exif( filename=filename )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for get_pdf_exif
+@csrf_exempt
 def get_pdf_exif(request):
 	# Init of the view get_pdf_exif
 	try:
@@ -63,12 +67,14 @@ def get_pdf_exif(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Save file pdf_file
-			filename_pdf_file, location_pdf_file, pdf_file = saveFileOutput(request.POST.get('pdf_file'), 'metadata', 'forensic')
+		else:
+			# Save file pdf_file
+			filename_pdf_file, location_pdf_file, pdf_file = saveFileOutput(request.FILES['pdf_file'], 'metadata', 'forensic')
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_metadata').get_pdf_exif( pdf_file=pdf_file )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))

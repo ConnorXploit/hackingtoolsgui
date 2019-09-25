@@ -9,6 +9,7 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 
 # Automatic view function for crawl
+@csrf_exempt
 def crawl(request):
 	# Init of the view crawl
 	try:
@@ -18,8 +19,8 @@ def crawl(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter url
+		else:
+			# Parameter url
 			url = request.POST.get('url')
 
 			# Parameter depth (Optional - Default 100)
@@ -55,6 +56,8 @@ def crawl(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_spider').crawl( url=url, depth=depth, proxies=proxies, proxyhost=proxyhost, proxyuser=proxyuser, proxypassword=proxypassword, proxyport=proxyport, proxysecure=proxysecure )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))

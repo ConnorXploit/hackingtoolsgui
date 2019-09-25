@@ -15,6 +15,11 @@
                 "label_desc": "Password length",
                 "value": 4
             },
+            "password_pattern": {
+                "__type__": "text",
+                "label_desc": "Pattern it",
+                "placeholder": "Aaa0?a"
+            },
             "bruteforce_numeric": {
                 "__type__": "checkbox",
                 "label_desc": "0123456789",
@@ -42,7 +47,7 @@
             },
             "__pool_it_crackZip__": {
                 "__type__": "checkbox",
-                "label_desc": "Pool the execution the the pool list",
+                "label_desc": "Pool the execution to the pool list",
                 "selected": false
             }
         }

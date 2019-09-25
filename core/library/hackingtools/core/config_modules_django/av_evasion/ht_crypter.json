@@ -36,6 +36,84 @@
         }
     },
     "django_form_module_function": {
+        "convertToExe": {
+            "__function__": "convertToExe",
+            "__async__": false,
+            "__return__": "",
+            "stub_name": {
+                "__type__": "text",
+                "label_desc": "stub_name",
+                "placeholder": "stub_name",
+                "required": true
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_convertToExe__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "createStub": {
+            "__function__": "createStub",
+            "__async__": false,
+            "__return__": "text",
+            "crypto_data_hex": {
+                "__type__": "text",
+                "label_desc": "crypto_data_hex",
+                "placeholder": "crypto_data_hex",
+                "required": true
+            },
+            "public_key": {
+                "__type__": "text",
+                "label_desc": "public_key",
+                "placeholder": "public_key",
+                "required": true
+            },
+            "drop_file_name": {
+                "__type__": "file",
+                "label_desc": "drop_file_name",
+                "placeholder": "drop_file_name",
+                "required": true
+            },
+            "save_name": {
+                "__type__": "text",
+                "label_desc": "save_name",
+                "placeholder": "save_name",
+                "required": true
+            },
+            "is_iterating": {
+                "__type__": "text",
+                "label_desc": "is_iterating",
+                "placeholder": "is_iterating",
+                "value": false
+            },
+            "is_last": {
+                "__type__": "text",
+                "label_desc": "is_last",
+                "placeholder": "is_last",
+                "value": false
+            },
+            "convert": {
+                "__type__": "text",
+                "label_desc": "convert",
+                "placeholder": "convert",
+                "value": false
+            },
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
+            },
+            "__pool_it_createStub__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
         "crypt_file": {
             "__function__": "crypt_file",
             "__async__": false,
@@ -87,64 +165,16 @@
                 "label_desc": "is_last",
                 "placeholder": "is_last",
                 "value": false
-            }
-        },
-        "convertToExe": {
-            "__function__": "convertToExe",
-            "__async__": false,
-            "__return__": "",
-            "stub_name": {
-                "__type__": "text",
-                "label_desc": "stub_name",
-                "placeholder": "stub_name",
-                "required": true
-            }
-        },
-        "createStub": {
-            "__function__": "createStub",
-            "__async__": false,
-            "__return__": "text",
-            "crypto_data_hex": {
-                "__type__": "text",
-                "label_desc": "crypto_data_hex",
-                "placeholder": "crypto_data_hex",
-                "required": true
             },
-            "public_key": {
-                "__type__": "text",
-                "label_desc": "public_key",
-                "placeholder": "public_key",
-                "required": true
+            "__is_async__": {
+                "__type__": "checkbox",
+                "label_desc": "Want AJAX call",
+                "selected": false
             },
-            "drop_file_name": {
-                "__type__": "file",
-                "label_desc": "drop_file_name",
-                "placeholder": "drop_file_name",
-                "required": true
-            },
-            "save_name": {
-                "__type__": "text",
-                "label_desc": "save_name",
-                "placeholder": "save_name",
-                "required": true
-            },
-            "is_iterating": {
-                "__type__": "text",
-                "label_desc": "is_iterating",
-                "placeholder": "is_iterating",
-                "value": false
-            },
-            "is_last": {
-                "__type__": "text",
-                "label_desc": "is_last",
-                "placeholder": "is_last",
-                "value": false
-            },
-            "convert": {
-                "__type__": "text",
-                "label_desc": "convert",
-                "placeholder": "convert",
-                "value": false
+            "__pool_it_crypt_file__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         }
     }

@@ -47,6 +47,7 @@ def extractFile(request):
     return renderMainPanel(request=request)
 
 # Automatic view function for zipFiles
+@csrf_exempt
 def zipFiles(request):
 	# Init of the view zipFiles
 	try:
@@ -56,15 +57,17 @@ def zipFiles(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Save file files
-			filename_files, location_files, files = saveFileOutput(request.POST.get('files'), 'unzip', 'crackers')
-			
-	# Parameter new_folder_name
+		else:
+			# Save file files
+			filename_files, location_files, files = saveFileOutput(request.FILES['files'], 'unzip', 'crackers')
+
+			# Parameter new_folder_name
 			new_folder_name = request.POST.get('new_folder_name')
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_unzip').zipFiles( files=files, new_folder_name=new_folder_name )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))

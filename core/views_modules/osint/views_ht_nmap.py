@@ -29,6 +29,7 @@ def getConnectedDevices(request):
 # End ht_nmap
 
 # Automatic view function for getDevicePorts
+@csrf_exempt
 def getDevicePorts(request):
 	# Init of the view getDevicePorts
 	try:
@@ -38,8 +39,8 @@ def getDevicePorts(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter ip
+		else:
+			# Parameter ip
 			ip = request.POST.get('ip')
 
 			# Parameter tcp (Optional - Default True)
@@ -52,11 +53,14 @@ def getDevicePorts(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_nmap').getDevicePorts( ip=ip, tcp=tcp, udp=udp )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for hasDevicePortOpened
+@csrf_exempt
 def hasDevicePortOpened(request):
 	# Init of the view hasDevicePortOpened
 	try:
@@ -66,15 +70,17 @@ def hasDevicePortOpened(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter ip
+		else:
+			# Parameter ip
 			ip = request.POST.get('ip')
-			
-	# Parameter port
+
+			# Parameter port
 			port = request.POST.get('port')
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_nmap').hasDevicePortOpened( ip=ip, port=port )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))

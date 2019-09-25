@@ -59,6 +59,11 @@ def saveLog():
         for log in logs:
             f.write("{log}\n".format(log=log))
 
+
+def print_and_return(msg, value, debug_module=False, debug_core=False, is_error=False):
+    printMessage(message=msg, description=value, debug_core=debug_core, is_error=is_error)
+    return value
+
 def printMessage(message, description=None, debug_module=False, debug_core=False, is_error=False, color=None):
     """This function prints a pretty message in console. The colors can be changed in config.json
     

@@ -1,3 +1,4 @@
+from .core import Connections
 from .core import Config, Utils, Logger
 config = Config.getConfig(parentKey='core', key='import_modules')
 from colorama import Fore, Back, Style

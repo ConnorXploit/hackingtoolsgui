@@ -1,5 +1,13 @@
-import hackingtools as ht
-from . import Config, Logger, Utils
+from . import Config, Logger
+
+def amIdjango(fileCall):
+    # Used by core on init for initialaizing Django Functions if needed
+    return True if 'core.library.hackingtools' == fileCall else False
+
+if amIdjango(__name__):
+    from core.library import hackingtools as ht
+else:
+    import hackingtools as ht
 config = Config.getConfig(parentKey='core', key='Utils')
 config_logger = Config.getConfig(parentKey='core', key='Logger')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
@@ -14,6 +22,7 @@ import requests
 import base64
 import os, inspect, ast
 import socket
+import itertools
 from itertools import product 
 
 from datetime import datetime
@@ -97,12 +106,12 @@ def getValidDictNoEmptyKeys(data):
                 final_data[d] = getValidDictNoEmptyKeys(data[d])
     return final_data
 
-def getFunctionFullCall(moduleName, functionName):
-    return 'ht.modules.{category}.{modDir}.{module}.{callClass}().{function}'.format(category=ht.getModuleCategory(moduleName), modDir=moduleName.replace('ht_', ''), module=moduleName, callClass=default_class_name_for_all, function=functionName)
+def getFunctionFullCall(moduleName, category, functionName):
+    return 'ht.modules.{category}.{modDir}.{module}.{callClass}().{function}'.format(category=category, modDir=moduleName.replace('ht_', ''), module=moduleName, callClass=default_class_name_for_all, function=functionName)
 
 def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
     params_func = None
-    function = getFunctionFullCall(moduleName=moduleName, functionName=functionName)
+    function = getFunctionFullCall(moduleName=moduleName, category=category, functionName=functionName)
     try:
         params_func = inspect.getfullargspec(eval(function))[0]
         params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
@@ -164,26 +173,9 @@ def doesFunctionContainsExplicitReturn(functionCall):
     except:
         return False
 
-# Network
-def getMyPublicIP():
-    try:
-        return requests.get('https://api.ipify.org').text
-    except:
-        return '127.0.0.1'
-
-def getMyLanIP():
-    return str(socket.gethostbyname(socket.gethostname()))
-
-def getMyLocalIP():
-    return '127.0.0.1'
-
 # Others
 def getTime():
     return datetime.utcnow().strftime(config_logger['log_print_date_format'])[:-3]
-
-def amIdjango(fileCall):
-    # Used by core on init for initialaizing Django Functions if needed
-    return True if 'core.library.hackingtools' == fileCall else False
 
 # Maths
 def euclides(a, b):
@@ -382,9 +374,45 @@ def randomText(length=8, alphabet='lalpha'):
         Logger.printMessage(message=randomText, description=e, is_error=True)
 
 def getCombinationPosibilitiesLength(alphabet, length):
-    return [''.join(x) for x in product(config_utils[alphabet], repeat=length)]
+    return [''.join(x) for x in product(config_utils[alphabet], repeat=int(length))]
 
-def getDict(length=8, maxvalue=10000, alphabet='lalpha'):
-    res = getCombinationPosibilitiesLength(alphabet=alphabet, length=length)
-    Logger.printMessage(message='getDict', description='{data} - {count}'.format(data=res[:10], count=len(res)), debug_core=True)
-    return res
+def fromWhatDictListIsChar(char='a'):
+    dictionaryOptions = Config.getConfig(parentKey='modules', key='ht_bruteforce', subkey='dictionaryOptions')
+    for opt in dictionaryOptions:
+        if char in config_utils[opt]:
+            return opt
+    return None
+
+def getCombinationPosibilitiesByPattern(try_pattern=None):
+    try:
+        alphabets_patter = []
+        create_pattern = []
+        for char in try_pattern:
+            char_alphabet = fromWhatDictListIsChar(char=char)
+
+            if len(alphabets_patter) == 0 or not char_alphabet in alphabets_patter or not alphabets_patter[-1] == char_alphabet:
+                alphabets_patter.append(char_alphabet)
+                create_pattern.append(1)
+            else:
+                create_pattern[-1] += 1
+
+        final_combinations = []
+
+        for i_alp, alp in enumerate(alphabets_patter):
+            print(final_combinations[:3])
+            if i_alp == 0:
+                final_combinations = getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp])
+            else:
+                final_combinations = [r[0] + r[1] for r in itertools.product(final_combinations, getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp]))]
+
+        return final_combinations
+    except MemoryError:
+        Logger.printMessage(message='Memory Error', description='There are so many combinations for this pattern', is_error=True)
+
+def getDict(length=8, maxvalue=10000, alphabet='lalpha', try_pattern=None):
+    if try_pattern:
+        return getCombinationPosibilitiesByPattern(try_pattern=try_pattern)
+    else:
+        res = getCombinationPosibilitiesLength(alphabet=alphabet, length=length)
+        Logger.printMessage(message='getDict', description='{data} - {count}'.format(data=res[:10], count=len(res)), debug_core=True)
+        return res

@@ -59,13 +59,34 @@
             </div>
             <div class="modal-body">
               <input name="pool_ip" class="form-control bg-light border-0 small col-md-6 mb-4" placeholder="https://1.2.3.4:8000" required/>
-              <textarea class="form-control">{{pool_list}}</textarea>
+              <textarea class="form-control">{{ pool_list | join:"&#10;" }}</textarea>
+              <h5 class="modal-title">My services:</h5>
+              <textarea class="form-control">{{ my_services | join:"&#10;" }}</textarea>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               <input type="submit" class="btn btn-primary" value="Add pool node"></button>
             </div>
           </form>
+          {% if not ngrokService %}
+            <div class="modal-body">
+              <hr class='sidebar-divider my-0 my-separator'>
+              <div style="display: flex;">
+                <form action="{% url 'startNgrok' %}" method="post" id="startNgrok" name="startNgrok" style="margin: 0 10px;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">Init ngrok</button>
+                </form>
+                <form action="{% url 'startNgrok' %}" method="post" id="startNgrok" name="startNgrok" style="margin: 0 10px;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">Init ngrok</button>
+                </form>
+                <form action="{% url 'startNgrok' %}" method="post" id="startNgrok" name="startNgrok" style="margin: 0 10px;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">Init ngrok</button>
+                </form>
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>

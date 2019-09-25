@@ -161,6 +161,7 @@ def trainFromZip(request):
         return renderMainPanel(request=request, popup_text=str(e))
 
 # Automatic view function for getTestsModelsDir
+@csrf_exempt
 def getTestsModelsDir(request):
 	# Init of the view getTestsModelsDir
 	try:
@@ -173,11 +174,14 @@ def getTestsModelsDir(request):
 		else:
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').getTestsModelsDir()
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for predict
+@csrf_exempt
 def predict(request):
 	# Init of the view predict
 	try:
@@ -187,8 +191,8 @@ def predict(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter X_img_path
+		else:
+			# Parameter X_img_path
 			X_img_path = request.POST.get('X_img_path')
 
 			# Parameter knn_clf (Optional - Default None)
@@ -206,11 +210,14 @@ def predict(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').predict( X_img_path=X_img_path, knn_clf=knn_clf, model_path=model_path, distance_threshold=distance_threshold )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for saveCroppedImage
+@csrf_exempt
 def saveCroppedImage(request):
 	# Init of the view saveCroppedImage
 	try:
@@ -220,17 +227,17 @@ def saveCroppedImage(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter img_path
+		else:
+			# Parameter img_path
 			img_path = request.POST.get('img_path')
-			
-	# Parameter coords
+
+			# Parameter coords
 			coords = request.POST.get('coords')
-			
-	# Parameter model_path
+
+			# Parameter model_path
 			model_path = request.POST.get('model_path')
-			
-	# Parameter name
+
+			# Parameter name
 			name = request.POST.get('name')
 
 			# Parameter counter (Optional - Default 1)
@@ -242,6 +249,7 @@ def saveCroppedImage(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for show_prediction_labels_on_image
+@csrf_exempt
 def show_prediction_labels_on_image(request):
 	# Init of the view show_prediction_labels_on_image
 	try:
@@ -251,23 +259,26 @@ def show_prediction_labels_on_image(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter img_path
+		else:
+			# Parameter img_path
 			img_path = request.POST.get('img_path')
-			
-	# Parameter predictions
+
+			# Parameter predictions
 			predictions = request.POST.get('predictions')
-			
-	# Parameter model_path
+
+			# Parameter model_path
 			model_path = request.POST.get('model_path')
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').show_prediction_labels_on_image( img_path=img_path, predictions=predictions, model_path=model_path )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for train
+@csrf_exempt
 def train(request):
 	# Init of the view train
 	try:
@@ -277,8 +288,8 @@ def train(request):
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
-		else:			
-	# Parameter train_dir
+		else:
+			# Parameter train_dir
 			train_dir = request.POST.get('train_dir')
 
 			# Parameter model_save_path (Optional - Default None)
@@ -301,6 +312,8 @@ def train(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').train( train_dir=train_dir, model_save_path=model_save_path, n_neighbors=n_neighbors, knn_algo=knn_algo, verbose=verbose )
+			if request.POST.get('is_async', False):
+				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		return renderMainPanel(request=request, popup_text=str(e))

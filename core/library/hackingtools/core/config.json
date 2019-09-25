@@ -63,7 +63,8 @@
         "ht_metadata": {},
         "ht_bruteforce": {
             "max_for_chunk": 10000,
-            "msg_password_is": "Password is"
+            "msg_password_is": "Password is",
+            "dictionaryOptions": ["lalpha", "ualpha", "numeric", "symbols-14", "symbols-all"]
         },
         "ht_unzip": {
             "posible_combinations": "Posible Combinations"
@@ -96,6 +97,11 @@
     "core": {
         "WANT_TO_BE_IN_POOL": true,
         "LOAD_DJANGO_CONF": true,
+        "Connections": {
+            "ngrok": {
+                "__load_on_boot__": false
+            }
+        },
         "__API_KEY__": {
             "botscout_api": "",
             "builtwith_api": "",
