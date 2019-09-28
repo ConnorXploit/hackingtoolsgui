@@ -342,3 +342,6 @@ textarea.form-control {
 .filterable .filters input[disabled]:-ms-input-placeholder {
     color: #333;
 }
+#collapseDocumentation, #collapseUtilities, #collapseTwo {
+    padding-bottom: 40px !important;
+}
