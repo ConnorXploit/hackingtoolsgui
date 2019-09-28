@@ -345,3 +345,27 @@ textarea.form-control {
 #collapseDocumentation, #collapseUtilities, #collapseTwo {
     padding-bottom: 40px !important;
 }
+.moduleFunctions {
+    max-height: 300px !important;
+    overflow: auto;
+    overscroll-behavior: auto;
+    border: 2px solid #4e73df !important;
+    border-radius: 3% !important;
+    padding: 10px !important;
+}
+.moduleFunctions::-webkit-scrollbar-track
+{
+	border: 1px solid #4e73df;
+	background-color: #F5F5F5;
+}
+
+.moduleFunctions::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+.moduleFunctions::-webkit-scrollbar-thumb
+{
+	background-color: #4e73df;	
+}

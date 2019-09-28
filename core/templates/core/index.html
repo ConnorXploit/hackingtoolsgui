@@ -261,7 +261,8 @@
               <div class="row">
                 {% for name, funct in modules_all.items %}
                   <div class="col-lg-3 mb-3">
-                      {{name}}
+                    <h3>{{name}}</h3>
+                    <div class="moduleFunctions">
                       {% if funct.items|length > 1 %}
                         {% for funct_name, funct_params in funct.items %}
                           {% if funct_name != 'help' %}
@@ -288,9 +289,6 @@
                                                     {% endfor %}
                                                   {% endfor %}
                                                   <input type="text" id="is_async_{{functi}}" name="is_async_{{functi}}" value="true" style="display: none;">
-                                                {% comment %} </div>
-                                                <div class="modal-footer"> {% endcomment %}
-                                                  <button type="submit" class="btn btn-primary">Test {{functi}}</button>
                                                   <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}">
                                                 </form>
                                               </div>
@@ -384,6 +382,7 @@
                           </div>
                         </div>
                       {% endif %}
+                    </div>
                   </div>
                 {% endfor %}
               </div>
