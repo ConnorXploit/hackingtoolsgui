@@ -216,7 +216,7 @@ def multiplicativeInverse(e, phi):
     if inv < 1: inv += phi #we only want positive values
     return inv
 
-def isPrime(number):
+def isPrime(n):
     """Tests to see if a number is prime.
     
     Arguments:
@@ -225,29 +225,19 @@ def isPrime(number):
     Returns:
         boolean -- If is prime True, else False
     """
-    Logger.printMessage(message='{methodName}'.format(methodName='isPrime'), description='{n}'.format(n=number), debug_core=True)
+    Logger.printMessage(message='{methodName}'.format(methodName='isPrime'), description='{n}'.format(n=n), debug_core=True)
     excepted = (0, 2, 4, 5, 6, 8)
-    if not int(str(number)[-1]) in excepted:
-        division = 0
-        try:
-            half = number/2
-            if not isinstance(half, float):
-                return False
-        except:
+    if not int(str(n)[-1]) in excepted:
+        if (n==1):
             return False
-        fibo_1 = 0
-        fibo_2 = 1
-        fibo_temp = fibo_1 + fibo_2
-        while fibo_temp < int(number/2):
-            if number % fibo_temp == 0:
-                division += 1
-            fibo_1 = fibo_2
-            fibo_2 = fibo_temp
-            fibo_temp = fibo_1 + fibo_2
-            if division == 2:
-                return False
-        if division == 1:
+        elif (n==2):
             return True
+        else:
+            for x in range(2,n):
+                if(n % x==0):
+                    return False
+            return True
+    return False
 
 def getRandomPrimeByLength(length = 8):
     """Returns a random prime number with the length you choose
@@ -264,10 +254,11 @@ def getRandomPrimeByLength(length = 8):
         length = 8
     try:
         while True:
-            n=random.randint(10**(length-1), 10**length)
+            n = randomText(length=length, alphabet='numeric')
             if isPrime(n):
                 return n
     except:
+        raise
         return -1
 
 # Text Treatment
@@ -399,7 +390,6 @@ def getCombinationPosibilitiesByPattern(try_pattern=None):
         final_combinations = []
 
         for i_alp, alp in enumerate(alphabets_patter):
-            print(final_combinations[:3])
             if i_alp == 0:
                 final_combinations = getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp])
             else:
@@ -410,7 +400,7 @@ def getCombinationPosibilitiesByPattern(try_pattern=None):
         Logger.printMessage(message='Memory Error', description='There are so many combinations for this pattern', is_error=True)
 
 def getDict(length=8, maxvalue=10000, alphabet='lalpha', try_pattern=None):
-    if try_pattern:
+    if try_pattern and not try_pattern == '':
         return getCombinationPosibilitiesByPattern(try_pattern=try_pattern)
     else:
         res = getCombinationPosibilitiesLength(alphabet=alphabet, length=length)

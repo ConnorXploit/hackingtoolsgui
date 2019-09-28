@@ -51,14 +51,6 @@ def createModuleFunctionView(moduleName, functionName):
         else:
             ht.Logger.printMessage(message='No function params', description=functionName)
 
-
-        # Is async checkbox
-        __is_async__ = '__is_async__'
-        moduleViewConfig[__is_async__] = {}
-        moduleViewConfig[__is_async__]['__type__'] = 'checkbox'
-        moduleViewConfig[__is_async__]['label_desc'] = 'Want AJAX call'
-        moduleViewConfig[__is_async__]['selected'] = False
-
         # Add pool it checkbox
         pool_param = '__pool_it_{p}__'.format(p=functionName)
         moduleViewConfig[pool_param] = {}
@@ -310,13 +302,13 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 if input_type == 'file':
                     #html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_className, id=m, required=required)
                     html += "<div class='input-group'>"
-                    html += "<div class='input-group-prepend'>"
-                    html += "<span class='input-group-text' id='inputGroupFileAddon01{id}'>{input_label_desc}</span>".format(id=m, input_label_desc=input_label_desc)
-                    html += "</div>"
-                    html += "<div class='custom-file'>"
-                    html += "<input type='file' class='custom-file-input' name='{id}' aria-describedby='inputGroupFileAddon01{id}' {required}>".format(id=m, required=required)
+                    # html += "<div class='input-group-prepend'>"
+                    # html += "<span class='input-group-text' id='inputGroupFileAddon01{id}'>{input_label_desc}</span>".format(id=m, input_label_desc=input_label_desc)
+                    # html += "</div>"
+                    # html += "<div class='custom-file'>"
+                    html += "<input type='file' class='custom-file-input' name='{id}' {required}>".format(id=m, required=required)
                     html += "<label class='custom-file-label' for='{id}'>Choose file</label>".format(id=m)
-                    html += "</div>"
+                    # html += "</div>"
                     html += "</div>"
 
                 elif input_type == 'checkbox':
@@ -356,7 +348,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
 
                 elif input_type == 'submit':
 
-                    submit_id = m
+                    submit_id = '{m}_{f}'.format(m=m, f=config_extrasubkey)
                     footer += "<input type=\"submit\" class=\"{className}\" value=\"{input_value}\" id=\"{id}\" />".format(className=input_className, input_value=input_value, id=submit_id)
                     
                     if loading_text:

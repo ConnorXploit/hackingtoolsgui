@@ -17,11 +17,6 @@
                 "placeholder": "campo",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_cantidadTuplasEnTapla__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -43,11 +38,6 @@
                 "label_desc": "tabla_name",
                 "placeholder": "tabla_name",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_cogerColumnasTabla__": {
                 "__type__": "checkbox",
@@ -83,11 +73,6 @@
                 "placeholder": "campoConocido",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_cogerNombreDeTablaPorID__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -98,11 +83,6 @@
             "__function__": "cogerTablas",
             "__async__": false,
             "__return__": "",
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_cogerTablas__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -124,11 +104,6 @@
                 "label_desc": "color",
                 "placeholder": "color",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_color__": {
                 "__type__": "checkbox",
@@ -152,11 +127,6 @@
                 "placeholder": "table",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_compareTextExistWhereSubstringACII__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -172,11 +142,6 @@
                 "label_desc": "sqli",
                 "placeholder": "sqli",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_ejecutarSQL__": {
                 "__type__": "checkbox",
@@ -212,11 +177,6 @@
                 "placeholder": "campoConocido",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_longitudCampoIDtablaCampo__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -233,11 +193,6 @@
                 "placeholder": "clave",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_md5_decrypt__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -248,11 +203,6 @@
             "__function__": "mostrarUserPass",
             "__async__": false,
             "__return__": "",
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_mostrarUserPass__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -280,11 +230,6 @@
                 "label_desc": "nombre_campo_id",
                 "placeholder": "nombre_campo_id",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_sacarValorPorTablaColumnaID__": {
                 "__type__": "checkbox",
@@ -332,11 +277,6 @@
                 "placeholder": "security",
                 "value": ""
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_setParams__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -352,11 +292,6 @@
                 "label_desc": "ascii_text",
                 "placeholder": "ascii_text",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_transformAsciiToHex__": {
                 "__type__": "checkbox",

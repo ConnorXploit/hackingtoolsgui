@@ -68,11 +68,6 @@
                 "placeholder": "ip",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_getSSLCerts__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -94,11 +89,6 @@
                 "label_desc": "osintDays",
                 "placeholder": "osintDays",
                 "value": 100
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_queryShodan__": {
                 "__type__": "checkbox",
@@ -122,11 +112,6 @@
                 "placeholder": "keyword",
                 "value": ""
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_searchFromConfig__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -142,11 +127,6 @@
                 "label_desc": "shodanKeyString",
                 "placeholder": "shodanKeyString",
                 "value": null
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_setApi__": {
                 "__type__": "checkbox",

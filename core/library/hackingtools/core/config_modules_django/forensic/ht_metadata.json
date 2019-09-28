@@ -11,11 +11,6 @@
                 "placeholder": "filename",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_get_image_exif__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -31,11 +26,6 @@
                 "label_desc": "pdf_file",
                 "placeholder": "pdf_file",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_get_pdf_exif__": {
                 "__type__": "checkbox",

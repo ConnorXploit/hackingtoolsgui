@@ -11,6 +11,7 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 
 # ht_objectdetection
 
+@csrf_exempt
 def predictImage(request):
     this_conf = config['ht_objectdetection_predictImage']
     try:
@@ -55,7 +56,7 @@ def predictImage(request):
                     response['Content-Disposition'] = 'inline; filename=' + os.path.basename(image_final)
                     return response
             
-            if request.POST.get('is_async', False):
+            if request.POST.get('is_async_predictImage', False):
                 data = {
                     'data' : this_conf['need_params']
                 }
@@ -66,6 +67,7 @@ def predictImage(request):
         Logger.printMessage(message='predictImage', description=str(e), is_error=True)
         return renderMainPanel(request=request, popup_text=str(e))
 
+@csrf_exempt
 def predictFromZip(request):
     this_conf = config['ht_objectdetection_predictFromZip']
     try:
@@ -113,7 +115,7 @@ def predictFromZip(request):
                     response = HttpResponse(fh.read(), content_type="application/{type}".format(type=filename.split('.')[1]))
                     response['Content-Disposition'] = 'inline; filename=' + os.path.basename(image_final)
                     return response
-            if request.POST.get('is_async', False):
+            if request.POST.get('is_async_predictFromZip', False):
                 data = {
                     'data' : this_conf['need_params']
                 }
@@ -124,6 +126,7 @@ def predictFromZip(request):
         Logger.printMessage(message='predictFromZip', description=str(e), is_error=True)
         return renderMainPanel(request=request, popup_text=str(e))
 
+@csrf_exempt
 def trainFromZip(request):
     try:
         if len(request.FILES) != 0:
@@ -148,7 +151,7 @@ def trainFromZip(request):
                     trainZipFile=uploaded_file_urlZip, 
                     first_folder_name=first_folder_name,
                     n_neighbors=n_neighbors)
-                if request.POST.get('is_async', False):
+                if request.POST.get('is_async_trainFromZip', False):
                     data = {
                         'data' : image_final
                     }
@@ -174,10 +177,12 @@ def getTestsModelsDir(request):
 		else:
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').getTestsModelsDir()
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_getTestsModelsDir', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_getTestsModelsDir', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for predict
@@ -192,28 +197,40 @@ def predict(request):
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
 		else:
-			# Parameter X_img_path
-			X_img_path = request.POST.get('X_img_path')
+			try:
+				# Save file X_img_path
+				filename_X_img_path, location_X_img_path, X_img_path = saveFileOutput(request.FILES['X_img_path'], 'objectdetection', 'ai')
 
+			except Exception as e:
+				# If not param X_img_path
+				if request.POST.get('is_async_predict', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 			# Parameter knn_clf (Optional - Default None)
 			knn_clf = request.POST.get('knn_clf', None)
 			if not knn_clf:
 				knn_clf = None
 
-			# Parameter model_path (Optional - Default None)
-			model_path = request.POST.get('model_path', None)
-			if not model_path:
-				model_path = None
+			try:
+				# Save file model_path (Optional)
+				filename_model_path, location_model_path, model_path = saveFileOutput(request.FILES['model_path'], 'objectdetection', 'ai')
+			except Exception as e:
+				# If not param model_path
+				if request.POST.get('is_async_predict', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 
 			# Parameter distance_threshold (Optional - Default 0.6)
 			distance_threshold = request.POST.get('distance_threshold', 0.6)
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').predict( X_img_path=X_img_path, knn_clf=knn_clf, model_path=model_path, distance_threshold=distance_threshold )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_predict', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_predict', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for saveCroppedImage
@@ -228,15 +245,27 @@ def saveCroppedImage(request):
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
 		else:
-			# Parameter img_path
-			img_path = request.POST.get('img_path')
+			try:
+				# Save file img_path
+				filename_img_path, location_img_path, img_path = saveFileOutput(request.FILES['img_path'], 'objectdetection', 'ai')
 
+			except Exception as e:
+				# If not param img_path
+				if request.POST.get('is_async_saveCroppedImage', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 			# Parameter coords
 			coords = request.POST.get('coords')
 
-			# Parameter model_path
-			model_path = request.POST.get('model_path')
+			try:
+				# Save file model_path
+				filename_model_path, location_model_path, model_path = saveFileOutput(request.FILES['model_path'], 'objectdetection', 'ai')
 
+			except Exception as e:
+				# If not param model_path
+				if request.POST.get('is_async_saveCroppedImage', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 			# Parameter name
 			name = request.POST.get('name')
 
@@ -246,6 +275,8 @@ def saveCroppedImage(request):
 			# Execute the function
 			ht.getModule('ht_objectdetection').saveCroppedImage( img_path=img_path, coords=coords, model_path=model_path, name=name, counter=counter )
 	except Exception as e:
+		if request.POST.get('is_async_saveCroppedImage', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for show_prediction_labels_on_image
@@ -260,21 +291,35 @@ def show_prediction_labels_on_image(request):
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
 		else:
-			# Parameter img_path
-			img_path = request.POST.get('img_path')
+			try:
+				# Save file img_path
+				filename_img_path, location_img_path, img_path = saveFileOutput(request.FILES['img_path'], 'objectdetection', 'ai')
 
+			except Exception as e:
+				# If not param img_path
+				if request.POST.get('is_async_show_prediction_labels_on_image', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 			# Parameter predictions
 			predictions = request.POST.get('predictions')
 
-			# Parameter model_path
-			model_path = request.POST.get('model_path')
+			try:
+				# Save file model_path
+				filename_model_path, location_model_path, model_path = saveFileOutput(request.FILES['model_path'], 'objectdetection', 'ai')
 
+			except Exception as e:
+				# If not param model_path
+				if request.POST.get('is_async_show_prediction_labels_on_image', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').show_prediction_labels_on_image( img_path=img_path, predictions=predictions, model_path=model_path )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_show_prediction_labels_on_image', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_show_prediction_labels_on_image', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for train
@@ -292,10 +337,14 @@ def train(request):
 			# Parameter train_dir
 			train_dir = request.POST.get('train_dir')
 
-			# Parameter model_save_path (Optional - Default None)
-			model_save_path = request.POST.get('model_save_path', None)
-			if not model_save_path:
-				model_save_path = None
+			try:
+				# Save file model_save_path (Optional)
+				filename_model_save_path, location_model_save_path, model_save_path = saveFileOutput(request.FILES['model_save_path'], 'objectdetection', 'ai')
+			except Exception as e:
+				# If not param model_save_path
+				if request.POST.get('is_async_train', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 
 			# Parameter n_neighbors (Optional - Default None)
 			n_neighbors = request.POST.get('n_neighbors', None)
@@ -312,9 +361,11 @@ def train(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_objectdetection').train( train_dir=train_dir, model_save_path=model_save_path, n_neighbors=n_neighbors, knn_algo=knn_algo, verbose=verbose )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_train', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_train', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	

@@ -13,39 +13,26 @@
           $('#popup').modal('hide');
         }
       </script>
-      <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="responseLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-pop-up" role="document">
-          <div class="modal-content" style="height: 500px;">
-            <div class="modal-header">
-              <h5 class="modal-title" id="responseLabel">Response:</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <textarea id="popup_textarea" class="form-control">{{popup_text|safe}}</textarea>
-            </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="button" class="btn btn-primary" value="Copy to the clipboard" onclick="copyToClipboard()"></button>
-              </div>
+    {% endif %}
+    <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="responseLabel" aria-hidden="true" style="z-index: 11111;">
+      <div class="modal-dialog modal-dialog-pop-up" role="document">
+        <div class="modal-content" style="height: 500px;">
+          <div class="modal-header">
+            <h5 class="modal-title" id="responseLabel">Response:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
+          <div class="modal-body">
+            <textarea id="popup_textarea" class="form-control">{{popup_text|safe}}</textarea>
+          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="button" class="btn btn-primary" value="Copy to the clipboard" onclick="copyToClipboard()"></button>
+            </div>
         </div>
       </div>
-    {% endif %}
-    <!-- Page Heading -->
-    {% comment %} <script>
-      function copyNodeIdToClipboard() {
-        var copyText = document.getElementById("my_pool_id");
-        copyText.select();
-        document.execCommand("copy");
-        temp = copyText.value
-        copyText.value = 'Pool Node copied for sharing'
-        setTimeout(function(){
-          copyText.value = temp
-        }, 2000);
-      }
-    </script> {% endcomment %}
+    </div>
     <div class="modal fade" id="pool_list" tabindex="-1" role="dialog" aria-labelledby="pool_list_modal" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -62,6 +49,7 @@
               <textarea class="form-control">{{ pool_list | join:"&#10;" }}</textarea>
               <h5 class="modal-title">My services:</h5>
               <textarea class="form-control">{{ my_services | join:"&#10;" }}</textarea>
+              <input type="text" id="is_async_add_pool_node" name="is_async_add_pool_node" value="true" style="display: none;">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -286,47 +274,79 @@
                                       <div class="modal-content">
                                         {% for data_key, data_value in data.items %}
                                           {% if data_key in '__function__' %}
-                                            <form action="{% url data_value %}" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
-                                              {% csrf_token %}
                                               <div class="modal-header">
                                                 <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
-                                              </div>
+                                              </div><!-- -->
                                               <div class="modal-body">
-                                                {% for mod, modform in modules_forms_modal.items %}
-                                                  {% for f_name, f_data_form in modform.items %}
-                                                    {% if f_name == functi %}
-                                                      {{f_data_form|safe}}
-                                                    {% endif %}
+                                                <form action="{% url data_value %}" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
+                                                  {% csrf_token %}
+                                                  {% for mod, modform in modules_forms_modal.items %}
+                                                    {% for f_name, f_data_form in modform.items %}
+                                                      {% if f_name == functi %}
+                                                        {{f_data_form|safe}}
+                                                      {% endif %}
+                                                    {% endfor %}
                                                   {% endfor %}
-                                                {% endfor %}
+                                                  <input type="text" id="is_async_{{functi}}" name="is_async_{{functi}}" value="true" style="display: none;">
+                                                {% comment %} </div>
+                                                <div class="modal-footer"> {% endcomment %}
+                                                  <button type="submit" class="btn btn-primary">Test {{functi}}</button>
+                                                  <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}">
+                                                </form>
                                               </div>
-                                              <div class="modal-footer">
-                                                <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}"></button>
-                                              </div>
-                                                {% comment %} <script>
-                                                  function upload(event) {
-                                                    event.preventDefault();
-                                                    var data = new FormData($('form_{{data_value}}').get(0));
+                                            <script>
+                                              $("#form_{{data_value}}").on('submit',(function(e) {
+                                                e.preventDefault();
+                                                var form = $('#form_{{data_value}}');
 
-                                                    $.ajax({
-                                                        url: $(this).attr('action'),
-                                                        type: $(this).attr('method'),
-                                                        data: data,
-                                                        cache: false,
-                                                        processData: false,
-                                                        contentType: false,
-                                                        success: function(data) {
-                                                            alert('success');
-                                                            alert(data)
+                                                $.ajax({
+                                                    url: form.attr('action'),
+                                                    type: "POST",
+                                                    data: new FormData($('#form_{{data_value}}')[0]),
+                                                    async: true,
+                                                    enctype: 'multipart/form-data',
+                                                    contentType: false,
+                                                    cache: false,
+                                                    processData: false,
+                                                    success : function(res) {
+                                                      if('data' in res && res.data && Object.keys(res.data).length !== 0){
+                                                        function isDict(v) {
+                                                            return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date) && isJsonable(v);
                                                         }
-                                                    });
-                                                    return false;
-                                                  }
-                                                  function submit(){
-                                                    $('form_{{data_value}}').submit(upload);
-                                                  }
-                                                </script> {% endcomment %}
-                                            </form>
+                                                        if(isDict(res.data)){
+                                                          data = JSON.stringify(res.data, null, 2);
+                                                          $.notify("{{functi}}:\n" + data, "success");
+                                                        } else {
+                                                          if(res.data instanceof Array){
+                                                            var data = '';
+                                                            for(var i=0; i < res.data.length; i++){
+                                                              data += "\n" + res.data[i];
+                                                            }
+                                                            $.notify("{{functi}}: " + data, "success");
+                                                          } else {
+                                                            /*$('#popup_textarea').val(data)
+                                                            $('#popup').modal('show');*/
+                                                            $.notify("{{functi}}:\n" + res.data, "success");
+                                                          }
+                                                        }
+                                                      } else {
+                                                        /*$('#popup_textarea').val(res)
+                                                        $('#popup').modal('show');*/
+                                                        $.notify("{{functi}} - " + res, "warn");
+                                                      }
+                                                    },
+                                                    error : function(xhr,errmsg,err) {
+                                                      /*console.log(xhr.status + ": " + xhr.responseText);*/
+                                                      $.notify("{{functi}} - " + res, "error");
+                                                    }
+                                                });
+                                                return false;
+                                              }));
+                                              $('#submit_{{functi}}').submit(function(e) {
+                                                e.preventDefault();
+                                                $('form_{{data_value}}').submit(upload);
+                                              });
+                                            </script>
                                           {% endif %}
                                         {% endfor %}
                                       </div>

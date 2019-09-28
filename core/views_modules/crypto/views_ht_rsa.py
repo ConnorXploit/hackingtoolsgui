@@ -10,6 +10,7 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 
 # ht_rsa
+@csrf_exempt
 def encrypt(request):
     if request.POST.get('private_key_keynumber') and request.POST.get('private_key_keymod') and request.POST.get('cipher_text'):
         priv_key_k = request.POST.get('private_key_keynumber')
@@ -17,7 +18,7 @@ def encrypt(request):
         text = request.POST.get('cipher_text')
         crypter = views.ht.getModule('ht_rsa')
         crypted_text = crypter.encrypt(private_key=(int(priv_key_k), int(priv_key_n)), plaintext=text.encode())
-        if request.POST.get('is_async', False):
+        if request.POST.get('is_async_encrypt', False):
             data = {
                 'data' : crypted_text
             }
@@ -26,6 +27,7 @@ def encrypt(request):
     else:
         return views.renderMainPanel(request=request)
 
+@csrf_exempt
 def decrypt(request):
     if request.POST.get('public_key_keynumber') and request.POST.get('public_key_keymod') and request.POST.get('decipher_text'):
         pub_key_k = request.POST.get('public_key_keynumber')
@@ -33,7 +35,7 @@ def decrypt(request):
         text = request.POST.get('decipher_text')
         crypter = views.ht.getModule('ht_rsa')
         decrypted_text = crypter.decrypt(public_key=(int(pub_key_k), int(pub_key_n)), ciphertext=text)
-        if request.POST.get('is_async', False):
+        if request.POST.get('is_async_decrypt', False):
             data = {
                 'data' : decrypted_text
             }
@@ -60,7 +62,7 @@ def getRandomKeypair(request):
         else:
             keypair = crypter.getRandomKeypair()
         keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
-        if request.POST.get('is_async', False):
+        if request.POST.get('is_async_getRandomKeypair', False):
             data = {
                 'data' : keypair
             }
@@ -85,7 +87,7 @@ def generate_keypair(request):
                     keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
                 except:
                     pass
-            if request.POST.get('is_async', False):
+            if request.POST.get('is_async_generate_keypair', False):
                 data = {
                     'data' : keypair
                 }

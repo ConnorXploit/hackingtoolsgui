@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
@@ -10,8 +10,9 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 
 # ht_crypter
 
-def cryptFile(request):
-    this_conf = config['ht_crypter_cryptFile']
+@csrf_exempt
+def crypt_file(request):
+    this_conf = config['ht_crypter_crypt_file']
     if len(request.FILES) != 0:
         if request.FILES['filename']:
             # Get file
@@ -73,7 +74,7 @@ def cryptFile(request):
                         os.remove(uploaded_file_url)
                         os.remove(crypted_file)
             else:
-                Logger.printMessage(message='cryptFile', description=this_conf['bad_saved'], is_error=True)
+                Logger.printMessage(message='crypt_file', description=this_conf['bad_saved'], is_error=True)
             return renderMainPanel(request=request)
 
     return renderMainPanel(request=request)
@@ -96,6 +97,8 @@ def convertToExe(request):
 			# Execute the function
 			ht.getModule('ht_crypter').convertToExe( stub_name=stub_name )
 	except Exception as e:
+		if request.POST.get('is_async_convertToExe', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for createStub
@@ -116,9 +119,15 @@ def createStub(request):
 			# Parameter public_key
 			public_key = request.POST.get('public_key')
 
-			# Save file drop_file_name
-			filename_drop_file_name, location_drop_file_name, drop_file_name = saveFileOutput(request.FILES['drop_file_name'], 'crypter', 'av_evasion')
+			try:
+				# Save file drop_file_name
+				filename_drop_file_name, location_drop_file_name, drop_file_name = saveFileOutput(request.FILES['drop_file_name'], 'crypter', 'av_evasion')
 
+			except Exception as e:
+				# If not param drop_file_name
+				if request.POST.get('is_async_createStub', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
 			# Parameter save_name
 			save_name = request.POST.get('save_name')
 
@@ -139,59 +148,11 @@ def createStub(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_crypter').createStub( crypto_data_hex=crypto_data_hex, public_key=public_key, drop_file_name=drop_file_name, save_name=save_name, is_iterating=is_iterating, is_last=is_last, convert=convert )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_createStub', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
-		return renderMainPanel(request=request, popup_text=str(e))
-	
-# Automatic view function for crypt_file
-@csrf_exempt
-def crypt_file(request):
-	# Init of the view crypt_file
-	try:
-		# Pool call
-		response, repool = sendPool(request, 'crypt_file')
-		if response or repool:
-			if repool:
-				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
-		else:
-			# Save file filename
-			filename_filename, location_filename, filename = saveFileOutput(request.FILES['filename'], 'crypter', 'av_evasion')
-
-			# Save file new_file_name
-			filename_new_file_name, location_new_file_name, new_file_name = saveFileOutput(request.FILES['new_file_name'], 'crypter', 'av_evasion')
-
-			# Save file drop_file_name (Optional)
-			filename_drop_file_name, location_drop_file_name, drop_file_name = saveFileOutput(request.POST.get('drop_file_name'), 'crypter', 'av_evasion')
-
-			# Parameter prime_length (Optional - Default 4)
-			prime_length = request.POST.get('prime_length', 4)
-
-			# Parameter compile_exe (Optional - Default False)
-			compile_exe = request.POST.get('compile_exe', False)
-			if not compile_exe:
-				compile_exe = None
-
-			# Parameter is_iterating (Optional - Default False)
-			is_iterating = request.POST.get('is_iterating', False)
-			if not is_iterating:
-				is_iterating = None
-
-			# Parameter iterate_count (Optional - Default 1)
-			iterate_count = request.POST.get('iterate_count', 1)
-
-			# Parameter is_last (Optional - Default False)
-			is_last = request.POST.get('is_last', False)
-			if not is_last:
-				is_last = None
-
-			# Execute, get result and show it
-			result = ht.getModule('ht_crypter').crypt_file( filename=filename, new_file_name=new_file_name, drop_file_name=drop_file_name, prime_length=prime_length, compile_exe=compile_exe, is_iterating=is_iterating, iterate_count=iterate_count, is_last=is_last )
-			if request.POST.get('is_async', False):
-				return JsonResponse({ "data" : result })
-			return renderMainPanel(request=request, popup_text=result)
-	except Exception as e:
+		if request.POST.get('is_async_createStub', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	

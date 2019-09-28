@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
-from .library.hackingtools.core import Utils, Logger, Config, Connections
+from .library.hackingtools.core import Utils, Logger, Config, Connections, UtilsDjangoViewsAuto
 from importlib import reload
 import os
 import json
@@ -93,14 +93,15 @@ def documentation(request, module_name=''):
 def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
-    response, creator, = ht.Pool.send(request, functionName)
-    if response:
-        if creator == ht.Pool.MY_NODE_ID:
-            if 'nodes_pool' in response:
-                for n in response['nodes_pool']:
-                    ht.Pool.addNodeToPool(n)
-            return response, False
-        return response, True
+    if ht.wantPool():
+        response, creator, = ht.Pool.send(request, functionName)
+        if response:
+            if creator == ht.Pool.MY_NODE_ID:
+                if 'nodes_pool' in response:
+                    for n in response['nodes_pool']:
+                        ht.Pool.addNodeToPool(n)
+                return response, False
+            return response, True
     return None, None
 
 def switchPool(request):
@@ -117,6 +118,7 @@ def createModule(request):
     if created:
         modules_and_params = ht.getModulesJSON()
     load_data()
+    UtilsDjangoViewsAuto.loadModuleFunctionsToView(mod_name, mod_cat)
     # ! Tengo que hacer que llame a las funciones de crear views y json con la config...
     # ! Aprovechar para solucionar los params que no cogia
     # ! Creo que se puede solucionar con la Util amIDjango al inicio de los import
@@ -159,13 +161,20 @@ def saveFileOutput(myfile, module_name, category):
     return (filename, location, os.path.join(location, filename))
 
 @csrf_exempt
+def getLogs(request):
+    data = {
+        'data' : ht.Logger.getLogs()
+    }
+    return JsonResponse(data)
+
+@csrf_exempt
 def add_pool_node(request):
     this_conf = config['add_pool_node']
     try:
         if request.POST:
             pool_node = request.POST.get('pool_ip')
         ht.Pool.addNodeToPool(pool_node)
-        if request.POST.get('is_async', False):
+        if request.POST.get('is_async_add_pool_node', False):
             data = {
                 'data' : ht.Pool.getPoolNodes()
             }

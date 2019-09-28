@@ -47,11 +47,6 @@
             "__function__": "getTestsModelsDir",
             "__async__": false,
             "__return__": "text",
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_getTestsModelsDir__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -85,11 +80,6 @@
                 "label_desc": "distance_threshold",
                 "placeholder": "distance_threshold",
                 "value": 0.6
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_predict__": {
                 "__type__": "checkbox",
@@ -217,11 +207,6 @@
                 "placeholder": "counter",
                 "value": 1
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_saveCroppedImage__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -249,11 +234,6 @@
                 "label_desc": "model_path",
                 "placeholder": "model_path",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_show_prediction_labels_on_image__": {
                 "__type__": "checkbox",
@@ -294,11 +274,6 @@
                 "label_desc": "verbose",
                 "placeholder": "verbose",
                 "value": false
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_train__": {
                 "__type__": "checkbox",

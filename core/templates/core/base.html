@@ -159,9 +159,14 @@
         <!-- Main Content -->
         <div id="content">
 
-          <!-- Topbar -->
-          <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+            {% block content %}{% endblock %}
+          </div>
 
+          <!-- Bottombar -->
+          <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow console-logger-nav">
+            {% comment %} 
             <!-- Sidebar Toggle (Topbar) -->
             <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
               <i class="fa fa-bars"></i>
@@ -202,15 +207,84 @@
                 </div>
               </li>
 
-            </ul>
+            </ul> {% endcomment %}
+
+            <!-- Bottom Console -->
+            <form class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100 navbar-search" style="width: 100%; height: 100%;">
+              <textarea class="form-control logger-console" id="consoleLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" disabled>Loading Log...</textarea>
+            </form>
+            <script>
+            function expandTextarea(id) {
+                document.getElementById(id).addEventListener('keyup', function() {
+                    this.style.overflow = 'hidden';
+                    this.style.height = 0;
+                    this.style.height = this.scrollHeight + 'px';
+                }, false);
+            }
+            expandTextarea('consoleLogger');
+            timer_clicktime = 200
+            length_console_logs = 0
+            var timer = {
+              running: false,
+              iv: timer_clicktime,
+              timeout: false,
+              cb : function(){},
+              start : function(cb,iv){
+                  var elm = this;
+                  clearInterval(this.timeout);
+                  this.running = true;
+                  if(cb) this.cb = cb;
+                  if(iv) this.iv = iv;
+                  this.timeout = setTimeout(function(){elm.execute(elm)}, this.iv);
+              },
+              execute : function(e){
+                  if(!e.running) return false;
+                  e.cb();
+                  e.start();
+              },
+              stop : function(){
+                  this.running = false;
+              },
+              set_interval : function(iv){
+                  clearInterval(this.timeout);
+                  this.start(false, iv);
+              }
+            };
+            timer.start(function(){
+              $.ajax({
+                url : "{% url 'getLogs' %}", // the endpoint
+                type : "POST", // http method
+                async: true,
+                success : function(res) {
+                  if('data' in res && res.data && Object.keys(res.data).length !== 0 && length_console_logs !== Object.keys(res.data).length){
+                    data_result = ''
+                    res_data_keys = Object.keys(res.data).reverse()
+                    for (var logtime in res_data_keys) {
+                        // check if the property/key is defined in the object itself, not in parent
+                        if (res.data.hasOwnProperty(res_data_keys[logtime])) {
+                          data_result += "[" + res_data_keys[logtime] + "] " + res.data[res_data_keys[logtime]] + "\n";
+                        }
+                    }
+                    $('#consoleLogger').val(data_result)
+                    $('#consoleLogger').val().replace(/<br>/gi,"\n")
+                    timer.set_interval(500);
+                    length_console_logs = Object.keys(res.data).length
+                  } else {
+                    // $('#consoleLogger').val('Loading Log...')
+                    timer.set_interval(2000);
+                  }
+                },
+                error : function(xhr,errmsg,err) {
+                  console.log(xhr.status + ": " + xhr.responseText);
+                }
+              });
+            }, timer_clicktime );
+            
+            </script>
 
           </nav>
-          <!-- End of Topbar -->
+          <!-- End of Bottombar -->
 
-          <!-- Begin Page Content -->
-          <div class="container-fluid">
-            {% block content %}{% endblock %}
-          </div>
           <!-- /.container-fluid -->
 
         </div>
@@ -235,12 +309,15 @@
     <!-- Custom scripts for all pages-->
     <script src="{% static 'core/js/sb-admin-2.min.js' %}"></script>
 
-    <!-- Page level plugins -->
+    <!-- Notifications for ajax success or error messages -->
+    <script src="{% static 'core/js/notify.min.js' %}"></script>
+
+    {% comment %} <!-- Page level plugins -->
     <script src="{% static 'core/vendor/chart.js/Chart.min.js' %}"></script>
 
     <!-- Page level custom scripts -->
     <script src="{% static 'core/js/demo/chart-area-demo.js' %}"></script>
-    <script src="{% static 'core/js/demo/chart-pie-demo.js' %}"></script>
+    <script src="{% static 'core/js/demo/chart-pie-demo.js' %}"></script> {% endcomment %}
 
     <!-- Bootstrap Toggle-->
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>

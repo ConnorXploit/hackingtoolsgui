@@ -54,11 +54,15 @@ def saveLog():
     """Creates a file with the log created by the library since loaded last time.
     Output format can be changed into config.json
     """
+    global logs
     time_now = datetime.utcnow().strftime(config['log_save_date_format'])[:-3]
     with open('log-{time}.txt'.format(time=time_now), 'w') as f:
-        for log in logs:
+        for log in getLogs():
             f.write("{log}\n".format(log=log))
 
+def getLogs():
+    global logs
+    return logs
 
 def print_and_return(msg, value, debug_module=False, debug_core=False, is_error=False):
     printMessage(message=msg, description=value, debug_core=debug_core, is_error=is_error)
@@ -77,6 +81,7 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
         is_error {bool} -- For showing in other color because been an error (default: {False})
         color {[type]} -- A color for showing with other color (default: {None})
     """
+    global logs
     filename = inspect.stack()[1].filename
     methodName = inspect.stack()[1].function
     

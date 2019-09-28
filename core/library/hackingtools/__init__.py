@@ -14,6 +14,7 @@ import progressbar
 import requests
 import sys
 import readline
+readline.parse_and_bind('tab: complete')
 from django.urls import resolve
 from importlib import reload
 

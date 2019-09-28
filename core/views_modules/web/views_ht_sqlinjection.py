@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
@@ -28,10 +28,12 @@ def cantidadTuplasEnTapla(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').cantidadTuplasEnTapla( tabla=tabla, campo=campo )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_cantidadTuplasEnTapla', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_cantidadTuplasEnTapla', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for cogerColumnasTabla
@@ -54,10 +56,12 @@ def cogerColumnasTabla(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').cogerColumnasTabla( tabla=tabla, tabla_name=tabla_name )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_cogerColumnasTabla', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_cogerColumnasTabla', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for cogerNombreDeTablaPorID
@@ -86,10 +90,12 @@ def cogerNombreDeTablaPorID(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').cogerNombreDeTablaPorID( user=user, tabla=tabla, idCampo=idCampo, campoConocido=campoConocido )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_cogerNombreDeTablaPorID', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_cogerNombreDeTablaPorID', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for cogerTablas
@@ -107,6 +113,8 @@ def cogerTablas(request):
 			# Execute the function
 			ht.getModule('ht_sqlinjection').cogerTablas()
 	except Exception as e:
+		if request.POST.get('is_async_cogerTablas', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for color
@@ -129,10 +137,12 @@ def color(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').color( texto=texto, color=color )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_color', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_color', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for compareTextExistWhereSubstringACII
@@ -155,10 +165,12 @@ def compareTextExistWhereSubstringACII(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').compareTextExistWhereSubstringACII( tabla_name=tabla_name, table=table )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_compareTextExistWhereSubstringACII', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_compareTextExistWhereSubstringACII', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for ejecutarSQL
@@ -178,10 +190,12 @@ def ejecutarSQL(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').ejecutarSQL( sqli=sqli )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_ejecutarSQL', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_ejecutarSQL', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for longitudCampoIDtablaCampo
@@ -210,10 +224,12 @@ def longitudCampoIDtablaCampo(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').longitudCampoIDtablaCampo( idCampo=idCampo, tabla=tabla, campo=campo, campoConocido=campoConocido )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_longitudCampoIDtablaCampo', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_longitudCampoIDtablaCampo', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for md5_decrypt
@@ -233,10 +249,12 @@ def md5_decrypt(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').md5_decrypt( clave=clave )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_md5_decrypt', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_md5_decrypt', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for mostrarUserPass
@@ -254,6 +272,8 @@ def mostrarUserPass(request):
 			# Execute the function
 			ht.getModule('ht_sqlinjection').mostrarUserPass()
 	except Exception as e:
+		if request.POST.get('is_async_mostrarUserPass', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for sacarValorPorTablaColumnaID
@@ -279,10 +299,12 @@ def sacarValorPorTablaColumnaID(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').sacarValorPorTablaColumnaID( tabla=tabla, columna=columna, nombre_campo_id=nombre_campo_id )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_sacarValorPorTablaColumnaID', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_sacarValorPorTablaColumnaID', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for setParams
@@ -326,6 +348,8 @@ def setParams(request):
 			# Execute the function
 			ht.getModule('ht_sqlinjection').setParams( url=url, param_focus=param_focus, cookie=cookie, proxies=proxies, submit_name=submit_name, security=security )
 	except Exception as e:
+		if request.POST.get('is_async_setParams', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for transformAsciiToHex
@@ -345,9 +369,11 @@ def transformAsciiToHex(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_sqlinjection').transformAsciiToHex( ascii_text=ascii_text )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_transformAsciiToHex', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_transformAsciiToHex', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	

@@ -64,7 +64,13 @@
         "ht_bruteforce": {
             "max_for_chunk": 10000,
             "msg_password_is": "Password is",
-            "dictionaryOptions": ["lalpha", "ualpha", "numeric", "symbols-14", "symbols-all"]
+            "dictionaryOptions": [
+                "lalpha",
+                "ualpha",
+                "numeric",
+                "symbols14",
+                "symbols-all"
+            ]
         },
         "ht_unzip": {
             "posible_combinations": "Posible Combinations"
@@ -92,7 +98,8 @@
             "predicting_no_knn_or_model_path": "Must supply knn classifier either thourgh knn_clf or model_path"
         },
         "ht_spider": {},
-        "ht_test": {}
+        "ht_test": {},
+        "ht_asdas": {}
     },
     "core": {
         "WANT_TO_BE_IN_POOL": true,

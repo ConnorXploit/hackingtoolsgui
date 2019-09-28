@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
@@ -56,9 +56,11 @@ def crawl(request):
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_spider').crawl( url=url, depth=depth, proxies=proxies, proxyhost=proxyhost, proxyuser=proxyuser, proxypassword=proxypassword, proxyport=proxyport, proxysecure=proxysecure )
-			if request.POST.get('is_async', False):
+			if request.POST.get('is_async_crawl', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
+		if request.POST.get('is_async_crawl', False):
+			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	

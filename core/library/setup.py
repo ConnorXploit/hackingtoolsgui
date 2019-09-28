@@ -1,4 +1,9 @@
 from setuptools import setup, find_packages
+import os, sys, subprocess
+try:
+    from pip import main as pipmain
+except ImportError:
+    from pip._internal import main as pipmain
 
 requirements = ''
 try:
@@ -7,8 +12,27 @@ try:
 except:
     print('You should install on Python 3.7+')
 
+def checkPackages():
+    # If Linux
+    extra_packages = {
+        "linux-apt" : ['build-essential', 'cmake', 'libopenblas-dev', 'liblapack-dev', 'libx11-dev', 'libgtk-3-dev'],
+        "linux" : ['dlib'],
+    }
+    for system in extra_packages:
+        if os.name in system:
+            if '-apt' in system:
+                for package in extra_packages[system]:
+                    if not package in sys.modules:
+                        subprocess.run('apt install {p}'.format(p=package))
+            else:
+                for package in extra_packages[system]:
+                    if not package in sys.modules:
+                        pipmain(['install', package])
+
+checkPackages()
+
 setup(name='hackingtools',
-        version='0.9.939.573',
+        version='0.9.939.586',
         description='All Hacking Tools in this Python with Manually Created Modules',
         url='http://github.com/ConnorXploit/hackingtools-py',
         author='Connor',

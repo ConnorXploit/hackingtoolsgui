@@ -10,7 +10,7 @@
         "add_pool_node" : {
             "error": "Something went wrong"
         },
-        "ht_crypter_cryptFile": {
+        "ht_crypter_crypt_file": {
             "bad_saved": "No se ha guardado correctamente"
         },
         "ht_bruteforce_crackZip" : {

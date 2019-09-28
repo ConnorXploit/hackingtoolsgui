@@ -30,11 +30,6 @@
                 "placeholder": "fileHash",
                 "required": true
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_isBadFileHash__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",

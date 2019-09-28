@@ -5,7 +5,7 @@
             "__function__": "crackZip",
             "__async__": false,
             "__return__": "text",
-            "zipFileBruteforce": {
+            "zipPathName": {
                 "__type__": "file",
                 "label_desc": "Browse zip file for crack it",
                 "required": true

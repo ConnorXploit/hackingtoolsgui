@@ -1,10 +1,10 @@
 {
     "__gui_label__": "File Crypter",
     "django_form_main_function": {
-        "__function__": "cryptFile",
+        "__function__": "crypt_file",
         "filename": {
             "__type__": "file",
-            "label_desc": "Brooooowse file to crypt",
+            "label_desc": "Browse file to crypt",
             "required": true
         },
         "iteratecount": {
@@ -29,7 +29,7 @@
             "value": "Close"
         },
         "submit": {
-            "__id__": "cryptFile",
+            "__id__": "crypt_file",
             "__type__": "submit",
             "value": "Crypt File",
             "loading_text": "Crypting..."
@@ -45,11 +45,6 @@
                 "label_desc": "stub_name",
                 "placeholder": "stub_name",
                 "required": true
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_convertToExe__": {
                 "__type__": "checkbox",
@@ -103,11 +98,6 @@
                 "placeholder": "convert",
                 "value": false
             },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
-            },
             "__pool_it_createStub__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -120,33 +110,25 @@
             "__return__": "text",
             "filename": {
                 "__type__": "file",
-                "label_desc": "filename",
-                "placeholder": "filename",
+                "label_desc": "Browse file to crypt",
                 "required": true
             },
-            "new_file_name": {
-                "__type__": "file",
-                "label_desc": "new_file_name",
-                "placeholder": "new_file_name",
-                "required": true
-            },
-            "drop_file_name": {
-                "__type__": "file",
-                "label_desc": "drop_file_name",
-                "placeholder": "drop_file_name",
-                "value": "dropped.py"
+            "iteratecount": {
+                "__type__": "number",
+                "label_desc": "Iterate count",
+                "value": "1"
             },
             "prime_length": {
-                "__type__": "text",
-                "label_desc": "prime_length",
-                "placeholder": "prime_length",
-                "value": 4
+                "__type__": "number",
+                "label_desc": "Prime's Length",
+                "value": "2"
             },
             "compile_exe": {
-                "__type__": "text",
-                "label_desc": "compile_exe",
-                "placeholder": "compile_exe",
-                "value": false
+                "__type__": "checkbox",
+                "label_desc": "Compile to EXE",
+                "systems": [
+                    "nt"
+                ]
             },
             "is_iterating": {
                 "__type__": "text",
@@ -165,11 +147,6 @@
                 "label_desc": "is_last",
                 "placeholder": "is_last",
                 "value": false
-            },
-            "__is_async__": {
-                "__type__": "checkbox",
-                "label_desc": "Want AJAX call",
-                "selected": false
             },
             "__pool_it_crypt_file__": {
                 "__type__": "checkbox",
