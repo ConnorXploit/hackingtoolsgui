@@ -297,19 +297,54 @@ textarea.form-control {
 #switchPoolForm > label[for=switchPoolForm]:after { 
     background-color: #e60b0b !important;
 }
+#bottomConsoleResultBar{
+    width: 100% !important; 
+    height: 100% !important; 
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    justify-content: space-around !important;
+    flex-wrap: wrap !important;
+}
+@media screen and (max-width: 800px) {
+    #bottomConsoleResultBar{
+        width: 100% !important; 
+        height: 100% !important; 
+        display: flex !important;
+        flex-direction: column-reverse !important;
+        justify-content: space-around !important;
+        flex-wrap: wrap !important;
+    }
+    .logger-console {
+        /*width: 70% !important;*/
+        /*height: 100% !important;*/
+        /*margin-bottom: 0px !important;*/
+        width: 100% !important;
+    }
+    .logger-results {
+        /*width: 28% !important;*/
+        /*margin: 0 15px !important;*/
+        width: 100% !important;
+    }
+}
 .console-logger-nav{
     bottom: 0px !important;
     /* float: left; */
-    position: absolute;
-    width: 100%;
-    right: 0px;
-    height: 200px;
+    position: absolute !important;
+    width: 100% !important;
+    right: 0px !important;
+    height: 200px !important;
     margin-bottom: 0px !important;
 }
 .logger-console {
-    width: 100% !important;
-    height: 100%;
-    margin-bottom: 0px !important;
+    /*width: 70% !important;*/
+    height: 100% !important;
+    /*margin-bottom: 0px !important;*/
+    flex: 0 0 74% !important;
+}
+.logger-results {
+    /*width: 28% !important;*/
+    /*margin: 0 15px !important;*/
+    flex: 0 0 24% !important;
 }
 .container-fluid {
     margin-top: 10px !important;
@@ -317,7 +352,7 @@ textarea.form-control {
 #consoleLogger {
     padding-top: 10px;
     padding-bottom: 25px;
-    display: block;
+    /*display: block;*/
 }
 .filterable {
     margin-top: 15px;

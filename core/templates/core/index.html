@@ -314,28 +314,51 @@
                                                         if(isDict(res.data)){
                                                           data = JSON.stringify(res.data, null, 2);
                                                           $.notify("{{functi}}:\n" + data, "success");
+                                                          if($('#resultsLogger').val() != ''){
+                                                            $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                          }
+                                                          $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
                                                         } else {
                                                           if(res.data instanceof Array){
                                                             var data = '';
                                                             for(var i=0; i < res.data.length; i++){
-                                                              data += "\n" + res.data[i];
+                                                              data += res.data[i];
+                                                              if(res.data.length-1 != i){
+                                                                data += "\n";
+                                                              }
                                                             }
-                                                            $.notify("{{functi}}: " + data, "success");
+                                                            $.notify("{{functi}}:\n" + data, "success");
+                                                            if($('#resultsLogger').val() != ''){
+                                                              $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                            }
+                                                            $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
                                                           } else {
                                                             /*$('#popup_textarea').val(data)
                                                             $('#popup').modal('show');*/
                                                             $.notify("{{functi}}:\n" + res.data, "success");
+                                                            if($('#resultsLogger').val() != ''){
+                                                              $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                            }
+                                                            $('#resultsLogger').val("{{functi}}:\n" + res.data + "\n" + $('#resultsLogger').val())
                                                           }
                                                         }
                                                       } else {
                                                         /*$('#popup_textarea').val(res)
                                                         $('#popup').modal('show');*/
                                                         $.notify("{{functi}} - " + res, "warn");
+                                                        if($('#resultsLogger').val() != ''){
+                                                          $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                        }
+                                                        $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
                                                       }
                                                     },
                                                     error : function(xhr,errmsg,err) {
                                                       /*console.log(xhr.status + ": " + xhr.responseText);*/
                                                       $.notify("{{functi}} - " + res, "error");
+                                                      if($('#resultsLogger').val() != ''){
+                                                        $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                      }
+                                                      $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
                                                     }
                                                 });
                                                 return false;

@@ -210,7 +210,8 @@
             </ul> {% endcomment %}
 
             <!-- Bottom Console -->
-            <form class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100 navbar-search" style="width: 100%; height: 100%;">
+            <form class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100 navbar-search" id="bottomConsoleResultBar">
+              <textarea class="form-control logger-results" id="resultsLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" placeholder="Waiting Results..." disabled></textarea>
               <textarea class="form-control logger-console" id="consoleLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" disabled>Loading Log...</textarea>
             </form>
             <script>

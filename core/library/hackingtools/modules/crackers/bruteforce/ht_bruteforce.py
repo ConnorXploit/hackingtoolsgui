@@ -23,24 +23,24 @@ class StartModule():
 			unzipper = ht.getModule('ht_unzip')
 		if log:
 			Logger.setDebugCore(True)
-		texts = Utils.getDict(length=int(password_length), alphabet=alphabet, try_pattern=password_pattern)
-		if len(texts) > max_length_posibilities:
-			texts_list = numpy.array_split(texts, max_length_posibilities)
-		else:
-			texts_list = [texts]
-		for index_t_list, t_list in enumerate(texts_list):
+		for texts in Utils.getDict(length=int(password_length), alphabet=alphabet, try_pattern=password_pattern):
 			if len(texts) > max_length_posibilities:
-				Logger.printMessage(message='crackZip', description='Chunk {n} - {word}'.format(n=index_t_list, word=t_list[1]))
-			for text in t_list:
-				if os.path.isfile(zipPathName):
-					password = unzipper.extractFile(zipPathName, text, posible_combinations=len(texts))
-				else:
-					Logger.printMessage(message='crackZip', description='File doesnt exists {a}'.format(a=zipPathName), is_error=True)
-					break
-				if password:
-					Logger.printMessage(message='crackZip', description='{msg_password_is} {a}'.format(msg_password_is=config['msg_password_is'], a=password))
-					if log:
-						Logger.setDebugCore(False)
-					return password
+				texts_list = numpy.array_split(texts, max_length_posibilities)
+			else:
+				texts_list = [texts]
+			for index_t_list, t_list in enumerate(texts_list):
+				if len(texts) > max_length_posibilities:
+					Logger.printMessage(message='crackZip', description='Chunk {n} - {word}'.format(n=index_t_list, word=t_list[1]))
+				for text in t_list:
+					if os.path.isfile(zipPathName):
+						password = unzipper.extractFile(zipPathName, text, posible_combinations=len(texts))
+					else:
+						Logger.printMessage(message='crackZip', description='File doesnt exists {a}'.format(a=zipPathName), is_error=True)
+						break
+					if password:
+						Logger.printMessage(message='crackZip', description='{msg_password_is} {a}'.format(msg_password_is=config['msg_password_is'], a=password))
+						if log:
+							Logger.setDebugCore(False)
+						return password
 		Logger.setDebugCore(False)
 		return None

@@ -6,6 +6,7 @@ core/views_modules/*/__pycache__/
 *.pyc
 
 \.vscode/
+\.vs/
 
 *.spec
 

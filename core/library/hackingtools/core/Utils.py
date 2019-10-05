@@ -254,7 +254,7 @@ def getRandomPrimeByLength(length = 8):
         length = 8
     try:
         while True:
-            n = randomText(length=length, alphabet='numeric')
+            n = int(randomText(length=length, alphabet='numeric'))
             if isPrime(n):
                 return n
     except:
