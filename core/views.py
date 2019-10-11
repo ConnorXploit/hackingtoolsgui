@@ -38,6 +38,12 @@ def load_data():
             categories.append(mod.split('.')[1])
         modules_all[mod.split('.')[2]] = modules_and_params[mod]
     modules_names = ht.getModulesNames()
+    server_repo = ht.Repositories.getOnlineServers()[0]
+    modules_names_repo = []
+    categories_names_repo = []
+    if server_repo:
+        modules_names_repo = ['ht_{m}'.format(m=mod.replace('ht_', '')) for mod in ht.Repositories.getModules(server_repo)]
+        categories_names_repo = ht.Repositories.getCategories(server_repo)
     pool_list = ht.Pool.getPoolNodes()
     my_services = ht.Connections.getMyServices()
     ngrokService = ht.Connections.getNgrokServiceUrl()
@@ -45,6 +51,8 @@ def load_data():
     status_pool = ht.WANT_TO_BE_IN_POOL
     ht_data =  { 
         'modules':modules_names, 
+        'modules_names_repo':modules_names_repo,
+        'categories_names_repo':categories_names_repo,
         'categories':categories, 
         'modules_all':modules_all,
         'modules_forms':modules_forms, 
@@ -126,11 +134,26 @@ def createModule(request):
     # ! De esta forma, desde aqui, podemos llamar a esas funciones y cargar todo de una sola vez y avisar que las funciones
     # ! solo serán funcionales una vez se reinicie o intentar hacer que se virtualice de alguna forma esa url y se resuelva sola sin tener que recargar
     return renderMainPanel(request=request)
+    
+@csrf_exempt
+def downloadInstallModule(request):
+    try:
+        mod_name = request.POST.get('module_name').replace(" ", "_").lower()
+        ht.Repositories.installModule(mod_name)
+        data = {
+            'data' : 'Installed successfully'
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        data = {
+            'data' : str(e)
+        }
+        return JsonResponse(data)
 
 def configModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
-    mod_conf = ht.getModuleConfig(mod_name)
-    reload(ht)
+    # mod_conf = ht.getModuleConfig(mod_name)
+    # reload(ht)
     return renderMainPanel(request=request)
 
 def createCategory(request):

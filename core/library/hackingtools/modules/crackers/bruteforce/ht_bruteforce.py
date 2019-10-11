@@ -18,22 +18,22 @@ class StartModule():
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_bruteforce'))
 
 	def crackZip(self, zipPathName, unzipper=None, alphabet='lalpha', password_length=4, password_pattern=None, log=False):
-		max_length_posibilities = int(config['max_for_chunk'])
+		#max_length_posibilities = int(config['max_for_chunk'])
 		if not unzipper:
 			unzipper = ht.getModule('ht_unzip')
 		if log:
 			Logger.setDebugCore(True)
-		for texts in Utils.getDict(length=int(password_length), alphabet=alphabet, try_pattern=password_pattern):
-			if len(texts) > max_length_posibilities:
-				texts_list = numpy.array_split(texts, max_length_posibilities)
-			else:
-				texts_list = [texts]
-			for index_t_list, t_list in enumerate(texts_list):
-				if len(texts) > max_length_posibilities:
+		for texts in [Utils.getCombinationPosibilitiesByPattern(try_pattern=password_pattern) if password_pattern else Utils.getDict(length=password_length, alphabet=alphabet)]:
+			# if len(texts) > max_length_posibilities:
+			# 	texts_list = numpy.array_split(texts, max_length_posibilities)
+			# else:
+			# 	texts_list = [texts]
+			# for index_t_list, t_list in enumerate(texts_list):
+				if len(t_list) > max_length_posibilities:
 					Logger.printMessage(message='crackZip', description='Chunk {n} - {word}'.format(n=index_t_list, word=t_list[1]))
 				for text in t_list:
 					if os.path.isfile(zipPathName):
-						password = unzipper.extractFile(zipPathName, text, posible_combinations=len(texts))
+						password = unzipper.extractFilePassword(zipPathName, text, posible_combinations=len(texts))
 					else:
 						Logger.printMessage(message='crackZip', description='File doesnt exists {a}'.format(a=zipPathName), is_error=True)
 						break

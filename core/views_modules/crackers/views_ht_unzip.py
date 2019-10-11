@@ -23,10 +23,44 @@ def extractFile(request):
 			try:
 				# Save file zipPathName
 				filename_zipPathName, location_zipPathName, zipPathName = saveFileOutput(request.FILES['zipPathName'], 'unzip', 'crackers')
-
 			except Exception as e:
 				# If not param zipPathName
 				if request.POST.get('is_async_extractFile', False):
+					return JsonResponse({ "data" : str(e) })
+				return renderMainPanel(request=request, popup_text=str(e))
+			# Parameter password (Optional - Default None)
+			password = request.POST.get('password', None)
+			if not password:
+				password = None
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_unzip').extractFile( zipPathName=zipPathName, password=password )
+			if request.POST.get('is_async_extractFile', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_extractFile', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for extractFilePassword
+@csrf_exempt
+def extractFilePassword(request):
+	# Init of the view extractFilePassword
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'extractFilePassword')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:
+			try:
+				# Save file zipPathName
+				filename_zipPathName, location_zipPathName, zipPathName = saveFileOutput(request.FILES['zipPathName'], 'unzip', 'crackers')
+			except Exception as e:
+				# If not param zipPathName
+				if request.POST.get('is_async_extractFilePassword', False):
 					return JsonResponse({ "data" : str(e) })
 				return renderMainPanel(request=request, popup_text=str(e))
 			# Parameter password (Optional - Default )
@@ -43,46 +77,37 @@ def extractFile(request):
 				output_dir_new = None
 
 			# Execute, get result and show it
-			result = ht.getModule('ht_unzip').extractFile( zipPathName=zipPathName, password=password, posible_combinations=posible_combinations, output_dir_new=output_dir_new )
-			if request.POST.get('is_async_extractFile', False):
+			result = ht.getModule('ht_unzip').extractFilePassword( zipPathName=zipPathName, password=password, posible_combinations=posible_combinations, output_dir_new=output_dir_new )
+			if request.POST.get('is_async_extractFilePassword', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
-		if request.POST.get('is_async_extractFile', False):
+		if request.POST.get('is_async_extractFilePassword', False):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
-# Automatic view function for zipFiles
+# Automatic view function for zipDirectory
 @csrf_exempt
-def zipFiles(request):
-	# Init of the view zipFiles
+def zipDirectory(request):
+	# Init of the view zipDirectory
 	try:
 		# Pool call
-		response, repool = sendPool(request, 'zipFiles')
+		response, repool = sendPool(request, 'zipDirectory')
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
 			return renderMainPanel(request=request, popup_text=response.text)
 		else:
-			try:
-				# Save file files
-				filename_files, location_files, files = saveFileOutput(request.FILES['files'], 'unzip', 'crackers')
-
-			except Exception as e:
-				# If not param files
-				if request.POST.get('is_async_zipFiles', False):
-					return JsonResponse({ "data" : str(e) })
-				return renderMainPanel(request=request, popup_text=str(e))
 			# Parameter new_folder_name
 			new_folder_name = request.POST.get('new_folder_name')
 
 			# Execute, get result and show it
-			result = ht.getModule('ht_unzip').zipFiles( files=files, new_folder_name=new_folder_name )
-			if request.POST.get('is_async_zipFiles', False):
+			result = ht.getModule('ht_unzip').zipDirectory( new_folder_name=new_folder_name )
+			if request.POST.get('is_async_zipDirectory', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
-		if request.POST.get('is_async_zipFiles', False):
+		if request.POST.get('is_async_zipDirectory', False):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	

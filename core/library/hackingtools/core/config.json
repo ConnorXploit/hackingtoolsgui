@@ -69,7 +69,8 @@
                 "ualpha",
                 "numeric",
                 "symbols14",
-                "symbols-all"
+                "symbols-all",
+                "symbols-all-space"
             ]
         },
         "ht_unzip": {

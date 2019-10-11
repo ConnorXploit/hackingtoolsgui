@@ -18,7 +18,8 @@ urlpatterns = [
     path('core/logger/getLogs/', views.getLogs, name="getLogs"),
     path('core/pool/switchPool/', views.switchPool, name="switchPool"),
     path('core/pool/add_pool_node/', views.add_pool_node, name="add_pool_node"),
-    path('core/connections/startNgrok/', views.startNgrok, name="startNgrok")
+    path('core/connections/startNgrok/', views.startNgrok, name="startNgrok"),
+    path('core/repositories/downloadInstallModule/', views.downloadInstallModule, name="downloadInstallModule")
 ]
 
 functions_not_loaded = []

@@ -1,5 +1,5 @@
 from .core import Connections
-from .core import Config, Utils, Logger
+from .core import Config, Utils, Logger, Repositories
 config = Config.getConfig(parentKey='core', key='import_modules')
 from colorama import Fore, Back, Style
 

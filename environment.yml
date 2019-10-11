@@ -18,22 +18,19 @@ dependencies:
     - chardet
     - click==7.0
     - click-plugins==1.0.4
-    - cmake==3.14.4
+    - cmake
     - colorama==0.4.1
     - dis3==0.1.3
     - django
-    - dlib==19.17.0
-    - face-recognition==1.2.3
-    - face-recognition-models==0.3.0
-    - flask==1.0.2
+    - flask
     - future==0.17.1
-    - hackingtools==0.9.939.596
+    - hackingtools==1.1.1
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8
     - isort==4.3.16
     - itsdangerous==1.1.0
-    - jinja2==2.10
+    - jinja2
     - lazy-object-proxy==1.3.1
     - macholib==1.11
     - markdown==3.1.1

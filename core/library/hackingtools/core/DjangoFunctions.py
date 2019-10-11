@@ -12,7 +12,6 @@ config_locales = ht.Config.getConfig(parentKey='core', key='locales')
 
 def createModuleFunctionView(moduleName, functionName):
     try:
-        ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_module=True)
         # Creates the JSON config for the view modal form
         category = ht.getModuleCategory(moduleName)
         functionParams = ht.Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
@@ -58,8 +57,9 @@ def createModuleFunctionView(moduleName, functionName):
         moduleViewConfig[pool_param]['label_desc'] = 'Pool the execution to the pool list'
         moduleViewConfig[pool_param]['selected'] = False
 
-        ht.Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
+        Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
         ht.Config.__look_for_changes__()
+        ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_module=True)
         return {functionName : moduleViewConfig}
     except:
         return None

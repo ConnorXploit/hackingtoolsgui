@@ -29,23 +29,51 @@
                 "required": true
             }
         },
-        "zipFiles": {
-            "__function__": "zipFiles",
+        "extractFilePassword": {
+            "__function__": "extractFilePassword",
             "__async__": false,
             "__return__": "text",
-            "files": {
-                "__type__": "file",
-                "label_desc": "files",
-                "placeholder": "files",
+            "zipPathName": {
+                "__type__": "text",
+                "label_desc": "zipPathName",
+                "placeholder": "zipPathName",
                 "required": true
             },
+            "password": {
+                "__type__": "text",
+                "label_desc": "password",
+                "placeholder": "password",
+                "value": ""
+            },
+            "posible_combinations": {
+                "__type__": "number",
+                "label_desc": "posible_combinations",
+                "placeholder": "posible_combinations",
+                "value": 1
+            },
+            "output_dir_new": {
+                "__type__": "text",
+                "label_desc": "output_dir_new",
+                "placeholder": "output_dir_new",
+                "value": null
+            },
+            "__pool_it_extractFilePassword__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "zipDirectory": {
+            "__function__": "zipDirectory",
+            "__async__": false,
+            "__return__": "text",
             "new_folder_name": {
                 "__type__": "text",
                 "label_desc": "new_folder_name",
                 "placeholder": "new_folder_name",
                 "required": true
             },
-            "__pool_it_zipFiles__": {
+            "__pool_it_zipDirectory__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false

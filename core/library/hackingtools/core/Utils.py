@@ -372,7 +372,7 @@ def fromWhatDictListIsChar(char='a'):
     for opt in dictionaryOptions:
         if char in config_utils[opt]:
             return opt
-    return None
+    return 'lalpha'
 
 def getCombinationPosibilitiesByPattern(try_pattern=None):
     try:

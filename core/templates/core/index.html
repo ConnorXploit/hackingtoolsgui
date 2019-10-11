@@ -505,6 +505,54 @@
               </a>
             </div>
           {% endfor %}
+          {% for mod in modules_names_repo %}
+            {% if not mod in modules %}
+              <div class="modal fade" id="{{mod}}_test" tabindex="-1" role="dialog" aria-labelledby="{{mod}}_test_label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="{{mod}}_test_label">Module: {{mod}}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="submit" id='download_{{mod}}' value="Download now from Repositories" />
+                      <input type="text" id="module_name" value="{{mod}}" hidden />
+                      <script>
+                        $('#download_{{mod}}').click(function(){
+                          $.ajax({
+                            url: "{% url 'downloadInstallModule' %}",
+                            method: "POST",
+                            data: {'module_name':'{{mod}}'},
+                            dataType: 'application/json',
+                            contentType: "application/json",
+                            success: function(result){
+                              $.notify("{{mod}}:\n" + result['data'], "success");
+                            },
+                            error(){
+                              $.notify("{{mod}}:\nSomething wen't wrong", "error");
+                            }
+                          });
+                        });
+                      </script>
+                    </div>
+                    <!-- TODO Form for download and an animation -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 mb-3">
+                <a href="#" data-toggle="modal" data-target="#{{mod}}_test">
+                  <div class="card bg-secondary text-white shadow mouseOverModule">
+                    <div class="card-body">
+                      {{mod}}
+                      <div class="text-white-50 small">Download Module</div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
 
@@ -522,6 +570,18 @@
                 </div>
               </div>
             </div>
+          {% endfor %}
+          {% for cat in categories_names_repo %}
+            {% if not cat in categories %}
+              <div class="col-lg-4 mb-3">
+                <div class="card bg-secondary text-white shadow mouseOverCategory">
+                  <div class="card-body">
+                    {{cat}}
+                    <div class="text-white-50 small">Category</div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
           {% endfor %}
         </div>
       </div>
