@@ -1,52 +1,68 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
-import json
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
 
 # Create your views here.
 
-# ht_shodan
-
+# Automatic view function for getIPListfromServices
 @csrf_exempt
 def getIPListfromServices(request):
-    if request.POST.get('service_name'):
-        service_name = request.POST.get('service_name')
-        shodan_key = None
-        if request.POST.get('shodanKeyString'):
-            shodan_key = request.POST.get('shodanKeyString')
-        shodan = ht.getModule('ht_shodan')
-        response_shodan = shodan.getIPListfromServices(serviceName=service_name, shodanKeyString=shodan_key)
-        resp_text = ','.join(response_shodan)
-        if request.POST.get('is_async_getIPListfromServices', False):
-            data = {
-                'data' : resp_text
-            }
-            return JsonResponse(data)
-        return renderMainPanel(request=request, popup_text=resp_text)
-    else:
-        return renderMainPanel(request=request)
+	# Init of the view getIPListfromServices
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'getIPListfromServices')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:
+			# Parameter serviceName
+			serviceName = request.POST.get('serviceName')
 
+			# Parameter shodanKeyString (Optional - Default None)
+			shodanKeyString = request.POST.get('shodanKeyString', None)
+			if not shodanKeyString:
+				shodanKeyString = None
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_shodan').getIPListfromServices( serviceName=serviceName, shodanKeyString=shodanKeyString )
+			if request.POST.get('is_async_getIPListfromServices', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_getIPListfromServices', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for search_host
 @csrf_exempt
 def search_host(request):
-    if request.POST.get('service_ip'):
-        service_ip = request.POST.get('service_ip')
-        shodan = ht.getModule('ht_shodan')
-        response_shodan = shodan.search_host(service_ip)
-        if request.POST.get('is_async_search_host', False):
-            data = {
-                'data' : response_shodan
-            }
-            return JsonResponse(data)
-        return renderMainPanel(request=request, popup_text=response_shodan)
-    else:
-        return renderMainPanel(request=request)
+	# Init of the view search_host
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'search_host')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return renderMainPanel(request=request, popup_text=response.text)
+		else:
+			# Parameter ip
+			ip = request.POST.get('ip')
 
-# End ht_shodan
-
+			# Execute, get result and show it
+			result = ht.getModule('ht_shodan').search_host( ip=ip )
+			if request.POST.get('is_async_search_host', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_search_host', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
 # Automatic view function for getSSLCerts
 @csrf_exempt
 def getSSLCerts(request):

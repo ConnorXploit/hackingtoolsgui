@@ -4,6 +4,8 @@ from . import views
 from core.library import hackingtools as ht
 from core.library.hackingtools.core import UtilsDjangoViewsAuto
 
+import time, os, json, datetime
+
 urlpatterns = [
     path('', views.home, name="home"),
     path('documentation/<module_name>', views.documentation, name="documentation"),
@@ -19,7 +21,8 @@ urlpatterns = [
     path('core/pool/switchPool/', views.switchPool, name="switchPool"),
     path('core/pool/add_pool_node/', views.add_pool_node, name="add_pool_node"),
     path('core/connections/startNgrok/', views.startNgrok, name="startNgrok"),
-    path('core/repositories/downloadInstallModule/', views.downloadInstallModule, name="downloadInstallModule")
+    path('core/repositories/downloadInstallModule/', views.downloadInstallModule, name="downloadInstallModule"),
+    path('core/serverDjango/restartServerDjango/', views.restartServerDjango, name="restartServerDjango")
 ]
 
 functions_not_loaded = []
@@ -124,5 +127,6 @@ try:
         ht.Logger.printMessage(message='RESTART SERVER', description='YOU HAVE TO RESTART EXIT AND RUN SERVER AGAIN FOR LOADING THE NEW VIEWS FOR YOUR MODULES', is_error=True)
         import sys 
         sys.exit()
+
 except:
     raise

@@ -18,15 +18,14 @@ def installModule(server, moduleName):
     if req.json()['status'] == 'OK':
         category = req.json()['data']
 
-        req = requests.post('http://{ip}/module/download/files/{m}'.format(ip=server, m=moduleName))
+        req = requests.get('http://{ip}/module/download/files/{m}'.format(ip=server, m=moduleName), stream=True, data={'module_name' : moduleName}, headers={'Accept-Encoding' : '*/*', 'Content-Type' : 'application/zip'})
 
         category_folder = os.path.join(path, 'modules', category)
         if not os.path.isdir(category_folder):
             os.mkdir(category_folder)
 
         new_file = os.path.join(category_folder, '{m}.zip'.format(m=moduleName))
-        with open(new_file, 'wb') as file:
-            file.write(req.content)
+        open(new_file, 'wb').write(req.content)
 
         unzipper = ht.getModule('ht_unzip')
         unzipper.extractFile(new_file)

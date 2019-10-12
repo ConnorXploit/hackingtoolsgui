@@ -32,30 +32,38 @@
             "__function__": "getIPListfromServices",
             "__async__": false,
             "__return__": "text",
-            "service_name": {
+            "serviceName": {
                 "__type__": "text",
-                "placeholder": "apache",
-                "value": "",
-                "label_desc": "Search query",
+                "label_desc": "serviceName",
+                "placeholder": "serviceName",
                 "required": true
             },
             "shodanKeyString": {
                 "__type__": "text",
-                "placeholder": "abcdef0123456789",
-                "value": "",
-                "label_desc": "Shodan API Key"
+                "label_desc": "shodanKeyString",
+                "placeholder": "shodanKeyString",
+                "value": null
+            },
+            "__pool_it_getIPListfromServices__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "search_host": {
             "__function__": "search_host",
             "__async__": false,
             "__return__": "text",
-            "service_ip": {
+            "ip": {
                 "__type__": "text",
-                "placeholder": "8.8.8.8",
-                "value": "",
-                "label_desc": "Search for ip info",
+                "label_desc": "ip",
+                "placeholder": "ip",
                 "required": true
+            },
+            "__pool_it_search_host__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "getSSLCerts": {
@@ -85,7 +93,7 @@
                 "value": ""
             },
             "osintDays": {
-                "__type__": "text",
+                "__type__": "number",
                 "label_desc": "osintDays",
                 "placeholder": "osintDays",
                 "value": 100

@@ -1,7 +1,6 @@
 {
     "modules": {
         "ht_shodan": {
-            "api_key": "lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl",
             "bad_api_key_error": "The specified APIKey is invalid, please insert another one.",
             "error_ip_no_exists": "No data available for the IP",
             "search_limit_date_format": "%d/%m/%Y",
@@ -98,7 +97,8 @@
             "predicting_invalid_path": "Invalid image path",
             "predicting_no_knn_or_model_path": "Must supply knn classifier either thourgh knn_clf or model_path"
         },
-        "ht_spider": {}
+        "ht_spider": {},
+        "ht_infector": {}
     },
     "core": {
         "WANT_TO_BE_IN_POOL": true,

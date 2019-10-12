@@ -25,16 +25,14 @@
             "__return__": "text",
             "ip": {
                 "__type__": "text",
-                "placeholder": "0.0.0.0",
-                "value": "",
-                "label_desc": "Search IP",
+                "label_desc": "ip",
+                "placeholder": "ip",
                 "required": true
             },
-            "shodanKeyString": {
-                "__type__": "text",
-                "placeholder": "abcdef0123456789",
-                "value": "",
-                "label_desc": "Shodan API Key"
+            "__pool_it_getConnectedDevices__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "getDevicePorts": {
@@ -48,16 +46,18 @@
                 "required": true
             },
             "tcp": {
-                "__type__": "text",
+                "__type__": "checkbox",
                 "label_desc": "tcp",
                 "placeholder": "tcp",
-                "value": true
+                "value": true,
+                "selected": true
             },
             "udp": {
-                "__type__": "text",
+                "__type__": "checkbox",
                 "label_desc": "udp",
                 "placeholder": "udp",
-                "value": false
+                "value": false,
+                "selected": false
             },
             "__pool_it_getDevicePorts__": {
                 "__type__": "checkbox",

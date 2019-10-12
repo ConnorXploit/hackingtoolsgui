@@ -22,7 +22,7 @@ class StartModule():
     def setApi(self, shodanKeyString=None):
         try:
             if not shodanKeyString:
-                shodanKeyString = config['api_key']
+                shodanKeyString = Config.getApiKey('shodan_api')
             Logger.printMessage(message='{methodName}'.format(methodName='setApi'), description=shodanKeyString, debug_core=True)
             self.api = Shodan(shodanKeyString)
         except:
@@ -31,7 +31,7 @@ class StartModule():
     def getIPListfromServices(self, serviceName, shodanKeyString=None):
         Logger.printMessage(message='{methodName}'.format(methodName='getIPListfromServices'), description='{param}'.format(param=serviceName), debug_module=True)
         if not self.api and not shodanKeyString:
-            self.setApi(Config.getApiKey('shodan_api'))
+            self.setApi()
         if self.api or shodanKeyString:
             if shodanKeyString:
                 self.setApi(shodanKeyString=shodanKeyString)
@@ -122,7 +122,7 @@ class StartModule():
         res = {}
         try:
             Logger.printMessage(message='{methodName}'.format(methodName='getSSLCerts'), debug_module=True)
-            for banner in api.stream.ports([443, 8443]):
+            for banner in self.api.stream.ports([443, 8443]):
                 if 'ssl' in banner:
                     res['ssl'] = banner['ssl']
         except Exception as e:

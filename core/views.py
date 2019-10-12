@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
 from .library.hackingtools.core import Utils, Logger, Config, Connections, UtilsDjangoViewsAuto
 from importlib import reload
-import os
+import os, sys
 import json
 from requests import Response
 from colorama import Fore
@@ -138,8 +138,8 @@ def createModule(request):
 @csrf_exempt
 def downloadInstallModule(request):
     try:
-        mod_name = request.POST.get('module_name').replace(" ", "_").lower()
-        ht.Repositories.installModule(mod_name)
+        mod_name = request.POST.get('module_name').replace('ht_', '').lower()
+        ht.Repositories.installModule(ht.Repositories.getOnlineServers()[0], mod_name)
         data = {
             'data' : 'Installed successfully'
         }
@@ -149,6 +149,23 @@ def downloadInstallModule(request):
             'data' : str(e)
         }
         return JsonResponse(data)
+
+@csrf_exempt
+def restartServerDjango(request):
+    try:
+        new_conf = { "restart" : True }
+        with open(os.path.join(os.path.dirname(__file__) , '__auto_restart_flag__.json'), 'w', encoding='utf8') as outfile:  
+            json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
+        data = {
+            'data' : 'Reloading'
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        data = {
+            'data' : str(e)
+        }
+        return JsonResponse(data)
+
 
 def configModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()

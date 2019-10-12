@@ -441,9 +441,9 @@ def __importModules__():
                                     pass
 
                             Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
-                            raise
+                            pass
                     except Exception as e:
                         Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
-                        raise
+                        pass
 
 __importModules__()
