@@ -8,7 +8,7 @@ from os import listdir
 from os.path import isfile, join
 import importlib
 import types
-import inspect
+import inspect, shutil
 import ast
 import progressbar
 import requests
@@ -24,6 +24,8 @@ except ImportError:
     from pip._internal import main as pipmain
 
 modules_loaded = {}
+
+threads = {}
 
 # If we want to be en Pool, import its Functions
 global WANT_TO_BE_IN_POOL
@@ -51,6 +53,8 @@ default_class_name_for_all = config['default_class_name_for_all']
 default_template_modules_ht = config['default_template_modules_ht']
 
 package = config['package_name']
+
+cant_install_requirements = list(Config.getConfig(parentKey='core', key='cant_install_requirements'))
 
 # === getModulesJSON ===
 def getModulesJSON():
@@ -268,6 +272,13 @@ def createModule(moduleName, category):
     trying_something = __importModules__()
     return
 
+def removeModule(moduleName, category):
+    modulePath = os.path.join(this_dir, 'modules', category, moduleName.replace('ht_', ''))
+    if os.path.isdir(modulePath):
+        shutil.rmtree(modulePath)
+    if os.path.isdir(modulePath):
+        os.rmdir(modulePath)
+
 def createCategory(categoryName):
     categoryName = categoryName.lower()
     categories = getCategories()
@@ -286,6 +297,18 @@ def switchPool():
 def wantPool():
     global WANT_TO_BE_IN_POOL
     return WANT_TO_BE_IN_POOL
+
+def worker(workerName, functionCall, args={}, chunk=None):
+    threads[workerName] = Utils.worker(functionCall, args, chunk)
+
+def getWorkers():
+    return threads
+
+def getWorker(nameWorker):
+    try:
+        return threads[nameWorker]
+    except:
+        return None
 
 #TODO Continue documentation here
 
@@ -397,6 +420,42 @@ def __methodsFromModule__(cls):
 def __classNameFromModule__(cls):
     return [x for x in dir(cls) if inspect.isclass(getattr(cls, x)) and x.startswith(class_name_starts_with_modules)]
 
+def __importModule__(modules, category, moduleName, progressbar=None):
+    module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
+    module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
+    try:
+        exec(module_import_string)
+        #globals()[module_name] = importlib.import_module(module_import_string)
+        module_className = __classNameFromModule__(eval(moduleName))
+        module_functions = __methodsFromModule__(eval(moduleName))
+        #Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
+        progressbar.update(1)
+        if len(module_functions) > 0:
+            modules_loaded[module_import_string_no_from] = {}
+            for mod_func in module_functions:
+                functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=mod_func, i_want_list=True)
+
+                modules_loaded[module_import_string_no_from][mod_func] = {}
+                modules_loaded[module_import_string_no_from][mod_func]['params'] = functionParams if len(functionParams) > 0 else False
+
+        else:
+            modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
+    except Exception as e:
+        new_module_name = str(e).split("'")[1]
+        if 'No module named' in str(e):
+            if not new_module_name in cant_install_requirements:
+                try:
+                    Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=new_module_name), color=Fore.YELLOW)
+                    pipmain(['install', '--user', new_module_name])
+                except:
+                    pass
+
+        cant_install_requirements.append(new_module_name)
+        Config.add_requirements_ignore(new_module_name)
+
+        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+        pass
+
 # Core method
 def __importModules__():
     """
@@ -410,40 +469,18 @@ def __importModules__():
         for modu in modules:
             for submod in modules[modu]:
                 for files in modules[modu][submod]:
+                    module_name = modules[modu][submod][files][0].split(".")[0]
                     try:
-                        module_name = modules[modu][submod][files][0].split(".")[0]
-                        #Logger.printMessage(message='{category}'.format(category=submod), description=module_name, debug_module=True) 
-                        module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
-                        module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(package=package, modules=modu, category=submod, tool=files, toolFileName=module_name)
-                        try:
-                            exec(module_import_string)
-                            #globals()[module_name] = importlib.import_module(module_import_string)
-                            module_className = __classNameFromModule__(eval(module_name))
-                            module_functions = __methodsFromModule__(eval(module_name))
-                            #Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
-                            bar.update(1)
-                            if len(module_functions) > 0:
-                                modules_loaded[module_import_string_no_from] = {}
-                                for mod_func in module_functions:
-                                    functionParams = Utils.getFunctionsParams(category=submod, moduleName=module_name, functionName=mod_func, i_want_list=True)
-
-                                    modules_loaded[module_import_string_no_from][mod_func] = {}
-                                    modules_loaded[module_import_string_no_from][mod_func]['params'] = functionParams if len(functionParams) > 0 else False
-
-                            else:
-                                modules_loaded[module_import_string_no_from] = 'Sin funciones...'   
-                        except Exception as e:
-                            if 'No module named' in str(e):
-                                try:
-                                    Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=str(e).split("'")[1]), color=Fore.YELLOW)
-                                    pipmain(['install', '--user', str(e).split("'")[1]])
-                                except:
-                                    pass
-
-                            Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
-                            pass
+                        #worker("import-module-{m}".format(m=module_name), __importModule__, args=(modu, submod, module_name, bar)) # Threaded
+                        __importModule__(modules=modu, category=submod, moduleName=module_name, progressbar=bar)
                     except Exception as e:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_name, error=str(e)), is_error=True)
                         pass
 
 __importModules__()
+
+try:
+    for t in threads:
+        t.join()
+except:
+    pass

@@ -121,7 +121,26 @@
           })
         </script>
         <a href="#" href="#" data-toggle="modal" data-target="#pool_list" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-upload fa-sm text-white-50"></i> Pool List ({{pool_list|length}})</a> | 
-        <a href="{% url 'config_look_for_changes' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Refresh Config</a>
+        <a href="{% url 'config_look_for_changes' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Refresh Config</a> | 
+        <a id="restartServerButton" style="color: white;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Restart Server</a>
+        <script>
+          $('#restartServerButton').click(function(){
+            $.ajax({
+                url : "{% url 'restartServerDjango' %}", // the endpoint
+                type : "POST", // http method
+                async: true,
+                success : function(res) {
+                  $.notify("Restart server:\n" + res['data'], "warn");
+                  $('#reloading-server').modal('show');
+                  changeGif(Math.floor(Math.random() * 4) + 1);
+                },
+                error : function(xhr,errmsg,err) {
+                  $.notify("Restart server:\n" + xhr.status + ": " + xhr.responseText, "error");
+                  console.log(xhr.status + ": " + xhr.responseText);
+                }
+              });
+          });
+        </script>
       </div>
     </div>
 
@@ -494,11 +513,61 @@
             </div>
           {% endfor %}
           {% for mod in modules %}
+            <div id="remove-{{mod}}" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="createModuleLabel">Remove {{mod}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <span>Sure you want to remove the module {{mod}}?</span>
+                    <span>For deleting, enter below: <b>{{mod}}</b></span>
+                    <input type="text" class="form-control" id="removeMod_{{mod}}"/>
+                  </div>
+                </div>
+              </div>
+            </div>
             <script>
               function removeModule{{mod}}(evt) {
                 evt.preventDefault();
-                alert('Sure you want to remove the module {{mod}}?');
-                $('#{{mod}}_test').modal('hide')
+                var txt;
+                var person = prompt("Sure you want to remove the module {{mod}}?\n\nFor deleting, enter below: '{{mod}}'", "");
+                if (person == "{{mod}}") {
+                  $.ajax({
+                    url: "{% url 'removeModule' %}",
+                    method: "POST",
+                    data: {
+                      module_name :'{{mod}}'
+                    },
+                    success: function(result){
+                      $.notify("{{mod}}:\n" + result['data'], "success");
+                      if($('#resultsLogger').val() != ''){
+                        $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                      }
+                      $('#resultsLogger').val("Remove {{mod}}:\n" + result['data'] + "\n" + $('#resultsLogger').val())
+                      $.notify("Restart Server:\n RESTART NEEDED", "warn");
+                      /*$.ajax({
+                        url: "{% url 'restartServerDjango' %}",
+                        method: "POST",
+                        success: function(res){
+                          $.notify("Restart server:\n" + res['data'], "warn");
+                          changeGif(Math.floor(Math.random() * 4) + 1);
+                          $('#reloading-server').modal('show');
+                        }
+                      });*/
+                    },
+                    error(){
+                      $.notify("{{mod}}:\nSomething wen't wrong", "error");
+                      $('#reloading-server').modal('hide');
+                    }
+                  });
+                } else {
+                  $.notify("Bad module name", "error");
+                  $('#reloading-server').modal('hide');
+                }
               }
             </script>
             <div class="col-lg-4 mb-3">
@@ -534,14 +603,24 @@
                       },
                       success: function(result){
                         $.notify("{{mod}}:\n" + result['data'], "success");
-                        $.notify("{{mod}}:\nReloading server with changes", "warn");
-                        $.ajax({
+                        if($('#resultsLogger').val() != ''){
+                          $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                        }
+                        $('#resultsLogger').val("Download {{mod}}:\n" + result['data'] + "\n" + $('#resultsLogger').val())
+                        $.notify("Restart Server:\n RESTART NEEDED", "warn");
+                        /*$.ajax({
                           url: "{% url 'restartServerDjango' %}",
-                          method: "POST"
-                        });
+                          method: "POST",
+                          success: function(res){
+                            $.notify("Restart server:\n" + res['data'], "warn");
+                            changeGif(Math.floor(Math.random() * 4) + 1);
+                            $('#reloading-server').modal('show');
+                          }
+                        });*/
                       },
                       error(){
                         $.notify("{{mod}}:\nSomething wen't wrong", "error");
+                        $('#reloading-server').modal('hide');
                       }
                     });
                   });

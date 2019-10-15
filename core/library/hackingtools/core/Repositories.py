@@ -18,6 +18,8 @@ def installModule(server, moduleName):
     if req.json()['status'] == 'OK':
         category = req.json()['data']
 
+        # Installing main files for the module
+
         req = requests.get('http://{ip}/module/download/files/{m}'.format(ip=server, m=moduleName), stream=True, data={'module_name' : moduleName}, headers={'Accept-Encoding' : '*/*', 'Content-Type' : 'application/zip'})
 
         category_folder = os.path.join(path, 'modules', category)
@@ -31,6 +33,18 @@ def installModule(server, moduleName):
         unzipper.extractFile(new_file)
 
         os.remove(new_file)
+
+        # Installing the json config
+        req = requests.get('http://{ip}/module/download/config/{m}'.format(ip=server, m=moduleName), stream=True, data={'module_name' : moduleName}, headers={'Accept-Encoding' : '*/*', 'Content-Type' : 'application/json'})
+        
+        config_django_module_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'config_modules_django', category))
+        if not os.path.isdir(config_django_module_path):
+            os.mkdir(config_django_module_path)
+        
+        print(req.content.json())
+        
+        open(os.path.join(config_django_module_path, 'ht_{m}.json'.format(m=moduleName.replace('ht_',''))), 'wb').write(req.content.json())
+
 
 def updateModule(server, moduleName):
     removeModule(server, moduleName)

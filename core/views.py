@@ -128,18 +128,36 @@ def createModule(request):
     load_data()
     UtilsDjangoViewsAuto.loadModuleFunctionsToView(mod_name, mod_cat)
     # ! Tengo que hacer que llame a las funciones de crear views y json con la config...
-    # ! Aprovechar para solucionar los params que no cogia
+    # ! Aprovechar para solucionar los params que no cogia (es porque tira del inspect y como no está guardado en pypi esa versión, no coge esa versión y devuelve 0 params)
     # ! Creo que se puede solucionar con la Util amIDjango al inicio de los import
-    # ! Hay que sacar las funciones de las urls.py que sirve para ello, a un UtilsDjango.py para ciertas funciones
+    # * Hay que sacar las funciones de las urls.py que sirve para ello, a un UtilsDjango.py para ciertas funciones
     # ! De esta forma, desde aqui, podemos llamar a esas funciones y cargar todo de una sola vez y avisar que las funciones
     # ! solo serán funcionales una vez se reinicie o intentar hacer que se virtualice de alguna forma esa url y se resuelva sola sin tener que recargar
     return renderMainPanel(request=request)
     
 @csrf_exempt
+def removeModule(request):
+    try:
+        mod_name = request.POST.get('module_name').replace(" ", "_").lower()
+        category = ht.getModuleCategory(mod_name)
+        ht.removeModule(mod_name, category)
+        UtilsDjangoViewsAuto.removeModuleView(mod_name, category)
+        data = {
+            'data' : 'Removed successfully'
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        data = {
+            'data' : str(e)
+        }
+        return JsonResponse(data)
+
+@csrf_exempt
 def downloadInstallModule(request):
     try:
         mod_name = request.POST.get('module_name').replace('ht_', '').lower()
         ht.Repositories.installModule(ht.Repositories.getOnlineServers()[0], mod_name)
+        UtilsDjangoViewsAuto.restartDjangoServer()
         data = {
             'data' : 'Installed successfully'
         }
@@ -153,11 +171,9 @@ def downloadInstallModule(request):
 @csrf_exempt
 def restartServerDjango(request):
     try:
-        new_conf = { "restart" : True }
-        with open(os.path.join(os.path.dirname(__file__) , '__auto_restart_flag__.json'), 'w', encoding='utf8') as outfile:  
-            json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
+        UtilsDjangoViewsAuto.restartDjangoServer()
         data = {
-            'data' : 'Reloading'
+            'data' : 'Reloading... Please wait at least 1 minute for saving changes'
         }
         return JsonResponse(data)
     except Exception as e:
@@ -165,6 +181,8 @@ def restartServerDjango(request):
             'data' : str(e)
         }
         return JsonResponse(data)
+    finally:
+        UtilsDjangoViewsAuto.restartDjangoServer()
 
 
 def configModule(request):

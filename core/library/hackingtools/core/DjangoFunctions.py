@@ -1,8 +1,5 @@
 from . import Config, Logger, Utils
-if Utils.amIdjango(__name__):
-    from core.library import hackingtools as ht
-else:
-    import hackingtools as ht
+from core.library import hackingtools as ht
 ht.Logger.setDebugModule(True)
 
 from colorama import Fore

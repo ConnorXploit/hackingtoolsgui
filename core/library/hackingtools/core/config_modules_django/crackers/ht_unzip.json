@@ -18,15 +18,22 @@
             "__function__": "extractFile",
             "__async__": false,
             "__return__": "text",
-            "zipFile": {
-                "__type__": "file",
-                "label_desc": "File to extract",
+            "zipPathName": {
+                "__type__": "text",
+                "label_desc": "zipPathName",
+                "placeholder": "zipPathName",
                 "required": true
             },
-            "passwordFile": {
-                "__type__": "password",
-                "label_desc": "Password to unzip",
-                "required": true
+            "password": {
+                "__type__": "text",
+                "label_desc": "password",
+                "placeholder": "password",
+                "value": null
+            },
+            "__pool_it_extractFile__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "extractFilePassword": {

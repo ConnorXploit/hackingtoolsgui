@@ -404,3 +404,7 @@ textarea.form-control {
 {
 	background-color: #4e73df;	
 }
+.loading-gif {
+    text-align: center;
+    padding: 0;
+}

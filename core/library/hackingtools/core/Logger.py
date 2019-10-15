@@ -100,9 +100,13 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
     if is_error:
         colorMessage = Fore.RED
 
+    if description:
+        logs[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
+    else:
+        logs[time_now] = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
+
     if ((not debug_module) and (not debug_core) and (DEBUG_USER)) or ((debug_module) and (DEBUG_MODULE_FLAG)) or ((debug_core) and (DEBUG_CORE_FLAG)):
         if description:
-            logs[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
             print('{timeColorStart}[{time}]{timeColorEnd} - {methodCalledFromColorStart}{methodCalledFrom}{methodCalledFromColorEnd} - {messageColorStart}{message}{messageColorEnd} - {description}'.format(
                 timeColorStart=Fore.BLUE, 
                 timeColorEnd=Fore.WHITE, 
@@ -115,7 +119,6 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
                 messageColorEnd=Fore.WHITE,
                 description=description))
         else:
-            logs[time_now] = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
             print('{timeColorStart}[{time}]{timeColorEnd} - {methodCalledFromColorStart}{methodCalledFrom}{methodCalledFromColorEnd} - {messageColorStart}{message}{messageColorEnd}'.format(
                 timeColorStart=Fore.BLUE, 
                 timeColorEnd=Fore.WHITE, 

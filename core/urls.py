@@ -12,6 +12,7 @@ urlpatterns = [
     path('popup/<string>', views.home, name="home"),
     # Core URLs
     path('core/module/create/', views.createModule, name="createmod"),
+    path('core/module/remove/', views.removeModule, name="removeModule"),
     path('core/module/config/', views.configModule, name="configmod"),
     path('core/module/save/<string>', views.configModule, name="savemod"),
     path('core/script/save/', views.createScript, name="createscript"),
@@ -124,8 +125,9 @@ try:
         loadModuleUrls(mod)
     if functions_not_loaded:
         ht.Logger.printMessage(message='CORE VIEWS', description='Loaded new function{s} views: {d}'.format(s='s' if len(functions_not_loaded) > 1 else '', d=', '.join(functions_not_loaded)), color=ht.Fore.YELLOW)
-        ht.Logger.printMessage(message='RESTART SERVER', description='YOU HAVE TO RESTART EXIT AND RUN SERVER AGAIN FOR LOADING THE NEW VIEWS FOR YOUR MODULES', is_error=True)
-        import sys 
+        #ht.Logger.printMessage(message='RESTART SERVER', description='YOU HAVE TO RESTART EXIT AND RUN SERVER AGAIN FOR LOADING THE NEW VIEWS FOR YOUR MODULES', is_error=True)
+        
+        import sys
         sys.exit()
 
 except:

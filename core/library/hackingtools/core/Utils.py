@@ -20,12 +20,17 @@ from colorama import Fore
 import random
 import requests
 import base64
-import os, inspect, ast
+import os, inspect, ast, threading
 import socket
 import itertools
 from itertools import product 
 
 from datetime import datetime
+
+def worker(functionCall, args={}, chunk=None):
+    t = threading.Thread(target=functionCall, args=args)
+    t.start()
+    return t
 
 # File Manipulation
 def getFileContentInByteArray(filePath):

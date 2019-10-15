@@ -212,6 +212,45 @@
             </ul> {% endcomment %}
 
             <!-- Bottom Console -->
+            <div id="reloading-server" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="createModuleLabel">Reloading Server...</h5>
+                    <span style='font-size:24px;'>&#9201;</span>
+                  </div>
+                  <div class="modal-body loading-gif">
+                    <img id="loadinggif" src="" alt="Reloading Server. Please Wait...">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script>
+              gif_to_load_num = Math.floor(Math.random() * 4) + 1;
+              switch (gif_to_load_num) {
+                case 1:
+                  $("#loadinggif").attr("src", "{% static 'core/img/loading1.gif' %}");
+                case 2:
+                  $("#loadinggif").attr("src", "{% static 'core/img/loading2.gif' %}");
+                case 3:
+                  $("#loadinggif").attr("src", "{% static 'core/img/loading3.gif' %}");
+                case 4:
+                  $("#loadinggif").attr("src", "{% static 'core/img/loading4.gif' %}");
+              }
+              function changeGif(num){
+                switch (num) {
+                  case 1:
+                    $("#loadinggif").attr("src", "{% static 'core/img/loading1.gif' %}");
+                  case 2:
+                    $("#loadinggif").attr("src", "{% static 'core/img/loading2.gif' %}");
+                  case 3:
+                    $("#loadinggif").attr("src", "{% static 'core/img/loading3.gif' %}");
+                  case 4:
+                    $("#loadinggif").attr("src", "{% static 'core/img/loading4.gif' %}");
+                }
+              }
+
+            </script>
             <form class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100 navbar-search" id="bottomConsoleResultBar">
               <textarea class="form-control logger-results" id="resultsLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" placeholder="Waiting Results..." disabled></textarea>
               <textarea class="form-control logger-console" id="consoleLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" disabled>Loading Log...</textarea>
@@ -253,6 +292,7 @@
                   this.start(false, iv);
               }
             };
+            error_counter_for_reload_message = 0
             timer.start(function(){
               $.ajax({
                 url : "{% url 'getLogs' %}", // the endpoint
@@ -272,12 +312,21 @@
                     $('#consoleLogger').val().replace(/<br>/gi,"\n")
                     timer.set_interval(500);
                     length_console_logs = Object.keys(res.data).length
+                    if (error_counter_for_reload_message > 4){
+                      error_counter_for_reload_message = 0;
+                      location.reload();
+                    }
                   } else {
                     // $('#consoleLogger').val('Loading Log...')
+                    if (error_counter_for_reload_message > 4){
+                      error_counter_for_reload_message = 0;
+                      location.reload();
+                    }
                     timer.set_interval(2000);
                   }
                 },
                 error : function(xhr,errmsg,err) {
+                  error_counter_for_reload_message = error_counter_for_reload_message + 1
                   console.log(xhr.status + ": " + xhr.responseText);
                 }
               });
@@ -314,6 +363,9 @@
 
     <!-- Notifications for ajax success or error messages -->
     <script src="{% static 'core/js/notify.min.js' %}"></script>
+
+    <!-- Live Refresh for Django  -->
+    <!--<script src="{% static 'core/js/live.js' %}"></script>-->
 
     {% comment %} <!-- Page level plugins -->
     <script src="{% static 'core/vendor/chart.js/Chart.min.js' %}"></script>

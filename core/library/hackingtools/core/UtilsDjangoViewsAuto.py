@@ -21,6 +21,24 @@ default_view_function_init = "\n# Automatic view function for {funcName}\n@csrf_
 
 lastly_added_func = ["help"]
 
+def restartDjangoServer():
+    wsgi_file = os.path.join(os.path.split(os.path.split(os.path.split(os.path.split(os.path.abspath(os.path.dirname(__file__)))[0])[0])[0])[0], 'hackingtoolsgui', 'wsgi.py')
+    if os.path.isfile(wsgi_file):
+        ht.Logger.printMessage('Restarting the server!', color=ht.Logger.Fore.YELLOW)
+        with open(wsgi_file, 'a+')as f:
+            f.write('\n')
+        lines = open(wsgi_file, 'r').readlines()
+        del lines[-1]
+        open(wsgi_file, 'w').writelines(lines)
+
+def removeModuleView(moduleName, category):
+    moduleViewPath = os.path.join(os.path.split(os.path.split(os.path.split(os.path.abspath(os.path.dirname(__file__)))[0])[0])[0], 'views_modules', category, 'views_ht_{m}.py'.format(m=moduleName.replace('ht_', '')))
+    if os.path.isfile(moduleViewPath):
+        os.remove(moduleViewPath)
+    moduleConfPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config_modules_django', category, 'ht_{m}.py'.format(m=moduleName.replace('ht_', '')))
+    if os.path.isfile(moduleConfPath):
+        os.remove(moduleConfPath)
+
 def getModuleViewFilePath(moduleName, category):
     moduleViewFile = 'views_ht_{n}.py'.format(n=moduleName.replace('ht_', ''))
     categoryDir = getModuleViewCategoryDir(moduleName, category)

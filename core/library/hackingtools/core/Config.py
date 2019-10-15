@@ -55,9 +55,10 @@ def __readFilesAuto__():
                 module_config_file = os.path.join(categories_dir, cat, '{mod}.json'.format(mod=mod))
                 if os.path.isfile(module_config_file):
                     with open(module_config_file) as json_data_file_django:
-                        config_django = json.load(json_data_file_django)
-                        for conf in config_django:
-                            config['modules'][mod][conf] = config_django[conf]
+                        if json_data_file_django:
+                            config_django = json.load(json_data_file_django)
+                            for conf in config_django:
+                                config['modules'][mod][conf] = config_django[conf]
     return config
 
 # === __readConfig__ ===
@@ -86,6 +87,20 @@ def __save_config__(new_conf, config_file='config.json'):
     """
     with open(os.path.join(os.path.dirname(__file__) , config_file), 'w', encoding='utf8') as outfile:  
         json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
+
+def add_requirements_ignore(requirementModuleName):
+    config = {}
+
+    with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
+        config = json.load(json_data_file)
+
+    if not 'cant_install_requirements' in dict(config['core']):
+        config['core']['cant_install_requirements'] = []
+
+    if not str(requirementModuleName) in list(config['core']['cant_install_requirements']):
+        config['core']['cant_install_requirements'].append(str(requirementModuleName))
+
+    __save_config__(config)
 
 # === __save_config__ ===
 def __save_django_module_config__(new_conf, category, moduleName, functionName):

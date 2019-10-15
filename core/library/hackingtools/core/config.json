@@ -103,6 +103,24 @@
     "core": {
         "WANT_TO_BE_IN_POOL": true,
         "LOAD_DJANGO_CONF": true,
+        "cant_install_requirements": [
+            "face_recognition",
+            "bar",
+            "core.library.hackingtools.modules.ht_spider",
+            "core.library.hackingtools.modules.ht_unzip",
+            "core.library.hackingtools.modules.ht_virustotal",
+            "core.library.hackingtools.modules.ht_nmap",
+            "core.library.hackingtools.modules.ht_shodan",
+            "core.library.hackingtools.modules.ht_infector",
+            "core.library.hackingtools.modules.ht_bruteforce",
+            "core.library.hackingtools.modules.ht_sqlinjection",
+            "core.library.hackingtools.modules.ht_rat",
+            "core.library.hackingtools.modules.ht_crypter",
+            "core.library.hackingtools.modules.ht_rsa",
+            "core.library.hackingtools.modules.ht_twitter",
+            "core.library.hackingtools.modules.ht_metadata",
+            "core.library.hackingtools.modules.ht_instagram"
+        ],
         "Connections": {
             "ngrok": {
                 "__load_on_boot__": false

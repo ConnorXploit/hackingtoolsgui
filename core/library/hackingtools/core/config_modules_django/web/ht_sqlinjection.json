@@ -1,0 +1,135 @@
+{
+    "__gui_label__": "ht_sqlinjection",
+    "django_form_module_function": {
+        "cantidadTuplasEnTapla": {
+            "__function__": "cantidadTuplasEnTapla",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_cantidadTuplasEnTapla__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "cogerColumnasTabla": {
+            "__function__": "cogerColumnasTabla",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_cogerColumnasTabla__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "cogerNombreDeTablaPorID": {
+            "__function__": "cogerNombreDeTablaPorID",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_cogerNombreDeTablaPorID__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "cogerTablas": {
+            "__function__": "cogerTablas",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_cogerTablas__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "color": {
+            "__function__": "color",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_color__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "compareTextExistWhereSubstringACII": {
+            "__function__": "compareTextExistWhereSubstringACII",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_compareTextExistWhereSubstringACII__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "ejecutarSQL": {
+            "__function__": "ejecutarSQL",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_ejecutarSQL__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "longitudCampoIDtablaCampo": {
+            "__function__": "longitudCampoIDtablaCampo",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_longitudCampoIDtablaCampo__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "md5_decrypt": {
+            "__function__": "md5_decrypt",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_md5_decrypt__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "mostrarUserPass": {
+            "__function__": "mostrarUserPass",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_mostrarUserPass__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "sacarValorPorTablaColumnaID": {
+            "__function__": "sacarValorPorTablaColumnaID",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_sacarValorPorTablaColumnaID__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "setParams": {
+            "__function__": "setParams",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_setParams__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "transformAsciiToHex": {
+            "__function__": "transformAsciiToHex",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_transformAsciiToHex__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}
