@@ -54,7 +54,7 @@ default_template_modules_ht = config['default_template_modules_ht']
 
 package = config['package_name']
 
-cant_install_requirements = list(Config.getConfig(parentKey='core', key='cant_install_requirements'))
+cant_install_requirements = Config.getConfig(parentKey='core', key='cant_install_requirements')
 
 # === getModulesJSON ===
 def getModulesJSON():
@@ -420,7 +420,7 @@ def __methodsFromModule__(cls):
 def __classNameFromModule__(cls):
     return [x for x in dir(cls) if inspect.isclass(getattr(cls, x)) and x.startswith(class_name_starts_with_modules)]
 
-def __importModule__(modules, category, moduleName, progressbar=None):
+def __importModule__(modules, category, moduleName):
     module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
     module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
     try:
@@ -429,7 +429,6 @@ def __importModule__(modules, category, moduleName, progressbar=None):
         module_className = __classNameFromModule__(eval(moduleName))
         module_functions = __methodsFromModule__(eval(moduleName))
         #Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
-        progressbar.update(1)
         if len(module_functions) > 0:
             modules_loaded[module_import_string_no_from] = {}
             for mod_func in module_functions:
@@ -443,18 +442,30 @@ def __importModule__(modules, category, moduleName, progressbar=None):
     except Exception as e:
         new_module_name = str(e).split("'")[1]
         if 'No module named' in str(e):
-            if not new_module_name in cant_install_requirements:
+
+            if not moduleName in cant_install_requirements:
+                cant_install_requirements[moduleName] = []
+
+            if not new_module_name in cant_install_requirements[moduleName]:
+
                 try:
                     Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=new_module_name), color=Fore.YELLOW)
-                    pipmain(['install', '--user', new_module_name])
+                    import subprocess
+                    p = subprocess.Popen([sys.executable, '-m', 'pip', 'install', new_module_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    out = p.communicate()
+                    if 'EnvironmentError' in out[0]:
+                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=new_module_name, error='Could not install in environment'), is_error=True)
+                    #pipmain([sys.executable, '-m', 'pip', 'install', '--user', new_module_name])
                 except:
                     pass
 
-        cant_install_requirements.append(new_module_name)
-        Config.add_requirements_ignore(new_module_name)
+                if not new_module_name in cant_install_requirements[moduleName]:
+                    cant_install_requirements[moduleName].append(new_module_name)
 
-        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
-        pass
+                if not 'hackingtools' in new_module_name:
+                    Config.add_requirements_ignore(moduleName, new_module_name)
+
+                Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
 
 # Core method
 def __importModules__():
@@ -463,8 +474,8 @@ def __importModules__():
     y como subcarpetas tiene que haber el nombre del tipo de herramienta que es y debajo de esas carpetas
     tienen que estar los directorios individualmente por herramientas que se incorpore a la librería
     """
-    modules = __getModules__()
     Logger.printMessage(message='{meth}'.format(meth='__importModules__'), description='Loading modules...', debug_module=True)
+    modules = __getModules__()
     with progressbar.ProgressBar(max_value=progressbar.UnknownLength) as bar:
         for modu in modules:
             for submod in modules[modu]:
@@ -472,15 +483,16 @@ def __importModules__():
                     module_name = modules[modu][submod][files][0].split(".")[0]
                     try:
                         #worker("import-module-{m}".format(m=module_name), __importModule__, args=(modu, submod, module_name, bar)) # Threaded
-                        __importModule__(modules=modu, category=submod, moduleName=module_name, progressbar=bar)
+                        __importModule__(modules=modu, category=submod, moduleName=module_name)
+                        bar.update(1)
                     except Exception as e:
                         Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_name, error=str(e)), is_error=True)
                         pass
 
 __importModules__()
 
-try:
-    for t in threads:
-        t.join()
-except:
-    pass
+# try:
+#     for t in threads:
+#         t.join()
+# except:
+#     pass

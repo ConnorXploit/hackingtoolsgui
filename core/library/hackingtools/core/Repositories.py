@@ -41,9 +41,7 @@ def installModule(server, moduleName):
         if not os.path.isdir(config_django_module_path):
             os.mkdir(config_django_module_path)
         
-        print(req.content.json())
-        
-        open(os.path.join(config_django_module_path, 'ht_{m}.json'.format(m=moduleName.replace('ht_',''))), 'wb').write(req.content.json())
+        open(os.path.join(config_django_module_path, 'ht_{m}.json'.format(m=moduleName.replace('ht_',''))), 'wb').write(req.content)
 
 
 def updateModule(server, moduleName):

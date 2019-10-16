@@ -29,18 +29,18 @@ class StartModule():
 			# else:
 			# 	texts_list = [texts]
 			# for index_t_list, t_list in enumerate(texts_list):
-				if len(t_list) > max_length_posibilities:
-					Logger.printMessage(message='crackZip', description='Chunk {n} - {word}'.format(n=index_t_list, word=t_list[1]))
-				for text in t_list:
-					if os.path.isfile(zipPathName):
-						password = unzipper.extractFilePassword(zipPathName, text, posible_combinations=len(texts))
-					else:
-						Logger.printMessage(message='crackZip', description='File doesnt exists {a}'.format(a=zipPathName), is_error=True)
-						break
-					if password:
-						Logger.printMessage(message='crackZip', description='{msg_password_is} {a}'.format(msg_password_is=config['msg_password_is'], a=password))
-						if log:
-							Logger.setDebugCore(False)
-						return password
+			# if len(t_list) > max_length_posibilities:
+			# 	Logger.printMessage(message='crackZip', description='Chunk {n} - {word}'.format(n=index_t_list, word=t_list[1]))
+			# for text in t_list:
+			if os.path.isfile(zipPathName):
+				password = unzipper.extractFilePassword(zipPathName, text)#, posible_combinations=len(texts))
+			else:
+				Logger.printMessage(message='crackZip', description='File doesnt exists {a}'.format(a=zipPathName), is_error=True)
+				break
+			if password:
+				Logger.printMessage(message='crackZip', description='{msg_password_is} {a}'.format(msg_password_is=config['msg_password_is'], a=password))
+				if log:
+					Logger.setDebugCore(False)
+				return password
 		Logger.setDebugCore(False)
 		return None

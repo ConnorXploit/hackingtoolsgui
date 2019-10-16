@@ -88,17 +88,20 @@ def __save_config__(new_conf, config_file='config.json'):
     with open(os.path.join(os.path.dirname(__file__) , config_file), 'w', encoding='utf8') as outfile:  
         json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
-def add_requirements_ignore(requirementModuleName):
+def add_requirements_ignore(moduleName, requirementModuleName):
     config = {}
 
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
         config = json.load(json_data_file)
 
     if not 'cant_install_requirements' in dict(config['core']):
-        config['core']['cant_install_requirements'] = []
+        config['core']['cant_install_requirements'] = {}
+
+    if not moduleName in config['core']['cant_install_requirements']:
+        config['core']['cant_install_requirements'][moduleName] = []
 
     if not str(requirementModuleName) in list(config['core']['cant_install_requirements']):
-        config['core']['cant_install_requirements'].append(str(requirementModuleName))
+        config['core']['cant_install_requirements'][moduleName].append(str(requirementModuleName))
 
     __save_config__(config)
 

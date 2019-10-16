@@ -181,8 +181,6 @@ def restartServerDjango(request):
             'data' : str(e)
         }
         return JsonResponse(data)
-    finally:
-        UtilsDjangoViewsAuto.restartDjangoServer()
 
 
 def configModule(request):

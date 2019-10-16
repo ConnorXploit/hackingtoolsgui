@@ -2,7 +2,6 @@ from hackingtools.core import Logger, Utils, Config
 import hackingtools as ht
 import os
 
-import zipfile
 import shutil
 from zipfile import ZipFile
 

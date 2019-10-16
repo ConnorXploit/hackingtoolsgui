@@ -1,0 +1,4 @@
+sklearn
+Pillow
+scikit-build
+https://github.com/ageitgey/face_recognition/setup.py

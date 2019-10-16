@@ -18,15 +18,10 @@ Public:
 from hackingtools.core import Logger, Config, Utils
 import hackingtools as ht 
 
-import binascii
 import sys
-from argparse import ArgumentParser
 import os.path
 import math
-from random import randint
 import base64
-import binascii
-import random
 import shutil
 
 config = Config.getConfig(parentKey='modules', key='ht_crypter')

@@ -1,0 +1,2 @@
+Pillow
+PyPDF2
