@@ -58,7 +58,6 @@ def removeModule(server, moduleName):
         category_folder = os.path.join(path, 'modules', category)
         if os.path.isdir(category_folder):
             module_folder = os.path.join(category_folder, moduleName)
-            print(module_folder)
             if os.path.isdir(module_folder):
                 shutil.rmtree(module_folder)
 

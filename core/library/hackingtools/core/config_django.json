@@ -2,7 +2,7 @@
     "views": {
         "home": {},
         "documentation": {
-            "documents_dir": "/static/docs/core/library/hackingtools/modules/",
+            "documents_dir": "/static/docs/core/library/hackingtools/modules",
             "html_template": "core/documentation.html",
             "bad_module": "Module {mod} doesn't exist",
             "no_module_selected" : "You have to select a module for getting it's documentation"

@@ -90,7 +90,8 @@ def documentation(request, module_name=''):
         for mod in ht.modules_loaded:
             if module_name == mod.split('.')[-1]:
                 doc_mod = '{documents_dir}/{c}/{b}/{a}.html'.format(documents_dir=this_conf['documents_dir'], c=mod.split('.')[-3], b=module_name.replace('ht_', ''), a=module_name)
-                categories = []
+                print(doc_mod)
+                categories = [] 
                 for mod in ht.getModulesJSON():
                     if not mod.split('.')[1] in categories:
                         categories.append(mod.split('.')[1])
