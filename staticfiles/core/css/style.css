@@ -1,0 +1,413 @@
+.mouseOverModule:hover{
+    border: 3px solid #4e73df;
+    margin: -3px;
+}
+.mouseOverFunction:hover{
+    border: 5px solid #4e73df;
+    margin: -5px 0;
+}
+.mouseOverCategory:hover{
+    border: 3px solid #1cc88a;
+    margin: -3px;
+}
+.overMouseButtons:hover{
+    border: 3px solid #1cc88a;
+    margin: -3px;
+}
+a:hover {
+    color: initial;
+    text-decoration: initial;
+}
+.py-2 {
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+}
+.functions {
+    position: relative !important;
+    max-width: 100%;
+    max-height: 100%;
+}
+.flex-container {
+    max-height: 100%;
+    bottom: 0px;
+    top: 0px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: start;
+    -moz-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-box-align: start;
+    -moz-box-align: start;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+
+.flex-item {
+    -webkit-box-ordinal-group: 1;
+    -moz-box-ordinal-group: 1;
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+}
+
+@-moz-document url-prefix() {
+    .flex-container {
+        width: 100%;
+        -moz-box-sizing: border-box;
+    }
+
+}
+
+/** SPINNER CREATION **/
+
+.loader {
+    position: relative;
+    text-align: center;
+    margin: 15px auto 35px auto;
+    z-index: 9999;
+    display: block;
+    width: 80px;
+    height: 80px;
+    border: 10px solid rgba(0, 0, 0, .3);
+    border-radius: 50%;
+    border-top-color: #000;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+
+/** MODAL STYLING **/
+
+.modal-content {
+    border-radius: 0px;
+    box-shadow: 0 0 20px 8px rgba(0, 0, 0, 0.7);
+}
+
+.modal-backdrop.show {
+    opacity: 0.75;
+}
+
+.modal-dialog-bigger {
+    max-width: 90% !important;
+}
+
+.loader-txt > p {
+    font-size: 13px;
+    color: #666;
+}
+
+.loader-txt > small {
+    font-size: 11.5px;
+    color: #999;
+}
+
+.modal-dialog{
+    overflow-y: initial !important
+}
+
+.modal-body-limited{
+    height: 75vh !important;
+    overflow-y: auto !important;
+}
+
+/** MODAL TREEVIEW STYLING **/
+.treetable{
+
+}
+.treetable .fa{
+    cursor: pointer;
+    padding-right: 5px;
+}
+.treetable .rowhidden{
+    display: none;
+}
+.treetable .j-addChild{
+    display: none;
+}
+.treetable .selected .j-addChild{
+    display: block;
+}
+.treetable .btn-outline{
+    background-color: transparent;
+}
+.treetable .form-control{
+    width: auto;
+    display: inline-block;
+}
+.treetable .textalign-center{
+    text-align: center;
+}
+.treetable .j-expend{
+    cursor: pointer;
+    width: 35% !important;
+    text-align: left !important;
+}
+.treetable .maintitle{
+    width: 35% !important;
+}
+.treetable .j-remove{
+    padding: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    color:red;
+}
+.treetable .tt-header{
+    margin-top:10px;
+}
+.treetable .class-level-2 .class-level-ul .j-expend{
+    position: relative;
+    left: 22px;
+}
+.treetable .class-level-3 .class-level-ul .j-expend{
+    position: relative;
+    left: 44px;
+}
+.treetable .class-level-4 .class-level-ul .j-expend{
+    position: relative;
+    left: 66px;
+}
+.treetable .class-level-5 .class-level-ul .j-expend{
+    position: relative;
+    left: 88px;
+}
+.treetable .class-level-6 .class-level-ul .j-expend{
+    position: relative;
+    left: 110px;
+}
+.treetable .class-level-7 .class-level-ul .j-expend{
+    position: relative;
+    left: 132px;
+}
+.treetable .class-level-8 .class-level-ul .j-expend{
+    position: relative;
+    left: 154px;
+}
+.treetable .class-level-9 .class-level-ul .j-expend{
+    position: relative;
+    left: 176px;
+}
+.treetable .class-level-10 .class-level-ul .j-expend{
+    position: relative;
+    left: 66px;
+}
+.treetable .class-level-1 {
+    border-bottom: dashed 1px #eee;
+}
+.treetable .class-level-ul{
+    padding: 0;
+    margin-bottom: 2px;
+}
+.treetable .class-level-ul li {
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    padding: 1px 10px;
+    min-width: 120px;
+    list-style: none;
+}
+.treetable .class-level-ul:after {
+    display: block;
+    clear: both;
+    height: 0;
+    content: "\0020";
+}
+.treetable .tt-header div span {
+    width: auto;
+    line-height: 29px;
+    display: inline-block;
+    min-width: 120px;
+    text-align: center;
+}
+.treetable .tt-body{
+    border: solid 1px #DDD;
+    padding-top: 1px;
+    background-color:#FFF;
+}
+.treetable .tt-header div{
+    border: solid 1px #DDD;
+    border-bottom:none;
+    background-color:#FFF;
+}
+.iframe-documentation{
+    display: block; 
+    width: 100%;
+    border: none;
+    overflow: hidden;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.modal-dialog-pop-up {
+    max-width: 60% !important;
+}
+textarea.form-control {
+    height: 100% !important;
+}
+.toggle input[type=checkbox][disabled] > * {
+    border: 2px solid grey;
+}
+.input-group>.custom-file:not(:first-child) .custom-file-label {
+    overflow: hidden !important;
+}
+/* Modal Form Inputs Style */
+.md-form, .input-group, input.es-input, .my-separator, .form-control {
+    margin-bottom: 20px !important;
+}
+#switchPoolForm {
+    margin-right: 5px !important;
+}
+#switchPoolForm > label[for=switchPoolForm]:after { 
+    background-color: #e60b0b !important;
+}
+#bottomConsoleResultBar{
+    width: 100% !important; 
+    height: 100% !important; 
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    justify-content: space-around !important;
+    flex-wrap: wrap !important;
+}
+@media screen and (max-width: 800px) {
+    #bottomConsoleResultBar{
+        width: 100% !important; 
+        height: 100% !important; 
+        display: flex !important;
+        flex-direction: column-reverse !important;
+        justify-content: space-around !important;
+        flex-wrap: wrap !important;
+    }
+    .logger-console {
+        /*width: 70% !important;*/
+        /*height: 100% !important;*/
+        /*margin-bottom: 0px !important;*/
+        width: 100% !important;
+    }
+    .logger-results {
+        /*width: 28% !important;*/
+        /*margin: 0 15px !important;*/
+        width: 100% !important;
+    }
+}
+.console-logger-nav{
+    bottom: 0px !important;
+    /* float: left; */
+    position: absolute !important;
+    width: 100% !important;
+    right: 0px !important;
+    height: 200px !important;
+    margin-bottom: 0px !important;
+}
+.logger-console {
+    /*width: 70% !important;*/
+    height: 100% !important;
+    /*margin-bottom: 0px !important;*/
+    flex: 0 0 74% !important;
+}
+.logger-results {
+    /*width: 28% !important;*/
+    /*margin: 0 15px !important;*/
+    flex: 0 0 24% !important;
+}
+.container-fluid {
+    margin-top: 10px !important;
+}
+#consoleLogger {
+    padding-top: 10px;
+    padding-bottom: 25px;
+    /*display: block;*/
+}
+.filterable {
+    margin-top: 15px;
+}
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+    color: #333;
+}
+#collapseDocumentation, #collapseUtilities, #collapseTwo {
+    padding-bottom: 40px !important;
+}
+.moduleFunctions {
+    max-height: 300px !important;
+    overflow: auto;
+    overscroll-behavior: auto;
+    border: 2px solid #4e73df !important;
+    border-radius: 3% !important;
+    padding: 10px !important;
+}
+.moduleFunctions::-webkit-scrollbar-track
+{
+	border: 1px solid #4e73df;
+	background-color: #F5F5F5;
+}
+
+.moduleFunctions::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+.moduleFunctions::-webkit-scrollbar-thumb
+{
+	background-color: #4e73df;	
+}
+.loading-gif {
+    text-align: center;
+    padding: 0;
+}
+#reloading-server {
+    z-index: 999999 !important;
+}

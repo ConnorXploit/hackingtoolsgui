@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>views.py</title>
+  <link rel="stylesheet" href="..\pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>views.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django.core.files.storage</span> <span class="kn">import</span> <span class="n">FileSystemStorage</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span><span class="p">,</span> <span class="n">resolve</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="kn">import</span> <span class="n">csrf_exempt</span>
+<span class="kn">from</span> <span class="nn">.library</span> <span class="kn">import</span> <span class="n">hackingtools</span> <span class="k">as</span> <span class="n">ht</span>
+<span class="kn">from</span> <span class="nn">.library.hackingtools.core</span> <span class="kn">import</span> <span class="n">Utils</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="nb">reload</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Create your views here.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">modules_and_params</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesJSON</span><span class="p">()</span>
+    <span class="n">modules_forms</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">__getModulesDjangoForms__</span><span class="p">()</span> <span class="c1"># Corregir template config vacios</span>
+    <span class="n">modules_forms_modal</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">__getModulesDjangoFormsModal__</span><span class="p">()</span> <span class="c1"># Corregir template config vacios</span>
+    <span class="n">modules_config</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesConfig</span><span class="p">()</span>
+    <span class="n">modules_config_treeview</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">__getModulesConfig_treeView__</span><span class="p">()</span>
+    <span class="n">modules_functions_modals</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesModalTests</span><span class="p">()</span>
+    <span class="n">modules_functions_calls_console_string</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesFunctionsCalls</span><span class="p">()</span>
+    <span class="n">pool_list</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">nodes_pool</span>
+    <span class="n">modules_all</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">modules_and_params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+            <span class="n">categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">modules_all</span><span class="p">[</span><span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">modules_and_params</span><span class="p">[</span><span class="n">mod</span><span class="p">]</span>
+    <span class="n">modules_names</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesNames</span><span class="p">()</span>
+    <span class="n">my_node_id_pool</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">MY_NODE_ID</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;core/index.html&#39;</span><span class="p">,</span> <span class="p">{</span> 
+        <span class="s1">&#39;modules&#39;</span><span class="p">:</span><span class="n">modules_names</span><span class="p">,</span> 
+        <span class="s1">&#39;categories&#39;</span><span class="p">:</span><span class="n">categories</span><span class="p">,</span> 
+        <span class="s1">&#39;modules_all&#39;</span><span class="p">:</span><span class="n">modules_all</span><span class="p">,</span>
+        <span class="s1">&#39;modules_forms&#39;</span><span class="p">:</span><span class="n">modules_forms</span><span class="p">,</span> 
+        <span class="s1">&#39;modules_forms_modal&#39;</span><span class="p">:</span><span class="n">modules_forms_modal</span><span class="p">,</span> 
+        <span class="s1">&#39;modules_config&#39;</span><span class="p">:</span><span class="n">modules_config</span><span class="p">,</span> 
+        <span class="s1">&#39;console_command&#39;</span><span class="p">:</span><span class="n">modules_functions_calls_console_string</span><span class="p">,</span> 
+        <span class="s1">&#39;modules_config_treeview&#39;</span><span class="p">:</span><span class="n">modules_config_treeview</span><span class="p">,</span> 
+        <span class="s1">&#39;modules_functions_modals&#39;</span><span class="p">:</span><span class="n">modules_functions_modals</span><span class="p">,</span> 
+        <span class="s1">&#39;pool_list&#39;</span><span class="p">:</span><span class="n">pool_list</span><span class="p">,</span>
+        <span class="s1">&#39;popup_text&#39;</span><span class="p">:</span><span class="n">popup_text</span><span class="p">,</span>
+        <span class="s1">&#39;my_node_id_pool&#39;</span><span class="p">:</span><span class="n">my_node_id_pool</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">documentation</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">module_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">module_name</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">ht</span><span class="o">.</span><span class="n">modules_loaded</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module_name</span> <span class="o">==</span> <span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">doc_mod</span> <span class="o">=</span> <span class="s1">&#39;/static/docs/core/library/hackingtools/modules/{c}/{b}/{a}.html&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">module_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="n">module_name</span><span class="p">)</span>
+                <span class="n">categories</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesJSON</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+                        <span class="n">categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">modules_names</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesNames</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;core/documentation.html&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;doc_mod&#39;</span> <span class="p">:</span> <span class="n">doc_mod</span><span class="p">,</span> <span class="s1">&#39;categories&#39;</span> <span class="p">:</span> <span class="n">categories</span><span class="p">,</span> <span class="s1">&#39;modules&#39;</span> <span class="p">:</span> <span class="n">modules_names</span> <span class="p">})</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Module {mod} doesn</span><span class="se">\&#39;</span><span class="s1">t exist&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod</span><span class="o">=</span><span class="n">module_name</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;You have to select a module for getting it</span><span class="se">\&#39;</span><span class="s1">s documentation&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">sendPool</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">functionName</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">functionName</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">getPoolNodes</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creator&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">ht</span><span class="o">.</span><span class="n">MY_NODE_ID</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creator_ip&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getMyPublicIP</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">createModule</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">mod_name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;module_name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mod_cat</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;category_name&#39;</span><span class="p">)</span>
+    <span class="n">created</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">createModule</span><span class="p">(</span><span class="n">mod_name</span><span class="p">,</span> <span class="n">mod_cat</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">created</span><span class="p">:</span>
+        <span class="n">modules_and_params</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesJSON</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span> <span class="c1">#TODO create a param for html to popup bootstrap in green or red if all ok</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">configModule</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">mod_name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;module_name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mod_conf</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModuleConfig</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
+    <span class="nb">reload</span><span class="p">(</span><span class="n">ht</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">createCategory</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">mod_cat</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;category_name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">ht</span><span class="o">.</span><span class="n">createCategory</span><span class="p">(</span><span class="n">mod_cat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">createScript</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">config_look_for_changes</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">ht</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">__look_for_changes__</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">saveFileOutput</span><span class="p">(</span><span class="n">myfile</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+    <span class="n">location</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;core&quot;</span><span class="p">,</span> <span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;hackingtools&quot;</span><span class="p">,</span> <span class="s2">&quot;modules&quot;</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">module_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">myfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">myfile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">add_pool_node</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">pool_node</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pool_ip&#39;</span><span class="p">)</span>
+        <span class="n">ht</span><span class="o">.</span><span class="n">addNodeToPool</span><span class="p">(</span><span class="n">pool_node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ht</span><span class="o">.</span><span class="n">nodes_pool</span><span class="p">))</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Something went wrong&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ht</span><span class="o">.</span><span class="n">nodes_pool</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>ht_rsa</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">ht_rsa_encrypt</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;private_key_keynumber&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;private_key_keymod&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cipher_text&#39;</span><span class="p">):</span>
+        <span class="n">priv_key_k</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;private_key_keynumber&#39;</span><span class="p">)</span>
+        <span class="n">priv_key_n</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;private_key_keymod&#39;</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cipher_text&#39;</span><span class="p">)</span>
+        <span class="n">crypter</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">)</span>
+        <span class="n">crypted_text</span> <span class="o">=</span> <span class="n">crypter</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">priv_key_k</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">priv_key_n</span><span class="p">)),</span> <span class="n">plaintext</span><span class="o">=</span><span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">crypted_text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">ht_rsa_decrypt</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;public_key_keynumber&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;public_key_keymod&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cipher_text&#39;</span><span class="p">):</span>
+        <span class="n">pub_key_k</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;public_key_keynumber&#39;</span><span class="p">)</span>
+        <span class="n">pub_key_n</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;public_key_keymod&#39;</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cipher_text&#39;</span><span class="p">)</span>
+        <span class="n">crypter</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">)</span>
+        <span class="n">decrypted_text</span> <span class="o">=</span> <span class="n">crypter</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">public_key</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">pub_key_k</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">pub_key_n</span><span class="p">)),</span> <span class="n">ciphertext</span><span class="o">=</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">decrypted_text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@csrf_exempt</span>
+<span class="k">def</span> <span class="nf">ht_rsa_getRandomKeypair</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">thanks_node</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="n">sendPool</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;getRandomKeypair&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Thanks to {thanks_node} = &gt; {response}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thanks_node</span><span class="o">=</span><span class="n">thanks_node</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">))</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_length&#39;</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_length&#39;</span><span class="p">)</span>
+    <span class="n">crypter</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">)</span>
+    <span class="n">keypair</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">length</span><span class="p">:</span>
+        <span class="n">keypair</span> <span class="o">=</span> <span class="n">crypter</span><span class="o">.</span><span class="n">getRandomKeypair</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">keypair</span> <span class="o">=</span> <span class="n">crypter</span><span class="o">.</span><span class="n">getRandomKeypair</span><span class="p">()</span>
+    <span class="n">keypair</span> <span class="o">=</span> <span class="s1">&#39;({n1}, {n2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n1</span><span class="o">=</span><span class="n">keypair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n2</span><span class="o">=</span><span class="n">keypair</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">keypair</span><span class="p">)</span>
+
+<span class="nd">@csrf_exempt</span>
+<span class="k">def</span> <span class="nf">ht_rsa_generate_keypair</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">thanks_node</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="n">sendPool</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;generate_keypair&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Thanks to {thanks_node} = &gt; {response}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thanks_node</span><span class="o">=</span><span class="n">thanks_node</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_a&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_b&#39;</span><span class="p">):</span>
+        <span class="n">prime_a</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_a&#39;</span><span class="p">)</span>
+        <span class="n">prime_b</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_b&#39;</span><span class="p">)</span>
+        <span class="n">crypter</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">)</span>
+        <span class="n">keypair</span> <span class="o">=</span> <span class="n">crypter</span><span class="o">.</span><span class="n">generate_keypair</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">prime_a</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">prime_b</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keypair</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span> 
+                <span class="n">keypair</span> <span class="o">=</span> <span class="s1">&#39;({n1}, {n2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n1</span><span class="o">=</span><span class="n">keypair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n2</span><span class="o">=</span><span class="n">keypair</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">keypair</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>End ht_rsa</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>ht_crypter</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">ht_crypter_cryptFile</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Get file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">myfile</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>Get Crypter Module</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">crypter</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_crypter&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Save the file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">uploaded_file_url</span> <span class="o">=</span> <span class="n">saveFileOutput</span><span class="p">(</span><span class="n">myfile</span><span class="p">,</span> <span class="s2">&quot;crypter&quot;</span><span class="p">,</span> <span class="s2">&quot;av_evasion&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>Compile Exe</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">compile_exe</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;compile_exe&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">==</span><span class="s1">&#39;on&#39;</span><span class="p">:</span>
+                <span class="n">compile_exe</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="n">tmp_new_file_name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">tmp_new_file_name</span><span class="p">:</span>
+                <span class="n">tmp_new_file_name</span> <span class="o">=</span> <span class="s1">&#39;{name}.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">tmp_new_file_name</span><span class="p">)</span>
+            <span class="n">new_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">tmp_new_file_name</span><span class="p">)</span>
+
+            <span class="n">drop_file_name</span> <span class="o">=</span> <span class="n">filename</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">drop_file_name</span><span class="p">:</span>
+                <span class="n">drop_file_name</span> <span class="o">=</span> <span class="s1">&#39;{name}.{ext}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">drop_file_name</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">iterate_count</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;iteratecount&#39;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">iterate_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;iteratecount&#39;</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">iterate_count</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">iterate_count</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="n">prime_length</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_length&#39;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">prime_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prime_length&#39;</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">prime_length</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">prime_length</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="n">is_last</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">iterate_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">is_last</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="n">crypted_file</span> <span class="o">=</span> <span class="n">crypter</span><span class="o">.</span><span class="n">crypt_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">uploaded_file_url</span><span class="p">,</span> <span class="n">new_file_name</span><span class="o">=</span><span class="n">new_file_name</span><span class="p">,</span> <span class="n">drop_file_name</span><span class="o">=</span><span class="n">drop_file_name</span><span class="p">,</span> <span class="n">prime_length</span><span class="o">=</span><span class="n">prime_length</span><span class="p">,</span> <span class="n">iterate_count</span><span class="o">=</span><span class="n">iterate_count</span><span class="p">,</span> <span class="n">is_last</span><span class="o">=</span><span class="n">is_last</span><span class="p">,</span> <span class="n">compile_exe</span><span class="o">=</span><span class="n">compile_exe</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">crypted_file</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">crypted_file</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">crypted_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">compile_exe</span><span class="p">:</span>
+                            <span class="n">new_file_name</span> <span class="o">=</span> <span class="s1">&#39;{name}.exe&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">new_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/{type}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">new_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+                        <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Content-Disposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;inline; filename=&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">crypted_file</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">response</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">uploaded_file_url</span><span class="p">)</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">crypted_file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;No se ha guardado correctamente&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>End ht_crypter</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>ht_shodan</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">ht_shodan_getIPListfromServices</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;service_name&#39;</span><span class="p">):</span>
+        <span class="n">service_name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;service_name&#39;</span><span class="p">)</span>
+        <span class="n">shodan_key</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;shodanKeyString&#39;</span><span class="p">):</span>
+            <span class="n">shodan_key</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;shodanKeyString&#39;</span><span class="p">)</span>
+        <span class="n">shodan</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_shodan&#39;</span><span class="p">)</span>
+        <span class="n">response_shodan</span> <span class="o">=</span> <span class="n">shodan</span><span class="o">.</span><span class="n">getIPListfromServices</span><span class="p">(</span><span class="n">serviceName</span><span class="o">=</span><span class="n">service_name</span><span class="p">,</span> <span class="n">shodanKeyString</span><span class="o">=</span><span class="n">shodan_key</span><span class="p">)</span>
+        <span class="n">resp_text</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">response_shodan</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">resp_text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>End ht_shodan</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>ht_nmap</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">ht_nmap_getConnectedDevices</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">):</span>
+        <span class="n">ip_to_scan</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">)</span>
+        <span class="n">nmap</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_nmap&#39;</span><span class="p">)</span>
+        <span class="n">response_nmap</span> <span class="o">=</span> <span class="n">nmap</span><span class="o">.</span><span class="n">getConnectedDevices</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip_to_scan</span><span class="p">)</span>
+        <span class="n">resp_text</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">response_nmap</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">resp_text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>End ht_nmap</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>ht_metadta</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">ht_metadata_get_metadata_exif</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;image_file&#39;</span><span class="p">]:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>Get file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">myfile</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;image_file&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>Get Crypter Module</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">metadata</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_metadata&#39;</span><span class="p">)</span>
+            
+            <span class="n">location</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;core&quot;</span><span class="p">,</span> <span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;hackingtools&quot;</span><span class="p">,</span> <span class="s2">&quot;modules&quot;</span><span class="p">,</span> <span class="s2">&quot;forensic&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+            <span class="n">fs</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <p>Save file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">filename</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">myfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">myfile</span><span class="p">)</span>
+            <span class="n">uploaded_file_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get_pdf_exif</span><span class="p">(</span><span class="n">uploaded_file_url</span><span class="p">)</span>
+
+            <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+
+            <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>ht_bruteforce</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@csrf_exempt</span>
+<span class="k">def</span> <span class="nf">ht_bruteforce_crackZip</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;zipFile&#39;</span><span class="p">]:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      <p>If it is a pool request&hellip; :) in config.json have to be a param to work: <strong>pool_it_crackZip</strong></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">thanks_node</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="n">sendPool</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;crackZip&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Thanks to {thanks_node} = &gt; {response}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thanks_node</span><span class="o">=</span><span class="n">thanks_node</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>Get file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">myfile</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;zipFile&#39;</span><span class="p">]</span>
+
+                <span class="n">consecutive</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;consecutive&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+                <span class="n">async_execution</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;async_execution&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>Get Crypter Module</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">bruter</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_bruteforce&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <p>Save the file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">uploaded_file_url</span> <span class="o">=</span> <span class="n">saveFileOutput</span><span class="p">(</span><span class="n">myfile</span><span class="p">,</span> <span class="s2">&quot;bruteforce&quot;</span><span class="p">,</span> <span class="s2">&quot;crackers&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">uploaded_file_url</span><span class="p">:</span>
+                    <span class="n">password</span> <span class="o">=</span> <span class="n">bruter</span><span class="o">.</span><span class="n">crackZip</span><span class="p">(</span><span class="n">uploaded_file_url</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">,</span> <span class="n">consecutive</span><span class="o">=</span><span class="n">consecutive</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Something went wrong. See the log&#39;</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">conError</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Connection aborted. Remote end closed connection without response&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>ht_unzip</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">test_ht_unzip_extractFile</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;zipFile&#39;</span><span class="p">]:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>Get file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">myfile</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;zipFile&#39;</span><span class="p">]</span>
+
+            <span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">):</span>
+                <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <p>Get Crypter Module</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">unzipper</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModule</span><span class="p">(</span><span class="s1">&#39;ht_unzip&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <p>Save the file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">uploaded_file_url</span> <span class="o">=</span> <span class="n">saveFileOutput</span><span class="p">(</span><span class="n">myfile</span><span class="p">,</span> <span class="s2">&quot;unzip&quot;</span><span class="p">,</span> <span class="s2">&quot;crackers&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">uploaded_file_url</span><span class="p">:</span>
+                <span class="n">password</span> <span class="o">=</span> <span class="n">unzipper</span><span class="o">.</span><span class="n">extractFile</span><span class="p">(</span><span class="n">uploaded_file_url</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Something went wrong. See the log&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">password</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">password</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <p>return home(request=request, popup_text=&rsquo;Nice, password is: {pa}&rsquo;.format(pa=password))</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">popup_text</span><span class="o">=</span><span class="s1">&#39;Bad password&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
