@@ -1,6 +1,10 @@
 from . import Config, Logger, Utils
 config = Config.getConfig(parentKey='core', key='Connections')
 import sys, requests, socket
+if Utils.amIdjango(__name__):
+    from core.library import hackingtools as ht
+else:
+    import hackingtools as ht
 
 # Connections Treatment
 global services
@@ -10,6 +14,10 @@ global listening_port
 listening_port = '8000'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+
+# Ngrok connections
+global ngrok_ip
+ngrok_ip = None
 
 # Main functions
 def getMyServices():
@@ -60,14 +68,16 @@ def __initServices__():
     # for service in (getMyPublicIP(), getMyLanIP(), getMyLocalIP()):
     #     services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
 
-    for service in (getMyLanIP(), getMyLocalIP()):
-        services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
+    global ngrok_ip
+    if ngrok_ip:
+        services = [ngrok_ip]
+    else:
+        for service in (getMyLanIP(), getMyLocalIP()):
+            services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
 
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)
+    ht.Pool.callNodesForInformAboutMyServices()
 
-# Ngrok connections
-global ngrok_ip
-ngrok_ip = None
 
 def getNgrokServiceUrl():
     global ngrok_ip
@@ -81,6 +91,7 @@ def startNgrok(port=listening_port):
         if ngrok_ip:
             services.append(ngrok_ip)
             return Logger.print_and_return(msg='ngrok', value=ngrok_ip)
+        ht.Pool.callNodesForInformAboutMyServices()
     except Exception as e:
         Logger.printMessage(message='Couldn\'t start ngrok service', description=str(e), is_error=True)
         return None

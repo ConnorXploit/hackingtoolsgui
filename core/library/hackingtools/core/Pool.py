@@ -24,6 +24,25 @@ def addNodeToPool(node_ip):
             nodes_pool.append(node_ip)
             Config.add_pool_node(node_ip)
 
+def callNodesForInformAboutMyServices():
+    global nodes_pool 
+    for n in nodes_pool:
+        ngrok_url = ht.Connections.getNgrokServiceUrl()
+        service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=n)
+        if ngrok_url:
+            try:
+                if ngrok_url:
+                    requests.post(service_for_call, data={'pool_ip':ngrok_url , 'pooling':True},  headers=ht.Connections.headers)
+            except:
+                pass
+        else:
+            for serv in ht.Connections.getMyServices():
+                try:
+                    if serv:
+                        requests.post(service_for_call, data={'pool_ip':serv , 'pooling':True},  headers=ht.Connections.headers)
+                except:
+                    pass
+
 def send(node_request, functionName):
     creator_id = MY_NODE_ID
     pool_nodes = getPoolNodes()
@@ -47,24 +66,7 @@ def send(node_request, functionName):
                     if params['creator'] == creator_id: # TODO This disables repooling ------ SOLVE THIS PLEASEEE WE NEED REPOOOL
                         response, creator = __sendPool__(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
                         
-                        global nodes_pool 
-                        for n in nodes_pool:
-                            # Call to inform about my services
-                            ngrok_url = ht.Connections.getNgrokServiceUrl()
-                            service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=n)
-                            if ngrok_url:
-                                try:
-                                    if ngrok_url:
-                                        requests.post(service_for_call, data={'pool_ip':ngrok_url , 'pooling':True},  headers=ht.Connections.headers)
-                                except:
-                                    pass
-                            else:
-                                for serv in ht.Connections.getMyServices():
-                                    try:
-                                        if serv:
-                                            requests.post(service_for_call, data={'pool_ip':serv , 'pooling':True},  headers=ht.Connections.headers)
-                                    except:
-                                        pass
+                        callNodesForInformAboutMyServices()
                                 
                         if 'creator' in params and params['creator'] == creator_id and response:
                             if isinstance(response, str):
