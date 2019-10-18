@@ -119,9 +119,7 @@
             ]
         },
         "Pool": {
-            "known_nodes": [
-                "http://127.0.0.1:1234"
-            ]
+            "known_nodes": []
         },
         "__API_KEY__": {
             "botscout_api": "",
