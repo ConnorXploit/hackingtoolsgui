@@ -263,7 +263,6 @@ def getRandomPrimeByLength(length = 8):
             if isPrime(n):
                 return n
     except:
-        raise
         return -1
 
 # Text Treatment

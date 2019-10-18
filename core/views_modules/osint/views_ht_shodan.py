@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
 
@@ -9,7 +8,6 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 
 # Automatic view function for getIPListfromServices
-@csrf_exempt
 def getIPListfromServices(request):
 	# Init of the view getIPListfromServices
 	try:
@@ -18,7 +16,7 @@ def getIPListfromServices(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter serviceName
 			serviceName = request.POST.get('serviceName')
@@ -39,7 +37,6 @@ def getIPListfromServices(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for search_host
-@csrf_exempt
 def search_host(request):
 	# Init of the view search_host
 	try:
@@ -48,7 +45,7 @@ def search_host(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter ip
 			ip = request.POST.get('ip')
@@ -64,7 +61,6 @@ def search_host(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for getSSLCerts
-@csrf_exempt
 def getSSLCerts(request):
 	# Init of the view getSSLCerts
 	try:
@@ -73,7 +69,7 @@ def getSSLCerts(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter ip
 			ip = request.POST.get('ip')
@@ -89,7 +85,6 @@ def getSSLCerts(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for queryShodan
-@csrf_exempt
 def queryShodan(request):
 	# Init of the view queryShodan
 	try:
@@ -98,7 +93,7 @@ def queryShodan(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter category (Optional - Default )
 			category = request.POST.get('category', '')
@@ -119,7 +114,6 @@ def queryShodan(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for searchFromConfig
-@csrf_exempt
 def searchFromConfig(request):
 	# Init of the view searchFromConfig
 	try:
@@ -128,7 +122,7 @@ def searchFromConfig(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter search (Optional - Default )
 			search = request.POST.get('search', '')
@@ -151,7 +145,6 @@ def searchFromConfig(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for setApi
-@csrf_exempt
 def setApi(request):
 	# Init of the view setApi
 	try:
@@ -160,7 +153,7 @@ def setApi(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter shodanKeyString (Optional - Default None)
 			shodanKeyString = request.POST.get('shodanKeyString', None)

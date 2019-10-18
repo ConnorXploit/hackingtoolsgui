@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
 
@@ -9,7 +8,6 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 
 # Automatic view function for get_image_exif
-@csrf_exempt
 def get_image_exif(request):
 	# Init of the view get_image_exif
 	try:
@@ -18,12 +16,11 @@ def get_image_exif(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			try:
 				# Save file filename
 				filename_filename, location_filename, filename = saveFileOutput(request.FILES['filename'], 'metadata', 'forensic')
-
 			except Exception as e:
 				# If not param filename
 				if request.POST.get('is_async_get_image_exif', False):
@@ -40,7 +37,6 @@ def get_image_exif(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for get_pdf_exif
-@csrf_exempt
 def get_pdf_exif(request):
 	# Init of the view get_pdf_exif
 	try:
@@ -49,12 +45,11 @@ def get_pdf_exif(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			try:
 				# Save file pdf_file
 				filename_pdf_file, location_pdf_file, pdf_file = saveFileOutput(request.FILES['pdf_file'], 'metadata', 'forensic')
-
 			except Exception as e:
 				# If not param pdf_file
 				if request.POST.get('is_async_get_pdf_exif', False):

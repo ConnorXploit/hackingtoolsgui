@@ -6,6 +6,7 @@ import sys, requests, socket
 global services
 services = []
 
+global listening_port
 listening_port = '8000'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
@@ -22,6 +23,7 @@ def serviceNotMine(service):
     return True
 
 def loadActualPort():
+    global listening_port
     try:
         listening_port = Logger.print_and_return(msg='loadActualPort', value=sys.argv[-1].split(':')[1], debug_core=True)
     except:
@@ -55,7 +57,10 @@ def __initServices__():
     if 'ngrok' in config and config['ngrok'] and '__load_on_boot__' in config['ngrok'] and config['ngrok']['__load_on_boot__'] == True:
         startNgrok(getActualPort())
 
-    for service in (getMyPublicIP(), getMyLanIP(), getMyLocalIP()):
+    # for service in (getMyPublicIP(), getMyLanIP(), getMyLocalIP()):
+    #     services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
+
+    for service in (getMyLanIP(), getMyLocalIP()):
         services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
 
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)

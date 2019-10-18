@@ -11,6 +11,9 @@ colorama.init()
 global logs
 logs = {}
 
+global logs_clear
+logs_clear = {}
+
 global DEBUG_CORE_FLAG 
 DEBUG_CORE_FLAG = config['DEBUG_CORE_FLAG']
 
@@ -64,6 +67,10 @@ def getLogs():
     global logs
     return logs
 
+def getLogsClear():
+    global logs_clear
+    return logs_clear
+
 def print_and_return(msg, value, debug_module=False, debug_core=False, is_error=False):
     printMessage(message=msg, description=value, debug_core=debug_core, is_error=is_error)
     return value
@@ -82,6 +89,7 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
         color {[type]} -- A color for showing with other color (default: {None})
     """
     global logs
+    global logs_clear
     filename = inspect.stack()[1].filename
     methodName = inspect.stack()[1].function
     
@@ -100,12 +108,18 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
     if is_error:
         colorMessage = Fore.RED
 
+    if not debug_module and not debug_core:
+        if description:
+            logs_clear[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
+        else:
+            logs_clear[time_now] = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
+
     if description:
         logs[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
     else:
         logs[time_now] = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
 
-    if ((not debug_module) and (not debug_core) and (DEBUG_USER)) or ((debug_module) and (DEBUG_MODULE_FLAG)) or ((debug_core) and (DEBUG_CORE_FLAG)):
+    if ((not debug_module == True) and (not debug_core == True) and (DEBUG_USER == True)) or ((debug_module == True) and (DEBUG_MODULE_FLAG == True)) or ((debug_core == True) and (DEBUG_CORE_FLAG == True)):
         if description:
             print('{timeColorStart}[{time}]{timeColorEnd} - {methodCalledFromColorStart}{methodCalledFrom}{methodCalledFromColorEnd} - {messageColorStart}{message}{messageColorEnd} - {description}'.format(
                 timeColorStart=Fore.BLUE, 

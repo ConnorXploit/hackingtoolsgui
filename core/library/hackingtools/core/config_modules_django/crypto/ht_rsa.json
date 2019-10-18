@@ -5,54 +5,44 @@
             "__function__": "encrypt",
             "__async__": false,
             "__return__": "text",
-            "private_key_keynumber": {
-                "__type__": "number",
-                "label_desc": "Private Key",
-                "value": 10000,
-                "required": true,
-                "returnable_modules_functions": {
-                    "ht_crypter": [
-                        "getRandomKeypair"
-                    ]
-                }
-            },
-            "private_key_keymod": {
-                "__type__": "number",
-                "label_desc": "Private Mod",
-                "value": 0,
-                "required": true,
-                "returnable_modules_functions": {
-                    "ht_crypter": [
-                        "getRandomKeypair"
-                    ]
-                }
-            },
-            "cipher_text": {
-                "__type__": "textarea",
-                "placeholder": "Text to cipher",
+            "private_key": {
+                "__type__": "text",
+                "label_desc": "private_key",
+                "placeholder": "private_key",
                 "required": true
+            },
+            "plaintext": {
+                "__type__": "text",
+                "label_desc": "plaintext",
+                "placeholder": "plaintext",
+                "required": true
+            },
+            "__pool_it_encrypt__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "decrypt": {
             "__function__": "decrypt",
             "__async__": false,
             "__return__": "text",
-            "public_key_keynumber": {
-                "__type__": "number",
-                "label_desc": "Public Key",
-                "value": 0,
+            "public_key": {
+                "__type__": "text",
+                "label_desc": "public_key",
+                "placeholder": "public_key",
                 "required": true
             },
-            "public_key_keymod": {
-                "__type__": "number",
-                "label_desc": "Public Mod",
-                "value": 0,
+            "ciphertext": {
+                "__type__": "text",
+                "label_desc": "ciphertext",
+                "placeholder": "ciphertext",
                 "required": true
             },
-            "decipher_text": {
-                "__type__": "textarea",
-                "placeholder": "Text to decipher",
-                "required": true
+            "__pool_it_decrypt__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "generate_keypair": {
@@ -60,15 +50,15 @@
             "__async__": false,
             "__return__": "text",
             "prime_a": {
-                "__type__": "number",
-                "label_desc": "Prime A",
-                "value": "1299853",
+                "__type__": "text",
+                "label_desc": "prime_a",
+                "placeholder": "prime_a",
                 "required": true
             },
             "prime_b": {
-                "__type__": "number",
-                "label_desc": "Prime B",
-                "value": "2099837",
+                "__type__": "text",
+                "label_desc": "prime_b",
+                "placeholder": "prime_b",
                 "required": true
             },
             "__pool_it_generate_keypair__": {
@@ -81,10 +71,11 @@
             "__function__": "getRandomKeypair",
             "__async__": false,
             "__return__": "text",
-            "prime_length": {
+            "length": {
                 "__type__": "number",
-                "label_desc": "Prime Length",
-                "value": "8"
+                "label_desc": "length",
+                "placeholder": "length",
+                "value": 8
             },
             "__pool_it_getRandomKeypair__": {
                 "__type__": "checkbox",

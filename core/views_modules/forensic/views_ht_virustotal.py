@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
 
@@ -9,7 +8,6 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 
 # Automatic view function for isBadFile
-@csrf_exempt
 def isBadFile(request):
 	# Init of the view isBadFile
 	try:
@@ -18,12 +16,11 @@ def isBadFile(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			try:
 				# Save file filename
 				filename_filename, location_filename, filename = saveFileOutput(request.FILES['filename'], 'virustotal', 'forensic')
-
 			except Exception as e:
 				# If not param filename
 				if request.POST.get('is_async_isBadFile', False):
@@ -40,7 +37,6 @@ def isBadFile(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for isBadFileHash
-@csrf_exempt
 def isBadFileHash(request):
 	# Init of the view isBadFileHash
 	try:
@@ -49,12 +45,11 @@ def isBadFileHash(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			try:
 				# Save file fileHash
 				filename_fileHash, location_fileHash, fileHash = saveFileOutput(request.FILES['fileHash'], 'virustotal', 'forensic')
-
 			except Exception as e:
 				# If not param fileHash
 				if request.POST.get('is_async_isBadFileHash', False):

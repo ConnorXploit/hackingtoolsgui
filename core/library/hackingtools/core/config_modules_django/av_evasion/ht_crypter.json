@@ -81,22 +81,25 @@
                 "required": true
             },
             "is_iterating": {
-                "__type__": "text",
+                "__type__": "checkbox",
                 "label_desc": "is_iterating",
                 "placeholder": "is_iterating",
-                "value": false
+                "value": false,
+                "selected": false
             },
             "is_last": {
-                "__type__": "text",
+                "__type__": "checkbox",
                 "label_desc": "is_last",
                 "placeholder": "is_last",
-                "value": false
+                "value": false,
+                "selected": false
             },
             "convert": {
-                "__type__": "text",
+                "__type__": "checkbox",
                 "label_desc": "convert",
                 "placeholder": "convert",
-                "value": false
+                "value": false,
+                "selected": false
             },
             "__pool_it_createStub__": {
                 "__type__": "checkbox",
@@ -110,43 +113,54 @@
             "__return__": "text",
             "filename": {
                 "__type__": "file",
-                "label_desc": "Browse file to crypt",
+                "label_desc": "filename",
+                "placeholder": "filename",
                 "required": true
             },
-            "iteratecount": {
-                "__type__": "number",
-                "label_desc": "Iterate count",
-                "value": "1"
+            "new_file_name": {
+                "__type__": "file",
+                "label_desc": "new_file_name",
+                "placeholder": "new_file_name",
+                "required": true
+            },
+            "drop_file_name": {
+                "__type__": "file",
+                "label_desc": "drop_file_name",
+                "placeholder": "drop_file_name",
+                "value": "dropped.py"
             },
             "prime_length": {
                 "__type__": "number",
-                "label_desc": "Prime's Length",
-                "value": "2"
+                "label_desc": "prime_length",
+                "placeholder": "prime_length",
+                "value": 4
             },
             "compile_exe": {
                 "__type__": "checkbox",
-                "label_desc": "Compile to EXE",
-                "systems": [
-                    "nt"
-                ]
+                "label_desc": "compile_exe",
+                "placeholder": "compile_exe",
+                "value": false,
+                "selected": false
             },
             "is_iterating": {
-                "__type__": "text",
+                "__type__": "checkbox",
                 "label_desc": "is_iterating",
                 "placeholder": "is_iterating",
-                "value": false
+                "value": false,
+                "selected": false
             },
             "iterate_count": {
-                "__type__": "text",
+                "__type__": "number",
                 "label_desc": "iterate_count",
                 "placeholder": "iterate_count",
                 "value": 1
             },
             "is_last": {
-                "__type__": "text",
+                "__type__": "checkbox",
                 "label_desc": "is_last",
                 "placeholder": "is_last",
-                "value": false
+                "value": false,
+                "selected": false
             },
             "__pool_it_crypt_file__": {
                 "__type__": "checkbox",

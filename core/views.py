@@ -6,10 +6,12 @@ from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
 from .library.hackingtools.core import Utils, Logger, Config, Connections, UtilsDjangoViewsAuto
 from importlib import reload
-import os, sys
+import os, sys, requests
 import json
 from requests import Response
 from colorama import Fore
+
+from bs4 import BeautifulSoup
 
 from .views_modules import *
 
@@ -102,14 +104,14 @@ def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
     if ht.wantPool():
-        response, creator, = ht.Pool.send(request, functionName)
+        response, creator = ht.Pool.send(request, functionName)
         if response:
             if creator == ht.Pool.MY_NODE_ID:
                 if 'nodes_pool' in response:
                     for n in response['nodes_pool']:
                         ht.Pool.addNodeToPool(n)
-                return response, False
-            return response, True
+                return response['res'], False # Yes, mine
+            return response['res'], True # Repool, not mine
     return None, None
 
 def switchPool(request):
@@ -125,8 +127,8 @@ def createModule(request):
     created = ht.createModule(mod_name, mod_cat)
     if created:
         modules_and_params = ht.getModulesJSON()
-    load_data()
-    UtilsDjangoViewsAuto.loadModuleFunctionsToView(mod_name, mod_cat)
+        load_data()
+        UtilsDjangoViewsAuto.loadModuleFunctionsToView(mod_name, mod_cat)
     # ! Tengo que hacer que llame a las funciones de crear views y json con la config...
     # ! Aprovechar para solucionar los params que no cogia (es porque tira del inspect y como no está guardado en pypi esa versión, no coge esa versión y devuelve 0 params)
     # ! Creo que se puede solucionar con la Util amIDjango al inicio de los import
@@ -135,7 +137,6 @@ def createModule(request):
     # ! solo serán funcionales una vez se reinicie o intentar hacer que se virtualice de alguna forma esa url y se resuelva sola sin tener que recargar
     return renderMainPanel(request=request)
     
-@csrf_exempt
 def removeModule(request):
     try:
         mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -152,7 +153,6 @@ def removeModule(request):
         }
         return JsonResponse(data)
 
-@csrf_exempt
 def downloadInstallModule(request):
     try:
         mod_name = request.POST.get('module_name').replace('ht_', '').lower()
@@ -168,7 +168,6 @@ def downloadInstallModule(request):
         }
         return JsonResponse(data)
 
-@csrf_exempt
 def restartServerDjango(request):
     try:
         UtilsDjangoViewsAuto.restartDjangoServer()
@@ -181,7 +180,6 @@ def restartServerDjango(request):
             'data' : str(e)
         }
         return JsonResponse(data)
-
 
 def configModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
@@ -208,7 +206,6 @@ def saveFileOutput(myfile, module_name, category):
     if not os.path.isdir(location):
         os.mkdir(location)
     try:
-        print(myfile)
         filename = fs.save(myfile.name, myfile)
     except Exception as e:
         Logger.printMessage(message='saveFileOutput', description=str(e))
@@ -216,10 +213,9 @@ def saveFileOutput(myfile, module_name, category):
     Logger.printMessage(message='saveFileOutput', description='Saving to {fi}'.format(fi=os.path.join(location,myfile.name)))
     return (filename, location, os.path.join(location, filename))
 
-@csrf_exempt
 def getLogs(request):
     data = {
-        'data' : ht.Logger.getLogs()
+        'data' : ht.Logger.getLogsClear()
     }
     return JsonResponse(data)
 
@@ -228,14 +224,17 @@ def add_pool_node(request):
     this_conf = config['add_pool_node']
     try:
         if request.POST:
-            pool_node = request.POST.get('pool_ip')
-        ht.Pool.addNodeToPool(pool_node)
-        if request.POST.get('is_async_add_pool_node', False):
-            data = {
-                'data' : ht.Pool.getPoolNodes()
-            }
-            return JsonResponse(data)
-        return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
+            pool_node = request.POST.get('pool_ip', None)
+            if not pool_node in ht.Pool.getPoolNodes():
+                ht.Pool.addNodeToPool(pool_node)
+                if not request.POST.get('pooling', False):
+                    for serv in ht.Connections.getMyServices():
+                        service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=pool_node)
+                        add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv},  headers=ht.Connections.headers)
+                        if add_me_to_theis_pool.status_code == 200:
+                            Logger.printMessage(message="send", description='Saving my service API REST to {n} - {s} '.format(n=pool_node, s=serv), color=Fore.YELLOW, debug_core=True)
+            return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
+        return renderMainPanel(request=request, popup_text='Only POST is available')
     except:
         return renderMainPanel(request=request, popup_text=this_conf['error'])
     return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
@@ -290,6 +289,36 @@ def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=Fals
 
     return used_alphabet
 
+@csrf_exempt
+def poolExecute(request):
+    functionCall = request.POST.get('functionCall', None)
+
+    files = None
+    if request.FILES and len(request.FILES) > 0:
+        files = request.FILES
+
+    params = {}
+    for key, value in request.POST.items():
+        params[key] = value
+
+    if functionCall:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+        me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
+        client = requests.session()
+        soup = BeautifulSoup(client.get(me).content, features="lxml")
+        csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']
+        params['csrfmiddlewaretoken'] = csrftoken
+        is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
+        params[is_async] = True
+        r = client.post('{me}{call}'.format(me=me, call=functionCall), files=files, data=params, headers=headers)
+        return JsonResponse({'data' : json.loads(r.text)['data']})
+    else:
+        return JsonResponse({'data' : 'No function to call'})
 
 # Connections
 

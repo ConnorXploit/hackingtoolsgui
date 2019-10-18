@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
 
@@ -9,7 +8,6 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 
 # Automatic view function for extractFile
-@csrf_exempt
 def extractFile(request):
 	# Init of the view extractFile
 	try:
@@ -18,7 +16,7 @@ def extractFile(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			try:
 				# Save file zipPathName
@@ -44,7 +42,6 @@ def extractFile(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for extractFilePassword
-@csrf_exempt
 def extractFilePassword(request):
 	# Init of the view extractFilePassword
 	try:
@@ -53,7 +50,7 @@ def extractFilePassword(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			try:
 				# Save file zipPathName
@@ -87,7 +84,6 @@ def extractFilePassword(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for zipDirectory
-@csrf_exempt
 def zipDirectory(request):
 	# Init of the view zipDirectory
 	try:
@@ -96,7 +92,7 @@ def zipDirectory(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter new_folder_name
 			new_folder_name = request.POST.get('new_folder_name')

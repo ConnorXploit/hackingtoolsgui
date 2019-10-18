@@ -49,7 +49,6 @@
               <textarea class="form-control">{{ pool_list | join:"&#10;" }}</textarea>
               <h5 class="modal-title">My services:</h5>
               <textarea class="form-control">{{ my_services | join:"&#10;" }}</textarea>
-              <input type="text" id="is_async_add_pool_node" name="is_async_add_pool_node" value="true" style="display: none;">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -100,6 +99,7 @@
                 url : "{% url 'switchPool' %}", // the endpoint
                 type : "POST", // http method
                 async: true,
+                data : { csrfmiddlewaretoken : '{{ csrf_token }}' },
                 success : function(res) {
                     if('status' in res && res.status == true){
                       $('input:checkbox[id^="__pool_it_"]').each(function(){
@@ -128,6 +128,7 @@
             $.ajax({
                 url : "{% url 'restartServerDjango' %}", // the endpoint
                 type : "POST", // http method
+                data : { csrfmiddlewaretoken : '{{ csrf_token }}' },
                 async: true,
                 success : function(res) {
                   $.notify("Restart server:\n" + res['data'], "warn");
@@ -298,7 +299,7 @@
                                                 <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
                                               </div><!-- -->
                                               <div class="modal-body">
-                                                <form action="{% url data_value %}" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
+                                                <form action="#" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
                                                   {% csrf_token %}
                                                   {% for mod, modform in modules_forms_modal.items %}
                                                     {% for f_name, f_data_form in modform.items %}
@@ -317,7 +318,7 @@
                                                 var form = $('#form_{{data_value}}');
 
                                                 $.ajax({
-                                                    url: form.attr('action'),
+                                                    url: '{% url data_value %}',
                                                     type: "POST",
                                                     data: new FormData($('#form_{{data_value}}')[0]),
                                                     async: true,
@@ -540,7 +541,8 @@
                     url: "{% url 'removeModule' %}",
                     method: "POST",
                     data: {
-                      module_name :'{{mod}}'
+                      module_name :'{{mod}}',
+                      csrfmiddlewaretoken : '{{ csrf_token }}'
                     },
                     success: function(result){
                       $.notify("{{mod}}:\n" + result['data'], "success");
@@ -599,7 +601,8 @@
                       url: "{% url 'downloadInstallModule' %}",
                       method: "POST",
                       data: {
-                        module_name :'{{mod}}'
+                        module_name :'{{mod}}',
+                        csrfmiddlewaretoken : '{{ csrf_token }}'
                       },
                       success: function(result){
                         $.notify("{{mod}}:\n" + result['data'], "success");

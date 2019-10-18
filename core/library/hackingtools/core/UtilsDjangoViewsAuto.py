@@ -7,7 +7,6 @@ ht.setDebugCore(True)
 ht.setDebugModule(True)
 
 default_view_init = """from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
 
@@ -17,7 +16,7 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 """
 
-default_view_function_init = "\n# Automatic view function for {funcName}\n@csrf_exempt\ndef {funcName}(request):\n"
+default_view_function_init = "\n# Automatic view function for {funcName}\ndef {funcName}(request):\n"
 
 lastly_added_func = ["help"]
 
@@ -53,7 +52,6 @@ def getModuleViewCategoryDir(moduleName, category):
 def getViewTemplateByFunctionParams(moduleName, functionName, category, params=[]):
     params = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
     template = '\t# Init of the view {f}\n\ttry:'.format(f=functionName)
-    first_template = template
     functionParamsForCallInStr = ""
 
     # Add pool condition:
@@ -62,7 +60,8 @@ def getViewTemplateByFunctionParams(moduleName, functionName, category, params=[
     template = '{temp}\t\tif response or repool:\n'.format(temp=template)
     template = '{temp}\t\t\tif repool:\n'.format(temp=template)
     template = '{temp}\t\t\t\treturn HttpResponse(response)\n'.format(temp=template)
-    template = '{temp}\t\t\treturn renderMainPanel(request=request, popup_text=response.text)\n'.format(temp=template)
+    temp = 'return JsonResponse({ "data" : str(response) })'
+    template = '{temp}\t\t\t{t}\n'.format(temp=template, t=temp)
     template = '{temp}\t\telse:'.format(temp=template)
 
     if params:

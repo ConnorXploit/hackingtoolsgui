@@ -113,6 +113,14 @@
                 "__load_on_boot__": false
             }
         },
+        "Repositories": {
+            "servers" : [
+                "hackingtoolsrepo.pentestinglab.es"
+            ]
+        },
+        "Pool": {
+            "known_nodes": []
+        },
         "__API_KEY__": {
             "botscout_api": "",
             "builtwith_api": "",

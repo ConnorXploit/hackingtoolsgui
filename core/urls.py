@@ -23,7 +23,8 @@ urlpatterns = [
     path('core/pool/add_pool_node/', views.add_pool_node, name="add_pool_node"),
     path('core/connections/startNgrok/', views.startNgrok, name="startNgrok"),
     path('core/repositories/downloadInstallModule/', views.downloadInstallModule, name="downloadInstallModule"),
-    path('core/serverDjango/restartServerDjango/', views.restartServerDjango, name="restartServerDjango")
+    path('core/serverDjango/restartServerDjango/', views.restartServerDjango, name="restartServerDjango"),
+    path('pool/execute/', views.poolExecute, name="execute")
 ]
 
 functions_not_loaded = []
@@ -56,7 +57,7 @@ def loadModuleUrls(moduleName):
             try:
                 func_call = main_function_config['__function__']
 
-                url_path = 'modules/{mod}/{func_call}/'.format(mod=moduleName, func_call=func_call)
+                url_path = 'modules/{cat}/{mod}/{func_call}/'.format(cat=ht.getModuleCategory(moduleName), mod=moduleName.replace('ht_', ''), func_call=func_call)
                 to_import = 'from .views_modules.{category} import views_{mod}'.format(category=ht.getModuleCategory(moduleName), mod=moduleName)
                 exec(to_import)
                 to_execute = 'views_{mod}.{func_call}'.format(mod=moduleName, func_call=func_call)
@@ -88,7 +89,7 @@ def loadModuleUrls(moduleName):
             if '__function__' in functions_config[function_conf]:
                 try:
                     func_call = functions_config[function_conf]["__function__"]
-                    url_path = 'modules/{mod}/{func_call}/'.format(mod=function_conf, func_call=func_call)
+                    url_path = 'modules/{cat}/{mod}/{func_call}/'.format(cat=ht.getModuleCategory(moduleName), mod=moduleName.replace('ht_', ''), func_call=func_call)
                     to_import = 'from .views_modules.{category} import views_{mod}'.format(category=ht.getModuleCategory(moduleName), mod=moduleName)
                     exec(to_import)
                     to_execute = 'views_{mod}.{func_call}'.format(mod=moduleName, func_call=func_call)

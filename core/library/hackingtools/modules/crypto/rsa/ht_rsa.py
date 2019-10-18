@@ -69,6 +69,10 @@ class StartModule():
 				prime_a = Utils.getRandomPrimeByLength(length)
 			while prime_b == '':
 				prime_b = Utils.getRandomPrimeByLength(length)
+		if prime_a > prime_b:
+			temp = prime_b
+			prime_b = prime_a
+			prime_a = temp
 		Logger.printMessage(message='getRandomKeypair', description=(prime_a, prime_b), debug_module=True)
 		return (prime_a, prime_b)
 	

@@ -16,8 +16,14 @@
             "__return__": "text",
             "filename": {
                 "__type__": "file",
-                "label_desc": "Select a file to test if is a bad file",
+                "label_desc": "filename",
+                "placeholder": "filename",
                 "required": true
+            },
+            "__pool_it_isBadFile__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
             }
         },
         "isBadFileHash": {

@@ -88,6 +88,18 @@ def __save_config__(new_conf, config_file='config.json'):
     with open(os.path.join(os.path.dirname(__file__) , config_file), 'w', encoding='utf8') as outfile:  
         json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
+def add_pool_node(node):
+    config = {}
+    with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
+        config = json.load(json_data_file)
+
+    if not 'known_nodes' in config['core']['Pool']:
+        config['core']['Pool']['known_nodes'] = []
+
+    config['core']['Pool']['known_nodes'].append(node)
+
+    __save_config__(config)
+
 def add_requirements_ignore(moduleName, requirementModuleName):
     config = {}
 

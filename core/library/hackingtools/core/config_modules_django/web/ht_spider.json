@@ -12,7 +12,7 @@
                 "required": true
             },
             "depth": {
-                "__type__": "text",
+                "__type__": "number",
                 "label_desc": "depth",
                 "placeholder": "depth",
                 "value": 100

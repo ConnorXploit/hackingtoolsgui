@@ -47,7 +47,44 @@
   </head>
 
   <body id="page-top">
+    <script>
+      /* 
+      
+        THIS ALLOWS CSRF_TOKEN SENDING BY FORM IN AJAX LATER, WHEN YOU USE: 
 
+        $.ajax({
+          ...
+          data: { csrfmiddlewaretoken : '{{ csrf_token }}' },
+          ...
+        });
+
+        You have to pass in "data" with other data you need for your functions
+
+        */
+      $.ajaxSetup({ 
+        beforeSend: function(xhr, settings) {
+          function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+                }
+              }
+            }
+            return cookieValue;
+          }
+          if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+            // Only send the token to relative URLs i.e. locally.
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+          }
+        } 
+      });
+    </script>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -298,6 +335,7 @@
                 url : "{% url 'getLogs' %}", // the endpoint
                 type : "POST", // http method
                 async: true,
+                data: { csrfmiddlewaretoken : '{{ csrf_token }}' },
                 success : function(res) {
                   if('data' in res && res.data && Object.keys(res.data).length !== 0 && length_console_logs !== Object.keys(res.data).length){
                     data_result = ''
@@ -328,6 +366,9 @@
                 error : function(xhr,errmsg,err) {
                   error_counter_for_reload_message = error_counter_for_reload_message + 1
                   console.log(xhr.status + ": " + xhr.responseText);
+                  if (error_counter_for_reload_message > 5){
+                    $('#reloading-server').modal('show');
+                  }
                 }
               });
             }, timer_clicktime );

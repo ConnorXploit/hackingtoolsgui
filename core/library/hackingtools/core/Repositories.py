@@ -10,7 +10,7 @@ config = Config.getConfig(parentKey='core', key='Repositories')
 
 path = os.path.abspath(os.path.split(os.path.dirname(__file__))[0])
 
-servers = ['hackingtools.pentestinglab.es']
+servers = config['servers']
 
 def installModule(server, moduleName):
     req = requests.post('http://{ip}/category/{m}'.format(ip=server, m=moduleName))

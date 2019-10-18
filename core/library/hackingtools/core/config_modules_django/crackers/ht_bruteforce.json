@@ -6,43 +6,40 @@
             "__async__": false,
             "__return__": "text",
             "zipPathName": {
-                "__type__": "file",
-                "label_desc": "Browse zip file for crack it",
+                "__type__": "text",
+                "label_desc": "zipPathName",
+                "placeholder": "zipPathName",
                 "required": true
+            },
+            "unzipper": {
+                "__type__": "text",
+                "label_desc": "unzipper",
+                "placeholder": "unzipper",
+                "value": null
+            },
+            "alphabet": {
+                "__type__": "text",
+                "label_desc": "alphabet",
+                "placeholder": "alphabet",
+                "value": "lalpha"
             },
             "password_length": {
                 "__type__": "number",
-                "label_desc": "Password length",
+                "label_desc": "password_length",
+                "placeholder": "password_length",
                 "value": 4
             },
             "password_pattern": {
                 "__type__": "text",
-                "label_desc": "Pattern it",
-                "placeholder": "Aaa0?a"
+                "label_desc": "password_pattern",
+                "placeholder": "password_pattern",
+                "value": null
             },
-            "bruteforce_numeric": {
+            "log": {
                 "__type__": "checkbox",
-                "label_desc": "0123456789",
-                "selected": false
-            },
-            "bruteforce_lower": {
-                "__type__": "checkbox",
-                "label_desc": "abcdefghijklmnopqrstuvwxyz",
-                "selected": false
-            },
-            "bruteforce_upper": {
-                "__type__": "checkbox",
-                "label_desc": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                "selected": false
-            },
-            "bruteforce_simbols": {
-                "__type__": "checkbox",
-                "label_desc": "!@#$%^&*()-_+:",
-                "selected": false
-            },
-            "bruteforce_simbols_all": {
-                "__type__": "checkbox",
-                "label_desc": "!@#$%^&*()-_+:~`[]{}|\\:;\"'<>,.?/",
+                "label_desc": "log",
+                "placeholder": "log",
+                "value": false,
                 "selected": false
             },
             "__pool_it_crackZip__": {

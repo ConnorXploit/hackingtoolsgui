@@ -1,99 +1,114 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import os
-import json
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
 
 # Create your views here.
 
-# ht_rsa
-@csrf_exempt
+# Automatic view function for encrypt
 def encrypt(request):
-    if request.POST.get('private_key_keynumber') and request.POST.get('private_key_keymod') and request.POST.get('cipher_text'):
-        priv_key_k = request.POST.get('private_key_keynumber')
-        priv_key_n = request.POST.get('private_key_keymod')
-        text = request.POST.get('cipher_text')
-        crypter = views.ht.getModule('ht_rsa')
-        crypted_text = crypter.encrypt(private_key=(int(priv_key_k), int(priv_key_n)), plaintext=text.encode())
-        if request.POST.get('is_async_encrypt', False):
-            data = {
-                'data' : crypted_text
-            }
-            return JsonResponse(data)
-        return views.renderMainPanel(request=request, popup_text=crypted_text)
-    else:
-        return views.renderMainPanel(request=request)
+	# Init of the view encrypt
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'encrypt')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter private_key
+			private_key = request.POST.get('private_key')
 
-@csrf_exempt
+			# Parameter plaintext
+			plaintext = request.POST.get('plaintext')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_rsa').encrypt( private_key=private_key, plaintext=plaintext )
+			if request.POST.get('is_async_encrypt', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_encrypt', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for decrypt
 def decrypt(request):
-    if request.POST.get('public_key_keynumber') and request.POST.get('public_key_keymod') and request.POST.get('decipher_text'):
-        pub_key_k = request.POST.get('public_key_keynumber')
-        pub_key_n = request.POST.get('public_key_keymod')
-        text = request.POST.get('decipher_text')
-        crypter = views.ht.getModule('ht_rsa')
-        decrypted_text = crypter.decrypt(public_key=(int(pub_key_k), int(pub_key_n)), ciphertext=text)
-        if request.POST.get('is_async_decrypt', False):
-            data = {
-                'data' : decrypted_text
-            }
-            return JsonResponse(data)
-        return views.renderMainPanel(request=request, popup_text=decrypted_text)
-    else:
-        return views.renderMainPanel(request=request)
+	# Init of the view decrypt
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'decrypt')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter public_key
+			public_key = request.POST.get('public_key')
 
-@csrf_exempt
-def getRandomKeypair(request):
-    response, repool = views.sendPool(request, "getRandomKeypair")
-    if response or repool:
-        if repool:
-            return HttpResponse(response)
-        return views.renderMainPanel(request=request, popup_text=response.text)
-    else:
-        length = None
-        if request.POST.get('prime_length'):
-            length = request.POST.get('prime_length')
-        crypter = views.ht.getModule('ht_rsa')
-        keypair = (0, 0)
-        if length:
-            keypair = crypter.getRandomKeypair(int(length))
-        else:
-            keypair = crypter.getRandomKeypair()
-        keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
-        if request.POST.get('is_async_getRandomKeypair', False):
-            data = {
-                'data' : keypair
-            }
-            return JsonResponse(data)
-        return views.renderMainPanel(request=request, popup_text=keypair)
+			# Parameter ciphertext
+			ciphertext = request.POST.get('ciphertext')
 
-@csrf_exempt
+			# Execute, get result and show it
+			result = ht.getModule('ht_rsa').decrypt( public_key=public_key, ciphertext=ciphertext )
+			if request.POST.get('is_async_decrypt', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_decrypt', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for generate_keypair
 def generate_keypair(request):
-    response, repool = views.sendPool(request, "generate_keypair")
-    if response or repool:
-        if repool:
-            return HttpResponse(response)
-        return views.renderMainPanel(request=request, popup_text=response.text)
-    else:
-        if request.POST.get('prime_a') and request.POST.get('prime_b'):
-            prime_a = request.POST.get('prime_a')
-            prime_b = request.POST.get('prime_b')
-            crypter = views.ht.getModule('ht_rsa')
-            keypair = crypter.generate_keypair(int(prime_a), int(prime_b))
-            if not isinstance(keypair, str):
-                try: 
-                    keypair = '({n1}, {n2})'.format(n1=keypair[0], n2=keypair[1])
-                except:
-                    pass
-            if request.POST.get('is_async_generate_keypair', False):
-                data = {
-                    'data' : keypair
-                }
-                return JsonResponse(data)
-            return views.renderMainPanel(request=request, popup_text=keypair)
-        else:
-            return views.renderMainPanel(request=request)
+	# Init of the view generate_keypair
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'generate_keypair')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter prime_a
+			prime_a = request.POST.get('prime_a')
 
-# End ht_rsa
+			# Parameter prime_b
+			prime_b = request.POST.get('prime_b')
+
+			# Execute, get result and show it
+			result1, result2 = ht.getModule('ht_rsa').generate_keypair( prime_a=prime_a, prime_b=prime_b )
+			if request.POST.get('is_async_generate_keypair', False):
+				return JsonResponse({ "data" : '({n1},{n2})'.format(n1=result1, n2=result2) })
+			return renderMainPanel(request=request, popup_text='({n1},{n2})'.format(n1=result1, n2=result2))
+	except Exception as e:
+		if request.POST.get('is_async_generate_keypair', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for getRandomKeypair
+def getRandomKeypair(request):
+	# Init of the view getRandomKeypair
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'getRandomKeypair')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter length (Optional - Default 8)
+			length = request.POST.get('length', 8)
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_rsa').getRandomKeypair( length=length )
+			if request.POST.get('is_async_getRandomKeypair', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_getRandomKeypair', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	

@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import os
 from requests import Response
 
@@ -9,7 +8,6 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 
 # Automatic view function for getConnectedDevices
-@csrf_exempt
 def getConnectedDevices(request):
 	# Init of the view getConnectedDevices
 	try:
@@ -18,7 +16,7 @@ def getConnectedDevices(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter ip
 			ip = request.POST.get('ip')
@@ -34,7 +32,6 @@ def getConnectedDevices(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for getDevicePorts
-@csrf_exempt
 def getDevicePorts(request):
 	# Init of the view getDevicePorts
 	try:
@@ -43,7 +40,7 @@ def getDevicePorts(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter ip
 			ip = request.POST.get('ip')
@@ -67,7 +64,6 @@ def getDevicePorts(request):
 		return renderMainPanel(request=request, popup_text=str(e))
 	
 # Automatic view function for hasDevicePortOpened
-@csrf_exempt
 def hasDevicePortOpened(request):
 	# Init of the view hasDevicePortOpened
 	try:
@@ -76,7 +72,7 @@ def hasDevicePortOpened(request):
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
-			return renderMainPanel(request=request, popup_text=response.text)
+			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter ip
 			ip = request.POST.get('ip')
