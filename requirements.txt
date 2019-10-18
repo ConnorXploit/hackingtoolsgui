@@ -15,7 +15,6 @@ django_heroku==0.3.1
 docutils==0.14
 entrypoints==0.3
 Flask
-gunicorn
 future==0.17.1
 hackingtools==1.2.3
 html5lib==1.0.1
