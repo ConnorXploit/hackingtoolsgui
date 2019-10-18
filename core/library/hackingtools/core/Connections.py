@@ -1,6 +1,6 @@
 from . import Config, Logger, Utils
 config = Config.getConfig(parentKey='core', key='Connections')
-import sys, requests, socket
+import sys, requests, socket, os
 
 # Connections Treatment
 global services
@@ -51,6 +51,11 @@ def getMyLanIP():
 def getMyLocalIP():
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
+def isHeroku():
+    if 'DYNO' in os.environ: # Automatically Heroku Deploy
+        return True
+    return False
+
 def __initServices__():
     global services
 
@@ -72,7 +77,6 @@ def __initServices__():
             services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
 
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)
-
 
 def getNgrokServiceUrl():
     global ngrok_ip
@@ -102,4 +106,5 @@ def stopNgrok(ngrokServiceUrl):
         return False
 
 # Init
-__initServices__()
+if not isHeroku():
+    __initServices__()
