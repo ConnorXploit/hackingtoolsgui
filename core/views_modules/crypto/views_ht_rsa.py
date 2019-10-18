@@ -79,7 +79,7 @@ def generate_keypair(request):
 			prime_b = request.POST.get('prime_b')
 
 			# Execute, get result and show it
-			result1, result2 = ht.getModule('ht_rsa').generate_keypair( prime_a=prime_a, prime_b=prime_b )
+			result1, result2 = ht.getModule('ht_rsa').generate_keypair( prime_a=int(prime_a), prime_b=int(prime_b) )
 			if request.POST.get('is_async_generate_keypair', False):
 				return JsonResponse({ "data" : '({n1},{n2})'.format(n1=result1, n2=result2) })
 			return renderMainPanel(request=request, popup_text='({n1},{n2})'.format(n1=result1, n2=result2))
