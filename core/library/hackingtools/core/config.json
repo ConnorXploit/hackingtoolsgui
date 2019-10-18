@@ -114,12 +114,14 @@
             }
         },
         "Repositories": {
-            "servers" : [
+            "servers": [
                 "hackingtoolsrepo.pentestinglab.es"
             ]
         },
         "Pool": {
-            "known_nodes": []
+            "known_nodes": [
+                "http://127.0.0.1:1234"
+            ]
         },
         "__API_KEY__": {
             "botscout_api": "",
