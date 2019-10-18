@@ -1,10 +1,6 @@
 from . import Config, Logger, Utils
 config = Config.getConfig(parentKey='core', key='Connections')
 import sys, requests, socket
-if Utils.amIdjango(__name__):
-    from core.library import hackingtools as ht
-else:
-    import hackingtools as ht
 
 # Connections Treatment
 global services
@@ -76,7 +72,6 @@ def __initServices__():
             services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
 
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)
-    ht.Pool.callNodesForInformAboutMyServices()
 
 
 def getNgrokServiceUrl():
@@ -91,7 +86,6 @@ def startNgrok(port=listening_port):
         if ngrok_ip:
             services.append(ngrok_ip)
             return Logger.print_and_return(msg='ngrok', value=ngrok_ip)
-        ht.Pool.callNodesForInformAboutMyServices()
     except Exception as e:
         Logger.printMessage(message='Couldn\'t start ngrok service', description=str(e), is_error=True)
         return None

@@ -326,5 +326,6 @@ def poolExecute(request):
 def startNgrok(request):
     ngrok = ht.Connections.startNgrok(Connections.getActualPort())
     if ngrok:
+        ht.Pool.callNodesForInformAboutMyServices()
         return renderMainPanel(request=request, popup_text=ngrok)
     return renderMainPanel(request=request)
