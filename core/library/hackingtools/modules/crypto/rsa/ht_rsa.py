@@ -94,7 +94,7 @@ class StartModule():
 			mensajeFinalBase64 = Utils.joinBase64(mensajeBase64)
 			return mensajeFinalBase64.decode("utf-8")
 		except Exception as e:
-			Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg}'.format(msg=e), debug_error=True)
+			Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg}'.format(msg=e))
 			return
 
 	def decrypt(self, public_key, ciphertext):

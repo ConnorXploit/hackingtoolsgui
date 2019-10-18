@@ -19,7 +19,7 @@ def encrypt(request):
 			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter private_key
-			private_key = request.POST.get('private_key')
+			private_key = tuple(request.POST.get('private_key'))
 
 			# Parameter plaintext
 			plaintext = request.POST.get('plaintext')
@@ -46,7 +46,7 @@ def decrypt(request):
 			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter public_key
-			public_key = request.POST.get('public_key')
+			public_key = tuple(request.POST.get('public_key'))
 
 			# Parameter ciphertext
 			ciphertext = request.POST.get('ciphertext')
