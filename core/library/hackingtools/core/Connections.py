@@ -57,24 +57,25 @@ def isHeroku():
     return False
 
 def __initServices__():
-    global services
+    if not isHeroku():
+        global services
 
-    https = '' # Anytime when adding ssl, shold be with an 's'
+        https = '' # Anytime when adding ssl, shold be with an 's'
 
-    loadActualPort()
+        loadActualPort()
 
-    if 'ngrok' in config and config['ngrok'] and '__load_on_boot__' in config['ngrok'] and config['ngrok']['__load_on_boot__'] == True:
-        startNgrok(getActualPort())
+        if 'ngrok' in config and config['ngrok'] and '__load_on_boot__' in config['ngrok'] and config['ngrok']['__load_on_boot__'] == True:
+            startNgrok(getActualPort())
 
-    # for service in (getMyPublicIP(), getMyLanIP(), getMyLocalIP()):
-    #     services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
+        # for service in (getMyPublicIP(), getMyLanIP(), getMyLocalIP()):
+        #     services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
 
-    global ngrok_ip
-    if ngrok_ip:
-        services = [ngrok_ip]
-    else:
-        for service in (getMyLanIP(), getMyLocalIP()):
-            services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
+        global ngrok_ip
+        if ngrok_ip:
+            services = [ngrok_ip]
+        else:
+            for service in (getMyLanIP(), getMyLocalIP()):
+                services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
 
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)
 
