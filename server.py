@@ -1,4 +1,4 @@
-import subprocess, time, argparse
+import subprocess, time, argparse, os
 
 parser = argparse.ArgumentParser()
    
@@ -6,7 +6,7 @@ parser.add_argument('-p', '--port', help="set django server port")
 
 args = parser.parse_args()
 
-port = 2222
+port = int(os.environ.get('PORT', 2222))
 if args.port:
     port = int(args.port)
 
