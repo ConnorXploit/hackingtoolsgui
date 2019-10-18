@@ -27,7 +27,7 @@ def encrypt(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').encrypt( private_key=private_key, plaintext=plaintext )
 			if request.POST.get('is_async_encrypt', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : str(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_encrypt', False):
