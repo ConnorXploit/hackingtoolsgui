@@ -372,7 +372,7 @@
                 error : function(xhr,errmsg,err) {
                   error_counter_for_reload_message = error_counter_for_reload_message + 1
                   console.log(xhr.status + ": " + xhr.responseText);
-                  if (error_counter_for_reload_message > 5){
+                  if (error_counter_for_reload_message > 2){
                     $('#reloading-server').modal('show');
                   }
                 }

@@ -50,9 +50,21 @@ def send(node_request, functionName):
                         global nodes_pool 
                         for n in nodes_pool:
                             # Call to inform about my services
-                            for serv in ht.Connections.getMyServices():
-                                service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=n)
-                                add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv , 'pooling':True},  headers=ht.Connections.headers)
+                            ngrok_url = ht.Connections.getNgrokServiceUrl()
+                            service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=n)
+                            if ngrok_url:
+                                try:
+                                    if ngrok_url:
+                                        requests.post(service_for_call, data={'pool_ip':ngrok_url , 'pooling':True},  headers=ht.Connections.headers)
+                                except:
+                                    pass
+                            else:
+                                for serv in ht.Connections.getMyServices():
+                                    try:
+                                        if serv:
+                                            requests.post(service_for_call, data={'pool_ip':serv , 'pooling':True},  headers=ht.Connections.headers)
+                                    except:
+                                        pass
                                 
                         if 'creator' in params and params['creator'] == creator_id and response:
                             if isinstance(response, str):

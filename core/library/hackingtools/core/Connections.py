@@ -14,7 +14,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleW
 # Main functions
 def getMyServices():
     global services
-    return services
+    return [serv for serv in services if serv]
 
 def serviceNotMine(service):
     for serv in services:

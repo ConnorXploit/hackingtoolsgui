@@ -119,7 +119,9 @@
             ]
         },
         "Pool": {
-            "known_nodes": []
+            "known_nodes": [
+                "http://hackingtools.pentestinglab.es"
+            ]
         },
         "__API_KEY__": {
             "botscout_api": "",
