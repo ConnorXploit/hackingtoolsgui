@@ -1,1 +1,1 @@
-web: gunicorn hackingtoolsgui.wsgi
+web: python server.py
