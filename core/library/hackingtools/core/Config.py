@@ -29,7 +29,7 @@ import json
 global config
 config = {}
 
-def __readFilesAuto__():
+def __readFilesAuto__(djangoButtonsPool=False):
     config = {}
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
         config = json.load(json_data_file)
@@ -45,7 +45,7 @@ def __readFilesAuto__():
             for conf in config_django:
                 config['django'][conf] = {}
                 for django_data in config_django[conf]:
-                    config['django'][conf][django_data] = config_django[conf][django_data]
+                    config['django'][conf][django_data] = config_django[conf][django_data] 
 
         # Loads the config for the modules into Django as modal forms
         categories_dir = os.path.join(os.path.dirname(__file__), 'config_modules_django')
@@ -59,7 +59,15 @@ def __readFilesAuto__():
                             config_django = json.load(json_data_file_django)
                             for conf in config_django:
                                 config['modules'][mod][conf] = config_django[conf]
+                                if djangoButtonsPool:
+                                    if isinstance(config['modules'][mod][conf], dict):
+                                        for f in config['modules'][mod][conf]:
+                                            if '__pool_it_' in f:
+                                                config['modules'][mod][conf][f]['selected'] = True
     return config
+
+def __djangoSwitchPoolItButtons__(checked=False):
+    return __readFilesAuto__(djangoButtonsPool=checked)
 
 # === __readConfig__ ===
 def __readConfig__(django=False):

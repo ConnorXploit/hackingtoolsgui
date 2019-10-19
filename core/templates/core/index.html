@@ -55,7 +55,7 @@
               <input type="submit" class="btn btn-primary" value="Add pool node"></button>
             </div>
           </form>
-          {% if not ngrokService %}
+          {% if not ngrokService and not is_heroku %}
             <div class="modal-body">
               <hr class='sidebar-divider my-0 my-separator'>
               <div style="display: flex;">

@@ -309,6 +309,7 @@
             expandTextarea('consoleLogger');
             timer_clicktime = 200
             length_console_logs = 0
+            buttonsPoolChecked = false
             var timer = {
               running: false,
               iv: timer_clicktime,
@@ -336,6 +337,15 @@
               }
             };
             error_counter_for_reload_message = 0
+
+            function switchPoolButtons(){
+              $.each($('.toggle'), function(){
+                if ($(this).children('input[id^="__pool_it_"]')){
+                  $(this).click();
+                }
+              });
+            }
+
             timer.start(function(){
               $.ajax({
                 url : "{% url 'getLogs' %}", // the endpoint
@@ -343,7 +353,18 @@
                 async: true,
                 data: { csrfmiddlewaretoken : '{{ csrf_token }}' },
                 success : function(res) {
-                  if('data' in res && res.data && Object.keys(res.data).length !== 0 && length_console_logs !== Object.keys(res.data).length){
+                  if ('buttonsPool' in res) {
+                    if (res.buttonsPool == true && buttonsPoolChecked == false) {
+                      switchPoolButtons();
+                      buttonsPoolChecked = true;
+                    } else {
+                      if (res.buttonsPool == false && buttonsPoolChecked == true) {
+                        switchPoolButtons();
+                        buttonsPoolChecked = false;
+                      }
+                    }
+                  }
+                  if ('data' in res && res.data && Object.keys(res.data).length !== 0 && length_console_logs !== Object.keys(res.data).length){
                     data_result = ''
                     res_data_keys = Object.keys(res.data).reverse()
                     for (var logtime in res_data_keys) {

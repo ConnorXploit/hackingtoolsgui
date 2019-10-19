@@ -10,9 +10,6 @@ import sys, requests, json, os
 # Nodes Pool Treatment
 
 nodes_pool = Config.getConfig(parentKey='core', key='Pool', subkey='known_nodes')
-if 'POOL_NODE' in os.environ:
-    # Check by the NODE ID if it's mine service
-    pass
 
 global CHECKED_NODES
 CHECKED_NODES = False
@@ -189,6 +186,17 @@ def removeNodeFromPool(node_ip):
         nodes_pool.remove(node_ip)
     Config.remove_pool_node(node_ip)
 
+def checkNode(node):
+    url = '{url}/core/pool/getNodeId/'.format(url=node)
+    try:
+        r = requests.post(url, headers=ht.Connections.headers)
+        if r.status_code == 200:
+            Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
+            if r.json()['data'] == MY_NODE_ID:
+                removeNodeFromPool(node)
+    except:
+        Logger.printMessage('Error connecting to server', url, is_error=True)
+
 def __checkPoolNodes__():
     global CHECKED_NODES
     if not CHECKED_NODES:
@@ -203,3 +211,11 @@ def __checkPoolNodes__():
                 CHECKED_NODES = True
             except:
                 Logger.printMessage('Error connecting to server', url, is_error=True)
+        if not getPoolNodes():
+            Config.__djangoSwitchPoolItButtons__(False)
+            return False
+    
+    if getPoolNodes():
+        Config.__djangoSwitchPoolItButtons__(True)
+        return True
+    return False

@@ -49,6 +49,7 @@ def load_data():
     pool_list = ht.Pool.getPoolNodes()
     my_services = ht.Connections.getMyServices()
     ngrokService = ht.Connections.getNgrokServiceUrl()
+    is_heroku = True if 'DYNO' in os.environ else False
     my_node_id_pool = ht.Pool.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
     ht_data =  { 
@@ -216,9 +217,10 @@ def saveFileOutput(myfile, module_name, category):
 
 def getLogs(request):
     data = {
-        'data' : ht.Logger.getLogsClear()
+        'data' : ht.Logger.getLogsClear(),
+        'buttonsPool' : ht.Pool.__checkPoolNodes__()
     }
-    ht.Pool.__checkPoolNodes__()
+    
     return JsonResponse(data)
 
 @csrf_exempt
