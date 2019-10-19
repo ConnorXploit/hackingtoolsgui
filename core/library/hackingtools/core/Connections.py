@@ -20,6 +20,11 @@ def getMyServices():
     global services
     return [serv for serv in services if serv]
 
+def addMineService(serv):
+    global services
+    if not serv in services:
+        services.append(serv)
+
 def serviceNotMine(service):
     for serv in services:
         if service == serv:
@@ -49,6 +54,8 @@ def getMyLanIP():
             return Logger.print_and_return(msg='getMyLanIP', value=ip, debug_core=True)
 
 def getMyLocalIP():
+    if isHeroku():
+        return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
 def isHeroku():

@@ -66,6 +66,7 @@ def load_data():
         'modules_functions_modals':modules_functions_modals, 
         'pool_list':pool_list,
         'my_services':my_services,
+        'is_heroku':is_heroku,
         'ngrokService':ngrokService,
         'my_node_id_pool':my_node_id_pool,
         'status_pool':status_pool}

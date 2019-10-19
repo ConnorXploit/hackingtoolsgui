@@ -50,7 +50,7 @@ def callNodesForInformAboutMyServices():
 
 def send(node_request, functionName):
     creator_id = MY_NODE_ID
-    pool_nodes = random.shuffle(getPoolNodes())
+    pool_nodes = getPoolNodes()
     try:
         if ht.wantPool():
             function_api_call = resolve(node_request.path_info).route
@@ -142,11 +142,14 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
         for service in ht.Connections.getMyServices():
             removeNodeFromPool(service)
 
+    random.shuffle(nodes)
+
     if len(nodes) > 0:
         if not mine_function_call and not my_own_call:
-            for node in random.shuffle(nodes):
+            for node in nodes:
                 try:
                     if ht.Connections.serviceNotMine(node):
+
                         node_call = '{node_ip}/pool/execute/'.format(node_ip=node)
 
                         params['pool_list'] = pool_list
@@ -159,7 +162,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                         params['functionCall'] = function_api_call
                         
                         r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
-
+                        print(r.status_code)
                         if r.status_code == 200:
                             for n in pool_list:
                                 if ht.Connections.serviceNotMine(n) and not n == node:
@@ -208,6 +211,8 @@ def __checkPoolNodes__():
                     if r.json()['data'] == MY_NODE_ID:
                         Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
                         removeNodeFromPool(node)
+                        if not node in ht.Connections.getMyServices():
+                            ht.Connections.addMineService(node)
                 CHECKED_NODES = True
             except:
                 Logger.printMessage('Error connecting to server', url, is_error=True)

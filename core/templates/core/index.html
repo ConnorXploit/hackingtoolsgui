@@ -132,6 +132,9 @@
                 async: true,
                 success : function(res) {
                   $.notify("Restart server:\n" + res['data'], "warn");
+                  $.each($('.modal'), function(){
+                    $(this).modal('hide');
+                  });
                   $('#reloading-server').modal('show');
                   changeGif(Math.floor(Math.random() * 4) + 1);
                 },

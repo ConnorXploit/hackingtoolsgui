@@ -100,7 +100,7 @@ def getRandomKeypair(request):
 			return JsonResponse({ "data" : str(response) })
 		else:
 			# Parameter length (Optional - Default 8)
-			length = request.POST.get('length', 8)
+			length = int(request.POST.get('length', 8))
 
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').getRandomKeypair( length=length )
