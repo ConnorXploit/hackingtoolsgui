@@ -197,6 +197,8 @@ def checkNode(node):
             Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
             if r.json()['data'] == MY_NODE_ID:
                 removeNodeFromPool(node)
+                if not node in ht.Connections.getMyServices():
+                    ht.Connections.addMineService(node)
     except:
         Logger.printMessage('Error connecting to server', url, is_error=True)
 

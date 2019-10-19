@@ -313,7 +313,10 @@ def poolExecute(request):
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
             'X-Requested-With': 'XMLHttpRequest'
         }
-        me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
+        if ht.Connections.isHeroku():
+            me = 'http://{url}/'.format(url=Connections.getMyLocalIP())
+        else:
+            me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
         client = requests.session()
         soup = BeautifulSoup(client.get(me).content, features="lxml")
         csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']
