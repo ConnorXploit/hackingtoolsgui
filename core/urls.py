@@ -19,6 +19,7 @@ urlpatterns = [
     path('core/category/create/', views.createCategory, name="createcat"),
     path('core/config/look_for_changes/', views.config_look_for_changes, name="config_look_for_changes"),
     path('core/logger/getLogs/', views.getLogs, name="getLogs"),
+    path('core/pool/getNodeId/', views.getNodeId, name="getNodeId"),
     path('core/pool/switchPool/', views.switchPool, name="switchPool"),
     path('core/pool/add_pool_node/', views.add_pool_node, name="add_pool_node"),
     path('core/connections/startNgrok/', views.startNgrok, name="startNgrok"),
@@ -124,6 +125,7 @@ try:
     for mod in ht.getModulesNames():
         #Logger.printMessage(message='Initialize', description='Loading mod \'{mod}\''.format(mod=mod))
         loadModuleUrls(mod)
+
     if functions_not_loaded:
         ht.Logger.printMessage(message='CORE VIEWS', description='Loaded new function{s} views: {d}'.format(s='s' if len(functions_not_loaded) > 1 else '', d=', '.join(functions_not_loaded)), color=ht.Fore.YELLOW)
         #ht.Logger.printMessage(message='RESTART SERVER', description='YOU HAVE TO RESTART EXIT AND RUN SERVER AGAIN FOR LOADING THE NEW VIEWS FOR YOUR MODULES', is_error=True)

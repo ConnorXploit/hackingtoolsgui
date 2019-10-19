@@ -5,11 +5,17 @@ else:
     import hackingtools as ht
 from django.urls import resolve
 from colorama import Fore
-import sys, requests, json
+import sys, requests, json, os
 
 # Nodes Pool Treatment
 
 nodes_pool = Config.getConfig(parentKey='core', key='Pool', subkey='known_nodes')
+if 'POOL_NODE' in os.environ:
+    # Check by the NODE ID if it's mine service
+    pass
+
+global CHECKED_NODES
+CHECKED_NODES = False
 MY_NODE_ID = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
 
 def switchPool():
@@ -17,12 +23,14 @@ def switchPool():
 
 def addNodeToPool(node_ip):
     global nodes_pool
+    global CHECKED_NODES
     if node_ip and not node_ip in nodes_pool:
         if Utils.amIdjango(__name__):
             Logger.printMessage(node_ip)
         if not node_ip in ht.Connections.getMyServices():
             nodes_pool.append(node_ip)
             Config.add_pool_node(node_ip)
+            CHECKED_NODES = False
 
 def callNodesForInformAboutMyServices():
     global nodes_pool 
@@ -179,3 +187,19 @@ def removeNodeFromPool(node_ip):
     global nodes_pool
     if node_ip in nodes_pool:
         nodes_pool.remove(node_ip)
+    Config.remove_pool_node(node_ip)
+
+def __checkPoolNodes__():
+    global CHECKED_NODES
+    if not CHECKED_NODES:
+        for node in getPoolNodes():
+            url = '{url}/core/pool/getNodeId/'.format(url=node)
+            try:
+                r = requests.post(url, headers=ht.Connections.headers)
+                if r.status_code == 200:
+                    Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
+                    if r.json()['data'] == MY_NODE_ID:
+                        removeNodeFromPool(node)
+                CHECKED_NODES = True
+            except:
+                Logger.printMessage('Error connecting to server', url, is_error=True)

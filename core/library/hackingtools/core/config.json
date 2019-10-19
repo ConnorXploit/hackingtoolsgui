@@ -120,7 +120,11 @@
         },
         "Pool": {
             "known_nodes": [
-                "http://hackingtools.pentestinglab.es"
+                "http://hackingtools.pentestinglab.es",
+                "http://pool1.pentestinglab.es",
+                "http://pool2.pentestinglab.es",
+                "http://pool3.pentestinglab.es",
+                "http://pool4.pentestinglab.es"
             ]
         },
         "__API_KEY__": {

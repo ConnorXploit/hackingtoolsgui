@@ -218,6 +218,7 @@ def getLogs(request):
     data = {
         'data' : ht.Logger.getLogsClear()
     }
+    ht.Pool.__checkPoolNodes__()
     return JsonResponse(data)
 
 @csrf_exempt
@@ -320,6 +321,10 @@ def poolExecute(request):
         return JsonResponse({'data' : json.loads(r.text)['data']})
     else:
         return JsonResponse({'data' : 'No function to call'})
+
+@csrf_exempt
+def getNodeId(request):
+    return JsonResponse({ 'data' : ht.Pool.MY_NODE_ID })
 
 # Connections
 
