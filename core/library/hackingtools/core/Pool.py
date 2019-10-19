@@ -5,7 +5,7 @@ else:
     import hackingtools as ht
 from django.urls import resolve
 from colorama import Fore
-import sys, requests, json, os, random
+import sys, requests, json, os, random, threading, time
 
 # Nodes Pool Treatment
 
@@ -181,6 +181,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
 
 def getPoolNodes():
     global nodes_pool
+    random.shuffle(nodes_pool)
     return nodes_pool
 
 def removeNodeFromPool(node_ip):
@@ -190,34 +191,47 @@ def removeNodeFromPool(node_ip):
     Config.remove_pool_node(node_ip)
 
 def checkNode(node):
-    url = '{url}/core/pool/getNodeId/'.format(url=node)
-    try:
-        r = requests.post(url, headers=ht.Connections.headers)
-        if r.status_code == 200:
-            Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
-            if r.json()['data'] == MY_NODE_ID:
-                removeNodeFromPool(node)
-                if not node in ht.Connections.getMyServices():
-                    ht.Connections.addMineService(node)
-    except:
-        Logger.printMessage('Error connecting to server', url, is_error=True)
+    idnode = getNodeId(node)
+    if idnode == MY_NODE_ID:
+        Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
+        removeNodeFromPool(node)
+        if not node in ht.Connections.getMyServices():
+            ht.Connections.addMineService(node)
 
-def __checkPoolNodes__():
+def getNodeId(node, thread=False):
+    threaded = thread
+
+    if not thread:
+        threaded = True
+
+    while threaded:
+
+        url = '{url}/core/pool/getNodeId/'.format(url=node)
+
+        if thread:
+            Logger.printMessage('Call to the node for not been idle in 3 minutes', url, color=Logger.Fore.YELLOW)
+            time.sleep(180)
+
+        try:
+            r = requests.post(url, headers=ht.Connections.headers)
+            if r.status_code == 200:
+                return r.json()['data']
+        except:
+            Logger.printMessage('Error connecting to server', url, is_error=True)
+
+        if not thread:
+            threaded = False
+
+    return None
+
+def __checkPoolNodes__(thread=False):
     global CHECKED_NODES
     if not CHECKED_NODES:
         for node in getPoolNodes():
-            url = '{url}/core/pool/getNodeId/'.format(url=node)
-            try:
-                r = requests.post(url, headers=ht.Connections.headers)
-                if r.status_code == 200:
-                    if r.json()['data'] == MY_NODE_ID:
-                        Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
-                        removeNodeFromPool(node)
-                        if not node in ht.Connections.getMyServices():
-                            ht.Connections.addMineService(node)
-                CHECKED_NODES = True
-            except:
-                Logger.printMessage('Error connecting to server', url, is_error=True)
+            idnode = getNodeId(node, thread)
+            if idnode == MY_NODE_ID:
+                checkNode(node)
+            CHECKED_NODES = True
         if not getPoolNodes():
             Config.__djangoSwitchPoolItButtons__(False)
             return False
@@ -226,3 +240,5 @@ def __checkPoolNodes__():
         Config.__djangoSwitchPoolItButtons__(True)
         return True
     return False
+
+# t = ht.Utils.worker(functionCall=__checkPoolNodes__, args=(True,))

@@ -25,8 +25,6 @@ except ImportError:
 
 modules_loaded = {}
 
-threads = {}
-
 # If we want to be en Pool, import its Functions
 global WANT_TO_BE_IN_POOL
 WANT_TO_BE_IN_POOL = Config.getConfig(parentKey='core', key='WANT_TO_BE_IN_POOL')
@@ -298,15 +296,12 @@ def wantPool():
     global WANT_TO_BE_IN_POOL
     return WANT_TO_BE_IN_POOL
 
-def worker(workerName, functionCall, args={}, chunk=None):
-    threads[workerName] = Utils.worker(functionCall, args, chunk)
-
-def getWorkers():
-    return threads
+def worker(workerName, functionCall, args={}, timesleep=1, chunk=None):
+    Utils.startWorker(workerName, functionCall, args, int(timesleep), chunk)
 
 def getWorker(nameWorker):
     try:
-        return threads[nameWorker]
+        return Utils.getWorkers()[nameWorker]
     except:
         return None
 
@@ -491,6 +486,7 @@ def __importModules__():
 
 __importModules__()
 
+worker('refresh-pool-servers', Pool.__checkPoolNodes__, timesleep=180)
 # try:
 #     for t in threads:
 #         t.join()

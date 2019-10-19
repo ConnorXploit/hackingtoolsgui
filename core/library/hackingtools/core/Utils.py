@@ -20,17 +20,52 @@ from colorama import Fore
 import random
 import requests
 import base64
-import os, inspect, ast, threading
+import os, inspect, ast, threading, time
+from threading import Thread, Lock
 import socket
 import itertools
 from itertools import product 
 
 from datetime import datetime
 
-def worker(functionCall, args={}, chunk=None):
-    t = threading.Thread(target=functionCall, args=args)
-    t.start()
-    return t
+global lock
+lock = Lock()
+
+global threads
+threads = {}
+
+def getWorkers():
+    global threads
+    return threads
+
+def startWorker(workerName, functionCall, args=(), timesleep=1, chunk=None):
+    t = None
+    try:
+        main_worker_name = 'main_{w}'.format(w=workerName)
+        Logger.printMessage(main_worker_name, 'Starting thread for control threads to a functioncall', debug_core=True)
+        t = Thread(target=worker, args=(workerName, functionCall, args, int(timesleep), chunk,))
+        t.setDaemon(True)
+        threads[main_worker_name] = t
+        t.start()
+    except:
+        t.join()
+
+def worker(workerName, functionCall, args=(), timesleep=1, chunk=None):
+    while True:
+        t = None
+        try:
+            Logger.printMessage(workerName, 'Calling for try in a thread', debug_core=True)
+            t = Thread(target=functionCall, args=args)
+            t.setDaemon(True)
+            threads[workerName] = t
+            t.start()
+        except:
+            t.join()
+        time.sleep(timesleep)
+
+def killAllWorkers(workers):
+    for t in threads:
+        threads[t].join()
 
 # File Manipulation
 def getFileContentInByteArray(filePath):

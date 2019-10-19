@@ -133,5 +133,12 @@ try:
         import sys
         sys.exit()
 
+    
+    # try:
+    #     while True:
+    #         time.sleep(0.5)
+    # except KeyboardInterrupt:
+    #     ht.Utils.killAllWorkers([ht.threads[x] for x in ht.threads])
+
 except:
     raise
