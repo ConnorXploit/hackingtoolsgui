@@ -1,4 +1,4 @@
-import inspect
+import inspect, os
 from datetime import datetime
 import colorama
 from colorama import Fore, Back, Style
@@ -98,6 +98,8 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
     else:
         methodCalledFrom = '{file}.{function}()'.format(file=filename.split('\\')[-1], function=methodName)
     
+    methodCalledFrom = str(os.path.join(os.path.split(os.path.split(methodCalledFrom)[0])[1], os.path.split(methodCalledFrom)[1]))
+
     time_now = Utils.getTime()
 
     colorMessage = Fore.LIGHTMAGENTA_EX
@@ -110,9 +112,21 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
 
     if not debug_module and not debug_core:
         if description:
-            logs_clear[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
+            msg = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
         else:
-            logs_clear[time_now] = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
+            msg = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
+
+        appears = 0
+        for l in logs_clear:
+            if msg in logs_clear[l]:
+                del logs_clear[l]
+                appears += 1
+
+        if appears > 0:
+            logs_clear[time_now] = '({n}) - {m}'.format(n=appears+1, m=msg)
+        else:
+            logs_clear[time_now] = msg
+
 
     if description:
         logs[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)

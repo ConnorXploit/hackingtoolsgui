@@ -30,5 +30,6 @@ while not want_exit:
         time.sleep(2)
     except KeyboardInterrupt:
         res = input('[DJANGO AUTO-RESTARTER] - Want to close autoloader? (N/y): ')
+        # Create a function for upload to pypi automatically and change versions
         if res == 'y':
             want_exit = True

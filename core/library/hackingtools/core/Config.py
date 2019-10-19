@@ -67,7 +67,9 @@ def __readFilesAuto__(djangoButtonsPool=False):
     return config
 
 def __djangoSwitchPoolItButtons__(checked=False):
-    return __readFilesAuto__(djangoButtonsPool=checked)
+    global config
+    config = __readFilesAuto__(djangoButtonsPool=checked)
+    return config
 
 # === __readConfig__ ===
 def __readConfig__(django=False):

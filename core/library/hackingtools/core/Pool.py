@@ -5,7 +5,7 @@ else:
     import hackingtools as ht
 from django.urls import resolve
 from colorama import Fore
-import sys, requests, json, os
+import sys, requests, json, os, random
 
 # Nodes Pool Treatment
 
@@ -50,7 +50,7 @@ def callNodesForInformAboutMyServices():
 
 def send(node_request, functionName):
     creator_id = MY_NODE_ID
-    pool_nodes = getPoolNodes()
+    pool_nodes = random.shuffle(getPoolNodes())
     try:
         if ht.wantPool():
             function_api_call = resolve(node_request.path_info).route
@@ -144,7 +144,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
 
     if len(nodes) > 0:
         if not mine_function_call and not my_own_call:
-            for node in nodes:
+            for node in random.shuffle(nodes):
                 try:
                     if ht.Connections.serviceNotMine(node):
                         node_call = '{node_ip}/pool/execute/'.format(node_ip=node)
@@ -205,8 +205,8 @@ def __checkPoolNodes__():
             try:
                 r = requests.post(url, headers=ht.Connections.headers)
                 if r.status_code == 200:
-                    Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
                     if r.json()['data'] == MY_NODE_ID:
+                        Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
                         removeNodeFromPool(node)
                 CHECKED_NODES = True
             except:
