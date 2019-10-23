@@ -43,7 +43,6 @@ def installModule(server, moduleName):
         
         open(os.path.join(config_django_module_path, 'ht_{m}.json'.format(m=moduleName.replace('ht_',''))), 'wb').write(req.content)
 
-
 def updateModule(server, moduleName):
     removeModule(server, moduleName)
     installModule(server, moduleName)

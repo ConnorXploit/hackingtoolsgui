@@ -162,7 +162,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                         params['functionCall'] = function_api_call
                         
                         r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
-                        print(r.status_code)
+                        print(r.status_code) 
                         if r.status_code == 200:
                             for n in pool_list:
                                 if ht.Connections.serviceNotMine(n) and not n == node:
@@ -217,7 +217,8 @@ def getNodeId(node, thread=False):
             if r.status_code == 200:
                 return r.json()['data']
         except:
-            Logger.printMessage('Error connecting to server', url, is_error=True)
+            Logger.printMessage('Error connecting to server, removing node from pool', url, is_error=True)
+            removeNodeFromPool(node)
 
         if not thread:
             threaded = False

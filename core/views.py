@@ -317,6 +317,7 @@ def poolExecute(request):
             me = 'http://{url}/'.format(url=Connections.getMyLocalIP())
         else:
             me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
+        print(me)
         client = requests.session()
         soup = BeautifulSoup(client.get(me).content, features="lxml")
         csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']

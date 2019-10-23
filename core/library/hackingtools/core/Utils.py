@@ -54,13 +54,14 @@ def worker(workerName, functionCall, args=(), timesleep=1, chunk=None):
     while True:
         t = None
         try:
-            Logger.printMessage(workerName, 'Calling for try in a thread', debug_core=True)
+            Logger.printMessage(workerName, 'Calling for try in a thread')
             t = Thread(target=functionCall, args=args)
             t.setDaemon(True)
             threads[workerName] = t
             t.start()
         except:
-            t.join()
+            if t:
+                t.join()
         time.sleep(timesleep)
 
 def killAllWorkers(workers):
@@ -301,6 +302,9 @@ def getRandomPrimeByLength(length = 8):
         return -1
 
 # Text Treatment
+def decimalToBinary(n):
+    return bin(n).replace("0b","")
+
 def textToAscii(content):
     """Transform text in String to ASCII Array
     

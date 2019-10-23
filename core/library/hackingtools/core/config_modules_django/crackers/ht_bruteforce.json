@@ -6,7 +6,7 @@
             "__async__": false,
             "__return__": "text",
             "zipPathName": {
-                "__type__": "text",
+                "__type__": "file",
                 "label_desc": "zipPathName",
                 "placeholder": "zipPathName",
                 "required": true

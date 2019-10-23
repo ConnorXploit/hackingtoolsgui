@@ -150,6 +150,13 @@ def getModulesFullConfig():
             modules_conf[module] = module_conf
     return modules_conf
 
+def getModulesFromCategory(category):
+    mods = []
+    for m in getModulesNames():
+        if getModuleCategory(m) == category:
+            mods.append(m)
+    return mods
+
 def getCategories():
     data = []
     for mods in modules_loaded:
@@ -486,7 +493,8 @@ def __importModules__():
 
 __importModules__()
 
-worker('refresh-pool-servers', Pool.__checkPoolNodes__, timesleep=180)
+if Utils.amIdjango(__name__):
+    worker('refresh-pool-servers', Pool.__checkPoolNodes__, timesleep=180)
 # try:
 #     for t in threads:
 #         t.join()
