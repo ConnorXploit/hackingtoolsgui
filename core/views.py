@@ -317,7 +317,7 @@ def poolExecute(request):
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
                 'Accept': 'application/json, text/javascript, */*; q=0.01',
-                'Content-Type': 'application/json; charset=UTF-8'
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             }
             client = requests.session()
             soup = BeautifulSoup(client.get(me).text, "html.parser")
