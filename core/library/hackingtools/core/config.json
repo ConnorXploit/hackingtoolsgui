@@ -124,7 +124,8 @@
                 "http://pool1.pentestinglab.es",
                 "http://pool2.pentestinglab.es",
                 "http://pool3.pentestinglab.es",
-                "http://pool4.pentestinglab.es"
+                "http://pool4.pentestinglab.es",
+                "http://127.0.0.1:1234"
             ]
         },
         "__API_KEY__": {

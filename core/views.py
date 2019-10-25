@@ -309,10 +309,9 @@ def poolExecute(request):
 
         ht.Pool.__checkPoolNodes__()
         if ht.Connections.isHeroku():
-            me = 'http://{url}/'.format(url=ht.Connections.getMyLocalIP()) 
+            me = ht.Connections.getMyLocalIP()
         else:
             me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
-        print(me)
 
         if functionCall:
             headers = {
