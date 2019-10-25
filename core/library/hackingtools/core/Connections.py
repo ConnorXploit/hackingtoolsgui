@@ -58,6 +58,7 @@ def getMyLocalIP():
     global services
     if isHeroku():
         if not services:
+            Pool.__checkPoolNodes__()
             Config.__readConfig__()
             services = Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
         return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
