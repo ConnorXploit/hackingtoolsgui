@@ -328,6 +328,8 @@ def poolExecute(request):
             is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
             params[is_async] = True
             r = client.post('{me}{slash}{call}'.format(me=me, slash='/' if me[-1] != '/' else '', call=functionCall), files=files, data=params, headers=headers)
+            Logger.printMessage(r)
+            Logger.printMessage(r.text)
             return JsonResponse({'data' : json.loads(r.text)['data']})
         else:
             return JsonResponse({'data' : 'No function to call'})
