@@ -230,7 +230,7 @@ def add_pool_node(request):
     try:
         if request.POST:
             pool_node = request.POST.get('pool_ip', None)
-            if not pool_node in ht.Pool.getPoolNodes():
+            if not pool_node or pool_node not in ht.Pool.getPoolNodes():
                 ht.Pool.addNodeToPool(pool_node)
                 if not request.POST.get('pooling', False):
                     for serv in ht.Connections.getMyServices():

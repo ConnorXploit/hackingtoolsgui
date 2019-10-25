@@ -60,7 +60,7 @@ def getMyLocalIP():
         if not services:
             Pool.__checkPoolNodes__()
             Config.__readConfig__()
-            services = Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
+            services += Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
         return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
@@ -92,6 +92,7 @@ def __initServices__():
     else:
         Pool.__checkPoolNodes__()
         Config.__readConfig__()
+        services += Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)
 
 def getNgrokServiceUrl():

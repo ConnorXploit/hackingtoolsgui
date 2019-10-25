@@ -197,7 +197,7 @@ def checkNode(node):
         Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
         removeNodeFromPool(node)
         if not node in ht.Connections.getMyServices():
-            ht.Config.add_my_service(node) 
+            Config.add_my_service(node) 
 
 def getNodeId(node, thread=False):
     threaded = thread
