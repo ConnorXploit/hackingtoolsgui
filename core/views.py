@@ -321,7 +321,7 @@ def poolExecute(request):
             }
             client = requests.session()
             soup = BeautifulSoup(client.get(me).text, "html.parser")
-            csrftoken = soup.find('input', {'name': 'csrfmiddlewaretoken'})
+            csrftoken = soup.find('input', {'name': 'csrfmiddlewaretoken'})['value']
             Logger.printMessage(csrftoken)
             if 'csrfmiddlewaretoken' in params:
                 del params['csrfmiddlewaretoken']
