@@ -307,6 +307,8 @@ def poolExecute(request):
         for key, value in request.POST.items():
             params[key] = value
 
+        if not ht.Connections.getMyServices():
+            ht.Pool.__checkPoolNodes__()
         if ht.Connections.isHeroku():
             me = 'http://{url}/'.format(url=ht.Connections.getMyLocalIP()) 
         else:

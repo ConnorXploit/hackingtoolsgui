@@ -22,6 +22,7 @@ def getMyServices():
 
 def addMineService(serv):
     global services
+    Logger.printMessage(serv)
     if not serv in services:
         services.append(serv)
 
