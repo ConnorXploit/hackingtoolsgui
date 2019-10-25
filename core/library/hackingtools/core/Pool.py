@@ -161,17 +161,15 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
 
                         params['functionCall'] = function_api_call
                         
-                        print(node_call)
-                        print(params)
                         r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
-                        print(r) 
-                        print(r.status_code) 
+                        
                         if r.status_code == 200:
                             for n in pool_list:
                                 if ht.Connections.serviceNotMine(n) and not n == node:
                                     addNodeToPool(n)
                             Logger.printMessage(message='Solved by', description=(node))
-                            return (json.loads(str(r.text)), params['creator'])
+                            Logger.printMessage(r.text)
+                            return (json.loads(str(r.text))['data'], params['creator'])
 
                 except Exception as e:
                     Logger.printMessage(message='ERROR', description=str(e), color=Fore.YELLOW)

@@ -307,6 +307,12 @@ def poolExecute(request):
         for key, value in request.POST.items():
             params[key] = value
 
+        if ht.Connections.isHeroku():
+            me = 'http://{url}/'.format(url=ht.Connections.getMyLocalIP())
+        else:
+            me = 'http://{url}:{port}/'.format(url=ht.Connections.getMyLocalIP(), port=Connections.getActualPort())
+        print(me)
+
         if functionCall:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
@@ -314,11 +320,6 @@ def poolExecute(request):
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'X-Requested-With': 'XMLHttpRequest'
             }
-            if ht.Connections.isHeroku():
-                me = 'http://{url}/'.format(url=Connections.getMyLocalIP())
-            else:
-                me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
-            print(me)
             client = requests.session()
             soup = BeautifulSoup(client.get(me).content, features="lxml")
             csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']
@@ -332,7 +333,7 @@ def poolExecute(request):
         else:
             return JsonResponse({'data' : 'No function to call'})
     except Exception as e:
-        return JsonResponse({'data' : str(e)})
+        return JsonResponse({'data' : me})
 
 @csrf_exempt
 def getNodeId(request):
