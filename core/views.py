@@ -296,40 +296,43 @@ def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=Fals
 
 @csrf_exempt
 def poolExecute(request):
-    functionCall = request.POST.get('functionCall', None)
+    try:
+        functionCall = request.POST.get('functionCall', None)
 
-    files = None
-    if request.FILES and len(request.FILES) > 0:
-        files = request.FILES
+        files = None
+        if request.FILES and len(request.FILES) > 0:
+            files = request.FILES
 
-    params = {}
-    for key, value in request.POST.items():
-        params[key] = value
+        params = {}
+        for key, value in request.POST.items():
+            params[key] = value
 
-    if functionCall:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-        if ht.Connections.isHeroku():
-            me = 'http://{url}/'.format(url=Connections.getMyLocalIP())
+        if functionCall:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+            if ht.Connections.isHeroku():
+                me = 'http://{url}/'.format(url=Connections.getMyLocalIP())
+            else:
+                me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
+            print(me)
+            client = requests.session()
+            soup = BeautifulSoup(client.get(me).content, features="lxml")
+            csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']
+            if 'csrfmiddlewaretoken' in params:
+                del params['csrfmiddlewaretoken']
+            params['csrfmiddlewaretoken'] = csrftoken
+            is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
+            params[is_async] = True
+            r = client.post('{me}{call}'.format(me=me, call=functionCall), files=files, data=params, headers=headers)
+            return JsonResponse({'data' : json.loads(r.text)['data']})
         else:
-            me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
-        print(me)
-        client = requests.session()
-        soup = BeautifulSoup(client.get(me).content, features="lxml")
-        csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']
-        if 'csrfmiddlewaretoken' in params:
-            del params['csrfmiddlewaretoken']
-        params['csrfmiddlewaretoken'] = csrftoken
-        is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
-        params[is_async] = True
-        r = client.post('{me}{call}'.format(me=me, call=functionCall), files=files, data=params, headers=headers)
-        return JsonResponse({'data' : json.loads(r.text)['data']})
-    else:
-        return JsonResponse({'data' : 'No function to call'})
+            return JsonResponse({'data' : 'No function to call'})
+    except Exception as e:
+        return JsonResponse({'data' : str(e)})
 
 @csrf_exempt
 def getNodeId(request):
