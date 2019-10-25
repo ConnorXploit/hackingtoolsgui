@@ -333,7 +333,7 @@ def poolExecute(request):
         else:
             return JsonResponse({'data' : 'No function to call'})
     except Exception as e:
-        return JsonResponse({'data' : me})
+        return JsonResponse({'data' : str(e)})
 
 @csrf_exempt
 def getNodeId(request):
