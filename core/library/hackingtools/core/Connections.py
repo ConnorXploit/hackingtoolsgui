@@ -22,7 +22,7 @@ def getMyServices():
 
 def addMineService(serv):
     global services
-    Logger.printMessage(serv)
+    Logger.printMessage('Adding service', serv)
     if not serv in services:
         services.append(serv)
 
@@ -57,8 +57,9 @@ def getMyLanIP():
 def getMyLocalIP():
     global services
     if isHeroku():
-        if services:
-            return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
+        if not services:
+            services = ht.Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
+        return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
 def isHeroku():
@@ -86,7 +87,9 @@ def __initServices__():
         else:
             for service in (getMyLanIP(), getMyLocalIP()):
                 services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
-
+    else:
+        ht.Pool.__checkPoolNodes__()
+        ht.Config.__readConfig__()
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)
 
 def getNgrokServiceUrl():

@@ -123,6 +123,31 @@ def remove_pool_node(node):
 
     __save_config__(config)
 
+def add_my_service(node): # Used by Heroku
+    config = {}
+    with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
+        config = json.load(json_data_file)
+
+    if not 'my_services' in config['core']['Connections']:
+        config['core']['Connections']['my_services'] = []
+
+    config['core']['Connections']['my_services'].append(node)
+
+    __save_config__(config)
+
+def remove_my_service(node):
+    config = {}
+    with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
+        config = json.load(json_data_file)
+
+    if not 'my_services' in config['core']['Connections']:
+        config['core']['Connections']['my_services'] = []
+    
+    if node in config['core']['Connections']['my_services']:
+        config['core']['Connections']['my_services'].remove(node)
+
+    __save_config__(config)
+
 def add_requirements_ignore(moduleName, requirementModuleName):
     config = {}
 
