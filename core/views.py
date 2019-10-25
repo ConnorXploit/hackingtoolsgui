@@ -334,6 +334,7 @@ def poolExecute(request):
         else:
             return JsonResponse({'data' : 'No function to call'})
     except Exception as e:
+        raise
         return JsonResponse({'data' : str(e)})
 
 @csrf_exempt
