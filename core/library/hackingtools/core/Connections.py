@@ -54,6 +54,7 @@ def getMyLanIP():
             return Logger.print_and_return(msg='getMyLanIP', value=ip, debug_core=True)
 
 def getMyLocalIP():
+    global services
     if isHeroku():
         if services:
             return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
