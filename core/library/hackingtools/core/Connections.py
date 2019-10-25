@@ -58,7 +58,7 @@ def getMyLocalIP():
     global services
     if isHeroku():
         if not services:
-            services = ht.Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
+            services = Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
         return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
