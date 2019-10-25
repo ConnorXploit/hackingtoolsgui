@@ -321,14 +321,14 @@ def poolExecute(request):
                 'X-Requested-With': 'XMLHttpRequest'
             }
             client = requests.session()
-            soup = BeautifulSoup(client.get(me).content, features="lxml")
+            soup = BeautifulSoup(client.get(me).content, features="xml")
             csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']
             if 'csrfmiddlewaretoken' in params:
                 del params['csrfmiddlewaretoken']
             params['csrfmiddlewaretoken'] = csrftoken
             is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
             params[is_async] = True
-            r = client.post('{me}{call}'.format(me=me, call=functionCall), files=files, data=params, headers=headers)
+            r = client.post('{me}/{call}'.format(me=me, call=functionCall), files=files, data=params, headers=headers)
             return JsonResponse({'data' : json.loads(r.text)['data']})
         else:
             return JsonResponse({'data' : 'No function to call'})
