@@ -68,19 +68,19 @@ def send(node_request, functionName):
                     if not 'creator' in params:
                         params['creator'] = creator_id
 
-                    if params['creator'] == creator_id: # TODO This disables repooling ------ SOLVE THIS PLEASEEE WE NEED REPOOOL
-                        response, creator = __sendPool__(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
-                        
-                        callNodesForInformAboutMyServices()
-                                
-                        if 'creator' in params and params['creator'] == creator_id and response:
-                            if isinstance(response, str):
-                                return ({ 'res' : response, 'nodes_pool' : nodes_pool }, creator_id)
-                            if isinstance(response, dict):
-                                return ({ 'res' : response['data'], 'nodes_pool' : nodes_pool }, creator_id)
-                            return (str(response.text), False)
-                        if response:
-                            return (response, creator) # Repool
+                    #if params['creator'] == creator_id: # TODO This disables repooling ------ SOLVE THIS PLEASEEE WE NEED REPOOOL
+                    response, creator = __sendPool__(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                    
+                    callNodesForInformAboutMyServices()
+                            
+                    if 'creator' in params and params['creator'] == creator_id and response:
+                        if isinstance(response, str):
+                            return ({ 'res' : response, 'nodes_pool' : nodes_pool }, creator_id)
+                        if isinstance(response, dict):
+                            return ({ 'res' : response['data'], 'nodes_pool' : nodes_pool }, creator_id)
+                        return (str(response.text), False)
+                    if response:
+                        return (response, creator) # Repool
                     return (None, None)
                 else:
                     return (None, None)

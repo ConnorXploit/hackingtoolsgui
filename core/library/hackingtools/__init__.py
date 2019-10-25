@@ -160,8 +160,8 @@ def getModulesFromCategory(category):
 def getCategories():
     data = []
     for mods in modules_loaded:
-        if mods not in data:
-            data.append(mods.split('.')[3])
+        if mods.split('.')[1] not in data:
+            data.append(mods.split('.')[1])
     return data
 
 def setDebugCore(on=True):
