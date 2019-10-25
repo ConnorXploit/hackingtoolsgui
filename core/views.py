@@ -321,6 +321,8 @@ def poolExecute(request):
         client = requests.session()
         soup = BeautifulSoup(client.get(me).content, features="lxml")
         csrftoken = soup.find('input', dict(name='csrfmiddlewaretoken'))['value']
+        if 'csrfmiddlewaretoken' in params:
+            del params['csrfmiddlewaretoken']
         params['csrfmiddlewaretoken'] = csrftoken
         is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
         params[is_async] = True

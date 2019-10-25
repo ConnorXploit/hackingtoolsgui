@@ -161,6 +161,8 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
 
                         params['functionCall'] = function_api_call
                         
+                        print(node_call)
+                        print(params)
                         r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
                         print(r.status_code) 
                         if r.status_code == 200:
