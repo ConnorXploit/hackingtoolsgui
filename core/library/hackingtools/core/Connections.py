@@ -1,4 +1,4 @@
-from . import Config, Logger, Utils
+from . import Config, Logger, Utils, Pool
 config = Config.getConfig(parentKey='core', key='Connections')
 import sys, requests, socket, os
 
@@ -88,8 +88,8 @@ def __initServices__():
             for service in (getMyLanIP(), getMyLocalIP()):
                 services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
     else:
-        ht.Pool.__checkPoolNodes__()
-        ht.Config.__readConfig__()
+        Pool.__checkPoolNodes__()
+        Config.__readConfig__()
     Logger.printMessage(message='Loaded services', description=services, color=Logger.Fore.YELLOW, debug_core=True)
 
 def getNgrokServiceUrl():
