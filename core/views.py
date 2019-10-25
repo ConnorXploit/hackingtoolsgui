@@ -317,8 +317,7 @@ def poolExecute(request):
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
                 'Accept': 'application/json, text/javascript, */*; q=0.01',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'X-Requested-With': 'XMLHttpRequest'
+                'Content-Type': 'application/json; charset=UTF-8'
             }
             client = requests.session()
             soup = BeautifulSoup(client.get(me).content, features="xml")
@@ -328,7 +327,7 @@ def poolExecute(request):
             params['csrfmiddlewaretoken'] = csrftoken
             is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
             params[is_async] = True
-            r = client.post('{me}/{call}'.format(me=me, call=functionCall), files=files, data=params, headers=headers)
+            r = client.post('{me}{slash}{call}'.format(me=me, slash='/' if me[-1] != '/' else '', call=functionCall), files=files, data=params, headers=headers)
             return JsonResponse({'data' : json.loads(r.text)['data']})
         else:
             return JsonResponse({'data' : 'No function to call'})
