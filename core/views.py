@@ -308,7 +308,7 @@ def poolExecute(request):
             params[key] = value
 
         if ht.Connections.isHeroku():
-            me = 'http://{url}/'.format(url=Connections.getMyLocalIP()) 
+            me = 'http://{url}/'.format(url=ht.Connections.getMyLocalIP()) 
         else:
             me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
         print(me)
