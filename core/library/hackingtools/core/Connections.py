@@ -9,6 +9,9 @@ services = []
 global listening_port
 listening_port = '8000'
 
+global https
+https = ''
+
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
 # Ngrok connections
@@ -43,25 +46,41 @@ def getActualPort():
     global listening_port
     return listening_port
 
-def getMyPublicIP():
+def getMyPublicIP(as_service=False):
+    global listening_port
+    global https
     try:
+        if as_service:
+            return Logger.print_and_return(msg='getMyPublicIP', value='http{s}://{i}:{p}'.format(s=https, i=requests.get('https://api.ipify.org').text, p=listening_port), debug_core=True)
         return Logger.print_and_return(msg='getMyPublicIP', value=requests.get('https://api.ipify.org').text, debug_core=True)
     except:
+        if as_service:
+            return Logger.print_and_return(msg='getMyPublicIP', value='http{s}://127.0.0.1:{p}'.format(s=https, p=listening_port), debug_core=True)
         return Logger.print_and_return(msg='getMyPublicIP', value='127.0.0.1', debug_core=True)
 
-def getMyLanIP():
+def getMyLanIP(as_service=False):
+    global listening_port
+    global https
     for ip in socket.gethostbyname_ex(socket.gethostname())[-1]:
         if '192.168.1' in ip or '192.168.0' in ip:
+            if as_service:
+                return Logger.print_and_return(msg='getMyLanIP', value='http{s}://{i}:{p}'.format(s=https, i=ip, p=listening_port), debug_core=True)
             return Logger.print_and_return(msg='getMyLanIP', value=ip, debug_core=True)
 
-def getMyLocalIP():
+def getMyLocalIP(as_service=False):
     global services
+    global listening_port
+    global https
     if isHeroku():
         if not services:
             Pool.__checkPoolNodes__()
             Config.__readConfig__()
             services += Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
+        if as_service:
+            return Logger.print_and_return(msg='getMyLocalIP', value='http{s}://{ss}:{p}'.format(s=https, ss=services[0], p=listening_port), debug_core=True)
         return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
+    if as_service:
+        return Logger.print_and_return(msg='getMyLocalIP', value='http{s}://127.0.0.1:{p}'.format(s=https, p=listening_port), debug_core=True)
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
 def isHeroku():
@@ -72,8 +91,7 @@ def isHeroku():
 def __initServices__():
     if not isHeroku():
         global services
-
-        https = '' # Anytime when adding ssl, shold be with an 's'
+        global https
 
         loadActualPort()
 

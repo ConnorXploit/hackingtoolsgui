@@ -8,7 +8,7 @@
             "no_module_selected" : "You have to select a module for getting it's documentation"
         },
         "add_pool_node" : {
-            "error": "Something went wrong"
+            "error": "Seem's not to be online that pool node"
         },
         "ht_crypter_crypt_file": {
             "bad_saved": "No se ha guardado correctamente"

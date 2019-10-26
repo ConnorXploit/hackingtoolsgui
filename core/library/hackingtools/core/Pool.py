@@ -161,12 +161,8 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
 
                         params['functionCall'] = function_api_call
 
-                        if 'creator_id' in params:
-                            if params['creator_id'] == MY_NODE_ID:
-                                return (None, None)
-
-                        if not 'creator_id' in params:
-                            params['creator_id'] == MY_NODE_ID
+                        if not 'creator' in params:
+                            params['creator'] == MY_NODE_ID
                         
                         r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
                         

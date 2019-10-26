@@ -71,8 +71,8 @@ def getLogsClear():
     global logs_clear
     return logs_clear
 
-def print_and_return(msg, value, debug_module=False, debug_core=False, is_error=False):
-    printMessage(message=msg, description=value, debug_core=debug_core, is_error=is_error)
+def print_and_return(msg, value, debug_module=False, debug_core=False, is_error=False, color=None):
+    printMessage(message=msg, description=value, debug_core=debug_core, is_error=is_error, color=color)
     return value
 
 def printMessage(message, description=None, debug_module=False, debug_core=False, is_error=False, color=None):
@@ -110,23 +110,28 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
     if is_error:
         colorMessage = Fore.RED
 
-    if not debug_module and not debug_core:
-        if description:
-            msg = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
+    #if not debug_module and not debug_core:
+    if description:
+        msg = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
+    else:
+        msg = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
+
+    appears = 0
+    temp_logs_clear = {}
+
+    for l in logs_clear:
+        log_line = str(logs_clear[l])
+        if msg != log_line:
+            temp_logs_clear[l] = log_line
         else:
-            msg = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
+            appears += 1
 
-        appears = 0
-        for l in logs_clear:
-            if msg in logs_clear[l]:
-                del logs_clear[l]
-                appears += 1
+    if appears > 0:
+        temp_logs_clear[time_now] = '({n}) - {m}'.format(n=appears+1, m=msg)
+    else:
+        temp_logs_clear[time_now] = msg
 
-        if appears > 0:
-            logs_clear[time_now] = '({n}) - {m}'.format(n=appears+1, m=msg)
-        else:
-            logs_clear[time_now] = msg
-
+    logs_clear = temp_logs_clear
 
     if description:
         logs[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
