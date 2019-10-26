@@ -299,41 +299,45 @@ def poolExecute(request):
     try:
         functionCall = request.POST.get('functionCall', None)
 
-        files = None
-        if request.FILES and len(request.FILES) > 0:
-            files = request.FILES
+        creator = request.POST.get('creator', None)
+        if creator != ht.Pool.MY_NODE_ID:
 
-        params = {}
-        for key, value in request.POST.items():
-            params[key] = value
+            files = None
+            if request.FILES and len(request.FILES) > 0:
+                files = request.FILES
 
-        ht.Pool.__checkPoolNodes__()
-        if ht.Connections.isHeroku():
-            me = ht.Connections.getMyLocalIP()
-        else:
-            me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
+            params = {}
+            for key, value in request.POST.items():
+                params[key] = value
 
-        if functionCall:
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
-                'Accept': 'application/json, text/javascript, */*; q=0.01',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-            }
-            client = requests.session()
-            soup = BeautifulSoup(client.get(me).text, "html.parser")
-            csrftoken = soup.find('input', {'name': 'csrfmiddlewaretoken'})['value']
-            Logger.printMessage(csrftoken)
-            if 'csrfmiddlewaretoken' in params:
-                del params['csrfmiddlewaretoken']
-            params['csrfmiddlewaretoken'] = csrftoken
-            is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
-            params[is_async] = True
-            r = client.post('{me}{slash}{call}'.format(me=me, slash='/' if me[-1] != '/' else '', call=functionCall), files=files, data=params, headers=headers)
-            Logger.printMessage(r)
-            Logger.printMessage(r.text)
-            return JsonResponse({'data' : json.loads(r.text)['data']})
-        else:
-            return JsonResponse({'data' : 'No function to call'})
+            ht.Pool.__checkPoolNodes__()
+            if ht.Connections.isHeroku():
+                me = ht.Connections.getMyLocalIP()
+            else:
+                me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
+
+            if functionCall:
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
+                    'Accept': 'application/json, text/javascript, */*; q=0.01',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                }
+                client = requests.session()
+                soup = BeautifulSoup(client.get(me).text, "html.parser")
+                csrftoken = soup.find('input', {'name': 'csrfmiddlewaretoken'})['value']
+                Logger.printMessage(csrftoken)
+                if 'csrfmiddlewaretoken' in params:
+                    del params['csrfmiddlewaretoken']
+                params['csrfmiddlewaretoken'] = csrftoken
+                is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
+                params[is_async] = True
+                r = client.post('{me}{slash}{call}'.format(me=me, slash='/' if me[-1] != '/' else '', call=functionCall), files=files, data=params, headers=headers)
+                Logger.printMessage(r)
+                Logger.printMessage(r.text)
+                return JsonResponse({'data' : json.loads(r.text)['data']})
+            else:
+                return JsonResponse({'data' : 'No function to call'})
+        return JsonResponse({'fail' : 'My own call'})
     except Exception as e:
         raise
         return JsonResponse({'data' : str(e)})
