@@ -299,7 +299,7 @@ def poolExecute(request):
     try:
         functionCall = request.POST.get('functionCall', None)
 
-        creator = request.POST.get('creator', None)
+        creator = request.POST.get('creator_id', None)
         if creator != ht.Pool.MY_NODE_ID:
 
             files = None
