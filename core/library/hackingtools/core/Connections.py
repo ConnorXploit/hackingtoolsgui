@@ -67,7 +67,7 @@ def getMyLanIP(as_service=False):
                 return Logger.print_and_return(msg='getMyLanIP', value='http{s}://{i}:{p}'.format(s=https, i=ip, p=listening_port), debug_core=True)
             return Logger.print_and_return(msg='getMyLanIP', value=ip, debug_core=True)
 
-def getMyLocalIP(as_service=False):
+def getMyLocalIP(as_service=False, port=True):
     global services
     global listening_port
     global https
@@ -77,10 +77,14 @@ def getMyLocalIP(as_service=False):
             Config.__readConfig__()
             services += Config.getConfig(parentKey='core', key='Connections', subkey='my_services')
         if as_service:
-            return Logger.print_and_return(msg='getMyLocalIP', value='http{s}://{ss}:{p}'.format(s=https, ss=services[0], p=listening_port), debug_core=True)
+            if port:
+                return Logger.print_and_return(msg='getMyLocalIP', value='http{s}://{ss}:{p}'.format(s=https, ss=services[0], p=listening_port), debug_core=True)
+            return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
         return Logger.print_and_return(msg='getMyLocalIP', value=services[0], debug_core=True)
     if as_service:
-        return Logger.print_and_return(msg='getMyLocalIP', value='http{s}://127.0.0.1:{p}'.format(s=https, p=listening_port), debug_core=True)
+        if port:
+            return Logger.print_and_return(msg='getMyLocalIP', value='http{s}://127.0.0.1:{p}'.format(s=https, p=listening_port), debug_core=True)
+        return Logger.print_and_return(msg='getMyLocalIP', value='http{s}://127.0.0.1'.format(s=https), debug_core=True)
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
 def isHeroku():

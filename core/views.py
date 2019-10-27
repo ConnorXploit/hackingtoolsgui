@@ -315,7 +315,7 @@ def poolExecute(request):
 
             ht.Pool.__checkPoolNodes__()
             if ht.Connections.isHeroku():
-                me = ht.Connections.getMyLocalIP(as_service=True)
+                me = ht.Connections.getMyLocalIP(as_service=True, port=False)
             else:
                 me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
 
