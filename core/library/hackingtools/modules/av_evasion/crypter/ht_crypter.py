@@ -36,7 +36,7 @@ class StartModule():
 
 # === help ===
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_crypter'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_crypter'), debug_module=True)
 
 # === convertToExe ===
 	def convertToExe(self, stub_name):

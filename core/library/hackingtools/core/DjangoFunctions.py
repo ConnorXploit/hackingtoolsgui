@@ -45,7 +45,7 @@ def createModuleFunctionView(moduleName, functionName):
                     if moduleViewConfig[param]['__type__'] == 'checkbox':
                         moduleViewConfig[param]['selected'] = moduleViewConfig[param]['value']
         else:
-            ht.Logger.printMessage(message='No function params', description=functionName)
+            ht.Logger.printMessage(message='No function params', description=functionName, debug_core=True)
 
         # Add pool it checkbox
         pool_param = '__pool_it_{p}__'.format(p=functionName)
@@ -56,7 +56,7 @@ def createModuleFunctionView(moduleName, functionName):
 
         Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
         ht.Config.__look_for_changes__()
-        ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_module=True)
+        ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_core=True)
         return {functionName : moduleViewConfig}
     except:
         return None
@@ -168,7 +168,7 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
         count += 1
         count = __treeview_count__(count)
         result_text.append(__treeview_createJSON__(conf_key=config[c], key=c, count=count, pid=count_pid))
-        ht.Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), color=Fore.YELLOW, debug_core=True)
+        ht.Logger.printMessage('{msg} - {key} - {n} - {m}'.format(msg='Pasando por: ', key=c, n=count, m=count_pid), is_warn=True, debug_core=True)
         if not isinstance(config[c], str) and not isinstance(config[c], bool) and not isinstance(config[c], int) and not isinstance(config[c], float):
             try:
                 __treeview_load_all__(config=config[c],result_text=result_text, count=count, count_pid=count-1)
@@ -177,7 +177,7 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
                 try:
                     __treeview_load_all__(config=tuple(config[c]),result_text=result_text, count=count, count_pid=count-1)
                     count += 1
-                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), color=Fore.YELLOW, debug_core=True)
+                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), is_warn=True, debug_core=True)
                 except:
                     ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED, debug_core=True)
         count += 1
@@ -212,7 +212,7 @@ def __treeview_createJSON__(conf_key, key, count=1, pid=0):
         else:
             return '{open_key}id:{count},name:"{name}",pid:{pid},value:""{close_key}'.format(open_key=open_key, count=count, name=key, pid=pid, close_key=close_key)
     except:
-        ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_load_json_data'], key=key, conf_key=conf_key), color=Fore.RED)
+        ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_load_json_data'], key=key, conf_key=conf_key), is_error=True)
 
 # End of TreeView
 

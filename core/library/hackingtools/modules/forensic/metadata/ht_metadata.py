@@ -15,7 +15,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_metadata'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_metadata'), debug_module=True)
 
 	def get_image_exif(self, filename):
 		Logger.printMessage(message='{methodName}'.format(methodName='get_image_exif'), description=filename, debug_module=True)

@@ -15,12 +15,12 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_unzip'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_unzip'), debug_module=True)
 
 	def extractFilePassword(self, zipPathName, password='', posible_combinations=1, output_dir_new=None):
 		#ZipFile only works with 7z with ZypCrypto encryption for setting the password
 		try:
-			Logger.printMessage(message="extractFilePassword", description='ZIP - {pwd} - {msg_posible_comb}: {com}'.format(pwd=password, msg_posible_comb=config['posible_combinations'], com=posible_combinations), debug_core=True)
+			Logger.printMessage(message="extractFilePassword", description='ZIP - {pwd} - {msg_posible_comb}: {com}'.format(pwd=password, msg_posible_comb=config['posible_combinations'], com=posible_combinations), debug_module=True)
 			with ZipFile(zipPathName) as zf:
 				zf.extractall(output_dir if not output_dir_new else output_dir_new, pwd=str.encode(password))
 			return password

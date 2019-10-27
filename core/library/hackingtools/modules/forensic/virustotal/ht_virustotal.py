@@ -17,18 +17,18 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_virustotal'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_virustotal'), debug_module=True)
 
 	def isBadFileHash(self, fileHash):
 		try:
 			resp = self.vtotal.file_report([fileHash])
 			if resp["status_code"] in (200, 204):
 				if resp["status_code"] == 204:
-					Logger.printMessage(message="isBadFileHash", description="Testing - {hash} - Waiting 2 seconds...".format(hash=fileHash))
+					Logger.printMessage(message="isBadFileHash", description="Testing - {hash} - Waiting 2 seconds...".format(hash=fileHash), debug_module=True)
 					time.sleep(2)
 					return self.isBadFileHash(fileHash)
 				while resp["json_resp"]["response_code"] == -2:
-					Logger.printMessage(message="isBadFileHash", description="Testing - {hash} - Waiting 2 seconds...".format(hash=fileHash))
+					Logger.printMessage(message="isBadFileHash", description="Testing - {hash} - Waiting 2 seconds...".format(hash=fileHash), debug_module=True)
 					time.sleep(2)
 					return self.isBadFileHash(fileHash)
 				no_detected_list = []
@@ -55,7 +55,7 @@ class StartModule():
 
 	def isBadFile(self, filename):
 		try:
-			Logger.printMessage(message="isBadFile", description=filename)
+			Logger.printMessage(message="isBadFile", description=filename, debug_module=True)
 			response = self.vtotal.file_scan(filename)
 			if response["status_code"] == 200:
 				scan_id = str(response["json_resp"]["scan_id"])

@@ -31,7 +31,7 @@ WANT_TO_BE_IN_POOL = Config.getConfig(parentKey='core', key='WANT_TO_BE_IN_POOL'
 if WANT_TO_BE_IN_POOL:
     from .core import Pool
 else:
-    Logger.printMessage('Pool not loaded', 'Change config or execute ht.Pool.switchPool() when you want it', color=Fore.YELLOW)
+    Logger.printMessage('Pool not loaded', 'Change config or execute ht.Pool.switchPool() when you want it', is_warn=True)
 
 # If it's Django, import it's Functions
 amidjango = Utils.amIdjango(__name__)
@@ -451,7 +451,7 @@ def __importModule__(modules, category, moduleName):
             if not new_module_name in cant_install_requirements[moduleName]:
 
                 try:
-                    Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=new_module_name), color=Fore.YELLOW)
+                    Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=new_module_name), is_warn=True)
                     import subprocess
                     p = subprocess.Popen([sys.executable, '-m', 'pip', 'install', new_module_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     out = p.communicate()

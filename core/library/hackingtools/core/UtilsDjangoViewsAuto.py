@@ -158,15 +158,14 @@ def createTemplateFunctionForModule(moduleName, category, functionName):
         ht.DjangoFunctions.createModuleFunctionView(moduleName, functionName)
 
     except:
-        raise
-        ht.Logger.printMessage(message='createTemplateFunctionForModule', description='Something wen\'t wrong creating template function modal view for {m}'.format(m=moduleName))
+        ht.Logger.printMessage(message='createTemplateFunctionForModule', description='Something wen\'t wrong creating template function modal view for {m}'.format(m=moduleName), is_error=True)
 
 def loadModuleFunctionsToView(moduleName, category):
     try:
         moduleFunctions = ht.getFunctionsNamesFromModule(moduleName).remove('help')
         createViewFileForModule(moduleName, category)
     except:
-        ht.Logger.printMessage(message='loadModuleFunctionsToView', description='Something wen\'t wrong creating views file for {m}'.format(m=moduleName))
+        ht.Logger.printMessage(message='loadModuleFunctionsToView', description='Something wen\'t wrong creating views file for {m}'.format(m=moduleName), is_error=True)
 
 def regenerateModal(moduleName):
     pass

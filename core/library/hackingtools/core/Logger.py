@@ -75,7 +75,7 @@ def print_and_return(msg, value, debug_module=False, debug_core=False, is_error=
     printMessage(message=msg, description=value, debug_core=debug_core, is_error=is_error, color=color)
     return value
 
-def printMessage(message, description=None, debug_module=False, debug_core=False, is_error=False, color=None):
+def printMessage(message, description=None, debug_module=False, debug_core=False, is_error=False, is_warn=False, is_info=False, is_success=False, color=None):
     """This function prints a pretty message in console. The colors can be changed in config.json
     
     Arguments:
@@ -110,33 +110,66 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
     if is_error:
         colorMessage = Fore.RED
 
-    #if not debug_module and not debug_core:
+    # Clear Log Starts Here
+    successful_flag = '[SUCCESS]'
+    error_flag = '[ERROR]'
+    core_flag = '[CORE]'
+    warn_flag = '[WARN]'
+    info_flag = '[INFO]' # Not used yet
+
     if description:
         msg = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
     else:
         msg = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
 
-    appears = 0
-    temp_logs_clear = {}
 
-    for l in logs_clear:
-        log_line = str(logs_clear[l])
-        if msg != log_line:
-            temp_logs_clear[l] = log_line
-        else:
-            appears += 1
+    if debug_module and not color:
+        msg = '{e} - {m}'.format(e=info_flag, m=msg)
 
-    if appears > 0:
-        temp_logs_clear[time_now] = '({n}) - {m}'.format(n=appears+1, m=msg)
-    else:
-        temp_logs_clear[time_now] = msg
+    if debug_core and not color:
+        msg = '{e} - {m}'.format(e=core_flag, m=msg)
 
-    logs_clear = temp_logs_clear
+    if (color == Fore.YELLOW or is_warn) and not debug_core and not debug_module:
+        msg = '{e} - {m}'.format(e=warn_flag, m=msg)
+
+    if (color == Fore.GREEN or is_success) and not debug_core and not debug_module:
+        msg = '{e} - {m}'.format(e=successful_flag, m=msg)
+
+    if (color == Fore.BLUE or is_info) and not debug_core and not debug_module:
+        msg = '{e} - {m}'.format(e=info_flag, m=msg)
+
+    if is_error:
+        msg = '{e} - {m}'.format(e=error_flag, m=msg)
 
     if description:
-        logs[time_now] = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
+        logs[time_now] = msg
     else:
-        logs[time_now] = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
+        logs[time_now] = msg
+
+    temp_logs_clear = {}
+
+    for x in logs:
+
+        exists = False
+
+        for temp in temp_logs_clear:
+            if temp_logs_clear[temp]['msg'] == logs[x]:
+                temp_logs_clear[temp]['count'] += 1
+                exists = True
+
+        if not exists:
+            temp_logs_clear[x] = {}
+            temp_logs_clear[x]['msg'] = logs[x]
+            temp_logs_clear[x]['count'] = 1
+
+    logs_clear = {}
+
+    for timeLog in temp_logs_clear:
+        if temp_logs_clear[timeLog]['count'] > 1:
+            logs_clear[timeLog] = '({n}) - {m}'.format(n=temp_logs_clear[timeLog]['count'], m=temp_logs_clear[timeLog]['msg'])
+        else:
+            logs_clear[timeLog] = temp_logs_clear[timeLog]['msg']
+    # Clear Log Ends Here
 
     if ((not debug_module == True) and (not debug_core == True) and (DEBUG_USER == True)) or ((debug_module == True) and (DEBUG_MODULE_FLAG == True)) or ((debug_core == True) and (DEBUG_CORE_FLAG == True)):
         if description:

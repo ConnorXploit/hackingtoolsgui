@@ -15,7 +15,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_bruteforce'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_bruteforce'), debug_module=True)
 
 	def crackZip(self, zipPathName, unzipper=None, alphabet='lalpha', password_length=4, password_pattern=None, log=False):
 		#max_length_posibilities = int(config['max_for_chunk'])
@@ -38,7 +38,7 @@ class StartModule():
 				Logger.printMessage(message='crackZip', description='File doesnt exists {a}'.format(a=zipPathName), is_error=True)
 				break
 			if password:
-				Logger.printMessage(message='crackZip', description='{msg_password_is} {a}'.format(msg_password_is=config['msg_password_is'], a=password))
+				Logger.printMessage(message='crackZip', description='{msg_password_is} {a}'.format(msg_password_is=config['msg_password_is'], a=password), debug_module=True)
 				if log:
 					Logger.setDebugCore(False)
 				return password

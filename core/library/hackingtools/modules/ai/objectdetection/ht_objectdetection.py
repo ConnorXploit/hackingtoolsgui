@@ -33,7 +33,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_objectdetection'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_objectdetection'), debug_module=True)
 
 	def getTestsModelsDir(self):
 		models = []
@@ -133,7 +133,7 @@ class StartModule():
 			return []
 		
 		if knn_clf is None and model_path is None:
-			Logger.printMessage(message="predict", description=config['predicting_no_knn_or_model_path'])
+			Logger.printMessage(message="predict", description=config['predicting_no_knn_or_model_path'], debug_module=True)
 			return []
 
 		# Load a trained KNN model (if one was passed in)

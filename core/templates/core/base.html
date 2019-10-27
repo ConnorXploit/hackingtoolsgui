@@ -296,7 +296,45 @@
             </script>
             <form class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100 navbar-search" id="bottomConsoleResultBar">
               <textarea class="form-control logger-results" id="resultsLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" placeholder="Waiting Results..." disabled></textarea>
-              <textarea class="form-control logger-console" id="consoleLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" disabled>Loading Log...</textarea>
+              <div class="form-control logger-console" id="consoleLogger" rows="4" spellcheck="false" aria-describedby="basic-addon2" placeholder="Loading Logger..."disabled>
+                <div>
+                  <table>
+                    <tr>
+                      <td class="consoleLogger-row">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-error" checked>
+                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-error">ERROR</label>
+                        </div>
+                      </td>
+                      <td class="consoleLogger-row">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-warn" checked>
+                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-warn">WARN</label>
+                        </div>
+                      </td>
+                      <td class="consoleLogger-row">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-info" checked>
+                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-info">INFO</label>
+                        </div>
+                      </td>
+                      <td class="consoleLogger-row">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-core" checked>
+                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-core">CORE</label>
+                        </div>
+                      </td>
+                      <td class="consoleLogger-row">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-success" checked>
+                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-success">SUCCESS</label>
+                        </div>
+                      </td>
+                  </tr>
+                  </table>
+                </div>
+                <div id="consoleLogger-content" name="consoleLogger-content"></div>
+              </div>
             </form>
             <script>
             function expandTextarea(id) {
@@ -306,7 +344,7 @@
                     this.style.height = this.scrollHeight + 'px';
                 }, false);
             }
-            expandTextarea('consoleLogger');
+            //expandTextarea('consoleLogger');
             timer_clicktime = 200
             length_console_logs = 0
             buttonsPoolChecked = false
@@ -364,19 +402,31 @@
                       }
                     }
                   }
-                  if ('data' in res && res.data && Object.keys(res.data).length !== 0 && length_console_logs !== Object.keys(res.data).length){
-                    data_result = ''
+                  if ('data' in res && res.data && Object.keys(res.data).length !== 0){ // && length_console_logs !== Object.keys(res.data).length
+                    $('#consoleLogger-content').empty();
                     res_data_keys = Object.keys(res.data).reverse()
                     for (var logtime in res_data_keys) {
-                        // check if the property/key is defined in the object itself, not in parent
-                        if (res.data.hasOwnProperty(res_data_keys[logtime])) {
-                          data_result += "[" + res_data_keys[logtime] + "] " + res.data[res_data_keys[logtime]] + "\n";
+                      data_result = '';
+                      if (res.data.hasOwnProperty(res_data_keys[logtime])) {
+                        data_result += "[" + res_data_keys[logtime] + "] " + res.data[res_data_keys[logtime]] + "\n";
+                        if (data_result.includes('ERROR') && $('#consoleLogger-filter-error').is(':checked')) {
+                          data_result = "<p class=\"text-danger\">" + data_result.split("[ERROR] - ")[0] + " - " + data_result.split("[ERROR] - ")[1] + "</p>";
+                        } else if (data_result.includes('WARN') && $('#consoleLogger-filter-warn').is(':checked')) {
+                          data_result = "<p class=\"text-warning\">" + data_result.split("[WARN] - ")[0] + " - " + data_result.split("[WARN] - ")[1] + "</p>";
+                        } else if (data_result.includes('INFO') && $('#consoleLogger-filter-info').is(':checked')) {
+                          data_result = "<p class=\"text-info\">" + data_result.split("[INFO] - ")[0] + " - " + data_result.split("[INFO] - ")[1] + "</p>";
+                        } else if (data_result.includes('SUCCESS') && $('#consoleLogger-filter-success').is(':checked')) {
+                          data_result = "<p class=\"text-success\">" + data_result.split("[SUCCESS] - ")[0] + " - " + data_result.split("[SUCCESS] - ")[1] + "</p>";
+                        } else if (data_result.includes('CORE') && $('#consoleLogger-filter-core').is(':checked')) {
+                          data_result = "<p class=\"text-secondary\">" + data_result.split("[CORE] - ")[0] + " - " + data_result.split("[CORE] - ")[1] + "</p>";
+                        } else if (data_result.includes('ERROR') == FALSE || data_result.includes('WARN') == FALSE || data_result.includes('INFO') == FALSE || data_result.includes('SUCCESS') == FALSE || data_result.includes('CORE') == FALSE){
+                          data_result = "<p class=\"text-default\">" + data_result + "</p>";
                         }
+                      }
+                      $('#consoleLogger-content').append(data_result);
                     }
-                    $('#consoleLogger').val(data_result)
-                    $('#consoleLogger').val().replace(/<br>/gi,"\n")
                     timer.set_interval(500);
-                    length_console_logs = Object.keys(res.data).length
+                    length_console_logs = Object.keys(res.data).length;
                     if (error_counter_for_reload_message > 4){
                       error_counter_for_reload_message = 0;
                       location.reload();

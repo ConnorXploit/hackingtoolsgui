@@ -20,7 +20,7 @@ class StartModule():
 		pass
 	
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_spider'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_spider'), debug_module=True)
 
 	def crawl(self, url, depth=100, proxies=None, proxyhost=None, proxyuser=None, proxypassword=None, proxyport=None, proxysecure="http"):
 		Logger.printMessage(message='{methodName}'.format(methodName='crawl'), debug_module=True)
@@ -67,7 +67,7 @@ class StartModule():
 				pass
 			return (linksVisited, webForms)
 		except Exception as e:
-			Logger.printMessage(message='{methodName}'.format(methodName='crawl'), description='{param}'.format(param=e), is_error=True, color=Fore.YELLOW)
+			Logger.printMessage(message='{methodName}'.format(methodName='crawl'), description='{param}'.format(param=e), is_error=True, is_warn=True)
 			raise
 		
 	def __handleLink__(self, link, depth=100, webForms={}, proxies=None, linksVisited=[], totalProfundity=0):

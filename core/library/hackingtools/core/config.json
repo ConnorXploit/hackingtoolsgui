@@ -121,7 +121,10 @@
         "Pool": {
             "known_nodes": [
                 "http://hackingtools.pentestinglab.es",
-                "http://pool1.pentestinglab.es"
+                "http://pool1.pentestinglab.es",
+                "http://pool3.pentestinglab.es",
+                "http://pool2.pentestinglab.es",
+                "http://pool4.pentestinglab.es"
             ]
         },
         "__API_KEY__": {
@@ -202,7 +205,7 @@
             "function_name_starts_with_modules": "__",
             "function_param_exclude": "self",
             "default_class_name_for_all": "StartModule",
-            "default_template_modules_ht": "from hackingtools.core import Logger, Utils, Config\nimport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tpass\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'))"
+            "default_template_modules_ht": "from hackingtools.core import Logger, Utils, Config\nimport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tpass\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'), debug_module=True)"
         },
         "Utils": {
             "empty_directory_strict": "modules/",

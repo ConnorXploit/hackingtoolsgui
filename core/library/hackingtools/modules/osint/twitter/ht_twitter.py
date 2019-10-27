@@ -11,6 +11,6 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_twitter'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_twitter'), debug_module=True)
 
 	

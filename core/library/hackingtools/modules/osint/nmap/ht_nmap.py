@@ -13,7 +13,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_nmap'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_nmap'), debug_module=True)
 
 	def getConnectedDevices(self, ip):
 		Logger.printMessage(message='{methodName}'.format(methodName='getConnectedDevices'), description='{param}'.format(param=ip), debug_module=True)

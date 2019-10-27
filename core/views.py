@@ -211,9 +211,9 @@ def saveFileOutput(myfile, module_name, category):
     try:
         filename = fs.save(myfile.name, myfile)
     except Exception as e:
-        Logger.printMessage(message='saveFileOutput', description=str(e))
+        Logger.printMessage(message='saveFileOutput', description=str(e), debug_core=True)
         return (None, None, None)
-    Logger.printMessage(message='saveFileOutput', description='Saving to {fi}'.format(fi=os.path.join(location,myfile.name)))
+    Logger.printMessage(message='saveFileOutput', description='Saving to {fi}'.format(fi=os.path.join(location,myfile.name)), is_success=True, debug_core=True)
     return (filename, location, os.path.join(location, filename))
 
 def getLogs(request):
@@ -238,7 +238,7 @@ def add_pool_node(request):
                             service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=pool_node)
                             add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv},  headers=ht.Connections.headers)
                             if add_me_to_theis_pool.status_code == 200:
-                                Logger.printMessage(message="send", description='Saving my service API REST to {n} - {s} '.format(n=pool_node, s=serv), color=Fore.YELLOW, debug_core=True)
+                                Logger.printMessage(message="send", description='Saving my service API REST to {n} - {s} '.format(n=pool_node, s=serv), is_info=True, debug_core=True)
                 else:
                     return renderMainPanel(request=request, popup_text='Could not add my own service to my pool nodes')
             return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
@@ -315,7 +315,7 @@ def poolExecute(request):
 
             ht.Pool.__checkPoolNodes__()
             if ht.Connections.isHeroku():
-                me = ht.Connections.getMyLocalIP()
+                me = ht.Connections.getMyLocalIP(as_service=True)
             else:
                 me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
 
@@ -328,15 +328,17 @@ def poolExecute(request):
                 client = requests.session()
                 soup = BeautifulSoup(client.get(me).text, "html.parser")
                 csrftoken = soup.find('input', {'name': 'csrfmiddlewaretoken'})['value']
-                Logger.printMessage(csrftoken)
+                Logger.printMessage(csrftoken, is_info=True, debug_core=True)
                 if 'csrfmiddlewaretoken' in params:
                     del params['csrfmiddlewaretoken']
                 params['csrfmiddlewaretoken'] = csrftoken
                 is_async = 'is_async_{fu}'.format(fu=functionCall.split('/')[-2])
                 params[is_async] = True
-                r = client.post('{me}{slash}{call}'.format(me=me, slash='/' if me[-1] != '/' else '', call=functionCall), files=files, data=params, headers=headers)
-                Logger.printMessage(r)
-                Logger.printMessage(r.text)
+                call_url = '{me}{slash}{call}'.format(me=me, slash='/' if me[-1] != '/' else '', call=functionCall)
+                print(call_url)
+                r = client.post(call_url, files=files, data=params, headers=headers)
+                Logger.printMessage(r, is_info=True, debug_core=True)
+                Logger.printMessage(r.text, is_info=True, debug_core=True)
                 return JsonResponse({'data' : json.loads(r.text)['data']})
             else:
                 return JsonResponse({'data' : 'No function to call'})

@@ -28,7 +28,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_rsa'))
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_rsa'), debug_module=True)
 
 	def generate_keypair(self, prime_a, prime_b):
 		if not (Utils.isPrime(int(prime_a)) and Utils.isPrime(int(prime_b))):

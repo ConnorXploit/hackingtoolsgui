@@ -17,16 +17,16 @@ class StartModule():
         self.setApi()
 
     def help(self):
-        Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_shodan'))
+        Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_shodan'), debug_module=True)
         
     def setApi(self, shodanKeyString=None):
         try:
             if not shodanKeyString:
                 shodanKeyString = Config.getApiKey('shodan_api')
-            Logger.printMessage(message='{methodName}'.format(methodName='setApi'), description=shodanKeyString, debug_core=True)
+            Logger.printMessage(message='{methodName}'.format(methodName='setApi'), description=shodanKeyString, is_info=True, debug_module=True)
             self.api = Shodan(shodanKeyString)
         except:
-            Logger.printMessage(message='{methodName}'.format(methodName='setApi'), description=config['bad_api_key_error'], debug_core=True, is_error=True) 
+            Logger.printMessage(message='{methodName}'.format(methodName='setApi'), description=config['bad_api_key_error'], debug_module=True, is_error=True) 
 
     def getIPListfromServices(self, serviceName, shodanKeyString=None):
         Logger.printMessage(message='{methodName}'.format(methodName='getIPListfromServices'), description='{param}'.format(param=serviceName), debug_module=True)
@@ -113,7 +113,7 @@ class StartModule():
                         pass
 
         except Exception as e:
-            Logger.printMessage(message='Warning: {0}... Retrying in 0,5 seconds...'.format(e), color=Fore.YELLOW, debug_module=True)
+            Logger.printMessage(message='Warning: {0}... Retrying in 0,5 seconds...'.format(e), is_warn=True, debug_module=True)
             time.sleep(0.4)
             return self.search_host(ip)
         return res

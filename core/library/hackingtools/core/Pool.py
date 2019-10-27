@@ -23,7 +23,7 @@ def addNodeToPool(node_ip):
     global CHECKED_NODES
     if node_ip and not node_ip in nodes_pool:
         if Utils.amIdjango(__name__):
-            Logger.printMessage(node_ip)
+            Logger.printMessage(node_ip, debug_core=True)
         if not node_ip in ht.Connections.getMyServices():
             nodes_pool.append(node_ip)
             Config.add_pool_node(node_ip)
@@ -63,7 +63,7 @@ def send(node_request, functionName):
                             params['pool_list'] = []
                     if 'creator' in params:
                         if params['creator'] == MY_NODE_ID:
-                            Logger.printMessage(message='My own call', description='Discarding...', color=Fore.YELLOW)
+                            Logger.printMessage(message='My own call', description='Discarding...', is_warn=True)
                             return (None, None)
                     if not 'creator' in params:
                         params['creator'] = creator_id
@@ -87,7 +87,7 @@ def send(node_request, functionName):
             else:
                 return (None, None)
         else:
-            Logger.printMessage(message='Disabled pool', description='If want to pool, change WANT_TO_BE_IN_POOL to true', color=Fore.YELLOW)
+            Logger.printMessage(message='Disabled pool', description='If want to pool, change WANT_TO_BE_IN_POOL to true', is_warn=True)
             return (None, None)
     except Exception as e:
         Logger.printMessage(message='ERROR', description=str(e), is_error=True)
@@ -112,7 +112,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
         for service in ht.Connections.getMyServices():
             if service in pool_list:
                 mine_function_call = True
-                Logger.printMessage(message=function_api_call, description='It\'s my own call', color=Fore.YELLOW)
+                Logger.printMessage(message=function_api_call, description='It\'s my own call', is_warn=True)
                 return (None, None)
     except:
         pass
@@ -170,16 +170,16 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                             for n in pool_list:
                                 if ht.Connections.serviceNotMine(n) and not n == node:
                                     addNodeToPool(n)
-                            Logger.printMessage(message='Solved by', description=(node))
-                            Logger.printMessage(r.text)
+                            Logger.printMessage(message='Solved by', description=(node), debug_core=True)
+                            Logger.printMessage(r.text, debug_core=True)
                             return (json.loads(str(r.text))['data'], params['creator'])
 
                 except Exception as e:
-                    Logger.printMessage(message='ERROR', description=str(e), color=Fore.YELLOW)
+                    Logger.printMessage(message='ERROR', description=str(e), is_warn=True)
         else:
-            Logger.printMessage(message='ERROR', description='Returned to me my own function called into the pool', debug_module=True)
+            Logger.printMessage(message='ERROR', description='Returned to me my own function called into the pool', debug_core=True)
     else:
-        Logger.printMessage(message='ERROR', description='There is nobody on the pool list', debug_module=True)
+        Logger.printMessage(message='ERROR', description='There is nobody on the pool list', debug_core=True)
 
     return (None, None)
 
@@ -197,7 +197,7 @@ def removeNodeFromPool(node_ip):
 def checkNode(node):
     idnode = getNodeId(node)
     if idnode == MY_NODE_ID:
-        Logger.printMessage('Removing node from nodes_pool, im this service xD', node)
+        Logger.printMessage('Removing node from nodes_pool, im this service xD', node, debug_core=True)
         removeNodeFromPool(node)
         if not node in ht.Connections.getMyServices():
             Config.add_my_service(node) 

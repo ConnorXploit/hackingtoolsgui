@@ -66,7 +66,7 @@ def uploadModule(server, category, moduleName):
     zipped_file = unzipper.zipDirectory(module_folder)
     req = requests.post('http://{ip}/new/module/upload/{c}'.format(ip=server, c=category), files={ "module" : (str(os.path.split(zipped_file)[1]), zipped_file)})
     if req.json()['status'] == 'OK':
-        Logger.printMessage(req.json()['data'])
+        Logger.printMessage(req.json()['data'], debug_core=True)
     Logger.printMessage(req.json()['data'], is_error=True)
 
 def addServer(server):

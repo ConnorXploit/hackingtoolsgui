@@ -25,7 +25,7 @@ def getMyServices():
 
 def addMineService(serv):
     global services
-    Logger.printMessage('Adding service', serv)
+    Logger.printMessage('Adding service', serv, debug_core=True)
     if not serv in services:
         services.append(serv)
 
@@ -105,8 +105,7 @@ def __initServices__():
         if ngrok_ip:
             services = [ngrok_ip]
         else:
-            for service in (getMyLanIP(), getMyLocalIP()):
-                services.append('http{s}://{ip}:{port}'.format(s=https, ip=service, port=getActualPort()))
+            [services.append(service) for service in (getMyLanIP(as_service=True), getMyLocalIP(as_service=True))]
     else:
         Pool.__checkPoolNodes__()
         Config.__readConfig__()

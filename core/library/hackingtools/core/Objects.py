@@ -132,7 +132,7 @@ class Host():
 
     def addScanResult(self, result):
         try:
-            Logger.printMessage(message='addScanResult', description=result)
+            Logger.printMessage(message='addScanResult', description=result, debug_core=True)
             for r in result:
                 try:
                     if "ip_str" == r:

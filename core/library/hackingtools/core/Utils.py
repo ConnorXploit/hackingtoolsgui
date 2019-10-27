@@ -54,7 +54,7 @@ def worker(workerName, functionCall, args=(), timesleep=1, chunk=None):
     while True:
         t = None
         try:
-            Logger.printMessage(workerName, 'Calling for try in a thread')
+            Logger.printMessage(workerName, 'Calling for try in a thread', debug_core=True)
             t = Thread(target=functionCall, args=args)
             t.setDaemon(True)
             threads[workerName] = t
@@ -126,7 +126,7 @@ def emptyDirectory(directory):
             Returns if all was OK
     """
     try:
-        #Logger.printMessage(message='emptyDirectory', description='Would empty: {path}'.format(path=directory), color=Fore.YELLOW)
+        #Logger.printMessage(message='emptyDirectory', description='Would empty: {path}'.format(path=directory), is_warn=True)
         #if os.path.isdir(directory):
         #    shutil.rmtree(directory)
         #    return True
