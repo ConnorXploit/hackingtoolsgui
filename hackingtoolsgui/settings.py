@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'yy@*d7k2&y+%(o%q2ahhueuubkymul(r%a7x%1u)(3oxx$z)ej'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 if 'DYNO' in os.environ: # Automatically Heroku Deploy
     debug = False
 
