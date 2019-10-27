@@ -167,19 +167,20 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                         if not 'creator' in params:
                             params['creator'] == MY_NODE_ID
                         
-                        r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
-                        
-                        if r.status_code == 200:
-                            for n in pool_list:
-                                if ht.Connections.serviceNotMine(n) and not n == node:
-                                    addNodeToPool(n)
-                            Logger.printMessage(message='Solved by', description=(node), debug_core=True)
-                            try:
-                                Logger.printMessage(r.text, debug_core=True)
-                            except:
-                                Logger.printMessage(r, debug_core=True)
-                            return (json.loads(str(r.text))['data'], params['creator'])
+                        if node not in params['pool_list']:
 
+                            r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
+                        
+                            if r.status_code == 200:
+                                for n in pool_list:
+                                    if ht.Connections.serviceNotMine(n) and not n == node:
+                                        addNodeToPool(n)
+                                Logger.printMessage(message='Solved by', description=(node), debug_core=True)
+                                try:
+                                    Logger.printMessage(r.text, debug_core=True)
+                                except:
+                                    Logger.printMessage(r, debug_core=True)
+                                return (json.loads(str(r.text))['data'], params['creator'])
                 except Exception as e:
                     Logger.printMessage(message='ERROR', description=str(e), is_warn=True)
         else:
