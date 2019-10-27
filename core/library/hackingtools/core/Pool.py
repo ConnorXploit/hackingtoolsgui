@@ -78,7 +78,10 @@ def send(node_request, functionName):
                                 return ({ 'res' : response, 'nodes_pool' : nodes_pool }, creator_id)
                             if isinstance(response, dict):
                                 return ({ 'res' : response['data'], 'nodes_pool' : nodes_pool }, creator_id)
-                            return (str(response.text), False)
+                            try:
+                                return (str(response.text), False)
+                            except:
+                                return (str(response), False)
                         if response:
                             return (response, creator) # Repool
                     return (None, None)
@@ -171,7 +174,10 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                                 if ht.Connections.serviceNotMine(n) and not n == node:
                                     addNodeToPool(n)
                             Logger.printMessage(message='Solved by', description=(node), debug_core=True)
-                            Logger.printMessage(r.text, debug_core=True)
+                            try:
+                                Logger.printMessage(r.text, debug_core=True)
+                            except:
+                                Logger.printMessage(r, debug_core=True)
                             return (json.loads(str(r.text))['data'], params['creator'])
 
                 except Exception as e:

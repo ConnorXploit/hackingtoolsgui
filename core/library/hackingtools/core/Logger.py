@@ -114,6 +114,7 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
     successful_flag = '[SUCCESS]'
     error_flag = '[ERROR]'
     core_flag = '[CORE]'
+    module_flag = '[MODULE]'
     warn_flag = '[WARN]'
     info_flag = '[INFO]' # Not used yet
 
@@ -123,23 +124,18 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
         msg = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
 
 
-    if debug_module and not color:
-        msg = '{e} - {m}'.format(e=info_flag, m=msg)
-
-    if debug_core and not color:
-        msg = '{e} - {m}'.format(e=core_flag, m=msg)
-
-    if (color == Fore.YELLOW or is_warn) and not debug_core and not debug_module:
+    if (color == Fore.YELLOW or is_warn):
         msg = '{e} - {m}'.format(e=warn_flag, m=msg)
-
-    if (color == Fore.GREEN or is_success) and not debug_core and not debug_module:
+    elif (color == Fore.GREEN or is_success):
         msg = '{e} - {m}'.format(e=successful_flag, m=msg)
-
-    if (color == Fore.BLUE or is_info) and not debug_core and not debug_module:
+    elif (color == Fore.BLUE or is_info):
         msg = '{e} - {m}'.format(e=info_flag, m=msg)
-
-    if is_error:
+    elif is_error:
         msg = '{e} - {m}'.format(e=error_flag, m=msg)
+    elif debug_module:
+        msg = '{e} - {m}'.format(e=module_flag, m=msg)
+    elif debug_core:
+        msg = '{e} - {m}'.format(e=core_flag, m=msg)
 
     if description:
         logs[time_now] = msg

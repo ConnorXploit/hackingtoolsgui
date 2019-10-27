@@ -351,13 +351,13 @@ textarea.form-control {
 }
 #consoleLogger {
     /* padding-top: 10px; */
-    padding-bottom: 25px;
+    /* padding-bottom: 25px; */
     overflow-x: hidden;
     background: #eaecf4;
     /*display: block;*/
 }
 #consoleLogger-content {
-    padding-bottom: 25px;
+    /* padding-bottom: 25px; */
     overflow-x: hidden;
     background: #eaecf4;
 }
@@ -373,6 +373,9 @@ textarea.form-control {
 }
 .text-secondary {
     color: #a6c!important;
+}
+.text-default {
+    color: #2bbbad!important;
 }
 .filterable {
     margin-top: 15px;

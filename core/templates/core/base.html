@@ -302,37 +302,44 @@
                     <tr>
                       <td class="consoleLogger-row">
                         <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-success" checked>
+                          <label class="custom-control-label consoleSwitchFilter text-success" for="consoleLogger-filter-success"><b>SUCCESS</b></label>
+                        </div>
+                      </td>
+                      <td class="consoleLogger-row">
+                        <div class="custom-control custom-switch">
                           <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-error" checked>
-                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-error">ERROR</label>
+                          <label class="custom-control-label consoleSwitchFilter text-danger" for="consoleLogger-filter-error"><b>ERROR</b></label>
                         </div>
                       </td>
                       <td class="consoleLogger-row">
                         <div class="custom-control custom-switch">
                           <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-warn" checked>
-                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-warn">WARN</label>
+                          <label class="custom-control-label consoleSwitchFilter text-warning" for="consoleLogger-filter-warn"><b>WARN</b></label>
                         </div>
                       </td>
                       <td class="consoleLogger-row">
                         <div class="custom-control custom-switch">
                           <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-info" checked>
-                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-info">INFO</label>
+                          <label class="custom-control-label consoleSwitchFilter text-info" for="consoleLogger-filter-info"><b>INFO</b></label>
                         </div>
                       </td>
                       <td class="consoleLogger-row">
                         <div class="custom-control custom-switch">
                           <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-core" checked>
-                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-core">CORE</label>
+                          <label class="custom-control-label consoleSwitchFilter text-secondary" for="consoleLogger-filter-core"><b>CORE</b></label>
                         </div>
                       </td>
                       <td class="consoleLogger-row">
                         <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-success" checked>
-                          <label class="custom-control-label consoleSwitchFilter" for="consoleLogger-filter-success">SUCCESS</label>
+                          <input type="checkbox" class="custom-control-input" id="consoleLogger-filter-module" checked>
+                          <label class="custom-control-label consoleSwitchFilter text-default" for="consoleLogger-filter-module"><b>MODULE</b></label>
                         </div>
                       </td>
                   </tr>
                   </table>
                 </div>
+                <hr style="margin: 2px auto !important;">
                 <div id="consoleLogger-content" name="consoleLogger-content"></div>
               </div>
             </form>
@@ -403,6 +410,7 @@
                     }
                   }
                   if ('data' in res && res.data && Object.keys(res.data).length !== 0){ // && length_console_logs !== Object.keys(res.data).length
+                    $('#reloading-server').modal('hide');
                     $('#consoleLogger-content').empty();
                     res_data_keys = Object.keys(res.data).reverse()
                     for (var logtime in res_data_keys) {
@@ -419,9 +427,13 @@
                           data_result = "<p class=\"text-success\">" + data_result.split("[SUCCESS] - ")[0] + " - " + data_result.split("[SUCCESS] - ")[1] + "</p>";
                         } else if (data_result.includes('CORE') && $('#consoleLogger-filter-core').is(':checked')) {
                           data_result = "<p class=\"text-secondary\">" + data_result.split("[CORE] - ")[0] + " - " + data_result.split("[CORE] - ")[1] + "</p>";
-                        } else if (data_result.includes('ERROR') == FALSE || data_result.includes('WARN') == FALSE || data_result.includes('INFO') == FALSE || data_result.includes('SUCCESS') == FALSE || data_result.includes('CORE') == FALSE){
-                          data_result = "<p class=\"text-default\">" + data_result + "</p>";
-                        }
+                        } else if (data_result.includes('MODULE') && $('#consoleLogger-filter-module').is(':checked')) {
+                          data_result = "<p class=\"text-default\">" + data_result.split("[MODULE] - ")[0] + " - " + data_result.split("[MODULE] - ")[1] + "</p>";
+                        } else {
+                          data_result = '';
+                        } /*else if ((data_result.includes('ERROR') == false && $('#consoleLogger-filter-error').is(':checked')) || (data_result.includes('WARN') == false && $('#consoleLogger-filter-warn').is(':checked')) || (data_result.includes('INFO') == false && $('#consoleLogger-filter-info').is(':checked')) || (data_result.includes('SUCCESS') == false && $('#consoleLogger-filter-success').is(':checked')) || (data_result.includes('CORE') == false && $('#consoleLogger-filter-core').is(':checked')) || (data_result.includes('MODULE') == false && $('#consoleLogger-filter-module').is(':checked'))){
+                          data_result = "<p class=\"text-muted\">" + data_result + "</p>";
+                        }*/
                       }
                       $('#consoleLogger-content').append(data_result);
                     }

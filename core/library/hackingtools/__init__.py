@@ -456,7 +456,7 @@ def __importModule__(modules, category, moduleName):
                     p = subprocess.Popen([sys.executable, '-m', 'pip', 'install', new_module_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     out = p.communicate()
                     if 'EnvironmentError' in out[0]:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=new_module_name, error='Could not install in environment'), is_error=True)
+                        Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=new_module_name, error='Could not install in environment'), is_error=True)
                     #pipmain([sys.executable, '-m', 'pip', 'install', '--user', new_module_name])
                 except:
                     pass
@@ -467,7 +467,7 @@ def __importModule__(modules, category, moduleName):
                 if not 'hackingtools' in new_module_name:
                     Config.add_requirements_ignore(moduleName, new_module_name)
 
-                Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
 
 # Core method
 def __importModules__():
@@ -488,7 +488,7 @@ def __importModules__():
                         __importModule__(modules=modu, category=submod, moduleName=module_name)
                         bar.update(1)
                     except Exception as e:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} [ERROR] File not found: {error}'.format(moduleName=module_name, error=str(e)), is_error=True)
+                        Logger.printMessage(message='__importModules__', description='{moduleName} File not found: {error}'.format(moduleName=module_name, error=str(e)), is_error=True)
                         pass
 
 __importModules__()
