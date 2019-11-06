@@ -98,7 +98,13 @@
             "predicting_no_knn_or_model_path": "Must supply knn classifier either thourgh knn_clf or model_path"
         },
         "ht_spider": {},
-        "ht_infector": {}
+        "ht_infector": {},
+        "ht_pepito": {},
+        "ht_telegram": {},
+        "ht_test": {},
+        "ht_cve": {},
+        "ht_cpe": {},
+        "ht_cwe": {}
     },
     "core": {
         "WANT_TO_BE_IN_POOL": true,
@@ -106,6 +112,9 @@
         "cant_install_requirements": {
             "ht_objectdetection": [
                 "face_recognition"
+            ],
+            "ht_cwe": [
+                "requests_html"
             ]
         },
         "Connections": {
@@ -123,8 +132,7 @@
                 "http://hackingtools.pentestinglab.es",
                 "http://pool1.pentestinglab.es",
                 "http://pool3.pentestinglab.es",
-                "http://pool2.pentestinglab.es",
-                "http://pool4.pentestinglab.es"
+                "http://pool2.pentestinglab.es"
             ]
         },
         "__API_KEY__": {

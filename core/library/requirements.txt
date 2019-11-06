@@ -15,7 +15,7 @@ docutils==0.14
 entrypoints==0.3
 Flask
 future==0.17.1
-hackingtools==1.6.3
+hackingtools==1.6.9
 html5lib==1.0.1
 httplib2==0.12.0
 idna==2.8
@@ -52,6 +52,7 @@ python-nmap==0.6.1
 python-utils==2.3.0
 readme-renderer==24.0
 requests==2.22.0
+requests_html
 scikit-build
 shodan==1.11.1
 six

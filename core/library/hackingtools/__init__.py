@@ -265,6 +265,11 @@ def createModule(moduleName, category):
     if not os.path.exists('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
         f = open('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
         f.write('')
+    if not os.path.isdir('{dir}/core/config_modules_django/{category}/'.format(dir=dir_actual, category=category)):
+        os.mkdir('{dir}/core/config_modules_django/{category}/'.format(dir=dir_actual, category=category))
+    if not os.path.isfile('{dir}/core/config_modules_django/{category}/{moduleName}.json'.format(dir=dir_actual, category=category, moduleName=moduleName)):
+        with open('{dir}/core/config_modules_django/{category}/ht_{moduleName}.json'.format(dir=dir_actual, category=category, moduleName=moduleName), "w") as fp:
+            fp.write(json.dumps({}))
     # temp_path, hackingtools_dir = os.path.split(dir_actual)
     # temp_path, library_dir = os.path.split(temp_path)
     # urls_file = os.path.join(temp_path, 'urls.py')

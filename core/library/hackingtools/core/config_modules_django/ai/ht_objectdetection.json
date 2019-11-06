@@ -1,0 +1,319 @@
+{
+    "__gui_label__": "Object Detection",
+    "django_form_main_function": {
+        "__function__": "predictImage",
+        "image_file_test": {
+            "__type__": "file",
+            "label_desc": "File to test",
+            "required": true
+        },
+        "__separator1__": true,
+        "modelfile_main": {
+            "__type__": "select",
+            "placeholder": "Trained Model in .clf",
+            "required": true,
+            "options_from_function": {
+                "ht_objectdetection": "getTestsModelsDir"
+            }
+        },
+        "__separator2__": true,
+        "image_models_zip": {
+            "__type__": "file",
+            "label_desc": "Models into a zip"
+        },
+        "first_folder_name": {
+            "__type__": "text",
+            "label_desc": "Main folder's name for image dataset",
+            "placeholder": "Empty if same name as ZIP file"
+        },
+        "neighbors": {
+            "__type__": "number",
+            "label_desc": "Count objects recognize",
+            "value": "1"
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "predictImage",
+            "__type__": "submit",
+            "value": "Test Image",
+            "loading_text": "Testing with AI..."
+        }
+    },
+    "django_form_module_function": {
+        "getTestsModelsDir": {
+            "__function__": "getTestsModelsDir",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getTestsModelsDir__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "predict": {
+            "__function__": "predict",
+            "__async__": false,
+            "__return__": "text",
+            "X_img_path": {
+                "__type__": "text",
+                "label_desc": "X_img_path",
+                "placeholder": "X_img_path",
+                "required": true
+            },
+            "knn_clf": {
+                "__type__": "text",
+                "label_desc": "knn_clf",
+                "placeholder": "knn_clf",
+                "value": null
+            },
+            "model_path": {
+                "__type__": "text",
+                "label_desc": "model_path",
+                "placeholder": "model_path",
+                "value": null
+            },
+            "distance_threshold": {
+                "__type__": "text",
+                "label_desc": "distance_threshold",
+                "placeholder": "distance_threshold",
+                "value": 0.6
+            },
+            "__pool_it_predict__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "predictFromZip": {
+            "__function__": "predictFromZip",
+            "__async__": false,
+            "__return__": "text",
+            "zipFile": {
+                "__type__": "file",
+                "label_desc": "zipFile",
+                "placeholder": "zipFile",
+                "required": true
+            },
+            "first_folder_name": {
+                "__type__": "text",
+                "label_desc": "first_folder_name",
+                "placeholder": "first_folder_name",
+                "value": ""
+            },
+            "model_path": {
+                "__type__": "text",
+                "label_desc": "model_path",
+                "placeholder": "model_path",
+                "value": "trained.clf"
+            },
+            "trainZipFile": {
+                "__type__": "file",
+                "label_desc": "trainZipFile",
+                "placeholder": "trainZipFile",
+                "value": null
+            },
+            "first_folder_name_training_zip": {
+                "__type__": "text",
+                "label_desc": "first_folder_name_training_zip",
+                "placeholder": "first_folder_name_training_zip",
+                "value": null
+            },
+            "n_neighbors": {
+                "__type__": "text",
+                "label_desc": "n_neighbors",
+                "placeholder": "n_neighbors",
+                "value": 1
+            },
+            "__pool_it_predictFromZip__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "predictImage": {
+            "__function__": "predictImage",
+            "__async__": false,
+            "__return__": "text",
+            "imageFile": {
+                "__type__": "file",
+                "label_desc": "imageFile",
+                "placeholder": "imageFile",
+                "required": true
+            },
+            "model_path": {
+                "__type__": "text",
+                "label_desc": "model_path",
+                "placeholder": "model_path",
+                "value": "trained.clf"
+            },
+            "trainZipFile": {
+                "__type__": "file",
+                "label_desc": "trainZipFile",
+                "placeholder": "trainZipFile",
+                "value": null
+            },
+            "first_folder_name": {
+                "__type__": "text",
+                "label_desc": "first_folder_name",
+                "placeholder": "first_folder_name",
+                "value": null
+            },
+            "n_neighbors": {
+                "__type__": "text",
+                "label_desc": "n_neighbors",
+                "placeholder": "n_neighbors",
+                "value": 1
+            },
+            "__pool_it_predictImage__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "saveCroppedImage": {
+            "__function__": "saveCroppedImage",
+            "__async__": false,
+            "__return__": "",
+            "img_path": {
+                "__type__": "text",
+                "label_desc": "img_path",
+                "placeholder": "img_path",
+                "required": true
+            },
+            "coords": {
+                "__type__": "text",
+                "label_desc": "coords",
+                "placeholder": "coords",
+                "required": true
+            },
+            "model_path": {
+                "__type__": "text",
+                "label_desc": "model_path",
+                "placeholder": "model_path",
+                "required": true
+            },
+            "name": {
+                "__type__": "text",
+                "label_desc": "name",
+                "placeholder": "name",
+                "required": true
+            },
+            "counter": {
+                "__type__": "text",
+                "label_desc": "counter",
+                "placeholder": "counter",
+                "value": 1
+            },
+            "__pool_it_saveCroppedImage__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "show_prediction_labels_on_image": {
+            "__function__": "show_prediction_labels_on_image",
+            "__async__": false,
+            "__return__": "text",
+            "img_path": {
+                "__type__": "text",
+                "label_desc": "img_path",
+                "placeholder": "img_path",
+                "required": true
+            },
+            "predictions": {
+                "__type__": "text",
+                "label_desc": "predictions",
+                "placeholder": "predictions",
+                "required": true
+            },
+            "model_path": {
+                "__type__": "text",
+                "label_desc": "model_path",
+                "placeholder": "model_path",
+                "required": true
+            },
+            "__pool_it_show_prediction_labels_on_image__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "train": {
+            "__function__": "train",
+            "__async__": false,
+            "__return__": "text",
+            "train_dir": {
+                "__type__": "text",
+                "label_desc": "train_dir",
+                "placeholder": "train_dir",
+                "required": true
+            },
+            "model_save_path": {
+                "__type__": "text",
+                "label_desc": "model_save_path",
+                "placeholder": "model_save_path",
+                "value": null
+            },
+            "n_neighbors": {
+                "__type__": "text",
+                "label_desc": "n_neighbors",
+                "placeholder": "n_neighbors",
+                "value": null
+            },
+            "knn_algo": {
+                "__type__": "text",
+                "label_desc": "knn_algo",
+                "placeholder": "knn_algo",
+                "value": "ball_tree"
+            },
+            "verbose": {
+                "__type__": "text",
+                "label_desc": "verbose",
+                "placeholder": "verbose",
+                "value": false
+            },
+            "__pool_it_train__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "trainFromZip": {
+            "__function__": "trainFromZip",
+            "__async__": false,
+            "__return__": "text",
+            "zipFile": {
+                "__type__": "file",
+                "label_desc": "zipFile",
+                "placeholder": "zipFile",
+                "required": true
+            },
+            "new_model_name": {
+                "__type__": "text",
+                "label_desc": "new_model_name",
+                "placeholder": "new_model_name",
+                "value": "new_trained.clf"
+            },
+            "first_folder_name": {
+                "__type__": "text",
+                "label_desc": "first_folder_name",
+                "placeholder": "first_folder_name",
+                "value": "model"
+            },
+            "n_neighbors": {
+                "__type__": "text",
+                "label_desc": "n_neighbors",
+                "placeholder": "n_neighbors",
+                "value": 1
+            },
+            "__pool_it_trainFromZip__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

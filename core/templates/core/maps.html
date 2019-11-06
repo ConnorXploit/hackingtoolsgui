@@ -1,0 +1,69 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid-maps" style="padding-bottom: 200px;">
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:fixed; top:0; bottom:0; width:100%; }
+  </style>
+  <div id='map'></div>
+  <script>
+    var center = "{{gps.latitude}},{{gps.longitude}}"
+    var latLng = center.split(",");
+    var lat = parseFloat(latLng[0]); 
+    var lng = parseFloat(latLng[1]); 
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaXZhbmNvcmNvbGVzIiwiYSI6ImNpcHhuc2VlbzAwNzhoem0yeGt2dHowNzMifQ.G57kFhckY4Jq00VrVPJ2AQ';
+    var map = new mapboxgl.Map({
+      container: 'map', 
+      style: 'mapbox://styles/ivancorcoles/cjhms0cvi3dz82spapuicuest', 
+      center: [lng, lat], 
+      zoom: 12,
+      pitch: 45,
+      bearing: -17.6,
+      antialias: true
+    });
+    map.on('load', function() {
+      // Insert the layer beneath any symbol layer.
+      var layers = map.getStyle().layers;
+      
+      var labelLayerId;
+      for (var i = 0; i < layers.length; i++) {
+        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+          labelLayerId = layers[i].id;
+          break;
+        }
+      }
+      map.addControl(new mapboxgl.FullscreenControl());
+      map.addLayer({
+        'id': '3d-buildings',
+        'source': 'composite',
+        'source-layer': 'building',
+        'filter': ['==', 'extrude', 'true'],
+        'type': 'fill-extrusion',
+        'minzoom': 8,
+        'paint': {
+          'fill-extrusion-color': '#aaa',
+          
+          // use an 'interpolate' expression to add a smooth transition effect to the
+          // buildings as the user zooms in
+          'fill-extrusion-height': [
+            "interpolate", ["linear"], ["zoom"], 
+            15, 0,
+            15.05,
+            ["get", "height"]
+          ],
+          'fill-extrusion-base': [
+            "interpolate", ["linear"], ["zoom"],
+            15, 0,
+            15.05,
+            ["get", "min_height"]
+          ],
+          'fill-extrusion-opacity': .6
+        }
+      }, labelLayerId);
+    });
+  </script>
+</div>
+{% endblock %}

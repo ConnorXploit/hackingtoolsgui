@@ -236,37 +236,22 @@ def __createModuleTemplateConfig__(module_name, category):
 
     module_config_file = os.path.join(category_dir, '{mod}.json'.format(mod=module_name))
 
-    new_conf = {
-        "__gui_label__" : "_MODULE_GUI_LABEL_",
-        "_comment" : "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
-        "_django_form_main_function_" : {
-            "__function__" : "_FUNCTION_NAME_",
-            "_HTML_FIELD_NAME_" : {
-                "__type__" : "_HTML_INPUT_TYPE_",
-                "label_desc" : "_DESCRIPTION_LABEL_",
-                "required" : "_IF_REQUIRED_",
-                "value" : "_INPUT_VALUE_",
-                "loading_text" : "_INPUT_LOADING_TEXT_",
-                "returnable_modules_functions" : {
-                    "_MODULE_CALL_FOR_" : [
-                        "_THAT_MODULES_FUNCTION"
-                    ]
-                },
-                "options_from_function": {
-                    "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
-                }
-            }
-        },
-        "_django_form_module_function_" : {
-            "_PUBLIC_FUNCTION_" : {
+    d = {}
+    with open(module_config_file, 'r', encoding='utf8') as outfile:  
+        d = json.load(outfile)
+
+    if not d:
+        new_conf = {
+            "__gui_label__" : "_MODULE_GUI_LABEL_",
+            "_comment" : "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+            "_django_form_main_function_" : {
                 "__function__" : "_FUNCTION_NAME_",
-                "__async__" : False,
-                "__return__" : "_IF_RETURNS_LIKE_TEXT_",
-                "_PARAM_TO_USE_IN_VIEWS_PY_" : {
+                "_HTML_FIELD_NAME_" : {
                     "__type__" : "_HTML_INPUT_TYPE_",
                     "label_desc" : "_DESCRIPTION_LABEL_",
-                    "value" : "_INPUT_VALUE_",
                     "required" : "_IF_REQUIRED_",
+                    "value" : "_INPUT_VALUE_",
+                    "loading_text" : "_INPUT_LOADING_TEXT_",
                     "returnable_modules_functions" : {
                         "_MODULE_CALL_FOR_" : [
                             "_THAT_MODULES_FUNCTION"
@@ -276,11 +261,31 @@ def __createModuleTemplateConfig__(module_name, category):
                         "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
                     }
                 }
+            },
+            "_django_form_module_function_" : {
+                "_PUBLIC_FUNCTION_" : {
+                    "__function__" : "_FUNCTION_NAME_",
+                    "__async__" : False,
+                    "__return__" : "_IF_RETURNS_LIKE_TEXT_",
+                    "_PARAM_TO_USE_IN_VIEWS_PY_" : {
+                        "__type__" : "_HTML_INPUT_TYPE_",
+                        "label_desc" : "_DESCRIPTION_LABEL_",
+                        "value" : "_INPUT_VALUE_",
+                        "required" : "_IF_REQUIRED_",
+                        "returnable_modules_functions" : {
+                            "_MODULE_CALL_FOR_" : [
+                                "_THAT_MODULES_FUNCTION"
+                            ]
+                        },
+                        "options_from_function": {
+                            "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
+                        }
+                    }
+                }
             }
         }
-    }
-    with open(module_config_file, 'w', encoding='utf8') as outfile:  
-        json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
+        with open(module_config_file, 'w', encoding='utf8') as outfile:  
+            json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
 # === __look_for_changes__ ===
 def __look_for_changes__(django=False):

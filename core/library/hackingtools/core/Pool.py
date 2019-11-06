@@ -177,7 +177,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                                         addNodeToPool(n)
                                 Logger.printMessage(message='Solved by', description=(node), debug_core=True)
                                 try:
-                                    Logger.printMessage(r.text, debug_core=True)
+                                    Logger.printMessage(json.loads(str(r.text))['data'], debug_core=True)
                                 except:
                                     Logger.printMessage(r, debug_core=True)
                                 return (json.loads(str(r.text))['data'], params['creator'])

@@ -11,7 +11,7 @@ def createModuleFunctionView(moduleName, functionName):
     try:
         # Creates the JSON config for the view modal form
         category = ht.getModuleCategory(moduleName)
-        functionParams = ht.Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
+        functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
         moduleViewConfig = {}
 
         moduleViewConfig['__function__'] = functionName

@@ -18,8 +18,12 @@ from .views_modules import *
 # Create your views here.
 
 config = Config.getConfig(parentKey='django', key='views')
+
 global ht_data
 ht_data = {}
+
+global ht_data_maps
+ht_data_maps = {}
 
 def load_data():
     global ht_data
@@ -71,6 +75,12 @@ def load_data():
         'my_node_id_pool':my_node_id_pool,
         'status_pool':status_pool}
 
+def load_data_maps():
+    global ht_data_maps
+    if ht_data_maps:
+        ht_data_maps = {}
+    ht_data_maps['gps'] = ht.Utils.getLocationGPS()
+
 def renderMainPanel(request, popup_text=''):
     global ht_data
     if not ht_data:
@@ -78,6 +88,12 @@ def renderMainPanel(request, popup_text=''):
     if popup_text != '':
         ht_data['popup_text'] = popup_text
     return render(request, 'core/index.html', dict(ht_data))
+
+def renderMaps(request):
+    global ht_data_maps
+    if not ht_data_maps:
+        load_data_maps()
+    return render(request, 'core/maps.html', dict(ht_data_maps))
 
 def home(request, popup_text=''):
     global ht_data

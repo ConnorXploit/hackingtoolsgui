@@ -17,7 +17,7 @@ default_class_name_for_all = Config.getConfig(parentKey='core', key='import_modu
 
 from colorama import Fore
 
-import random
+import random, importlib
 import requests
 import base64
 import os, inspect, ast, threading, time
@@ -33,6 +33,8 @@ lock = Lock()
 
 global threads
 threads = {}
+
+path = os.path.abspath(os.path.split(os.path.dirname(__file__))[0])
 
 def getWorkers():
     global threads
@@ -160,6 +162,19 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
         args, varargs, keywords, defaults = inspect.getargspec(eval(function))
         args = [param for param in args if not param in function_param_exclude] if args else []
 
+        # if not params_func and not defaults and not args: # Try to import explicitly the file and get the params
+        #     modules_dir = os.path.join(os.path.split(path)[0], 'modules')
+        #     module_file = os.path.join(modules_dir, category, moduleName.replace('ht_', ''), 'ht_{m}.py'.format(m=moduleName.replace('ht_', '')))
+        #     if os.path.isfile(module_file):
+        #         module = importlib.import_module(function.split(default_class_name_for_all)[0])
+        #         function = '{m}.{f}'.format(m=module, f=functionName)
+
+        #         params_func = inspect.getfullargspec(eval(function))[0]
+        #         params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
+
+        #         args, varargs, keywords, defaults = inspect.getargspec(eval(function))
+        #         args = [param for param in args if not param in function_param_exclude] if args else []
+
         if defaults:
             new_params_func = params_func[:-len(defaults)]
             args_defaults = dict(zip(params_func[-len(defaults):], defaults))
@@ -199,6 +214,8 @@ def getValueType(value):
         if isinstance(eval(value), str):
             if '.' in value and len(value.split('.')[1] in range(1,4)):
                 return 'file'
+            if 'path' in value or 'file' in value:
+                return 'file'
             if 'pass' in value or 'password' in value:
                 return 'password'
             if 'data' in value:
@@ -217,6 +234,13 @@ def doesFunctionContainsExplicitReturn(functionCall):
 # Others
 def getTime():
     return datetime.utcnow().strftime(config_logger['log_print_date_format'])[:-3]
+
+def getLocationGPS():
+    ip_request = requests.get('https://get.geojs.io/v1/ip.json')
+    geo_request_url = 'https://get.geojs.io/v1/ip/geo/' + ip_request.json()['ip'] + '.json'
+    geo_request = requests.get(geo_request_url)
+    geo_data = geo_request.json()
+    return geo_data
 
 # Maths
 def euclides(a, b):

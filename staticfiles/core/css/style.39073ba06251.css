@@ -450,10 +450,3 @@ textarea.form-control {
 .notifyjs-corner {
     max-width: 300px !important;
 }
-.mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
-    display: none !important;
-}
-.mapboxgl-ctrl-top-right {
-    left: 10px !important;
-    right: auto !important;
-}
