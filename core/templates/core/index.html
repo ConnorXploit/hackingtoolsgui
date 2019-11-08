@@ -315,6 +315,29 @@
                                                   <input type="text" id="is_async_{{functi}}" name="is_async_{{functi}}" value="true" style="display: none;">
                                                   <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}">
                                                 </form>
+                                                <form id="switchFunctionMap">
+                                                  {% csrf_token %}
+                                                  <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap" {% if status_pool %} checked {% endif %}>
+                                                    <label class="custom-control-label" for="checkSwitchFunctionMap">On/Off in map</label>
+                                                  </div>
+                                                  <!--<input id="checkSwitchPool" type="checkbox" style="border: 0px !important;" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size="small" data-offstyle="danger" data-onstyle="{% if pool_list|length > 0 %}success{% else %}primary{% endif %}" {% if status_pool %}checked{% endif %}>-->
+                                                </form>
+                                                <script>
+                                                  $(function() {
+                                                    $('#checkSwitchFunctionMap').change(function(e) {
+                                                      e.preventDefault();
+                                                      //$("#switchPoolForm").submit();
+                                                      $.ajax({
+                                                        headers: { "X-CSRFToken": '{{csrf_token}}' },
+                                                        url : "{% url 'switchFunctionMap' %}", // the endpoint
+                                                        type : "POST", // http method
+                                                        async: true,
+                                                        data : { csrfmiddlewaretoken : '{{ csrf_token }}' , module : 'ht_{{ name }}', functionName : '{{ functi }}'}
+                                                      });
+                                                    })
+                                                  })
+                                                </script>
                                               </div>
                                             <script>
                                               $("#form_{{data_value}}").on('submit',(function(e) {
@@ -898,7 +921,7 @@
               }
               $('#consoleLogger-content').append(data_result);
             }
-            timer.set_interval(500);
+            timer.set_interval(2000);
             length_console_logs = Object.keys(res.data).length;
             if (error_counter_for_reload_message > 4){
               error_counter_for_reload_message = 0;
@@ -910,7 +933,7 @@
               error_counter_for_reload_message = 0;
               location.reload();
             }
-            timer.set_interval(2000);
+            timer.set_interval(5000);
           }
         },
         error : function(xhr,errmsg,err) {

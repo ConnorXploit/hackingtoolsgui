@@ -11,6 +11,7 @@ urlpatterns = [
     path('documentation/<module_name>', views.documentation, name="documentation"),
     path('popup/<string>', views.home, name="home"),
     path('maps/', views.renderMaps, name="maps"),
+    path('maps/switchFunctionMap/', views.switchFunctionMap, name="switchFunctionMap"),
     # Core URLs
     path('core/module/create/', views.createModule, name="createmod"),
     path('core/module/remove/', views.removeModule, name="removeModule"),

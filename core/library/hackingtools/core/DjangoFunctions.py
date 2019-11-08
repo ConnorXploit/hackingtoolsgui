@@ -55,6 +55,7 @@ def createModuleFunctionView(moduleName, functionName):
         moduleViewConfig[pool_param]['selected'] = False
 
         Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
+        Config.switch_function_for_map(category, moduleName, functionName)
         ht.Config.__look_for_changes__()
         ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_core=True)
         return {functionName : moduleViewConfig}
@@ -122,6 +123,15 @@ def getModulesFunctionsCalls():
                 module_funcs[func] = header.format(module_name=module.split('.')[-1], module_function=func, module_function_params='')
         modulesCalls[module.split('.')[-1]] = module_funcs
     return modulesCalls
+
+def getModulesFunctionsForMap():
+    functions = {}
+    for module in ht.modules_loaded:
+        for f in ht.modules_loaded[module]:
+            functionName = f.split('.')[-1]
+            if ht.Config.getConfig(parentKey='modules', key=module, subkey='django_form_module_function')[functionName]['__in_map_{f}__'.format(f=functionName)] == True:
+                functions[module] = functionName
+    return functions
 
 def __getModulesConfig_treeView__():
     """Return a String with the config for the GUI Treeview

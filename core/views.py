@@ -80,6 +80,7 @@ def load_data_maps():
     if ht_data_maps:
         ht_data_maps = {}
     ht_data_maps['gps'] = ht.Utils.getLocationGPS()
+    ht_data_maps['funcs_map'] = ht.DjangoFunctions.getModulesFunctionsForMap()
 
 def renderMainPanel(request, popup_text=''):
     global ht_data
@@ -94,6 +95,13 @@ def renderMaps(request):
     if not ht_data_maps:
         load_data_maps()
     return render(request, 'core/maps.html', dict(ht_data_maps))
+
+def switchFunctionMap(request):
+    mod = request.POST.get('module')
+    cat = ht.getModuleCategory(mod)
+    fun = request.POST.get('functionName')
+    ht.Config.switch_function_for_map(cat, mod, fun)
+    return JsonResponse({'data':'Ok'})
 
 def home(request, popup_text=''):
     global ht_data

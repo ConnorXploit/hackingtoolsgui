@@ -238,17 +238,19 @@ def getNodeId(node, thread=False):
 
 def __checkPoolNodes__(thread=False):
     global CHECKED_NODES
+    changes = False
     if not CHECKED_NODES:
         for node in getPoolNodes():
             idnode = getNodeId(node, thread)
             if idnode == MY_NODE_ID:
                 checkNode(node)
+                changes = True
             CHECKED_NODES = True
         if not getPoolNodes():
             Config.__djangoSwitchPoolItButtons__(False)
             return False
     
-    if getPoolNodes():
+    if getPoolNodes() and changes:
         Config.__djangoSwitchPoolItButtons__(True)
         return True
     return False

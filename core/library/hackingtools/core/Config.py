@@ -148,6 +148,39 @@ def remove_my_service(node):
 
     __save_config__(config)
 
+def switch_function_for_map(category, moduleName, functionName):
+    mod_config_file = os.path.join(os.path.dirname(__file__), 'config_django.json')
+    
+    conf = {}
+
+    with open(mod_config_file) as json_data:
+        if json_data:
+            conf = json.load(json_data)
+
+    if conf:
+        if not 'maps' in conf:
+            conf['maps'] = {}
+        in_map = '__in_map_{f}__'.format(f=functionName)
+
+        if not moduleName in conf['maps']:
+            conf['maps'][moduleName] = {}
+
+        if not functionName in conf['maps'][moduleName]:
+            conf['maps'][moduleName][functionName] = {}
+
+        if not in_map in conf['maps'][moduleName][functionName]:
+
+            conf['maps'][moduleName][functionName][in_map] = {}
+            conf['maps'][moduleName][functionName][in_map]['selected'] = False
+            conf['maps'][moduleName][functionName][in_map]['__type__'] = 'checkbox'
+            conf['maps'][moduleName][functionName][in_map]['label_desc'] = 'Set True if you want in map'
+
+        else:
+            conf['maps'][moduleName][functionName][in_map]['selected'] = not bool(conf['maps'][moduleName][functionName][in_map]['selected'])
+
+        with open(mod_config_file, 'w', encoding='utf8') as outfile:  
+            json.dump(conf, outfile, indent=4, ensure_ascii=False)
+
 def add_requirements_ignore(moduleName, requirementModuleName):
     config = {}
 

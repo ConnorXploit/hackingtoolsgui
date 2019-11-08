@@ -5,15 +5,15 @@
             "documents_dir": "/static/docs/core/library/hackingtools/modules",
             "html_template": "core/documentation.html",
             "bad_module": "Module {mod} doesn't exist",
-            "no_module_selected" : "You have to select a module for getting it's documentation"
+            "no_module_selected": "You have to select a module for getting it's documentation"
         },
-        "add_pool_node" : {
+        "add_pool_node": {
             "error": "Seem's not to be online that pool node"
         },
         "ht_crypter_crypt_file": {
             "bad_saved": "No se ha guardado correctamente"
         },
-        "ht_bruteforce_crackZip" : {
+        "ht_bruteforce_crackZip": {
             "error_see_log": "Something went wrong. See the log",
             "not_solved": "Something want wrong",
             "conn_closed": "Connection aborted. Remote end closed connection without response"
