@@ -69,23 +69,38 @@
     "maps": {
         "ht_crypter": {
             "convertToExe": {
-                "__in_map_convertToExe__": true
+                "__in_map_convertToExe__": false
             },
             "createStub": {
                 "__in_map_createStub__": false
             },
             "crypt_file": {
-                "__in_map_crypt_file__": false
+                "__in_map_crypt_file__": true
+            },
+            "help": {
+                "__in_map_help__": false
             }
         },
         "ht_bruteforce": {
             "crackZip": {
                 "__in_map_crackZip__": false
+            },
+            "help": {
+                "__in_map_help__": false
             }
         },
         "ht_unzip": {
             "extractFilePassword": {
                 "__in_map_extractFilePassword__": false
+            },
+            "extractFile": {
+                "__in_map_extractFile__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            },
+            "zipDirectory": {
+                "__in_map_zipDirectory__": false
             }
         },
         "ht_rsa": {
@@ -99,15 +114,174 @@
                 "__in_map_generate_keypair__": false
             },
             "decode": {
-                "__in_map_decode__": true
+                "__in_map_decode__": false
             },
             "encode": {
-                "__in_map_encode__": true
+                "__in_map_encode__": false
+            },
+            "decrypt": {
+                "__in_map_decrypt__": false
+            },
+            "help": {
+                "__in_map_help__": false
             }
         },
         "ht_shodan": {
             "search_host": {
                 "__in_map_search_host__": false
+            },
+            "getIPListfromServices": {
+                "__in_map_getIPListfromServices__": false
+            },
+            "getSSLCerts": {
+                "__in_map_getSSLCerts__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            },
+            "queryShodan": {
+                "__in_map_queryShodan__": false
+            },
+            "searchFromConfig": {
+                "__in_map_searchFromConfig__": false
+            },
+            "setApi": {
+                "__in_map_setApi__": false
+            }
+        },
+        "ht_metadata": {
+            "get_image_exif": {
+                "__in_map_get_image_exif__": false
+            },
+            "get_pdf_exif": {
+                "__in_map_get_pdf_exif__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_virustotal": {
+            "help": {
+                "__in_map_help__": false
+            },
+            "isBadFile": {
+                "__in_map_isBadFile__": false
+            },
+            "isBadFileHash": {
+                "__in_map_isBadFileHash__": false
+            }
+        },
+        "ht_infector": {
+            "help": {
+                "__in_map_help__": false
+            },
+            "injectPayloadToWindowsTerminalProfile": {
+                "__in_map_injectPayloadToWindowsTerminalProfile__": false
+            }
+        },
+        "ht_rat": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_instagram": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_nmap": {
+            "getConnectedDevices": {
+                "__in_map_getConnectedDevices__": false
+            },
+            "getDevicePorts": {
+                "__in_map_getDevicePorts__": false
+            },
+            "hasDevicePortOpened": {
+                "__in_map_hasDevicePortOpened__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_twitter": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_cpe": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_cve": {
+            "help": {
+                "__in_map_help__": false
+            },
+            "search": {
+                "__in_map_search__": false
+            }
+        },
+        "ht_cwe": {
+            "help": {
+                "__in_map_help__": false
+            },
+            "searchCWE": {
+                "__in_map_searchCWE__": false
+            },
+            "searchWeakness": {
+                "__in_map_searchWeakness__": false
+            }
+        },
+        "ht_spider": {
+            "crawl": {
+                "__in_map_crawl__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_sqlinjection": {
+            "cantidadTuplasEnTapla": {
+                "__in_map_cantidadTuplasEnTapla__": false
+            },
+            "cogerColumnasTabla": {
+                "__in_map_cogerColumnasTabla__": false
+            },
+            "cogerNombreDeTablaPorID": {
+                "__in_map_cogerNombreDeTablaPorID__": false
+            },
+            "cogerTablas": {
+                "__in_map_cogerTablas__": false
+            },
+            "color": {
+                "__in_map_color__": false
+            },
+            "compareTextExistWhereSubstringACII": {
+                "__in_map_compareTextExistWhereSubstringACII__": false
+            },
+            "ejecutarSQL": {
+                "__in_map_ejecutarSQL__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            },
+            "longitudCampoIDtablaCampo": {
+                "__in_map_longitudCampoIDtablaCampo__": false
+            },
+            "md5_decrypt": {
+                "__in_map_md5_decrypt__": false
+            },
+            "mostrarUserPass": {
+                "__in_map_mostrarUserPass__": false
+            },
+            "sacarValorPorTablaColumnaID": {
+                "__in_map_sacarValorPorTablaColumnaID__": false
+            },
+            "setParams": {
+                "__in_map_setParams__": false
+            },
+            "transformAsciiToHex": {
+                "__in_map_transformAsciiToHex__": false
             }
         }
     }

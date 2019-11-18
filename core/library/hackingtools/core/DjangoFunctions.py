@@ -128,9 +128,18 @@ def getModulesFunctionsForMap():
     functions = {}
     for module in ht.modules_loaded:
         for f in ht.modules_loaded[module]:
+            functions[module.split('.')[-1]] = []
             functionName = f.split('.')[-1]
-            if ht.Config.getConfig(parentKey='modules', key=module, subkey='django_form_module_function')[functionName]['__in_map_{f}__'.format(f=functionName)] == True:
-                functions[module] = functionName
+            conf_func = Config.getConfig(parentKey='django', key='maps', subkey=module.split('.')[-1], extrasubkey=functionName)
+            if not conf_func:
+                Config.switch_function_for_map(ht.getModuleCategory(module.split('.')[-1]), module.split('.')[-1], functionName)
+            else:
+                in_maps = '__in_map_{f}__'.format(f=functionName)
+                if in_maps in conf_func and conf_func[in_maps] == True:
+                    functions[module.split('.')[-1]].append(functionName)
+            if not functions[module.split('.')[-1]]:
+                del functions[module.split('.')[-1]]
+    print(functions)
     return functions
 
 def __getModulesConfig_treeView__():

@@ -80,7 +80,10 @@ def load_data_maps():
     if ht_data_maps:
         ht_data_maps = {}
     ht_data_maps['gps'] = ht.Utils.getLocationGPS()
-    ht_data_maps['funcs_map'] = ht.DjangoFunctions.getModulesFunctionsForMap()
+    try:
+        ht_data_maps['funcs_map'] = ht.DjangoFunctions.getModulesFunctionsForMap()
+    except:
+        pass
 
 def renderMainPanel(request, popup_text=''):
     global ht_data
