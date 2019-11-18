@@ -64,6 +64,7 @@
                                   return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
                               }
                               if(isDict(res.data)){
+                                $.notify("Getting data from:\n" + r.data['ip'], "success");
                                 data = JSON.stringify(res.data, null, 2);
                                 var marker = new mapboxgl.Marker()
                                 var popup = new mapboxgl.Popup({ offset: 25 }).setText(data);
