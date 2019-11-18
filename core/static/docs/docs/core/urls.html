@@ -21,7 +21,19 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">include</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span></pre></div>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span>
+
+<span class="kn">from</span> <span class="nn">core.library</span> <span class="kn">import</span> <span class="n">hackingtools</span> <span class="k">as</span> <span class="n">ht</span>
+<span class="kn">from</span> <span class="nn">core.library.hackingtools.core</span> <span class="kn">import</span> <span class="n">UtilsDjangoViewsAuto</span>
+
+<span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">datetime</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">home</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;home&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;documentation/&lt;module_name&gt;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">documentation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;documentation&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;popup/&lt;string&gt;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">home</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;home&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;maps/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">renderMaps</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;maps&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;maps/switchFunctionMap/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">switchFunctionMap</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;switchFunctionMap&quot;</span><span class="p">),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -30,14 +42,27 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      <p>import hackingtools as ht
-from hackingtools.core import Config</p>
+      <p>Core URLs</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">home</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;home&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;documentation/&lt;module_name&gt;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">documentation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;documentation&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;popup/&lt;string&gt;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">home</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;home&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/module/create/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">createModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;createmod&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/module/remove/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">removeModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;removeModule&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/module/config/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">configModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;configmod&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/module/save/&lt;string&gt;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">configModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;savemod&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/script/save/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">createScript</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;createscript&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/category/create/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">createCategory</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;createcat&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/config/look_for_changes/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">config_look_for_changes</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;config_look_for_changes&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/logger/getLogs/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">getLogs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;getLogs&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/pool/getNodeId/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">getNodeId</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;getNodeId&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/pool/switchPool/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">switchPool</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;switchPool&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/pool/add_pool_node/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">add_pool_node</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;add_pool_node&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/connections/startNgrok/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">startNgrok</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;startNgrok&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/repositories/downloadInstallModule/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">downloadInstallModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;downloadInstallModule&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/serverDjango/restartServerDjango/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">restartServerDjango</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;restartServerDjango&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;pool/execute/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">poolExecute</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;execute&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">functions_not_loaded</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -46,16 +71,62 @@ from hackingtools.core import Config</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
-      <p>Core URLs</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/module/create/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">createModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;createmod&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/module/config/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">configModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;configmod&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/module/save/&lt;string&gt;&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">configModule</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;savemod&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/script/save/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">createScript</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;createscript&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/category/create/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">createCategory</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;createcat&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/config/look_for_changes/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">config_look_for_changes</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;config_look_for_changes&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;core/pool/add_pool_node/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">add_pool_node</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;add_pool_node&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">loadModuleUrls</span><span class="p">(</span><span class="n">moduleName</span><span class="p">):</span>
+    <span class="n">main_function_config</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="s1">&#39;django_form_main_function&#39;</span><span class="p">)</span>
+    <span class="n">functions_config</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="s1">&#39;django_form_module_function&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">functions_config</span><span class="p">:</span>
+        <span class="n">functions</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">functions</span> <span class="ow">and</span> <span class="s1">&#39;help&#39;</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+            <span class="n">functions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;help&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">functions</span><span class="p">:</span>
+            <span class="n">functions_config</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+                <span class="n">new_conf</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">DjangoFunctions</span><span class="o">.</span><span class="n">createModuleFunctionView</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">functionName</span><span class="o">=</span><span class="n">func</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_conf</span><span class="p">:</span>
+                    <span class="n">functions_config</span><span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_conf</span><span class="p">[</span><span class="n">func</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">functions_config</span> <span class="ow">and</span> <span class="ow">not</span> <span class="s1">&#39;help&#39;</span> <span class="o">==</span> <span class="n">function</span><span class="p">:</span>
+                <span class="n">new_conf</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">DjangoFunctions</span><span class="o">.</span><span class="n">createModuleFunctionView</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">functionName</span><span class="o">=</span><span class="n">function</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_conf</span><span class="p">:</span>
+                    <span class="n">functions_config</span><span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_conf</span><span class="p">[</span><span class="n">function</span><span class="p">]</span>
+
+    <span class="n">main_not_loaded</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">if</span> <span class="n">main_function_config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;__function__&#39;</span> <span class="ow">in</span> <span class="n">main_function_config</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">func_call</span> <span class="o">=</span> <span class="n">main_function_config</span><span class="p">[</span><span class="s1">&#39;__function__&#39;</span><span class="p">]</span>
+
+                <span class="n">url_path</span> <span class="o">=</span> <span class="s1">&#39;modules/{cat}/{mod}/{func_call}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cat</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">func_call</span><span class="o">=</span><span class="n">func_call</span><span class="p">)</span>
+                <span class="n">to_import</span> <span class="o">=</span> <span class="s1">&#39;from .views_modules.{category} import views_{mod}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)</span>
+                <span class="k">exec</span><span class="p">(</span><span class="n">to_import</span><span class="p">)</span>
+                <span class="n">to_execute</span> <span class="o">=</span> <span class="s1">&#39;views_{mod}.{func_call}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">func_call</span><span class="o">=</span><span class="n">func_call</span><span class="p">)</span>
+                <span class="n">view_object</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">to_execute</span><span class="p">)</span>
+
+                <span class="n">urlpatterns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">(</span><span class="n">url_path</span><span class="p">,</span> <span class="n">view_object</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">func_call</span><span class="p">))</span>
+            
+            <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">ht</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;loadModuleUrls&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Can</span><span class="se">\&#39;</span><span class="s1"> load {to_import}. Creating it!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">to_import</span><span class="o">=</span><span class="n">to_import</span><span class="p">),</span> <span class="n">is_info</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">UtilsDjangoViewsAuto</span><span class="o">.</span><span class="n">loadModuleFunctionsToView</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">))</span>
+                <span class="n">loadModuleUrls</span><span class="p">(</span><span class="n">moduleName</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">functions_not_loaded</span> <span class="ow">and</span> <span class="n">func_call</span> <span class="ow">in</span> <span class="n">functions_not_loaded</span><span class="p">:</span>
+                    <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                <span class="n">UtilsDjangoViewsAuto</span><span class="o">.</span><span class="n">createTemplateFunctionForModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">func_call</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">ht</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;loadModuleUrls&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;There is no View for the URL </span><span class="se">\&#39;</span><span class="s1">{mod_url}</span><span class="se">\&#39;</span><span class="s1"> Creating it!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod_url</span><span class="o">=</span><span class="n">func_call</span><span class="p">),</span> <span class="n">is_warn</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">functions_not_loaded</span> <span class="ow">and</span> <span class="n">func_call</span> <span class="ow">in</span> <span class="n">functions_not_loaded</span><span class="p">:</span>
+                    <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                <span class="n">UtilsDjangoViewsAuto</span><span class="o">.</span><span class="n">createTemplateFunctionForModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">func_call</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -64,11 +135,39 @@ from hackingtools.core import Config</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>Modules URLs
-ht_crypter</p>
+      <p>Logger.printMessage(message=&rsquo;loadModuleUrls&rsquo;, description=&rsquo;{mod} has no main function&rsquo;.format(mod=mod), is_warn=True)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_crypter/test_ht_crypter/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_crypter_cryptFile</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_crypter&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">functions_config</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">function_conf</span> <span class="ow">in</span> <span class="n">functions_config</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;__function__&#39;</span> <span class="ow">in</span> <span class="n">functions_config</span><span class="p">[</span><span class="n">function_conf</span><span class="p">]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">func_call</span> <span class="o">=</span> <span class="n">functions_config</span><span class="p">[</span><span class="n">function_conf</span><span class="p">][</span><span class="s2">&quot;__function__&quot;</span><span class="p">]</span>
+                    <span class="n">url_path</span> <span class="o">=</span> <span class="s1">&#39;modules/{cat}/{mod}/{func_call}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cat</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">func_call</span><span class="o">=</span><span class="n">func_call</span><span class="p">)</span>
+                    <span class="n">to_import</span> <span class="o">=</span> <span class="s1">&#39;from .views_modules.{category} import views_{mod}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)</span>
+                    <span class="k">exec</span><span class="p">(</span><span class="n">to_import</span><span class="p">)</span>
+                    <span class="n">to_execute</span> <span class="o">=</span> <span class="s1">&#39;views_{mod}.{func_call}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">func_call</span><span class="o">=</span><span class="n">func_call</span><span class="p">)</span>
+                    <span class="n">view_object</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">to_execute</span><span class="p">)</span>
+
+                    <span class="n">urlpatterns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">(</span><span class="n">url_path</span><span class="p">,</span> <span class="n">view_object</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">func_call</span><span class="p">))</span>
+            
+                <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">ht</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;loadModuleUrls&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Can</span><span class="se">\&#39;</span><span class="s1"> load {to_import}. Creating it!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">to_import</span><span class="o">=</span><span class="n">to_import</span><span class="p">),</span> <span class="n">is_info</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="n">UtilsDjangoViewsAuto</span><span class="o">.</span><span class="n">loadModuleFunctionsToView</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">))</span>
+                    <span class="n">loadModuleUrls</span><span class="p">(</span><span class="n">moduleName</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">functions_not_loaded</span> <span class="ow">and</span> <span class="n">func_call</span> <span class="ow">in</span> <span class="n">functions_not_loaded</span><span class="p">:</span>
+                        <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                    <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                    <span class="n">UtilsDjangoViewsAuto</span><span class="o">.</span><span class="n">createTemplateFunctionForModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">func_call</span><span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">ht</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;loadModuleUrls&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;There is no View for the URL </span><span class="se">\&#39;</span><span class="s1">{mod_url}</span><span class="se">\&#39;</span><span class="s1"> Creating it!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod_url</span><span class="o">=</span><span class="n">func_call</span><span class="p">),</span> <span class="n">is_warn</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">functions_not_loaded</span> <span class="ow">and</span> <span class="n">func_call</span> <span class="ow">in</span> <span class="n">functions_not_loaded</span><span class="p">:</span>
+                        <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                    <span class="n">functions_not_loaded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func_call</span><span class="p">)</span>
+                    <span class="n">UtilsDjangoViewsAuto</span><span class="o">.</span><span class="n">createTemplateFunctionForModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">func_call</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -77,13 +176,10 @@ ht_crypter</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      <p>ht_rsa</p>
+      <p>Logger.printMessage(message=&rsquo;loadModuleUrls&rsquo;, description=&rsquo;{mod} has no functions on views config definition&rsquo;.format(mod=mod), is_warn=True)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_rsa/encrypt/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_rsa_encrypt</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_rsa_encrypt&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_rsa/decrypt/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_rsa_decrypt</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_rsa_decrypt&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_rsa/getRandomKeypair/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_rsa_getRandomKeypair</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_rsa_getRandomKeypair&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_rsa/generate_keypair/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_rsa_generate_keypair</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_rsa_generate_keypair&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -92,11 +188,10 @@ ht_crypter</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <p>ht_shodan</p>
+      <p>Review params in all functions views for reloading the json and recreating the view function</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_shodan/getIPListfromServices/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_shodan_getIPListfromServices</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_shodan&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_shodan/getIPListfromServices/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_shodan_getIPListfromServices</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_shodan_getIPListfromServices&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">UtilsDjangoViewsAuto</span><span class="o">.</span><span class="n">reviewChangesViewFunctionsParams</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -105,11 +200,11 @@ ht_crypter</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-6'>#</a>
       </div>
-      <p>ht_nmap</p>
+      <p>Automatically creates the URL&rsquo;s get by the modules and the configurations</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_nmap/getConnectedDevices/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_nmap_getConnectedDevices</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_nmap&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_nmap/getConnectedDevices/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_nmap_getConnectedDevices</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_nmap_getConnectedDevices&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre><span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">ht</span><span class="o">.</span><span class="n">getModulesNames</span><span class="p">():</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -118,10 +213,13 @@ ht_crypter</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
-      <p>ht_metadata</p>
+      <p>Logger.printMessage(message=&rsquo;Initialize&rsquo;, description=&rsquo;Loading mod '{mod}'&lsquo;.format(mod=mod))</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_metadata/get_image_exif/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_metadata_get_metadata_exif</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_metadata_get_image_exif&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">loadModuleUrls</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">functions_not_loaded</span><span class="p">:</span>
+        <span class="n">ht</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;CORE VIEWS&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Loaded new function{s} views: {d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">functions_not_loaded</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">functions_not_loaded</span><span class="p">)),</span> <span class="n">is_info</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -130,10 +228,12 @@ ht_crypter</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-8'>#</a>
       </div>
-      <p>ht_bruteforce</p>
+      <p>ht.Logger.printMessage(message=&rsquo;RESTART SERVER&rsquo;, description=&rsquo;YOU HAVE TO RESTART EXIT AND RUN SERVER AGAIN FOR LOADING THE NEW VIEWS FOR YOUR MODULES&rsquo;, is_error=True)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_bruteforce/crackZip/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ht_bruteforce_crackZip</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_bruteforce_crackZip&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre>        
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -142,33 +242,17 @@ ht_crypter</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>ht_unzip</p>
+      <p>try:
+    while True:
+        time.sleep(0.5)
+except KeyboardInterrupt:
+    ht.Utils.killAllWorkers([ht.threads[x] for x in ht.threads])</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;modules/ht_unzip/extractFile/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">test_ht_unzip_extractFile</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_ht_unzip_extractFile&quot;</span><span class="p">),</span>
-<span class="p">]</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-10'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
-      </div>
-      <p>for mod in ht.getModulesNames():
-    main_function_config = Config.getConfig(parentKey=&rsquo;modules&rsquo;, key=mod, subkey=&rsquo;django_form_main_function&rsquo;)
-    functions_config = Config.getConfig(parentKey=&rsquo;modules&rsquo;, key=mod, subkey=&rsquo;django_form_module_function&rsquo;)
-    if main_function_config:
-        urlpatterns += path(&lsquo;modules/{mod}/test_{mod}&rsquo;.format(mod=mod), eval(&lsquo;views.test_{mod}&rsquo;.format(mod=mod)), &ldquo;test_{mod}&rdquo;.format(mod=mod))
-    for function_conf in functions_config:
-        try:
-            func_call = function_conf[&ldquo;<strong>function</strong>&rdquo;]
-            urlpatterns += path(&lsquo;modules/{mod}/{func_call}&rsquo;.format(func_call=func_call), eval(&lsquo;views.{mod}<em>{func_call}&rsquo;.format(mod=function_conf, func_call=func_call)), &ldquo;test</em>{func_call}&rdquo;.format(func_call=func_call))
-        except:
-            print(&lsquo;Error loading&rsquo;, function_conf)</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre></pre></div>
+      <div class="highlight"><pre><span class="k">except</span><span class="p">:</span>
+    <span class="k">raise</span>
+
+</pre></div>
     </div>
   </div>
   <div class='clearall'></div>

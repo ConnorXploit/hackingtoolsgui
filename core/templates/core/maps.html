@@ -1,72 +1,197 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block content %}
-<div class="container-fluid-maps" style="padding-bottom: 200px;">
-  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
-  <style>
-    body { margin:0; padding:0; }
-    #map { position:fixed; top:0; bottom:0; width:100%; }
-  </style>
-  <div id='map'></div>
+  <div id='map'>
+    <form id="search_form">
+      <input id="search_this" type="text" placeholder="Search..." class="form-control searcher_map" />
+    </form>
+  </div>
   <script>
-    var center = "{{gps.latitude}},{{gps.longitude}}"
-    var latLng = center.split(",");
-    var lat = parseFloat(latLng[0]); 
-    var lng = parseFloat(latLng[1]); 
-    mapboxgl.accessToken = 'pk.eyJ1IjoiaXZhbmNvcmNvbGVzIiwiYSI6ImNpcHhuc2VlbzAwNzhoem0yeGt2dHowNzMifQ.G57kFhckY4Jq00VrVPJ2AQ';
-    var map = new mapboxgl.Map({
-      container: 'map', 
-      style: 'mapbox://styles/ivancorcoles/cjhms0cvi3dz82spapuicuest', 
-      center: [lng, lat], 
-      zoom: 12,
-      pitch: 45,
-      bearing: -17.6,
-      antialias: true
-    });
-    map.on('load', function() {
-      // Insert the layer beneath any symbol layer.
-      var layers = map.getStyle().layers;
-      
-      var labelLayerId;
-      for (var i = 0; i < layers.length; i++) {
-        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-          labelLayerId = layers[i].id;
-          break;
-        }
+    $("#search_form").on('submit',(function(e) {
+      e.preventDefault();
+      var form = $('#search_form');
+      var shodan_key = prompt("Insert API Key", "Shodan"); 
+      var params = {
+        serviceName: $('#search_this').val(),
+        shodanKeyString: shodan_key,
+        is_async_getIPListfromServices: true
       }
-      map.addControl(new mapboxgl.FullscreenControl());
-      map.addLayer({
-        'id': '3d-buildings',
-        'source': 'composite',
-        'source-layer': 'building',
-        'filter': ['==', 'extrude', 'true'],
-        'type': 'fill-extrusion',
-        'minzoom': 8,
-        'paint': {
-          'fill-extrusion-color': '#aaa',
-          
-          // use an 'interpolate' expression to add a smooth transition effect to the
-          // buildings as the user zooms in
-          'fill-extrusion-height': [
-            "interpolate", ["linear"], ["zoom"], 
-            15, 0,
-            15.05,
-            ["get", "height"]
-          ],
-          'fill-extrusion-base': [
-            "interpolate", ["linear"], ["zoom"],
-            15, 0,
-            15.05,
-            ["get", "min_height"]
-          ],
-          'fill-extrusion-opacity': .6
+      $.ajax({
+        headers: { "X-CSRFToken": '{{csrf_token}}' },
+        url: '/modules/osint/shodan/getIPListfromServices/',
+        type: "POST",
+        data : params,
+        async: true,
+        success : function(res) {
+          if('data' in res && res.data && Object.keys(res.data).length !== 0){
+            function isDict(v) {
+                return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+            }
+            if(res.data instanceof Array){
+              var data = '';
+              var api_key = prompt("Insert API Key", "IpInfoDB"); 
+              if (api_key != null) {
+                for(var i=0; i < res.data.length; i++){
+                  var params = {
+                    ip: res.data[i],
+                    api: api_key
+                  }
+                  $.ajax({
+                    headers: { "X-CSRFToken": '{{csrf_token}}' },
+                    url: '/core/utils/getIPLocationGPS/',
+                    type: "POST",
+                    data : params,
+                    async: true,
+                    success : function(r) {
+                      if('data' in r && r.data && Object.keys(r.data).length !== 0){
+                        function isDict(v) {
+                            return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+                        }
+                        var params = {
+                          ip: r.data['ip'],
+                          api: shodan_key,
+                          is_async_search_host: true
+                        }
+                        $.ajax({
+                          headers: { "X-CSRFToken": '{{csrf_token}}' },
+                          url: '/modules/osint/shodan/search_host/',
+                          type: "POST",
+                          data : params,
+                          async: true,
+                          success : function(res) {
+                            if('data' in res && res.data && Object.keys(res.data).length !== 0){
+                              function isDict(v) {
+                                  return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+                              }
+                              if(isDict(res.data)){
+                                data = JSON.stringify(res.data, null, 2);
+                                var marker = new mapboxgl.Marker()
+                                var popup = new mapboxgl.Popup({ offset: 25 }).setText(data);
+                                marker.setLngLat(r.data['location']).setPopup(popup).addTo(map);
+                              }
+                            }
+                          }
+                        });
+                      }
+                    }
+                  });
+                }
+              }
+            }
+          }
         }
-      }, labelLayerId);
-    });
+      });
+      return false;
+    }));
   </script>
-</div>
-<div>
-  {{funcs_map}}
-</div>
+  <div class="container-fluid-maps" style="padding-bottom: 200px;">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body { margin:0; padding:0; }
+      #map { position:fixed; top:0; bottom:0; width:100%; }
+    </style>
+    <script>
+      var center = "{{gps.latitude}},{{gps.longitude}}"
+      var latLng = center.split(",");
+      var lat = parseFloat(latLng[0]); 
+      var lng = parseFloat(latLng[1]); 
+      mapboxgl.accessToken = 'pk.eyJ1IjoiaXZhbmNvcmNvbGVzIiwiYSI6ImNpcHhuc2VlbzAwNzhoem0yeGt2dHowNzMifQ.G57kFhckY4Jq00VrVPJ2AQ';
+      var map = new mapboxgl.Map({
+        container: 'map', 
+        style: 'mapbox://styles/ivancorcoles/cjhms0cvi3dz82spapuicuest', 
+        center: [lng, lat], 
+        zoom: 12,
+        pitch: 45,
+        bearing: -17.6,
+        antialias: true
+      });
+      map.on('load', function() {
+        // Insert the layer beneath any symbol layer.
+        var layers = map.getStyle().layers;
+        
+        var labelLayerId;
+        for (var i = 0; i < layers.length; i++) {
+          if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+            labelLayerId = layers[i].id;
+            break;
+          }
+        }
+        map.addControl(new mapboxgl.FullscreenControl());
+        map.addLayer({
+          'id': '3d-buildings',
+          'source': 'composite',
+          'source-layer': 'building',
+          'filter': ['==', 'extrude', 'true'],
+          'type': 'fill-extrusion',
+          'minzoom': 8,
+          'paint': {
+            'fill-extrusion-color': '#aaa',
+            
+            // use an 'interpolate' expression to add a smooth transition effect to the
+            // buildings as the user zooms in
+            'fill-extrusion-height': [
+              "interpolate", ["linear"], ["zoom"], 
+              15, 0,
+              15.05,
+              ["get", "height"]
+            ],
+            'fill-extrusion-base': [
+              "interpolate", ["linear"], ["zoom"],
+              15, 0,
+              15.05,
+              ["get", "min_height"]
+            ],
+            'fill-extrusion-opacity': .6
+          }
+        }, labelLayerId);
+        map.addLayer({
+          "id": "points",
+          "type": "symbol",
+          "source": {
+            "type": "geojson",
+            "data": {
+              "type": "FeatureCollection",
+              "features": [{
+                // feature for Mapbox DC
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [40.3130408, -3.8708206]
+                },
+                "properties": {
+                  "title": "Mapbox DC",
+                  "icon": "monument"
+                }
+              }, {
+              // feature for Mapbox SF
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [-3.8200946, 40.3222029]
+                },
+                "properties": {
+                  "title": "Mapbox SF",
+                  "icon": "harbor"
+                }
+              }]
+            }
+          },
+          "layout": {
+            // get the icon name from the source's "icon" property
+            // concatenate the name to get an icon from the style's sprite sheet
+            "icon-image": ["concat", ["get", "icon"], "-15"],
+            // get the title name from the source's "title" property
+            "text-field": ["get", "title"],
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+            "text-offset": [0, 0.6],
+            "text-anchor": "top"
+          }
+        });
+      });
+    </script>
+  </div>
+  <div>
+    {{funcs_map}}
+  </div>
 {% endblock %}

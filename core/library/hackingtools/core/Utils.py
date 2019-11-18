@@ -20,7 +20,7 @@ from colorama import Fore
 import random, importlib
 import requests
 import base64
-import os, inspect, ast, threading, time
+import os, inspect, ast, threading, time, json
 from threading import Thread, Lock
 import socket
 import itertools
@@ -242,6 +242,14 @@ def getLocationGPS():
     geo_data = geo_request.json()
     return geo_data
 
+def getIPLocationGPS(ip, api):
+    url = 'http://api.ipinfodb.com/v3/ip-city/?key={api}&ip={ip}'.format(api=api, ip=ip)
+    res = requests.get(url).content.decode()
+    if len(res.split(';')) > 8:
+        return {'ip' : ip, 'location' : [ res.split(';')[9], res.split(';')[8] ] }
+    else:
+        return {'ip' : ip, 'location' : [0, 0] }
+
 # Maths
 def euclides(a, b):
     """Euclid's algorithm for determining the greatest common divisor
@@ -425,11 +433,30 @@ def decimalToAscii(content):
     Logger.printMessage(message='{methodName}'.format(methodName='decimalToAscii'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return ''.join([chr(dec) for dec in content])
 
-def randomText(length=8, alphabet='lalpha'):
+def randomText(length=8, alphabet='lalpha', try_pattern=None, pattern_force_chars=''):
     try:
+        if try_pattern:
+            alphabets_patter = []
+            for char in try_pattern:
+                char_alphabet = fromWhatDictListIsChar(char=char)
+
+                if char_alphabet and not char in pattern_force_chars:
+                    alphabets_patter.append(char_alphabet)
+                else:
+                    alphabets_patter.append(char)
+                    
+            return ''.join([ getRandomCharFromDict(alphabet=alp) if getRandomCharFromDict(alphabet=alp) else alp for alp in alphabets_patter ])
+
         return ''.join(random.SystemRandom().choice(config_utils[alphabet]) for _ in range(int(length)))
+
     except Exception as e:
         Logger.printMessage(message=randomText, description=e, is_error=True)
+
+def getRandomCharFromDict(alphabet='lalpha'):
+    dictionaryOptions = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
+    if alphabet in dictionaryOptions:
+        return random.choice(dictionaryOptions[alphabet])
+    return None
 
 def getCombinationPosibilitiesLength(alphabet, length):
     return [''.join(x) for x in product(config_utils[alphabet], repeat=int(length))]
@@ -439,20 +466,22 @@ def fromWhatDictListIsChar(char='a'):
     for opt in dictionaryOptions:
         if char in config_utils[opt]:
             return opt
-    return 'lalpha'
+    return None
 
-def getCombinationPosibilitiesByPattern(try_pattern=None):
+def getCombinationPosibilitiesByPattern(try_pattern=None, only_one=False):
     try:
         alphabets_patter = []
         create_pattern = []
         for char in try_pattern:
             char_alphabet = fromWhatDictListIsChar(char=char)
-
-            if len(alphabets_patter) == 0 or not char_alphabet in alphabets_patter or not alphabets_patter[-1] == char_alphabet:
-                alphabets_patter.append(char_alphabet)
-                create_pattern.append(1)
+            if char_alphabet:
+                if len(alphabets_patter) == 0 or not char_alphabet in alphabets_patter or not alphabets_patter[-1] == char_alphabet:
+                    alphabets_patter.append(char_alphabet)
+                    create_pattern.append(1)
+                else:
+                    create_pattern[-1] += 1
             else:
-                create_pattern[-1] += 1
+                alphabets_patter.append(char)
 
         final_combinations = []
 

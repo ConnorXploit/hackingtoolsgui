@@ -36,30 +36,6 @@ def getIPListfromServices(request):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
-# Automatic view function for search_host
-def search_host(request):
-	# Init of the view search_host
-	try:
-		# Pool call
-		response, repool = sendPool(request, 'search_host')
-		if response or repool:
-			if repool:
-				return HttpResponse(response)
-			return JsonResponse({ "data" : str(response) })
-		else:
-			# Parameter ip
-			ip = request.POST.get('ip')
-
-			# Execute, get result and show it
-			result = ht.getModule('ht_shodan').search_host( ip=ip )
-			if request.POST.get('is_async_search_host', False):
-				return JsonResponse({ "data" : result })
-			return renderMainPanel(request=request, popup_text=result)
-	except Exception as e:
-		if request.POST.get('is_async_search_host', False):
-			return JsonResponse({ "data" : str(e) })
-		return renderMainPanel(request=request, popup_text=str(e))
-	
 # Automatic view function for getSSLCerts
 def getSSLCerts(request):
 	# Init of the view getSSLCerts
@@ -164,6 +140,35 @@ def setApi(request):
 			ht.getModule('ht_shodan').setApi( shodanKeyString=shodanKeyString )
 	except Exception as e:
 		if request.POST.get('is_async_setApi', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for search_host
+def search_host(request):
+	# Init of the view search_host
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'search_host')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter ip
+			ip = request.POST.get('ip')
+
+			# Parameter api (Optional - Default None)
+			api = request.POST.get('api', None)
+			if not api:
+				api = None
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_shodan').search_host( ip=ip, api=api )
+			if request.POST.get('is_async_search_host', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_search_host', False):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	

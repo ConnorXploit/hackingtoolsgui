@@ -20,7 +20,6 @@ class StartModule():
 		try:
 			url = 'https://www.cvedetails.com/cve/{id}'.format(id=cve_id.strip())
 			soup = BeautifulSoup(urllib3.urlopen(url).read())
-			print(soup)
 			CVE = soup.find(attrs={"name":"description"})['content'].split(':', 1)
 			CVSS = soup.find('div', attrs={'class' : 'cvssbox'})
 			return (CVE[0].strip(), CVE[1].lstrip(), CVSS.contents[0])

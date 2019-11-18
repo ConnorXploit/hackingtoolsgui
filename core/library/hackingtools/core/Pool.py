@@ -5,6 +5,7 @@ else:
     import hackingtools as ht
 from django.urls import resolve
 from colorama import Fore
+from tempfile import TemporaryFile
 import sys, requests, json, os, random, threading, time
 
 # Nodes Pool Treatment
@@ -69,7 +70,7 @@ def send(node_request, functionName):
                         params['creator'] = creator_id
 
                     if params['creator'] == creator_id: # TODO This disables repooling ------ SOLVE THIS PLEASEEE WE NEED REPOOOL
-                        response, creator = __sendPool__(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
+                        response, creator, _ = __sendPool__(creator=params['creator'], function_api_call=function_api_call, params=dict(params), files=node_request.FILES)
                         
                         callNodesForInformAboutMyServices()
                                 
@@ -96,6 +97,30 @@ def send(node_request, functionName):
         Logger.printMessage(message='ERROR', description=str(e), is_error=True)
         return (None, None)
 
+def sendNow(moduleName, functionName, params={}, files={}):
+    global nodes_pool
+
+    url_path = 'modules/{cat}/{mod}/{func_call}/'.format(cat=ht.getModuleCategory(moduleName), mod=moduleName.replace('ht_', ''), func_call=functionName)
+
+    params['creator'] = MY_NODE_ID
+    params['pool_list'] = []
+            
+    response, _, resolver = __sendPool__(MY_NODE_ID, url_path, params, files)
+
+    while 'NoneType' in response:
+        response, _, resolver = __sendPool__(MY_NODE_ID, url_path, params, files)
+        
+    res = {}
+    res['nodes_pool'] = nodes_pool
+    res['resolved_by'] = resolver
+
+    if isinstance(response, dict):
+        res['res'] = response['data']
+    else:
+        res['res'] = response
+    
+    return res
+
 def __sendPool__(creator, function_api_call='', params={}, files=[]):
     # We have 3 diferent nodes list:
     #   1- nodes_pool : We know those nodes for any call
@@ -116,7 +141,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
             if service in pool_list:
                 mine_function_call = True
                 Logger.printMessage(message=function_api_call, description='It\'s my own call', is_warn=True)
-                return (None, None)
+                return (None, None, None)
     except:
         pass
     
@@ -168,7 +193,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                             params['creator'] == MY_NODE_ID
                         
                         if node not in params['pool_list']:
-
+                            print(files)
                             r = requests.post(node_call, files=files, data=params, headers=dict(Referer=node))
                         
                             if r.status_code == 200:
@@ -180,7 +205,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                                     Logger.printMessage(json.loads(str(r.text))['data'], debug_core=True)
                                 except:
                                     Logger.printMessage(r, debug_core=True)
-                                return (json.loads(str(r.text))['data'], params['creator'])
+                                return (json.loads(str(r.text))['data'], params['creator'], node) # (Data Content, Creator Call, Resolved By Node)
                 except Exception as e:
                     Logger.printMessage(message='ERROR', description=str(e), is_warn=True)
         else:
@@ -188,7 +213,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
     else:
         Logger.printMessage(message='ERROR', description='There is nobody on the pool list', debug_core=True)
 
-    return (None, None)
+    return (None, None, None)
 
 def getPoolNodes():
     global nodes_pool

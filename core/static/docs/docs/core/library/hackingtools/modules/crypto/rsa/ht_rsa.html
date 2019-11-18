@@ -80,7 +80,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">))</span></pre></div>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -192,10 +192,15 @@ Public key is (e, n) and private key is (d, n)</p>
 		<span class="n">prime_a</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 		<span class="n">prime_b</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 		<span class="k">while</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="n">prime_b</span><span class="p">:</span>
-			<span class="k">while</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+			<span class="k">while</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="n">prime_b</span><span class="p">:</span>
 				<span class="n">prime_a</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getRandomPrimeByLength</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
-			<span class="k">while</span> <span class="n">prime_b</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+			<span class="k">while</span> <span class="n">prime_b</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="n">prime_b</span><span class="p">:</span>
 				<span class="n">prime_b</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getRandomPrimeByLength</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">prime_a</span> <span class="o">&gt;</span> <span class="n">prime_b</span><span class="p">:</span>
+			<span class="n">temp</span> <span class="o">=</span> <span class="n">prime_b</span>
+			<span class="n">prime_b</span> <span class="o">=</span> <span class="n">prime_a</span>
+			<span class="n">prime_a</span> <span class="o">=</span> <span class="n">temp</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;getRandomKeypair&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="n">prime_a</span><span class="p">,</span> <span class="n">prime_b</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 		<span class="k">return</span> <span class="p">(</span><span class="n">prime_a</span><span class="p">,</span> <span class="n">prime_b</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -229,14 +234,14 @@ Public key is (e, n) and private key is (d, n)</p>
 			<span class="n">ba64un</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">joinBase64</span><span class="p">(</span><span class="n">hexba64</span><span class="p">)</span>
 			<span class="n">decasc</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">decimalToAscii</span><span class="p">(</span><span class="n">ba64un</span><span class="p">)</span>
 			<span class="n">mensaje</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">textToAscii</span><span class="p">(</span><span class="n">decasc</span><span class="p">)</span>
-			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;encrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{msg}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">mensaje</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;encrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{msg} - Length: {l}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">mensaje</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">l</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 			<span class="n">mensaje1</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">ord</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">char</span><span class="p">))</span> <span class="o">**</span> <span class="n">key</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">mensaje</span><span class="p">]</span>
 			<span class="n">mensajeHex</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">asciiToHex</span><span class="p">(</span><span class="n">mensaje1</span><span class="p">)</span>
 			<span class="n">mensajeBase64</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">hexToBase64</span><span class="p">(</span><span class="n">mensajeHex</span><span class="p">)</span>
 			<span class="n">mensajeFinalBase64</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">joinBase64</span><span class="p">(</span><span class="n">mensajeBase64</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">mensajeFinalBase64</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;encrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{msg}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">e</span><span class="p">),</span> <span class="n">debug_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;encrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{msg}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">e</span><span class="p">))</span>
 			<span class="k">return</span></pre></div>
     </div>
   </div>
@@ -274,7 +279,44 @@ Public key is (e, n) and private key is (d, n)</p>
 		<span class="n">ashex</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">hexToDecimal</span><span class="p">(</span><span class="n">hexba64</span><span class="p">)</span>
 		<span class="n">deasc</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">decimalToAscii</span><span class="p">(</span><span class="n">ashex</span><span class="p">)</span>
 		<span class="n">ba64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">deasc</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-		<span class="k">return</span> <span class="n">ba64</span>
+		<span class="k">return</span> <span class="n">ba64</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">plaintext</span><span class="p">):</span>
+		<span class="n">enc</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)):</span>
+			<span class="n">key_c</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+			<span class="n">enc_c</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">plaintext</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="n">key_c</span><span class="p">))</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span>
+			<span class="n">enc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">enc_c</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">enc</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">):</span>
+		<span class="n">dec</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">ciphertext</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64decode</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)):</span>
+			<span class="n">key_c</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+			<span class="n">dec_c</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">((</span><span class="mi">256</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="n">key_c</span><span class="p">))</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span>
+			<span class="n">dec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dec_c</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span>
 
 </pre></div>
     </div>

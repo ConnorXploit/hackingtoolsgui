@@ -18,10 +18,10 @@ readline.parse_and_bind('tab: complete')
 from django.urls import resolve
 from importlib import reload
 
-try:
-    from pip import main as pipmain
-except ImportError:
-    from pip._internal import main as pipmain
+# try:
+#     from pip import main as pipmain
+# except ImportError:
+#     from pip._internal import main as pipmain
 
 modules_loaded = {}
 

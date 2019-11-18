@@ -82,6 +82,50 @@
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
             }
+        },
+        "decode": {
+            "__function__": "decode",
+            "__async__": false,
+            "__return__": "text",
+            "key": {
+                "__type__": "text",
+                "label_desc": "key",
+                "placeholder": "key",
+                "required": true
+            },
+            "ciphertext": {
+                "__type__": "text",
+                "label_desc": "ciphertext",
+                "placeholder": "ciphertext",
+                "required": true
+            },
+            "__pool_it_decode__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "encode": {
+            "__function__": "encode",
+            "__async__": false,
+            "__return__": "text",
+            "key": {
+                "__type__": "text",
+                "label_desc": "key",
+                "placeholder": "key",
+                "required": true
+            },
+            "plaintext": {
+                "__type__": "text",
+                "label_desc": "plaintext",
+                "placeholder": "plaintext",
+                "required": true
+            },
+            "__pool_it_encode__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
         }
     }
 }

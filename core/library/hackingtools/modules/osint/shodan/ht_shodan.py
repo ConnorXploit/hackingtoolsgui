@@ -46,7 +46,7 @@ class StartModule():
         else:
             return []
 
-    def queryShodan(self, category='', osintDays=100):
+    def queryShodan(self, category='', osintDays=100, shodanKeyString=None):
         try:
             Logger.printMessage(message='{methodName}'.format(methodName='queryShodan'), debug_module=True)
 
@@ -54,39 +54,46 @@ class StartModule():
             limit_date = (datetime.date.today() - datetime.timedelta(days=days_back)).strftime(config['search_limit_date_format'])
             search_term = 'category:{category} after:{time}'.format(category=category, time=limit_date)
 
-            results = self.api.search(search_term, page=1)
+            if shodanKeyString:
+                shod = Shodan(shodanKeyString)
+                results = shod.search(search_term, page=1)
 
-            Logger.printMessage(message='{message_result}: {res}'.format(message_result=config['msg_result_found'], res=results['total']), debug_module=True)
+                Logger.printMessage(message='{message_result}: {res}'.format(message_result=config['msg_result_found'], res=results['total']), debug_module=True)
 
-            pages = results['total']/100
+                pages = results['total']/100
 
-            if results['total']%100 > 0:
-                pages += 1
+                if results['total']%100 > 0:
+                    pages += 1
 
-                ip_list = []
+                    ip_list = []
 
-                for n in range(1, pages+1):
-                    if n > 1:
-                        results = self.api.search(search_term, page=n)
+                    for n in range(1, pages+1):
+                        if n > 1:
+                            results = self.api.search(search_term, page=n)
 
-                    Logger.printMessage(message='{msg_fetch_page} {num} of {pages}...'.format(msg_fetch_page=config['msg_fetch_page'], num=n, pages=pages), debug_module=True)
+                        Logger.printMessage(message='{msg_fetch_page} {num} of {pages}...'.format(msg_fetch_page=config['msg_fetch_page'], num=n, pages=pages), debug_module=True)
 
-                    for result in results['matches']:
-                        ip_list.append(result['ip_str'])
+                        for result in results['matches']:
+                            ip_list.append(result['ip_str'])
 
-                return ip_list
+                    return ip_list
 
-            else:
-                return []
+                else:
+                    return []
+        except Exception as e:
+            Logger.printMessage(message='{error}: {error_msg}'.format(error=config['error'], error_msg=e), debug_module=True)
+            return []
 
         except Exception as e:
             Logger.printMessage(message='{error}: {error_msg}'.format(error=config['error'], error_msg=e), debug_module=True)
             return []
 
-    def search_host(self, ip):
+    def search_host(self, ip, api=None):
         res = {}
         try:
             Logger.printMessage(message='{methodName}'.format(methodName='search_host'), description='{param}'.format(param=ip), debug_module=True)
+            if api:
+                self.setApi(api)
             host = self.api.host(ip)
 
             interesting_data = config['scan_interesting_data_keys']

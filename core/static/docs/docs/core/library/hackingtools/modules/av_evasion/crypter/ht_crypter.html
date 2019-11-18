@@ -47,15 +47,10 @@ Currently it support&rsquo;s the following 2 public functions and 4 private func
       <div class="highlight"><pre><span class="kn">from</span> <span class="nn">hackingtools.core</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Utils</span>
 <span class="kn">import</span> <span class="nn">hackingtools</span> <span class="kn">as</span> <span class="nn">ht</span> 
 
-<span class="kn">import</span> <span class="nn">binascii</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
 <span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">import</span> <span class="nn">binascii</span>
-<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ht_crypter&#39;</span><span class="p">)</span>
@@ -98,7 +93,7 @@ Currently it support&rsquo;s the following 2 public functions and 4 private func
     </div>
     <div class='code'>
       <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_crypter&#39;</span><span class="p">))</span></pre></div>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_crypter&#39;</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -293,8 +288,17 @@ Currently it support&rsquo;s the following 2 public functions and 4 private func
 <span class="s2">	if drpnm.split(&#39;.&#39;)[1] in exec_extensions and sys.platform == &#39;win32&#39;:</span>
 <span class="s2">		os.system(drpnm)</span>
 <span class="s2">	if drpnm.split(&#39;.&#39;)[1] in python_extensions:</span>
-<span class="s2">		exec(dcy_data)</span>
-<span class="s2">		proc = subprocess.Popen(&#39;python {fn}&#39;.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">		try:</span>
+<span class="s2">			p = subprocess.call([&#39;python {fn}&#39;.format(fn=drpnm)])</span>
+<span class="s2">		except Exception as e:</span>
+<span class="s2">			nf = open(&#39;exception.txt&#39;, &#39;wb&#39;)</span>
+<span class="s2">			try:</span>
+<span class="s2">				nf.write(str(e))</span>
+<span class="s2">			except:</span>
+<span class="s2">				pass</span>
+<span class="s2">			nf.close()</span>
+<span class="s2">#DIVIDER</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 		<span class="n">stub_base64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">stub</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
@@ -415,8 +419,7 @@ Currently it support&rsquo;s the following 2 public functions and 4 private func
       <div class='octowrap'>
         <a class='octothorpe' href='#section-16'>#</a>
       </div>
-      <p>=== crypt_file ===
-Crypt&rsquo;s a file when some params we have to use</p>
+      <p>exec(dcy_data)</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -427,6 +430,31 @@ Crypt&rsquo;s a file when some params we have to use</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>proc = subprocess.Popen(&lsquo;python {fn}&rsquo;.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>=== crypt_file ===
+Crypt&rsquo;s a file when some params we have to use</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       <pre><code>    
     Arguments

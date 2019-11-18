@@ -60,6 +60,12 @@
                 "placeholder": "ip",
                 "required": true
             },
+            "api": {
+                "__type__": "text",
+                "label_desc": "api",
+                "placeholder": "api",
+                "value": null
+            },
             "__pool_it_search_host__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",

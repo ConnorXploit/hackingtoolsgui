@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>ht_rsa.py</title>
+  <link rel="stylesheet" href="..\..\..\..\..\..\pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>ht_rsa.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hackingtools.core</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Utils</span>
+<span class="kn">import</span> <span class="nn">hackingtools</span> <span class="kn">as</span> <span class="nn">ht</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">)</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;output&#39;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">StartModule</span><span class="p">():</span>
+	<span class="sd">&#39;&#39;&#39;How to use:</span>
+
+<span class="sd">	prime_a, prime_b = self.getRandomKeypair()</span>
+<span class="sd">	public, private = self.generate_keypair(prime_a, prime_b)</span>
+
+<span class="sd">	print(&#39;Public key: {pub} - Private Key: {pri}&#39;.format(pub=public, pri=private))</span>
+
+<span class="sd">	encrypted_msg = self.encrypt(private, message)</span>
+<span class="sd">	print(&#39;Message ciphered: {msg}&#39;.format(msg=encrypted_msg))</span>
+
+<span class="sd">	decrypted_msg = self.decrypt(public, encrypted_msg)</span>
+<span class="sd">	print(&#39;Message deciphered: {msg}&#39;.format(msg=decrypted_msg))</span>
+<span class="sd">	</span>
+<span class="sd">	&#39;&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_rsa&#39;</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">generate_keypair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prime_a</span><span class="p">,</span> <span class="n">prime_b</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">Utils</span><span class="o">.</span><span class="n">isPrime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">prime_a</span><span class="p">))</span> <span class="ow">and</span> <span class="n">Utils</span><span class="o">.</span><span class="n">isPrime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">prime_b</span><span class="p">))):</span>
+			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;generate_keypair&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;bad_identical_prime&#39;</span><span class="p">],</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;bad_identical_prime&#39;</span><span class="p">]</span>
+		<span class="k">elif</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="n">prime_b</span><span class="p">:</span>
+			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;generate_keypair&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;p_q_equal_error&#39;</span><span class="p">],</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;p_q_equal_error&#39;</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>n = pq</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">n</span> <span class="o">=</span> <span class="n">prime_a</span> <span class="o">*</span> <span class="n">prime_b</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Phi is the totient of n</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">prime_a</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">prime_b</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Choose an integer e such that e and phi(n) are coprime</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">e</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Use Euclid&rsquo;s Algorithm to verify that e and phi(n) are comprime</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">g</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">euclides</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+			<span class="k">while</span> <span class="n">g</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">e</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+				<span class="n">g</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">euclides</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Use Extended Euclid&rsquo;s Algorithm to generate the private key</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">d</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">multiplicativeInverse</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Return public and private keypair
+Public key is (e, n) and private key is (d, n)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="k">return</span> <span class="p">((</span><span class="n">e</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">getRandomKeypair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">8</span><span class="p">):</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;getRandomKeypair&#39;</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="n">prime_a</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+		<span class="n">prime_b</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+		<span class="k">while</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="n">prime_b</span><span class="p">:</span>
+			<span class="k">while</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="n">prime_b</span><span class="p">:</span>
+				<span class="n">prime_a</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getRandomPrimeByLength</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+			<span class="k">while</span> <span class="n">prime_b</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">prime_a</span> <span class="o">==</span> <span class="n">prime_b</span><span class="p">:</span>
+				<span class="n">prime_b</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getRandomPrimeByLength</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">prime_a</span> <span class="o">&gt;</span> <span class="n">prime_b</span><span class="p">:</span>
+			<span class="n">temp</span> <span class="o">=</span> <span class="n">prime_b</span>
+			<span class="n">prime_b</span> <span class="o">=</span> <span class="n">prime_a</span>
+			<span class="n">prime_a</span> <span class="o">=</span> <span class="n">temp</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;getRandomKeypair&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="n">prime_a</span><span class="p">,</span> <span class="n">prime_b</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">prime_a</span><span class="p">,</span> <span class="n">prime_b</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">private_key</span><span class="p">,</span> <span class="n">plaintext</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;encrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{private_key} - {msg}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">plaintext</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Unpack the key into it&rsquo;s components</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">key</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">private_key</span>
+			<span class="n">ba64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)</span>
+			<span class="n">ashex</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">asciiToHex</span><span class="p">(</span><span class="n">ba64</span><span class="p">)</span>
+			<span class="n">hexba64</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">hexToBase64</span><span class="p">(</span><span class="n">ashex</span><span class="p">)</span>
+			<span class="n">ba64un</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">joinBase64</span><span class="p">(</span><span class="n">hexba64</span><span class="p">)</span>
+			<span class="n">decasc</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">decimalToAscii</span><span class="p">(</span><span class="n">ba64un</span><span class="p">)</span>
+			<span class="n">mensaje</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">textToAscii</span><span class="p">(</span><span class="n">decasc</span><span class="p">)</span>
+			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;encrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{msg} - Length: {l}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">mensaje</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">l</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+			<span class="n">mensaje1</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">ord</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">char</span><span class="p">))</span> <span class="o">**</span> <span class="n">key</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">mensaje</span><span class="p">]</span>
+			<span class="n">mensajeHex</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">asciiToHex</span><span class="p">(</span><span class="n">mensaje1</span><span class="p">)</span>
+			<span class="n">mensajeBase64</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">hexToBase64</span><span class="p">(</span><span class="n">mensajeHex</span><span class="p">)</span>
+			<span class="n">mensajeFinalBase64</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">joinBase64</span><span class="p">(</span><span class="n">mensajeBase64</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">mensajeFinalBase64</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;encrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{msg}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">e</span><span class="p">))</span>
+			<span class="k">return</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">):</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;decrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{public_key}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">public_key</span><span class="o">=</span><span class="n">public_key</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Unpack the key into its components</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">key</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">public_key</span>
+		<span class="n">menRec</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">asciiToBase64</span><span class="p">(</span><span class="n">ciphertext</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+		<span class="n">menHex</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">base64ToHex</span><span class="p">(</span><span class="n">menRec</span><span class="p">)</span>
+		<span class="n">menDec</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">hexToDecimal</span><span class="p">(</span><span class="n">menHex</span><span class="p">)</span>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{methodName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;decrypt&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{msg}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">menDec</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="n">menDesc</span> <span class="o">=</span> <span class="p">[((</span><span class="n">char</span> <span class="o">**</span> <span class="n">key</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">menDec</span><span class="p">]</span>
+		<span class="n">menAscii</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">decimalToAscii</span><span class="p">(</span><span class="n">menDesc</span><span class="p">)</span>
+		<span class="n">decasc</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">asciiToBase64</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">menAscii</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+		<span class="n">hexba64</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">base64ToHex</span><span class="p">(</span><span class="n">decasc</span><span class="p">)</span>
+		<span class="n">ashex</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">hexToDecimal</span><span class="p">(</span><span class="n">hexba64</span><span class="p">)</span>
+		<span class="n">deasc</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">decimalToAscii</span><span class="p">(</span><span class="n">ashex</span><span class="p">)</span>
+		<span class="n">ba64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">deasc</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+		<span class="k">return</span> <span class="n">ba64</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">plaintext</span><span class="p">):</span>
+		<span class="n">enc</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)):</span>
+			<span class="n">key_c</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+			<span class="n">enc_c</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">plaintext</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="n">key_c</span><span class="p">))</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span>
+			<span class="n">enc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">enc_c</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">enc</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">):</span>
+		<span class="n">dec</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">ciphertext</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64decode</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)):</span>
+			<span class="n">key_c</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+			<span class="n">dec_c</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">((</span><span class="mi">256</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="n">key_c</span><span class="p">))</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span>
+			<span class="n">dec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dec_c</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

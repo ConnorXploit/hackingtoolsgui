@@ -13,6 +13,7 @@ urlpatterns = [
     path('maps/', views.renderMaps, name="maps"),
     path('maps/switchFunctionMap/', views.switchFunctionMap, name="switchFunctionMap"),
     # Core URLs
+    path('core/utils/getIPLocationGPS/', views.getIPLocationGPS, name="getIPLocationGPS"),
     path('core/module/create/', views.createModule, name="createmod"),
     path('core/module/remove/', views.removeModule, name="removeModule"),
     path('core/module/config/', views.configModule, name="configmod"),

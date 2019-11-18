@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>Logger.py</title>
+  <link rel="stylesheet" href="..\..\..\..\pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>Logger.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">colorama</span>
+<span class="kn">from</span> <span class="nn">colorama</span> <span class="kn">import</span> <span class="n">Fore</span><span class="p">,</span> <span class="n">Back</span><span class="p">,</span> <span class="n">Style</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Utils</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;Logger&#39;</span><span class="p">)</span>
+
+<span class="n">colorama</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="k">global</span> <span class="n">logs</span>
+<span class="n">logs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">global</span> <span class="n">logs_clear</span>
+<span class="n">logs_clear</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">global</span> <span class="n">DEBUG_CORE_FLAG</span> 
+<span class="n">DEBUG_CORE_FLAG</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;DEBUG_CORE_FLAG&#39;</span><span class="p">]</span>
+
+<span class="k">global</span> <span class="n">DEBUG_MODULE_FLAG</span> 
+<span class="n">DEBUG_MODULE_FLAG</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;DEBUG_MODULE_FLAG&#39;</span><span class="p">]</span>
+
+<span class="k">global</span> <span class="n">DEBUG_USER</span> 
+<span class="n">DEBUG_USER</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;DEBUG_USER&#39;</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;clear_on_load&#39;</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">colorama</span><span class="o">.</span><span class="n">ansi</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">())</span> <span class="c1"># Clear Screen Code</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Function for establising DEBUG_CORE_FLAG to True/False</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">setDebugCore</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Keyword Arguments:
+    on {boolean} &ndash; Set&rsquo;s True or False the Debug messages for Core Logger calls (default: {True})</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">DEBUG_CORE_FLAG</span>
+    <span class="n">DEBUG_CORE_FLAG</span> <span class="o">=</span> <span class="n">on</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Function for establising DEBUG_MODULE_FLAG to True/False</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">setDebugModule</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Keyword Arguments:
+    on {boolean} &ndash; Set&rsquo;s True or False the Debug messages for Module Logger calls (default: {True})</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">DEBUG_MODULE_FLAG</span>
+    <span class="n">DEBUG_MODULE_FLAG</span> <span class="o">=</span> <span class="n">on</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Function for establising DEBUG_USER to True/False</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">setDebug</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Keyword Arguments:
+    on {boolean} &ndash; Set&rsquo;s True or False the Debug messages for User Logger calls (default: {True})</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">DEBUG_USER</span>
+    <span class="n">DEBUG_USER</span> <span class="o">=</span> <span class="n">on</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Creates a file with the log created by the library since loaded last time.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">saveLog</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Output format can be changed into config.json</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">logs</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;log_save_date_format&#39;</span><span class="p">])[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;log-{time}.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time_now</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">getLogs</span><span class="p">():</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;{log}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getLogs</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">logs</span>
+    <span class="k">return</span> <span class="n">logs</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getLogsClear</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">logs_clear</span>
+    <span class="k">return</span> <span class="n">logs_clear</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">print_and_return</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="n">debug_core</span><span class="p">,</span> <span class="n">is_error</span><span class="o">=</span><span class="n">is_error</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>This function prints a pretty message in console. The colors can be changed in config.json</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">printMessage</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_warn</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_info</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_success</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Arguments:
+    message {String} &ndash; The main message you want to show on console log</p>
+<p>Keyword Arguments:
+    description {String} &ndash; The description of the message you are showing (default: {None})
+    debug_module {bool} &ndash; Tell&rsquo;s if the message is been called from a module (default: {False})
+    debug_core {bool} &ndash; Tell&rsquo;s if the message is been called from any core file (default: {False})
+    is_error {bool} &ndash; For showing in other color because been an error (default: {False})
+    color {[type]} &ndash; A color for showing with other color (default: {None})</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">logs</span>
+    <span class="k">global</span> <span class="n">logs_clear</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">filename</span>
+    <span class="n">methodName</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function</span>
+    
+    <span class="k">if</span> <span class="n">methodName</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">):</span>
+        <span class="n">methodCalledFrom</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">methodCalledFrom</span> <span class="o">=</span> <span class="s1">&#39;{file}.{function}()&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">function</span><span class="o">=</span><span class="n">methodName</span><span class="p">)</span>
+    
+    <span class="n">methodCalledFrom</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">methodCalledFrom</span><span class="p">)[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">methodCalledFrom</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">time_now</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
+
+    <span class="n">colorMessage</span> <span class="o">=</span> <span class="n">Fore</span><span class="o">.</span><span class="n">LIGHTMAGENTA_EX</span>
+
+    <span class="k">if</span> <span class="n">color</span><span class="p">:</span>
+        <span class="n">colorMessage</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">if</span> <span class="n">is_error</span><span class="p">:</span>
+        <span class="n">colorMessage</span> <span class="o">=</span> <span class="n">Fore</span><span class="o">.</span><span class="n">RED</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Clear Log Starts Here</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">successful_flag</span> <span class="o">=</span> <span class="s1">&#39;[SUCCESS]&#39;</span>
+    <span class="n">error_flag</span> <span class="o">=</span> <span class="s1">&#39;[ERROR]&#39;</span>
+    <span class="n">core_flag</span> <span class="o">=</span> <span class="s1">&#39;[CORE]&#39;</span>
+    <span class="n">module_flag</span> <span class="o">=</span> <span class="s1">&#39;[MODULE]&#39;</span>
+    <span class="n">warn_flag</span> <span class="o">=</span> <span class="s1">&#39;[WARN]&#39;</span>
+    <span class="n">info_flag</span> <span class="o">=</span> <span class="s1">&#39;[INFO]&#39;</span> <span class="c1"># Not used yet</span>
+
+    <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{methodCalledFrom} - {message} - {description}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodCalledFrom</span><span class="o">=</span><span class="n">methodCalledFrom</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{methodCalledFrom} - {message}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">methodCalledFrom</span><span class="o">=</span><span class="n">methodCalledFrom</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">color</span> <span class="o">==</span> <span class="n">Fore</span><span class="o">.</span><span class="n">YELLOW</span> <span class="ow">or</span> <span class="n">is_warn</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{e} - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">=</span><span class="n">warn_flag</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">color</span> <span class="o">==</span> <span class="n">Fore</span><span class="o">.</span><span class="n">GREEN</span> <span class="ow">or</span> <span class="n">is_success</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{e} - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">=</span><span class="n">successful_flag</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">color</span> <span class="o">==</span> <span class="n">Fore</span><span class="o">.</span><span class="n">BLUE</span> <span class="ow">or</span> <span class="n">is_info</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{e} - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">=</span><span class="n">info_flag</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_error</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{e} - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">=</span><span class="n">error_flag</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">debug_module</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{e} - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">=</span><span class="n">module_flag</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">debug_core</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;{e} - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">=</span><span class="n">core_flag</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+        <span class="n">logs</span><span class="p">[</span><span class="n">time_now</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logs</span><span class="p">[</span><span class="n">time_now</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span>
+
+    <span class="n">temp_logs_clear</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">logs</span><span class="p">:</span>
+
+        <span class="n">exists</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temp_logs_clear</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">temp</span><span class="p">][</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">logs</span><span class="p">[</span><span class="n">x</span><span class="p">]:</span>
+                <span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">temp</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">exists</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">:</span>
+            <span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logs</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+            <span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">logs_clear</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">timeLog</span> <span class="ow">in</span> <span class="n">temp_logs_clear</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">timeLog</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logs_clear</span><span class="p">[</span><span class="n">timeLog</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;({n}) - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">timeLog</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">],</span> <span class="n">m</span><span class="o">=</span><span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">timeLog</span><span class="p">][</span><span class="s1">&#39;msg&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logs_clear</span><span class="p">[</span><span class="n">timeLog</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_logs_clear</span><span class="p">[</span><span class="n">timeLog</span><span class="p">][</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Clear Log Ends Here</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="n">debug_module</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">debug_core</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">DEBUG_USER</span> <span class="o">==</span> <span class="bp">True</span><span class="p">))</span> <span class="ow">or</span> <span class="p">((</span><span class="n">debug_module</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">DEBUG_MODULE_FLAG</span> <span class="o">==</span> <span class="bp">True</span><span class="p">))</span> <span class="ow">or</span> <span class="p">((</span><span class="n">debug_core</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">DEBUG_CORE_FLAG</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{timeColorStart}[{time}]{timeColorEnd} - {methodCalledFromColorStart}{methodCalledFrom}{methodCalledFromColorEnd} - {messageColorStart}{message}{messageColorEnd} - {description}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">timeColorStart</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">BLUE</span><span class="p">,</span> 
+                <span class="n">timeColorEnd</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span> 
+                <span class="n">time</span><span class="o">=</span><span class="n">time_now</span><span class="p">,</span>
+                <span class="n">methodCalledFromColorStart</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">GREEN</span><span class="p">,</span> 
+                <span class="n">methodCalledFrom</span><span class="o">=</span><span class="n">methodCalledFrom</span><span class="p">,</span>
+                <span class="n">methodCalledFromColorEnd</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span>
+                <span class="n">messageColorStart</span><span class="o">=</span><span class="n">colorMessage</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+                <span class="n">messageColorEnd</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{timeColorStart}[{time}]{timeColorEnd} - {methodCalledFromColorStart}{methodCalledFrom}{methodCalledFromColorEnd} - {messageColorStart}{message}{messageColorEnd}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">timeColorStart</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">BLUE</span><span class="p">,</span> 
+                <span class="n">timeColorEnd</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span> 
+                <span class="n">time</span><span class="o">=</span><span class="n">time_now</span><span class="p">,</span>
+                <span class="n">methodCalledFromColorStart</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">GREEN</span><span class="p">,</span> 
+                <span class="n">methodCalledFrom</span><span class="o">=</span><span class="n">methodCalledFrom</span><span class="p">,</span>
+                <span class="n">methodCalledFromColorEnd</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">WHITE</span><span class="p">,</span>
+                <span class="n">messageColorStart</span><span class="o">=</span><span class="n">colorMessage</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+                <span class="n">messageColorEnd</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">WHITE</span><span class="p">))</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

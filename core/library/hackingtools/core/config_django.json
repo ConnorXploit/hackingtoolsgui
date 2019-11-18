@@ -65,5 +65,50 @@
                 }
             }
         }
+    },
+    "maps": {
+        "ht_crypter": {
+            "convertToExe": {
+                "__in_map_convertToExe__": true
+            },
+            "createStub": {
+                "__in_map_createStub__": false
+            },
+            "crypt_file": {
+                "__in_map_crypt_file__": false
+            }
+        },
+        "ht_bruteforce": {
+            "crackZip": {
+                "__in_map_crackZip__": false
+            }
+        },
+        "ht_unzip": {
+            "extractFilePassword": {
+                "__in_map_extractFilePassword__": false
+            }
+        },
+        "ht_rsa": {
+            "encrypt": {
+                "__in_map_encrypt__": false
+            },
+            "getRandomKeypair": {
+                "__in_map_getRandomKeypair__": false
+            },
+            "generate_keypair": {
+                "__in_map_generate_keypair__": false
+            },
+            "decode": {
+                "__in_map_decode__": true
+            },
+            "encode": {
+                "__in_map_encode__": true
+            }
+        },
+        "ht_shodan": {
+            "search_host": {
+                "__in_map_search_host__": false
+            }
+        }
     }
 }

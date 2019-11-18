@@ -112,3 +112,57 @@ def getRandomKeypair(request):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
+# Automatic view function for decode
+def decode(request):
+	# Init of the view decode
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'decode')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter key
+			key = request.POST.get('key')
+
+			# Parameter ciphertext
+			ciphertext = request.POST.get('ciphertext')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_rsa').decode( key=key, ciphertext=ciphertext )
+			if request.POST.get('is_async_decode', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_decode', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for encode
+def encode(request):
+	# Init of the view encode
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'encode')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter key
+			key = request.POST.get('key')
+
+			# Parameter plaintext
+			plaintext = request.POST.get('plaintext')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_rsa').encode( key=key, plaintext=plaintext )
+			if request.POST.get('is_async_encode', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_encode', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	

@@ -211,3 +211,6 @@ class StartModule():
             pass_dec = self.md5_decrypt(passw)
             print('[{asterisco}] - {titulo_user}: {user}\t- {titulo_passw}: {passw}\t- {titulo_password_limpia}: {pass_limpia}'.format(asterisco=self.color('*', config['color_ok']), titulo_user=self.color('User', config['color_ok']), user=self.color(nombres[contador], config['color_ok']), titulo_passw=self.color('Password', config['color_ok']), passw=self.color(passw, config['color_ok']), titulo_password_limpia=self.color('Password Limpia', config['color_ok']), pass_limpia=self.color(pass_dec, config['color_ok'])))
             contador += 1
+
+    
+    

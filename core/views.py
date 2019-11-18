@@ -248,6 +248,16 @@ def getLogs(request):
     
     return JsonResponse(data)
 
+def getIPLocationGPS(request):
+    ip = request.POST.get('ip', None)
+    api = request.POST.get('api', None)
+    data = {
+        'data' : ht.Utils.getIPLocationGPS(ip, api),
+        'status' : 'OK'
+    }
+    
+    return JsonResponse(data)
+
 @csrf_exempt
 def add_pool_node(request):
     this_conf = config['add_pool_node']

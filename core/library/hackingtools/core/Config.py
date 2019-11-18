@@ -29,6 +29,9 @@ import json
 global config
 config = {}
 
+global switching_to_map
+switching_to_map = False
+
 def __readFilesAuto__(djangoButtonsPool=False):
     config = {}
     with open(os.path.join(os.path.dirname(__file__) , 'config.json')) as json_data_file:
@@ -39,31 +42,33 @@ def __readFilesAuto__(djangoButtonsPool=False):
 
     if django:
         # Load the basic config for Django
-        with open(os.path.join(os.path.dirname(__file__) , 'config_django.json')) as json_data_file_django:
-            config['django'] = {}
-            config_django = json.load(json_data_file_django)
-            for conf in config_django:
-                config['django'][conf] = {}
-                for django_data in config_django[conf]:
-                    config['django'][conf][django_data] = config_django[conf][django_data] 
+        global switching_to_map
+        if not switching_to_map:
+            with open(os.path.join(os.path.dirname(__file__) , 'config_django.json')) as json_data_file_django:
+                config['django'] = {}
+                config_django = json.load(json_data_file_django)
+                for conf in config_django:
+                    config['django'][conf] = {}
+                    for django_data in config_django[conf]:
+                        config['django'][conf][django_data] = config_django[conf][django_data] 
 
-        # Loads the config for the modules into Django as modal forms
-        categories_dir = os.path.join(os.path.dirname(__file__), 'config_modules_django')
-        for mod in config['modules']:
-            categories = os.listdir(categories_dir)
-            for cat in categories:
-                module_config_file = os.path.join(categories_dir, cat, '{mod}.json'.format(mod=mod))
-                if os.path.isfile(module_config_file):
-                    with open(module_config_file) as json_data_file_django:
-                        if json_data_file_django:
-                            config_django = json.load(json_data_file_django)
-                            for conf in config_django:
-                                config['modules'][mod][conf] = config_django[conf]
-                                if djangoButtonsPool:
-                                    if isinstance(config['modules'][mod][conf], dict):
-                                        for f in config['modules'][mod][conf]:
-                                            if '__pool_it_' in f:
-                                                config['modules'][mod][conf][f]['selected'] = True
+            # Loads the config for the modules into Django as modal forms
+            categories_dir = os.path.join(os.path.dirname(__file__), 'config_modules_django')
+            for mod in config['modules']:
+                categories = os.listdir(categories_dir)
+                for cat in categories:
+                    module_config_file = os.path.join(categories_dir, cat, '{mod}.json'.format(mod=mod))
+                    if os.path.isfile(module_config_file):
+                        with open(module_config_file) as json_data_file_django:
+                            if json_data_file_django:
+                                config_django = json.load(json_data_file_django)
+                                for conf in config_django:
+                                    config['modules'][mod][conf] = config_django[conf]
+                                    if djangoButtonsPool:
+                                        if isinstance(config['modules'][mod][conf], dict):
+                                            for f in config['modules'][mod][conf]:
+                                                if '__pool_it_' in f:
+                                                    config['modules'][mod][conf][f]['selected'] = True
     return config
 
 def __djangoSwitchPoolItButtons__(checked=False):
@@ -149,6 +154,8 @@ def remove_my_service(node):
     __save_config__(config)
 
 def switch_function_for_map(category, moduleName, functionName):
+    global switching_to_map
+    switching_to_map = True
     mod_config_file = os.path.join(os.path.dirname(__file__), 'config_django.json')
     
     conf = {}
@@ -169,17 +176,13 @@ def switch_function_for_map(category, moduleName, functionName):
             conf['maps'][moduleName][functionName] = {}
 
         if not in_map in conf['maps'][moduleName][functionName]:
-
-            conf['maps'][moduleName][functionName][in_map] = {}
-            conf['maps'][moduleName][functionName][in_map]['selected'] = False
-            conf['maps'][moduleName][functionName][in_map]['__type__'] = 'checkbox'
-            conf['maps'][moduleName][functionName][in_map]['label_desc'] = 'Set True if you want in map'
-
+            conf['maps'][moduleName][functionName][in_map] = False
         else:
-            conf['maps'][moduleName][functionName][in_map]['selected'] = not bool(conf['maps'][moduleName][functionName][in_map]['selected'])
+            conf['maps'][moduleName][functionName][in_map] = not bool(conf['maps'][moduleName][functionName][in_map])
 
         with open(mod_config_file, 'w', encoding='utf8') as outfile:  
             json.dump(conf, outfile, indent=4, ensure_ascii=False)
+    switching_to_map = False
 
 def add_requirements_ignore(moduleName, requirementModuleName):
     config = {}

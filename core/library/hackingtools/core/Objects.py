@@ -3,10 +3,11 @@ import json
 
 class Host():
 
-    def __init__(self, target_id, ip=[], ports=[], hostnames=[], city='', country_name='', org='', isp='', last_update='', asn='', os='', data=''):
+    def __init__(self, target_id, ip=[], ports=[], vulnerabilities=[], hostnames=[], city='', country_name='', org='', isp='', last_update='', asn='', os='', data=''):
         self.target_id = target_id
         self.ip = ip
         self.ports = ports
+        self.vulnerabilities = vulnerabilities
         self.hostnames = hostnames
         self.city = city
         self.country_name = country_name
@@ -25,6 +26,8 @@ class Host():
             parameters["ip"] = self.getIp()
         if self.ports:
             parameters["ports"] = self.getPorts()
+        if self.vulnerabilities:
+            parameters["vulnerabilities"] = self.getVulnerabilities()
         if self.hostnames:
             parameters["hostnames"] = self.getHostNames()
         if self.city:
@@ -62,6 +65,14 @@ class Host():
 
     def removePort(self, port):
         self.ports.remove(port)
+
+    def addVulnerability(self, vuln):
+        if not vuln in self.vulnerabilities:
+            self.vulnerabilities.append(vuln)
+
+    def removeVulnerability(self, vuln):
+        if vuln in self.vulnerabilities:
+            self.vulnerabilities.remove(vuln)
 
     def addHostName(self, hostname):
         self.removeHostName(hostname)
@@ -102,6 +113,9 @@ class Host():
 
     def getPorts(self):
         return self.ports
+
+    def getVulnerabilities(self):
+        return ', '.join([vuln.getCVE() for vuln in self.vulnerabilities])
 
     def getHostNames(self):
         return self.hostnames
@@ -271,7 +285,7 @@ class Scan():
         self.hosts.append(host)
 
     def removeHost(self, host_id):
-        self.hosts.remove(host)
+        self.hosts.remove(host_id)
 
     def getName(self):
         return self.name
@@ -281,6 +295,44 @@ class Scan():
 
     def getHosts(self):
         return self.hosts
+
+class Vulnerability():
+    
+    def __init__(self, name, cve='CVE-0000-0000', cpe='', cwe='', cvss_base=0):
+        self.name = name
+        self.cve = cve
+        self.cwe = cwe
+        self.cvss_base = cvss_base
+
+    def getName(self):
+        return self.name
+
+    def setName(self, name):
+        self.name = name
+
+    def getCVE(self):
+        return self.cve
+
+    def setCVE(self, cve):
+        self.cve = cve
+
+    def getCWE(self):
+        return self.cwe
+
+    def setCWE(self, cwe):
+        self.cwe = cwe
+
+    def getCPE(self):
+        return self.cpe
+
+    def setCPE(self, cpe):
+        self.cpe = cpe
+
+    def getCVSS(self):
+        return self.cvss_base
+
+    def setCVSS(self, cvss):
+        self.cvss_base = cvss
 
 class Historical():
     

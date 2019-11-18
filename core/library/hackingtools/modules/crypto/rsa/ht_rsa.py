@@ -65,9 +65,9 @@ class StartModule():
 		prime_a = ''
 		prime_b = ''
 		while prime_a == prime_b:
-			while prime_a == '':
+			while prime_a == '' or prime_a == prime_b:
 				prime_a = Utils.getRandomPrimeByLength(length)
-			while prime_b == '':
+			while prime_b == '' or prime_a == prime_b:
 				prime_b = Utils.getRandomPrimeByLength(length)
 		if prime_a > prime_b:
 			temp = prime_b
@@ -87,7 +87,7 @@ class StartModule():
 			ba64un = Utils.joinBase64(hexba64)
 			decasc = Utils.decimalToAscii(ba64un)
 			mensaje = Utils.textToAscii(decasc)
-			Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg}'.format(msg=mensaje[0:10]), debug_module=True)
+			Logger.printMessage(message='{methodName}'.format(methodName='encrypt'), description='{msg} - Length: {l}'.format(msg=mensaje[0:10], l=len(mensaje)), debug_module=True)
 			mensaje1 = [(ord(chr(char)) ** key) % n for char in mensaje]
 			mensajeHex = Utils.asciiToHex(mensaje1)
 			mensajeBase64 = Utils.hexToBase64(mensajeHex)
@@ -113,3 +113,20 @@ class StartModule():
 		deasc = Utils.decimalToAscii(ashex)
 		ba64 = base64.b64decode(deasc.encode())
 		return ba64
+
+	def encode(self, key, plaintext):
+		enc = []
+		for i in range(len(plaintext)):
+			key_c = key[i % len(key)]
+			enc_c = chr((ord(plaintext[i]) + ord(key_c)) % 256)
+			enc.append(enc_c)
+		return base64.urlsafe_b64encode("".join(enc).encode()).decode()
+
+	def decode(self, key, ciphertext):
+		dec = []
+		ciphertext = base64.urlsafe_b64decode(ciphertext).decode()
+		for i in range(len(ciphertext)):
+			key_c = key[i % len(key)]
+			dec_c = chr((256 + ord(ciphertext[i]) - ord(key_c)) % 256)
+			dec.append(dec_c)
+		return "".join(dec)

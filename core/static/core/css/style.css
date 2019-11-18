@@ -457,3 +457,12 @@ textarea.form-control {
     left: 10px !important;
     right: auto !important;
 }
+.searcher_map {
+    width: 300px;
+    /* margin: auto; */
+    right: 100px;
+    position: relative;
+    float: right;
+    z-index: 99999;
+    margin: 15px !important;
+}

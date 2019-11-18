@@ -828,128 +828,128 @@
       </div>
     </form>
     <script>
-    function expandTextarea(id) {
-        document.getElementById(id).addEventListener('keyup', function() {
-            this.style.overflow = 'hidden';
-            this.style.height = 0;
-            this.style.height = this.scrollHeight + 'px';
-        }, false);
-    }
-    //expandTextarea('consoleLogger');
-    timer_clicktime = 200
-    length_console_logs = 0
-    buttonsPoolChecked = false
-    var timer = {
-      running: false,
-      iv: timer_clicktime,
-      timeout: false,
-      cb : function(){},
-      start : function(cb,iv){
-          var elm = this;
-          clearInterval(this.timeout);
-          this.running = true;
-          if(cb) this.cb = cb;
-          if(iv) this.iv = iv;
-          this.timeout = setTimeout(function(){elm.execute(elm)}, this.iv);
-      },
-      execute : function(e){
-          if(!e.running) return false;
-          e.cb();
-          e.start();
-      },
-      stop : function(){
-          this.running = false;
-      },
-      set_interval : function(iv){
-          clearInterval(this.timeout);
-          this.start(false, iv);
+      function expandTextarea(id) {
+          document.getElementById(id).addEventListener('keyup', function() {
+              this.style.overflow = 'hidden';
+              this.style.height = 0;
+              this.style.height = this.scrollHeight + 'px';
+          }, false);
       }
-    };
-    error_counter_for_reload_message = 0
-
-    function switchPoolButtons(){
-      $.each($('.toggle'), function(){
-        if ($(this).children('input[id^="__pool_it_"]')){
-          $(this).click();
-        }
-      });
-    }
-
-    timer.start(function(){
-      $.ajax({
-        url : "{% url 'getLogs' %}", // the endpoint
-        type : "POST", // http method
-        async: true,
-        data: { csrfmiddlewaretoken : '{{ csrf_token }}' },
-        success : function(res) {
-          if ('buttonsPool' in res) {
-            if (res.buttonsPool == true && buttonsPoolChecked == false) {
-              switchPoolButtons();
-              buttonsPoolChecked = true;
-            } else {
-              if (res.buttonsPool == false && buttonsPoolChecked == true) {
-                switchPoolButtons();
-                buttonsPoolChecked = false;
-              }
-            }
-          }
-          if ('data' in res && res.data && Object.keys(res.data).length !== 0){ // && length_console_logs !== Object.keys(res.data).length
-            $('#reloading-server').modal('hide');
-            $('#consoleLogger-content').empty();
-            res_data_keys = Object.keys(res.data).reverse()
-            for (var logtime in res_data_keys) {
-              data_result = '';
-              if (res.data.hasOwnProperty(res_data_keys[logtime])) {
-                data_result += "[" + res_data_keys[logtime] + "] " + res.data[res_data_keys[logtime]] + "\n";
-                if (data_result.includes('ERROR') && $('#consoleLogger-filter-error').is(':checked')) {
-                  data_result = "<p class=\"text-danger\">" + data_result.split("[ERROR] - ")[0] + " - " + data_result.split("[ERROR] - ")[1] + "</p>";
-                } else if (data_result.includes('WARN') && $('#consoleLogger-filter-warn').is(':checked')) {
-                  data_result = "<p class=\"text-warning\">" + data_result.split("[WARN] - ")[0] + " - " + data_result.split("[WARN] - ")[1] + "</p>";
-                } else if (data_result.includes('INFO') && $('#consoleLogger-filter-info').is(':checked')) {
-                  data_result = "<p class=\"text-info\">" + data_result.split("[INFO] - ")[0] + " - " + data_result.split("[INFO] - ")[1] + "</p>";
-                } else if (data_result.includes('SUCCESS') && $('#consoleLogger-filter-success').is(':checked')) {
-                  data_result = "<p class=\"text-success\">" + data_result.split("[SUCCESS] - ")[0] + " - " + data_result.split("[SUCCESS] - ")[1] + "</p>";
-                } else if (data_result.includes('CORE') && $('#consoleLogger-filter-core').is(':checked')) {
-                  data_result = "<p class=\"text-secondary\">" + data_result.split("[CORE] - ")[0] + " - " + data_result.split("[CORE] - ")[1] + "</p>";
-                } else if (data_result.includes('MODULE') && $('#consoleLogger-filter-module').is(':checked')) {
-                  data_result = "<p class=\"text-default\">" + data_result.split("[MODULE] - ")[0] + " - " + data_result.split("[MODULE] - ")[1] + "</p>";
-                } else {
-                  data_result = '';
-                } /*else if ((data_result.includes('ERROR') == false && $('#consoleLogger-filter-error').is(':checked')) || (data_result.includes('WARN') == false && $('#consoleLogger-filter-warn').is(':checked')) || (data_result.includes('INFO') == false && $('#consoleLogger-filter-info').is(':checked')) || (data_result.includes('SUCCESS') == false && $('#consoleLogger-filter-success').is(':checked')) || (data_result.includes('CORE') == false && $('#consoleLogger-filter-core').is(':checked')) || (data_result.includes('MODULE') == false && $('#consoleLogger-filter-module').is(':checked'))){
-                  data_result = "<p class=\"text-muted\">" + data_result + "</p>";
-                }*/
-              }
-              $('#consoleLogger-content').append(data_result);
-            }
-            timer.set_interval(2000);
-            length_console_logs = Object.keys(res.data).length;
-            if (error_counter_for_reload_message > 4){
-              error_counter_for_reload_message = 0;
-              location.reload();
-            }
-          } else {
-            // $('#consoleLogger').val('Loading Log...')
-            if (error_counter_for_reload_message > 4){
-              error_counter_for_reload_message = 0;
-              location.reload();
-            }
-            timer.set_interval(5000);
-          }
+      //expandTextarea('consoleLogger');
+      timer_clicktime = 200
+      length_console_logs = 0
+      buttonsPoolChecked = false
+      var timer = {
+        running: false,
+        iv: timer_clicktime,
+        timeout: false,
+        cb : function(){},
+        start : function(cb,iv){
+            var elm = this;
+            clearInterval(this.timeout);
+            this.running = true;
+            if(cb) this.cb = cb;
+            if(iv) this.iv = iv;
+            this.timeout = setTimeout(function(){elm.execute(elm)}, this.iv);
         },
-        error : function(xhr,errmsg,err) {
-          error_counter_for_reload_message = error_counter_for_reload_message + 1
-          console.log(xhr.status + ": " + xhr.responseText);
-          if (error_counter_for_reload_message > 2){
-            $.each($('.modal'), function(){
-              if ($(this).attr('id') != 'reloading-server'){
-                $(this).modal('hide');
-              }
-            });
-            $('#reloading-server').modal('show');
-          }
+        execute : function(e){
+            if(!e.running) return false;
+            e.cb();
+            e.start();
+        },
+        stop : function(){
+            this.running = false;
+        },
+        set_interval : function(iv){
+            clearInterval(this.timeout);
+            this.start(false, iv);
         }
-      });
-    }, timer_clicktime );
+      };
+      error_counter_for_reload_message = 0
+
+      function switchPoolButtons(){
+        $.each($('.toggle'), function(){
+          if ($(this).children('input[id^="__pool_it_"]')){
+            $(this).click();
+          }
+        });
+      }
+
+      timer.start(function(){
+        $.ajax({
+          url : "{% url 'getLogs' %}", // the endpoint
+          type : "POST", // http method
+          async: true,
+          data: { csrfmiddlewaretoken : '{{ csrf_token }}' },
+          success : function(res) {
+            if ('buttonsPool' in res) {
+              if (res.buttonsPool == true && buttonsPoolChecked == false) {
+                switchPoolButtons();
+                buttonsPoolChecked = true;
+              } else {
+                if (res.buttonsPool == false && buttonsPoolChecked == true) {
+                  switchPoolButtons();
+                  buttonsPoolChecked = false;
+                }
+              }
+            }
+            if ('data' in res && res.data && Object.keys(res.data).length !== 0){ // && length_console_logs !== Object.keys(res.data).length
+              $('#reloading-server').modal('hide');
+              $('#consoleLogger-content').empty();
+              res_data_keys = Object.keys(res.data).reverse()
+              for (var logtime in res_data_keys) {
+                data_result = '';
+                if (res.data.hasOwnProperty(res_data_keys[logtime])) {
+                  data_result += "[" + res_data_keys[logtime] + "] " + res.data[res_data_keys[logtime]] + "\n";
+                  if (data_result.includes('ERROR') && $('#consoleLogger-filter-error').is(':checked')) {
+                    data_result = "<p class=\"text-danger\">" + data_result.split("[ERROR] - ")[0] + " - " + data_result.split("[ERROR] - ")[1] + "</p>";
+                  } else if (data_result.includes('WARN') && $('#consoleLogger-filter-warn').is(':checked')) {
+                    data_result = "<p class=\"text-warning\">" + data_result.split("[WARN] - ")[0] + " - " + data_result.split("[WARN] - ")[1] + "</p>";
+                  } else if (data_result.includes('INFO') && $('#consoleLogger-filter-info').is(':checked')) {
+                    data_result = "<p class=\"text-info\">" + data_result.split("[INFO] - ")[0] + " - " + data_result.split("[INFO] - ")[1] + "</p>";
+                  } else if (data_result.includes('SUCCESS') && $('#consoleLogger-filter-success').is(':checked')) {
+                    data_result = "<p class=\"text-success\">" + data_result.split("[SUCCESS] - ")[0] + " - " + data_result.split("[SUCCESS] - ")[1] + "</p>";
+                  } else if (data_result.includes('CORE') && $('#consoleLogger-filter-core').is(':checked')) {
+                    data_result = "<p class=\"text-secondary\">" + data_result.split("[CORE] - ")[0] + " - " + data_result.split("[CORE] - ")[1] + "</p>";
+                  } else if (data_result.includes('MODULE') && $('#consoleLogger-filter-module').is(':checked')) {
+                    data_result = "<p class=\"text-default\">" + data_result.split("[MODULE] - ")[0] + " - " + data_result.split("[MODULE] - ")[1] + "</p>";
+                  } else {
+                    data_result = '';
+                  } /*else if ((data_result.includes('ERROR') == false && $('#consoleLogger-filter-error').is(':checked')) || (data_result.includes('WARN') == false && $('#consoleLogger-filter-warn').is(':checked')) || (data_result.includes('INFO') == false && $('#consoleLogger-filter-info').is(':checked')) || (data_result.includes('SUCCESS') == false && $('#consoleLogger-filter-success').is(':checked')) || (data_result.includes('CORE') == false && $('#consoleLogger-filter-core').is(':checked')) || (data_result.includes('MODULE') == false && $('#consoleLogger-filter-module').is(':checked'))){
+                    data_result = "<p class=\"text-muted\">" + data_result + "</p>";
+                  }*/
+                }
+                $('#consoleLogger-content').append(data_result);
+              }
+              timer.set_interval(2000);
+              length_console_logs = Object.keys(res.data).length;
+              if (error_counter_for_reload_message > 4){
+                error_counter_for_reload_message = 0;
+                location.reload();
+              }
+            } else {
+              // $('#consoleLogger').val('Loading Log...')
+              if (error_counter_for_reload_message > 4){
+                error_counter_for_reload_message = 0;
+                location.reload();
+              }
+              timer.set_interval(5000);
+            }
+          },
+          error : function(xhr,errmsg,err) {
+            error_counter_for_reload_message = error_counter_for_reload_message + 1
+            console.log(xhr.status + ": " + xhr.responseText);
+            if (error_counter_for_reload_message > 2){
+              $.each($('.modal'), function(){
+                if ($(this).attr('id') != 'reloading-server'){
+                  $(this).modal('hide');
+                }
+              });
+              $('#reloading-server').modal('show');
+            }
+          }
+        });
+      }, timer_clicktime );
     
     </script>
 
