@@ -20,11 +20,16 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hackingtools.core</span> <span class="kn">import</span> <span class="n">Logger</span>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hackingtools.core</span> <span class="kn">import</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Config</span>
 <span class="kn">import</span> <span class="nn">hackingtools</span> <span class="kn">as</span> <span class="nn">ht</span>
 
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">from</span> <span class="nn">PyPDF2</span> <span class="kn">import</span> <span class="n">PdfFileReader</span><span class="p">,</span> <span class="n">PdfFileWriter</span></pre></div>
+<span class="kn">from</span> <span class="nn">PyPDF2</span> <span class="kn">import</span> <span class="n">PdfFileReader</span><span class="p">,</span> <span class="n">PdfFileWriter</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ht_metadata&#39;</span><span class="p">)</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;output&#39;</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -49,7 +54,6 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;ht_metadata loaded&#39;</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 		<span class="k">pass</span></pre></div>
     </div>
   </div>
@@ -63,7 +67,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_metadata&#39;</span><span class="p">))</span></pre></div>
+		<span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">ht</span><span class="o">.</span><span class="n">getFunctionsNamesFromModule</span><span class="p">(</span><span class="s1">&#39;ht_metadata&#39;</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>

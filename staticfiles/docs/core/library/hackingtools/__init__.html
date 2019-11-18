@@ -20,10 +20,9 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">Config</span>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">Connections</span>
+<span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Utils</span><span class="p">,</span> <span class="n">Logger</span><span class="p">,</span> <span class="n">Repositories</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;import_modules&#39;</span><span class="p">)</span>
-<span class="n">config_locales</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;locales&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">colorama</span> <span class="kn">import</span> <span class="n">Fore</span><span class="p">,</span> <span class="n">Back</span><span class="p">,</span> <span class="n">Style</span>
 
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">threading</span>
@@ -31,11 +30,61 @@
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="nb">reload</span>
-
-<span class="n">modules_loaded</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kn">import</span> <span class="nn">progressbar</span>
+<span class="kn">import</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">readline</span>
+<span class="n">readline</span><span class="o">.</span><span class="n">parse_and_bind</span><span class="p">(</span><span class="s1">&#39;tab: complete&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">resolve</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="nb">reload</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>try:
+    from pip import main as pipmain
+except ImportError:
+    from pip._internal import main as pipmain</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">modules_loaded</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>If we want to be en Pool, import its Functions</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">global</span> <span class="n">WANT_TO_BE_IN_POOL</span>
+<span class="n">WANT_TO_BE_IN_POOL</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;WANT_TO_BE_IN_POOL&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">WANT_TO_BE_IN_POOL</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Pool not loaded&#39;</span><span class="p">,</span> <span class="s1">&#39;Change config or execute ht.Pool.switchPool() when you want it&#39;</span><span class="p">,</span> <span class="n">is_warn</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>If it&rsquo;s Django, import it&rsquo;s Functions</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">amidjango</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">amIdjango</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">amidjango</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">DjangoFunctions</span>
 
 <span class="n">this_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
 
@@ -45,19 +94,20 @@
 <span class="n">ignore_folders</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ignore_folders&#39;</span><span class="p">]</span>
 <span class="n">class_name_starts_with_modules</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;class_name_starts_with_modules&#39;</span><span class="p">]</span>
 <span class="n">function_name_starts_with_modules</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;function_name_starts_with_modules&#39;</span><span class="p">]</span>
-<span class="n">function_param_exclude</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;function_param_exclude&#39;</span><span class="p">]</span>
 <span class="n">default_class_name_for_all</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_class_name_for_all&#39;</span><span class="p">]</span>
 
 <span class="n">default_template_modules_ht</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_template_modules_ht&#39;</span><span class="p">]</span>
 
-<span class="n">package</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;package_name&#39;</span><span class="p">]</span></pre></div>
+<span class="n">package</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;package_name&#39;</span><span class="p">]</span>
+
+<span class="n">cant_install_requirements</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;cant_install_requirements&#39;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-1'>
+  <div class='section' id='section-4'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-1'>#</a>
+        <a class='octothorpe' href='#section-4'>#</a>
       </div>
       <h3><span id="getmodulesjson" href="getmodulesjson"> getModulesJSON </span></h3>
     </div>
@@ -66,10 +116,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-2'>
+  <div class='section' id='section-5'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-2'>#</a>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       <pre><code>Returns an Array with the modules loaded
 
@@ -88,16 +138,26 @@ Parameters
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">modules_loaded</span><span class="p">[</span><span class="n">mod</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">conf</span><span class="p">[</span><span class="n">mod</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1 function&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">conf</span><span class="p">[</span><span class="n">mod</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;{func} functions&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">modules_loaded</span><span class="p">[</span><span class="n">mod</span><span class="p">]))</span>
-    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Modules loaded as JSON automatically:&#39;</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">modules_loaded</span></pre></div>
+            <span class="n">conf</span><span class="p">[</span><span class="n">mod</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;{func} functions&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">modules_loaded</span><span class="p">[</span><span class="n">mod</span><span class="p">]))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-3'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-3'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Logger.printMessage(&lsquo;Modules loaded as JSON automatically:&rsquo;, conf, debug_module=True)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">modules_loaded</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>Returns an Array with the functions of a module you choose</p>
     </div>
@@ -106,10 +166,10 @@ Parameters
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-4'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <h2>Parameters</h2>
 <pre><code>module_name = String
@@ -131,22 +191,22 @@ Parameters
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <p>Return an Array with the modules calls you can write for importing directly a module.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesCalls</span><span class="p">():</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModuleCalls</span><span class="p">(</span><span class="n">module_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <p>Also, it logs into your console the calls formated for well reading.</p>
 <h2>Parameters</h2>
@@ -158,85 +218,11 @@ Parameters
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Modules :&#39;</span><span class="p">,</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">modulesCalls</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">getModules</span><span class="p">():</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">{text}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">mods</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">,</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">modulesCalls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mods</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">modulesCalls</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-7'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
-      </div>
-      <p>Return&rsquo;s an Array with modules name as keys and inside it&rsquo;s values,</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesFunctionsCalls</span><span class="p">():</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-8'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
-      </div>
-      <p>the key are the functions call names with a value of a template for 
-initialaizing and calling that function</p>
-<h2>Parameters</h2>
-<pre><code>None
-</code></pre>
-<h2>Return</h2>
-<pre><code>Array
-</code></pre>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="n">modulesCalls</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;import hackingtools as ht</span><span class="se">\n\n</span><span class="s1">ht_mod = ht.getModule(&quot;{module_name}&quot;)</span><span class="se">\n</span><span class="s1">mod_result = ht_mod.{module_function}({module_function_params})</span><span class="se">\n\n</span><span class="s1">print(mod_result)&#39;</span>
-    <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
-        <span class="n">module_funcs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module</span><span class="p">]:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module</span><span class="p">][</span><span class="n">func</span><span class="p">]:</span>
-                    <span class="n">module_funcs</span><span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module_name</span><span class="o">=</span><span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">module_function</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">module_function_params</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">modules_loaded</span><span class="p">[</span><span class="n">module</span><span class="p">][</span><span class="n">func</span><span class="p">][</span><span class="n">param</span><span class="p">]))</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="n">module_funcs</span><span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module_name</span><span class="o">=</span><span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">module_function</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">module_function_params</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">modulesCalls</span><span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">module_funcs</span>
-    <span class="k">return</span> <span class="n">modulesCalls</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-9'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
-      </div>
-      <p>Return&rsquo;s an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesNames</span><span class="p">():</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-10'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
-      </div>
-      <h2>Parameters</h2>
-<pre><code>None
-</code></pre>
-<h2>Return</h2>
-<pre><code>Array
-</code></pre>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="n">modules_names</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">tools</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
-        <span class="n">modules_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tools</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">modules_names</span></pre></div>
+    <span class="k">if</span> <span class="n">module_name</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">getModules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">mods</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">mods</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">mods</span> <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">getModules</span><span class="p">()]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -245,10 +231,10 @@ initialaizing and calling that function</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      <p>Return&rsquo;s an Array with the Label for GUI for that module</p>
+      <p>Return&rsquo;s an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesGuiNames</span><span class="p">():</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesNames</span><span class="p">():</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -265,12 +251,10 @@ initialaizing and calling that function</p>
 </code></pre>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">getModulesNames</span><span class="p">():</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">tool</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="s1">&#39;__gui_label__&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
-            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">names</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">modules_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tools</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
+        <span class="n">modules_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tools</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">modules_names</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -313,10 +297,15 @@ initialaizing and calling that function</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-15'>#</a>
       </div>
-      <p>Return&rsquo;s an Array with all modules as keys and their values, the Modal GUI function forms</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesModalTests</span><span class="p">():</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesFromCategory</span><span class="p">(</span><span class="n">category</span><span class="p">):</span>
+    <span class="n">mods</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">getModulesNames</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">getModuleCategory</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">category</span><span class="p">:</span>
+            <span class="n">mods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mods</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -325,20 +314,15 @@ initialaizing and calling that function</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-16'>#</a>
       </div>
-      <h2>Parameters</h2>
-<pre><code>None
-</code></pre>
-<h2>Return</h2>
-<pre><code>Array
-</code></pre>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">tools_functions</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">getModulesNames</span><span class="p">():</span>
-        <span class="n">tool_functions</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">tool</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="s1">&#39;django_form_module_function&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">tool_functions</span><span class="p">:</span>
-            <span class="n">tools_functions</span><span class="p">[</span><span class="n">tool</span><span class="p">]</span> <span class="o">=</span> <span class="n">tool_functions</span>
-    <span class="k">return</span> <span class="n">tools_functions</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getCategories</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mods</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mods</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">data</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -347,153 +331,6 @@ initialaizing and calling that function</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
-      <p>Return a String with the config for the GUI Treeview</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__getModulesConfig_treeView__</span><span class="p">():</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-18'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
-      </div>
-      <h2>Parameters</h2>
-<pre><code>None
-</code></pre>
-<h2>Return</h2>
-<pre><code>String
-</code></pre>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">result_text</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">tools_config</span> <span class="o">=</span> <span class="n">getModulesFullConfig</span><span class="p">()</span>
-    <span class="n">__treeview_load_all__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">tools_config</span><span class="p">,</span> <span class="n">result_text</span><span class="o">=</span><span class="n">result_text</span><span class="p">)</span>
-    <span class="n">response</span> <span class="o">=</span>  <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result_text</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">response</span>
-
-<span class="k">global</span> <span class="n">__treeview_counter__</span>
-<span class="n">__treeview_counter__</span> <span class="o">=</span> <span class="mi">0</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-19'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
-      </div>
-      <p>Loads the GUI Treeview with the config of all the modules loaded</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__treeview_load_all__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">result_text</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">count_pid</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-20'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
-      </div>
-      <h2>Parameters</h2>
-<pre><code>config = Array
-result_text = String
-count = int
-count_pid = int
-</code></pre>
-<h2>Return</h2>
-<pre><code>None
-</code></pre>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="n">open_key</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span>
-    <span class="n">close_key</span> <span class="o">=</span> <span class="s2">&quot;}&quot;</span>
-    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">count_pid</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">count</span> <span class="o">=</span> <span class="n">__treeview_count__</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
-        <span class="n">result_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">__treeview_createJSON__</span><span class="p">(</span><span class="n">conf_key</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">count_pid</span><span class="p">))</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;{msg} - {key} - {n} - {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Pasando por: &#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">count_pid</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="nb">float</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">__treeview_load_all__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">],</span><span class="n">result_text</span><span class="o">=</span><span class="n">result_text</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">count_pid</span><span class="o">=</span><span class="n">count</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">__treeview_load_all__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">]),</span><span class="n">result_text</span><span class="o">=</span><span class="n">result_text</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">count_pid</span><span class="o">=</span><span class="n">count</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;{msg} - {key} - {conf_key}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">config_locales</span><span class="p">[</span><span class="s1">&#39;error_json_data_loaded&#39;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">conf_key</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                <span class="k">except</span><span class="p">:</span>
-                    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;{msg} - {key} - {conf_key}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">config_locales</span><span class="p">[</span><span class="s1">&#39;error_json_data_not_loaded&#39;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">conf_key</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="n">c</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">RED</span><span class="p">,</span> <span class="n">debug_core</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-21'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__treeview_count__</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
-    <span class="k">global</span> <span class="n">__treeview_counter__</span>
-    <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="n">__treeview_counter__</span><span class="p">:</span>
-        <span class="n">count</span> <span class="o">=</span> <span class="n">__treeview_counter__</span>
-    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">__treeview_counter__</span> <span class="o">=</span> <span class="n">count</span>
-    <span class="k">return</span> <span class="n">count</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-22'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-22'>#</a>
-      </div>
-      <p>Return JSON String with the config for the treeview</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__treeview_createJSON__</span><span class="p">(</span><span class="n">conf_key</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-23'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
-      </div>
-      <h2>Parameters</h2>
-<pre><code>conf_key = String
-key = String
-count = int
-pid = int
-</code></pre>
-<h2>Return</h2>
-<pre><code>String JSON Format
-</code></pre>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
-        <span class="n">open_key</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span>
-        <span class="n">close_key</span> <span class="o">=</span> <span class="s2">&quot;}&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf_key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">&#39;{open_key}id:{count},name:&quot;{name}&quot;,pid:{pid},value:&quot;{value}&quot;{close_key}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">open_key</span><span class="o">=</span><span class="n">open_key</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">conf_key</span><span class="p">,</span> <span class="n">close_key</span><span class="o">=</span><span class="n">close_key</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;{open_key}id:{count},name:&quot;{name}&quot;,pid:{pid},value:&quot;&quot;{close_key}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">open_key</span><span class="o">=</span><span class="n">open_key</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">close_key</span><span class="o">=</span><span class="n">close_key</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;{msg} - {key} - {conf_key}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="n">config_locales</span><span class="p">[</span><span class="s1">&#39;error_load_json_data&#39;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">conf_key</span><span class="o">=</span><span class="n">conf_key</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">Fore</span><span class="o">.</span><span class="n">RED</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-24'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
-      </div>
       <p>Set Debug Log from Core to on/off</p>
     </div>
     <div class='code'>
@@ -501,10 +338,10 @@ pid = int
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-25'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-25'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       <h2>Parameters</h2>
 <pre><code>on = boolean (True/False)
@@ -518,10 +355,10 @@ pid = int
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-26'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-26'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       <p>Set Debug Log from Modules to on/off</p>
     </div>
@@ -530,10 +367,10 @@ pid = int
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       <h2>Parameters</h2>
 <pre><code>on = boolean (True/False)
@@ -547,10 +384,10 @@ pid = int
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-28'>
+  <div class='section' id='section-21'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-21'>#</a>
       </div>
       <p>Return&rsquo;s and load&rsquo;s a module into a variable passing a module name as parameter</p>
     </div>
@@ -559,10 +396,10 @@ pid = int
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
+  <div class='section' id='section-22'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
+        <a class='octothorpe' href='#section-22'>#</a>
       </div>
       <h2>Parameters</h2>
 <pre><code>moduleName = String
@@ -575,16 +412,18 @@ pid = int
       <div class="highlight"><pre>    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Initiation of {moduleName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">moduleName</span> <span class="ow">in</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;ht_&#39;</span> <span class="ow">in</span> <span class="n">moduleName</span><span class="p">:</span>
+                <span class="n">moduleName</span> <span class="o">=</span> <span class="s1">&#39;ht_{m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)</span>
             <span class="n">sentence</span> <span class="o">=</span> <span class="s1">&#39;modules.{category}.{mod}.{moduleName}.StartModule()&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
-    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Looks like {mod} is not loaded on HackingTools. Look the first import in log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mod</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-30'>
+  <div class='section' id='section-23'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       <p>Return&rsquo;s an Array with the config of a module passed as parameter</p>
     </div>
@@ -593,10 +432,10 @@ pid = int
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-31'>
+  <div class='section' id='section-24'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       <h2>Parameters</h2>
 <pre><code>moduleName = String
@@ -615,15 +454,151 @@ pid = int
     </div>
   </div>
   <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModules</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;modules.{name}.{classInit}()&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">mods</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">classInit</span><span class="o">=</span><span class="n">default_class_name_for_all</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">data</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesConfig</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[{</span><span class="n">m</span><span class="p">:</span><span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])}</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModuleCategory</span><span class="p">(</span><span class="n">moduleName</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">m</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <pre><code>Iniciamos con el comando anterior la instancia del modulo
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">createModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Creating {moduleName} on {category}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">moduleName</span> <span class="o">=</span> <span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">getCategories</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+        <span class="n">createCategory</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+    <span class="n">dir_actual</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">)):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">default_template_modules_ht</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;{dir}/core/config_modules_django/{category}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">)):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;{dir}/core/config_modules_django/{category}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;{dir}/core/config_modules_django/{category}/{moduleName}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{dir}/core/config_modules_django/{category}/ht_{moduleName}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({}))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>temp_path, hackingtools_dir = os.path.split(dir_actual)
+temp_path, library_dir = os.path.split(temp_path)
+urls_file = os.path.join(temp_path, &lsquo;urls.py&rsquo;)
+insert_url_django(urls_file, moduleName) # TODO edit urls for auto URLs when creating module
+print(&ldquo;{msg}&rdquo;.format(msg=urls_file))
+Reload variables on client side
+global hackingtools
+reload(hackingtools)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">Config</span><span class="o">.</span><span class="n">__createModuleTemplateConfig__</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">category</span><span class="p">)</span>
+    <span class="n">trying_something</span> <span class="o">=</span> <span class="n">__importModules__</span><span class="p">()</span>
+    <span class="k">return</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">removeModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+    <span class="n">modulePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_dir</span><span class="p">,</span> <span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">modulePath</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">modulePath</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">modulePath</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="n">modulePath</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
   <div class='section' id='section-32'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-32'>#</a>
       </div>
-      <p>Import Modules</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">createCategory</span><span class="p">(</span><span class="n">categoryName</span><span class="p">):</span>
+    <span class="n">categoryName</span> <span class="o">=</span> <span class="n">categoryName</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">getCategories</span><span class="p">()</span>
+    <span class="n">dir_actual</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">categoryName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">categoryName</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">categoryName</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -632,10 +607,15 @@ pid = int
       <div class='octowrap'>
         <a class='octothorpe' href='#section-33'>#</a>
       </div>
-      <p>TODO Continue documentation here</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">switchPool</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">WANT_TO_BE_IN_POOL</span>
+    <span class="k">if</span> <span class="n">WANT_TO_BE_IN_POOL</span><span class="p">:</span>
+        <span class="n">WANT_TO_BE_IN_POOL</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">WANT_TO_BE_IN_POOL</span> <span class="o">=</span> <span class="bp">True</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -644,10 +624,12 @@ pid = int
       <div class='octowrap'>
         <a class='octothorpe' href='#section-34'>#</a>
       </div>
-      <p>Core method - Usado por: <strong>importModules</strong>()</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__listDirectory__</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">exclude_pattern_starts_with</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">wantPool</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">WANT_TO_BE_IN_POOL</span>
+    <span class="k">return</span> <span class="n">WANT_TO_BE_IN_POOL</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -655,6 +637,71 @@ pid = int
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">workerName</span><span class="p">,</span> <span class="n">functionCall</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">{},</span> <span class="n">timesleep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">chunk</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">Utils</span><span class="o">.</span><span class="n">startWorker</span><span class="p">(</span><span class="n">workerName</span><span class="p">,</span> <span class="n">functionCall</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">timesleep</span><span class="p">),</span> <span class="n">chunk</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getWorker</span><span class="p">(</span><span class="n">nameWorker</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getWorkers</span><span class="p">()[</span><span class="n">nameWorker</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>TODO Continue documentation here</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <p>Import Modules</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Core method - Usado por: <strong>importModules</strong>()</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__listDirectory__</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">exclude_pattern_starts_with</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
       </div>
       <pre><code>Devuelve las carpetas contenidas en el directorio indicado. Si se quieren listar los 
 ficheros se deberá indicar el argumento files=True. En el caso de querer excluir ficheros o carpetas
@@ -719,10 +766,10 @@ se indicará en el argumento exclude_pattern_starts_with con el comienzo de los 
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-36'>
+  <div class='section' id='section-41'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-36'>#</a>
+        <a class='octothorpe' href='#section-41'>#</a>
       </div>
       <p>Core method - Usado por: <strong>importModules</strong>()</p>
     </div>
@@ -731,10 +778,10 @@ se indicará en el argumento exclude_pattern_starts_with con el comienzo de los 
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-37'>
+  <div class='section' id='section-42'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-37'>#</a>
+        <a class='octothorpe' href='#section-42'>#</a>
       </div>
       <pre><code>Devuelve las carpetas o ficheros contenidas en cada módulo del directorio actual, expluyendo de la raiz 
 los directorios que empiecen por punto.
@@ -770,10 +817,10 @@ los directorios que empiecen por punto.
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-38'>
+  <div class='section' id='section-43'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-38'>#</a>
+        <a class='octothorpe' href='#section-43'>#</a>
       </div>
       <p>Core method - Usado por: <strong>importModules</strong>()</p>
     </div>
@@ -782,10 +829,10 @@ los directorios que empiecen por punto.
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-39'>
+  <div class='section' id='section-44'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-39'>#</a>
+        <a class='octothorpe' href='#section-44'>#</a>
       </div>
       <pre><code>Devuelve los métodos que tiene una clase pasada como parametro
 </code></pre>
@@ -795,156 +842,16 @@ los directorios que empiecen por punto.
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-40'>
+  <div class='section' id='section-45'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-40'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__methodsFromPythonFile__</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">function_name_starts_with_modules</span><span class="p">)]</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-41'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-41'>#</a>
+        <a class='octothorpe' href='#section-45'>#</a>
       </div>
       <p>Core method - Usado por: <strong>importModules</strong>()</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">def</span> <span class="nf">__classNameFromModule__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">class_name_starts_with_modules</span><span class="p">)]</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-42'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__createHtmlModalForm__</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">config_subkey</span><span class="o">=</span><span class="s1">&#39;django_form_main_function&#39;</span><span class="p">,</span> <span class="n">config_extrasubkey</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="n">module_form</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="n">config_subkey</span><span class="p">,</span> <span class="n">extrasubkey</span><span class="o">=</span><span class="n">config_extrasubkey</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">module_form</span><span class="p">:</span>
-        <span class="k">return</span>
-        
-    <span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;&lt;div class=</span><span class="se">\&quot;</span><span class="s2">modal-body</span><span class="se">\&quot;</span><span class="s2">&gt;&quot;</span>
-    <span class="n">footer</span> <span class="o">=</span> <span class="s1">&#39;&lt;div class=&quot;modal-footer&quot;&gt;&#39;</span>
-    <span class="n">m_form</span> <span class="o">=</span> <span class="n">module_form</span>
-    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">m_form</span><span class="p">:</span>
-        <span class="n">temp_m_form</span> <span class="o">=</span> <span class="n">m_form</span>
-        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;systems&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;systems&#39;</span><span class="p">])</span> <span class="ow">or</span> <span class="ow">not</span> <span class="s1">&#39;systems&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="s1">&#39;__type__&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;__id__&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;__className__&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]:</span>
-                <span class="n">input_type</span> <span class="o">=</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;__type__&#39;</span><span class="p">]</span>
-                <span class="n">input_id</span> <span class="o">=</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;__id__&#39;</span><span class="p">]</span>
-                <span class="n">input_class</span> <span class="o">=</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;__className__&#39;</span><span class="p">]</span>
-                <span class="n">input_placeholder</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="n">loading_text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">if</span> <span class="s1">&#39;placeholder&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]:</span>
-                    <span class="n">input_placeholder</span> <span class="o">=</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;placeholder&#39;</span><span class="p">]</span>
-                <span class="n">input_label_desc</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">if</span> <span class="s1">&#39;label_desc&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]:</span>
-                    <span class="n">input_label_desc</span> <span class="o">=</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;label_desc&#39;</span><span class="p">]</span>
-                <span class="n">input_value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">if</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]:</span>
-                    <span class="n">input_value</span> <span class="o">=</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-                <span class="n">loading_text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">if</span> <span class="s1">&#39;loading_text&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]:</span>
-                    <span class="n">loading_text</span> <span class="o">=</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="s1">&#39;loading_text&#39;</span><span class="p">]</span>
-                <span class="n">required</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">if</span> <span class="s1">&#39;required&#39;</span> <span class="ow">in</span> <span class="n">temp_m_form</span><span class="p">[</span><span class="n">m</span><span class="p">]:</span>
-                    <span class="n">required</span> <span class="o">=</span> <span class="s1">&#39;required&#39;</span>
-                <span class="k">if</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
-                    <span class="n">html</span> <span class="o">+=</span> <span class="s2">&quot;&lt;label class=</span><span class="se">\&quot;</span><span class="s2">btn btn-default</span><span class="se">\&quot;</span><span class="s2">&gt;{input_label_desc}&lt;span class=</span><span class="se">\&quot;</span><span class="s2">name-file</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;/span&gt;&lt;input type=</span><span class="se">\&quot;</span><span class="s2">file</span><span class="se">\&quot;</span><span class="s2"> name=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">{className}</span><span class="se">\&quot;</span><span class="s2"> hidden {required} /&gt;&lt;/label&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_label_desc</span><span class="o">=</span><span class="n">input_label_desc</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="n">input_class</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input_id</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s1">&#39;checkbox&#39;</span><span class="p">:</span>
-                    <span class="n">html</span> <span class="o">+=</span> <span class="s2">&quot;&lt;div class=</span><span class="se">\&quot;</span><span class="s2">custom-control custom-checkbox</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;input type=</span><span class="se">\&quot;</span><span class="s2">checkbox</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">{className}</span><span class="se">\&quot;</span><span class="s2"> id=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> name=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> {required} &gt;&lt;label class=</span><span class="se">\&quot;</span><span class="s2">custom-control-label</span><span class="se">\&quot;</span><span class="s2"> for=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2">&gt;{input_label_desc}&lt;/label&gt;&lt;/div&gt;&lt;br /&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">input_id</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="n">input_class</span><span class="p">,</span> <span class="n">input_label_desc</span><span class="o">=</span><span class="n">input_label_desc</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s1">&#39;button&#39;</span><span class="p">:</span>
-                    <span class="n">footer</span> <span class="o">+=</span> <span class="s2">&quot;&lt;button type=</span><span class="se">\&quot;</span><span class="s2">button</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">{className}</span><span class="se">\&quot;</span><span class="s2"> data-dismiss=</span><span class="se">\&quot;</span><span class="s2">modal</span><span class="se">\&quot;</span><span class="s2">&gt;{input_value}&lt;/button&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="n">input_class</span><span class="p">,</span> <span class="n">input_value</span><span class="o">=</span><span class="n">input_value</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s1">&#39;submit&#39;</span><span class="p">:</span>
-                    <span class="n">footer</span> <span class="o">+=</span> <span class="s2">&quot;&lt;input type=</span><span class="se">\&quot;</span><span class="s2">submit</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">{className}</span><span class="se">\&quot;</span><span class="s2"> value=</span><span class="se">\&quot;</span><span class="s2">{input_value}</span><span class="se">\&quot;</span><span class="s2"> id=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> /&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="n">input_class</span><span class="p">,</span> <span class="n">input_value</span><span class="o">=</span><span class="n">input_value</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input_id</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">loading_text</span><span class="p">:</span>
-                        <span class="n">footer</span> <span class="o">+=</span> <span class="s2">&quot;&lt;script&gt;$(&#39;#&quot;</span>
-                        <span class="n">footer</span> <span class="o">+=</span> <span class="n">input_id</span>
-                        <span class="n">footer</span> <span class="o">+=</span> <span class="s2">&quot;&#39;).on(&#39;click&#39;, function(){$(&#39;#&quot;</span>
-                        <span class="n">footer</span> <span class="o">+=</span> <span class="n">input_id</span>
-                        <span class="n">footer</span> <span class="o">+=</span> <span class="s2">&quot;&#39;).attr(&#39;value&#39;, &#39;{loading_text}&#39;);&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loading_text</span><span class="o">=</span><span class="n">loading_text</span><span class="p">)</span>
-                        <span class="n">footer</span> <span class="o">+=</span> <span class="s2">&quot;});&lt;/script&gt;&quot;</span>
-                <span class="k">elif</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s1">&#39;textarea&#39;</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">input_label_desc</span><span class="p">:</span>
-                        <span class="n">html</span> <span class="o">+=</span> <span class="s2">&quot;&lt;div class=</span><span class="se">\&quot;</span><span class="s2">form-group row</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;label for=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">col-4 col-form-label</span><span class="se">\&quot;</span><span class="s2">&gt;{input_label_desc}&lt;/label&gt;&lt;div class=</span><span class="se">\&quot;</span><span class="s2">col-4</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;textarea class=</span><span class="se">\&quot;</span><span class="s2">{className}</span><span class="se">\&quot;</span><span class="s2"> name=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> id=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> rows=</span><span class="se">\&quot;</span><span class="s2">5</span><span class="se">\&quot;</span><span class="s2"> placeholder=</span><span class="se">\&quot;</span><span class="s2">{placeholder}</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;/textarea&gt;&lt;/div&gt;&lt;/div&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="n">input_class</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input_id</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="n">input_placeholder</span><span class="p">,</span> <span class="n">input_label_desc</span><span class="o">=</span><span class="n">input_label_desc</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">html</span> <span class="o">+=</span> <span class="s2">&quot;&lt;textarea class=</span><span class="se">\&quot;</span><span class="s2">{className}</span><span class="se">\&quot;</span><span class="s2"> name=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> id=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> rows=</span><span class="se">\&quot;</span><span class="s2">5</span><span class="se">\&quot;</span><span class="s2"> placeholder=</span><span class="se">\&quot;</span><span class="s2">{placeholder}</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;/textarea&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="n">input_class</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input_id</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="n">input_placeholder</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">html</span> <span class="o">+=</span> <span class="s2">&quot;&lt;div class=</span><span class="se">\&quot;</span><span class="s2">form-group row</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;label for=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">col-4 col-form-label</span><span class="se">\&quot;</span><span class="s2">&gt;{input_label_desc}&lt;/label&gt;&lt;div class=</span><span class="se">\&quot;</span><span class="s2">col-4</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;input class=</span><span class="se">\&quot;</span><span class="s2">{className}</span><span class="se">\&quot;</span><span class="s2"> type=</span><span class="se">\&quot;</span><span class="s2">{input_type}</span><span class="se">\&quot;</span><span class="s2"> value=</span><span class="se">\&quot;</span><span class="s2">{input_value}</span><span class="se">\&quot;</span><span class="s2"> placeholder=</span><span class="se">\&quot;</span><span class="s2">{placeholder}</span><span class="se">\&quot;</span><span class="s2"> name=</span><span class="se">\&quot;</span><span class="s2">{id}</span><span class="se">\&quot;</span><span class="s2"> {required}/&gt;&lt;/div&gt;&lt;/div&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">input_id</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="n">input_placeholder</span><span class="p">,</span> <span class="n">input_label_desc</span><span class="o">=</span><span class="n">input_label_desc</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="n">input_class</span><span class="p">,</span> <span class="n">input_type</span><span class="o">=</span><span class="n">input_type</span><span class="p">,</span> <span class="n">input_value</span><span class="o">=</span><span class="n">input_value</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">)</span>
-    <span class="n">footer</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/div&gt;&#39;</span>
-    <span class="n">html</span> <span class="o">+=</span> <span class="n">footer</span>
-    <span class="n">html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/div&gt;&#39;</span>
-    <span class="k">return</span> <span class="n">html</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-43'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__getModulesDjangoForms__</span><span class="p">():</span>
-    <span class="n">forms</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">getModulesNames</span><span class="p">():</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">__createHtmlModalForm__</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">form</span><span class="p">:</span>
-            <span class="n">forms</span><span class="p">[</span><span class="n">mod</span><span class="p">]</span> <span class="o">=</span> <span class="n">form</span>
-    <span class="k">return</span> <span class="n">forms</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-44'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-44'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__getModulesDjangoFormsModal__</span><span class="p">():</span>
-    <span class="n">forms</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">getModulesNames</span><span class="p">():</span>
-        <span class="n">mod_data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">functions</span> <span class="o">=</span> <span class="n">__getModuleFunctionNamesFromConfig__</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">functions</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">functs</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
-                <span class="n">form</span> <span class="o">=</span> <span class="n">__createHtmlModalForm__</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="s1">&#39;django_form_module_function&#39;</span><span class="p">,</span> <span class="n">functs</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">form</span><span class="p">:</span>
-                    <span class="n">mod_data</span><span class="p">[</span><span class="n">functs</span><span class="p">]</span> <span class="o">=</span> <span class="n">form</span>
-        <span class="k">if</span> <span class="n">mod_data</span><span class="p">:</span>
-            <span class="n">forms</span><span class="p">[</span><span class="n">mod</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod_data</span>
-    <span class="k">return</span> <span class="n">forms</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-45'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-45'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__getModuleFunctionNamesFromConfig__</span><span class="p">(</span><span class="n">mod</span><span class="p">):</span>
-    <span class="n">functions</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">subkey</span><span class="o">=</span><span class="s1">&#39;django_form_module_function&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">functions</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">func_name</span> <span class="k">for</span> <span class="n">func_name</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -956,8 +863,11 @@ los directorios que empiecen por punto.
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModulesConfig</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">[{</span><span class="n">m</span><span class="p">:</span><span class="n">Config</span><span class="o">.</span><span class="n">getConfig</span><span class="p">(</span><span class="n">parentKey</span><span class="o">=</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])}</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">]</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__importModule__</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="p">):</span>
+    <span class="n">module_import_string</span> <span class="o">=</span> <span class="s1">&#39;from .{modules}.{category}.{tool} import {toolFileName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="n">modules</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">toolFileName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)</span>
+    <span class="n">module_import_string_no_from</span> <span class="o">=</span> <span class="s1">&#39;{modules}.{category}.{tool}.{toolFileName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="n">modules</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ht_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">toolFileName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">exec</span><span class="p">(</span><span class="n">module_import_string</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -966,10 +876,11 @@ los directorios que empiecen por punto.
       <div class='octowrap'>
         <a class='octothorpe' href='#section-47'>#</a>
       </div>
-      <p>Core method</p>
+      <p>globals()[module_name] = importlib.import_module(module_import_string)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__importModules__</span><span class="p">():</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">module_className</span> <span class="o">=</span> <span class="n">__classNameFromModule__</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">moduleName</span><span class="p">))</span>
+        <span class="n">module_functions</span> <span class="o">=</span> <span class="n">__methodsFromModule__</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">moduleName</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -978,22 +889,35 @@ los directorios que empiecen por punto.
       <div class='octowrap'>
         <a class='octothorpe' href='#section-48'>#</a>
       </div>
-      <pre><code>Método que busca dentro de las carpetas junto a este fichero (ignorando las directorios marcados anteriormente)
-y como subcarpetas tiene que haber el nombre del tipo de herramienta que es y debajo de esas carpetas
-tienen que estar los directorios individualmente por herramientas que se incorpore a la librería
-</code></pre>
+      <p>Logger.printMessage(message=&rsquo;{mod} loaded&rsquo;.format(mod=module_name), debug_module=True)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">modules</span> <span class="o">=</span> <span class="n">__getModules__</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">modu</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">submod</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">[</span><span class="n">modu</span><span class="p">]:</span>
-            <span class="k">for</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">[</span><span class="n">modu</span><span class="p">][</span><span class="n">submod</span><span class="p">]:</span>
-                <span class="n">module_name</span> <span class="o">=</span> <span class="n">modules</span><span class="p">[</span><span class="n">modu</span><span class="p">][</span><span class="n">submod</span><span class="p">][</span><span class="n">files</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{category}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">submod</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
-                <span class="n">module_import_string</span> <span class="o">=</span> <span class="s1">&#39;from .{modules}.{category}.{tool} import {toolFileName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="n">modu</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">submod</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">toolFileName</span><span class="o">=</span><span class="n">module_name</span><span class="p">)</span>
-                <span class="n">module_import_string_no_from</span> <span class="o">=</span> <span class="s1">&#39;{modules}.{category}.{tool}.{toolFileName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="n">modu</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">submod</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">toolFileName</span><span class="o">=</span><span class="n">module_name</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_functions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">mod_func</span> <span class="ow">in</span> <span class="n">module_functions</span><span class="p">:</span>
+                <span class="n">functionParams</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">getFunctionsParams</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">functionName</span><span class="o">=</span><span class="n">mod_func</span><span class="p">,</span> <span class="n">i_want_list</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+                <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">][</span><span class="n">mod_func</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">][</span><span class="n">mod_func</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">functionParams</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">functionParams</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">False</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sin funciones...&#39;</span>   
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">new_module_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;No module named&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">moduleName</span> <span class="ow">in</span> <span class="n">cant_install_requirements</span><span class="p">:</span>
+                <span class="n">cant_install_requirements</span><span class="p">[</span><span class="n">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">new_module_name</span> <span class="ow">in</span> <span class="n">cant_install_requirements</span><span class="p">[</span><span class="n">moduleName</span><span class="p">]:</span>
+
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">exec</span><span class="p">(</span><span class="n">module_import_string</span><span class="p">)</span></pre></div>
+                    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;__importModules__&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Trying to install module {m}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">new_module_name</span><span class="p">),</span> <span class="n">is_warn</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="kn">import</span> <span class="nn">subprocess</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="s1">&#39;install&#39;</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+                    <span class="n">out</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="s1">&#39;EnvironmentError&#39;</span> <span class="ow">in</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;__importModules__&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{moduleName} {error}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">new_module_name</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s1">&#39;Could not install in environment&#39;</span><span class="p">),</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -1002,38 +926,19 @@ tienen que estar los directorios individualmente por herramientas que se incorpo
       <div class='octowrap'>
         <a class='octothorpe' href='#section-49'>#</a>
       </div>
-      <p>globals()[module_name] = importlib.import_module(module_import_string)</p>
+      <p>pipmain([sys.executable, &lsquo;-m&rsquo;, &lsquo;pip&rsquo;, &lsquo;install&rsquo;, &lsquo;&ndash;user&rsquo;, new_module_name])</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>                    <span class="n">module_className</span> <span class="o">=</span> <span class="n">__classNameFromModule__</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">module_name</span><span class="p">))</span>
-                    <span class="n">module_functions</span> <span class="o">=</span> <span class="n">__methodsFromModule__</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">module_name</span><span class="p">))</span>
+      <div class="highlight"><pre>                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
 
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_functions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                        <span class="k">for</span> <span class="n">mod_func</span> <span class="ow">in</span> <span class="n">module_functions</span><span class="p">:</span>
-                            <span class="n">function</span> <span class="o">=</span> <span class="s1">&#39;{module}.{callClass}().{function}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">callClass</span><span class="o">=</span><span class="n">default_class_name_for_all</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">mod_func</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">new_module_name</span> <span class="ow">in</span> <span class="n">cant_install_requirements</span><span class="p">[</span><span class="n">moduleName</span><span class="p">]:</span>
+                    <span class="n">cant_install_requirements</span><span class="p">[</span><span class="n">moduleName</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_module_name</span><span class="p">)</span>
 
-                            <span class="k">try</span><span class="p">:</span>
-                                <span class="n">params_func</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">function</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-                            <span class="k">except</span><span class="p">:</span>
-                                <span class="k">pass</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;hackingtools&#39;</span> <span class="ow">in</span> <span class="n">new_module_name</span><span class="p">:</span>
+                    <span class="n">Config</span><span class="o">.</span><span class="n">add_requirements_ignore</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">)</span>
 
-                            <span class="k">if</span> <span class="n">params_func</span><span class="p">:</span>
-                                <span class="n">clean_params</span> <span class="o">=</span> <span class="p">[]</span>
-                                <span class="k">for</span> <span class="n">param_func</span> <span class="ow">in</span> <span class="n">params_func</span><span class="p">:</span>
-                                    <span class="k">if</span> <span class="n">param_func</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">function_param_exclude</span><span class="p">:</span>
-                                        <span class="n">clean_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_func</span><span class="p">)</span>
-
-                            <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">][</span><span class="n">mod_func</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-                            <span class="k">if</span> <span class="n">clean_params</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">clean_params</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                                <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">][</span><span class="n">mod_func</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clean_params</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">][</span><span class="n">mod_func</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">modules_loaded</span><span class="p">[</span><span class="n">module_import_string_no_from</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sin funciones...&#39;</span>   
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{a} - [ERROR] - {msg}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">module_import_string</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span></pre></div>
+                <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;__importModules__&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{moduleName} {error}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">module_import_string</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)),</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -1042,10 +947,10 @@ tienen que estar los directorios individualmente por herramientas que se incorpo
       <div class='octowrap'>
         <a class='octothorpe' href='#section-50'>#</a>
       </div>
-      <p>return True</p>
+      <p>Core method</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre></pre></div>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">__importModules__</span><span class="p">():</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -1054,14 +959,20 @@ tienen que estar los directorios individualmente por herramientas que se incorpo
       <div class='octowrap'>
         <a class='octothorpe' href='#section-51'>#</a>
       </div>
-      
+      <pre><code>Método que busca dentro de las carpetas junto a este fichero (ignorando las directorios marcados anteriormente)
+y como subcarpetas tiene que haber el nombre del tipo de herramienta que es y debajo de esas carpetas
+tienen que estar los directorios individualmente por herramientas que se incorpore a la librería
+</code></pre>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getModules</span><span class="p">():</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;modules.{name}.{classInit}()&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">mods</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">classInit</span><span class="o">=</span><span class="n">default_class_name_for_all</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">data</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;{meth}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meth</span><span class="o">=</span><span class="s1">&#39;__importModules__&#39;</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Loading modules...&#39;</span><span class="p">,</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">modules</span> <span class="o">=</span> <span class="n">__getModules__</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">max_value</span><span class="o">=</span><span class="n">progressbar</span><span class="o">.</span><span class="n">UnknownLength</span><span class="p">)</span> <span class="k">as</span> <span class="n">bar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">modu</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">submod</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">[</span><span class="n">modu</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">[</span><span class="n">modu</span><span class="p">][</span><span class="n">submod</span><span class="p">]:</span>
+                    <span class="n">module_name</span> <span class="o">=</span> <span class="n">modules</span><span class="p">[</span><span class="n">modu</span><span class="p">][</span><span class="n">submod</span><span class="p">][</span><span class="n">files</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">try</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -1070,11 +981,19 @@ tienen que estar los directorios individualmente por herramientas que se incorpo
       <div class='octowrap'>
         <a class='octothorpe' href='#section-52'>#</a>
       </div>
-      <pre><code>Iniciamos con el comando anterior la instancia del modulo
-</code></pre>
+      <p>worker(&ldquo;import-module-{m}&rdquo;.format(m=module_name), <strong>importModule</strong>, args=(modu, submod, module_name, bar)) # Threaded</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">createModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>                        <span class="n">__importModule__</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="n">modu</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">submod</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">module_name</span><span class="p">)</span>
+                        <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;__importModules__&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;{moduleName} File not found: {error}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)),</span> <span class="n">is_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                        <span class="k">pass</span>
+
+<span class="n">__importModules__</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">Utils</span><span class="o">.</span><span class="n">amIdjango</span><span class="p">(</span><span class="vm">__name__</span><span class="p">):</span>
+    <span class="n">worker</span><span class="p">(</span><span class="s1">&#39;refresh-pool-servers&#39;</span><span class="p">,</span> <span class="n">Pool</span><span class="o">.</span><span class="n">__checkPoolNodes__</span><span class="p">,</span> <span class="n">timesleep</span><span class="o">=</span><span class="mi">180</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -1083,111 +1002,14 @@ tienen que estar los directorios individualmente por herramientas que se incorpo
       <div class='octowrap'>
         <a class='octothorpe' href='#section-53'>#</a>
       </div>
-      
+      <p>try:
+    for t in threads:
+        t.join()
+except:
+    pass</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">Logger</span><span class="o">.</span><span class="n">printMessage</span><span class="p">(</span><span class="s1">&#39;Creating {moduleName} on {category}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">),</span> <span class="n">debug_module</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">moduleName</span> <span class="o">=</span> <span class="n">moduleName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">category</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">categories</span> <span class="o">=</span> <span class="n">getCategories</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
-        <span class="n">createCategory</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
-    <span class="n">dir_actual</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">)):</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)):</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">default_template_modules_ht</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">)):</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/{moduleName}/__init__.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span> <span class="n">moduleName</span><span class="o">=</span><span class="n">moduleName</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-54'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-54'>#</a>
-      </div>
-      <p>temp_path, hackingtools_dir = os.path.split(dir_actual)
-temp_path, library_dir = os.path.split(temp_path)
-urls_file = os.path.join(temp_path, &lsquo;urls.py&rsquo;)
-insert_url_django(urls_file, moduleName) # TODO edit urls for auto URLs when creating module
-print(&ldquo;{msg}&rdquo;.format(msg=urls_file))
-Reload variables on client side</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">global</span> <span class="n">hackingtools</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-55'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-55'>#</a>
-      </div>
-      <p>reload(hackingtools)</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="n">Config</span><span class="o">.</span><span class="n">__createModuleTemplateConfig__</span><span class="p">(</span><span class="n">moduleName</span><span class="p">)</span>
-    <span class="n">trying_something</span> <span class="o">=</span> <span class="n">__importModules__</span><span class="p">()</span>
-    <span class="k">return</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-56'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-56'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">insert_url_django</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-57'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-57'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">createCategory</span><span class="p">(</span><span class="n">categoryName</span><span class="p">):</span>
-    <span class="n">categoryName</span> <span class="o">=</span> <span class="n">categoryName</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">categories</span> <span class="o">=</span> <span class="n">getCategories</span><span class="p">()</span>
-    <span class="n">dir_actual</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">categoryName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">categoryName</span><span class="p">)):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;{dir}/modules/{category}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">dir_actual</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">categoryName</span><span class="p">))</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-58'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-58'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getCategories</span><span class="p">():</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">mods</span> <span class="ow">in</span> <span class="n">modules_loaded</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">mods</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mods</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">data</span>
-
-<span class="n">__importModules__</span><span class="p">()</span>
-
-</pre></div>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
