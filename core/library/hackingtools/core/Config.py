@@ -160,9 +160,7 @@ def switch_function_for_map(category, moduleName, functionName):
     
     conf = {}
 
-    with open(mod_config_file) as json_data:
-        if json_data:
-            conf = json.load(json_data)
+    conf = config['django']
 
     if conf:
         if not 'maps' in conf:
@@ -178,10 +176,11 @@ def switch_function_for_map(category, moduleName, functionName):
         if not in_map in conf['maps'][moduleName][functionName]:
             conf['maps'][moduleName][functionName][in_map] = False
         else:
-            conf['maps'][moduleName][functionName][in_map] = not bool(conf['maps'][moduleName][functionName][in_map])
+            conf['maps'][moduleName][functionName][in_map] = not conf['maps'][moduleName][functionName][in_map]
 
         with open(mod_config_file, 'w', encoding='utf8') as outfile:  
             json.dump(conf, outfile, indent=4, ensure_ascii=False)
+
     switching_to_map = False
 
 def add_requirements_ignore(moduleName, requirementModuleName):

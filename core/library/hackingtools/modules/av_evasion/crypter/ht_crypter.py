@@ -179,16 +179,7 @@ if os.path.exists(drpnm):
 	if drpnm.split('.')[1] in exec_extensions and sys.platform == 'win32':
 		os.system(drpnm)
 	if drpnm.split('.')[1] in python_extensions:
-		#exec(dcy_data)
-		try:
-			p = subprocess.call(['python {fn}'.format(fn=drpnm)])
-		except Exception as e:
-			nf = open('exception.txt', 'wb')
-			try:
-				nf.write(str(e))
-			except:
-				pass
-			nf.close()
+		exec(dcy_data)
 		#proc = subprocess.Popen('python {fn}'.format(fn=drpnm), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 """
 

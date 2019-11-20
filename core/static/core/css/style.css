@@ -466,3 +466,30 @@ textarea.form-control {
     z-index: 99999;
     margin: 15px !important;
 }
+#switchFunctionMap {
+    padding: 10px !important;
+}
+.functions_map {
+    width: 50%;
+    height: 100px;
+    position: absolute;
+    background: #073e005c;
+    bottom: 0px;
+    overflow: visible;
+}
+.functions_button_bar {
+    bottom: 10px;
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 99;
+}
+.card-function {
+    display: flex;
+    flex-direction: inherit;
+}
+.in_map_icon {
+    padding: 10px;
+    font-size: 20px;
+}

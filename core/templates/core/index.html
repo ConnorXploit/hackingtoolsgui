@@ -315,17 +315,34 @@
                                                   <input type="text" id="is_async_{{functi}}" name="is_async_{{functi}}" value="true" style="display: none;">
                                                   <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}">
                                                 </form>
-                                                <form id="switchFunctionMap">
-                                                  {% csrf_token %}
-                                                  <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap" {% if status_pool %} checked {% endif %}>
-                                                    <label class="custom-control-label" for="checkSwitchFunctionMap">On/Off in map</label>
-                                                  </div>
-                                                  <!--<input id="checkSwitchPool" type="checkbox" style="border: 0px !important;" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size="small" data-offstyle="danger" data-onstyle="{% if pool_list|length > 0 %}success{% else %}primary{% endif %}" {% if status_pool %}checked{% endif %}>-->
-                                                </form>
+
+
+                                                {% for modul, funcs in funcs_map.items %}
+                                                  {% if modul in 'ht_'|add:name %}
+                                                    {% if functi in funcs %}
+                                                      <form id="switchFunctionMap_{{modul}}_{{functi}}">
+                                                        {% csrf_token %}
+                                                        <div class="custom-control custom-switch">
+                                                          <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}" checked>
+                                                          <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
+                                                        </div>
+                                                      </form>
+                                                    {% else %}
+                                                      <form id="switchFunctionMap_{{modul}}_{{functi}}">
+                                                        {% csrf_token %}
+                                                        <div class="custom-control custom-switch">
+                                                          <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}">
+                                                          <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
+                                                        </div>
+                                                      </form>
+                                                    {% endif %}
+                                                  {% endif %}
+                                                {% endfor %}
+
+
                                                 <script>
                                                   $(function() {
-                                                    $('#checkSwitchFunctionMap').change(function(e) {
+                                                    $("#checkSwitchFunctionMap_{{'ht_'|add:name}}_{{functi}}").change(function(e) {
                                                       e.preventDefault();
                                                       //$("#switchPoolForm").submit();
                                                       $.ajax({
@@ -430,7 +447,7 @@
                               {% endfor %}
                             {% endfor %}
                             <a href="#" data-toggle="modal" data-target="#testModuleFunctionModal_ht_{{name}}_{{funct_name}}">
-                              <div class="card bg-dark text-white shadow mouseOverFunction" id="function_background_{{name}}_{{funct_name}}">
+                              <div class="card bg-dark text-white shadow mouseOverFunction card-function" id="function_background_{{name}}_{{funct_name}}">
                                 <div class="card-body">
                                   {{funct_name}}
                                   {% for i, param in funct_params.items %}
@@ -441,6 +458,13 @@
                                     {% endif %}
                                   {% endfor %}
                                 </div>
+                                {% for modul, funcs in funcs_map.items %}
+                                  {% if modul in 'ht_'|add:name %}
+                                    {% if funct_name in funcs %}
+                                      <i class="far fa-map in_map_icon" class="in_map_icon"></i>
+                                    {% endif %}
+                                  {% endif %}
+                                {% endfor %}
                               </div>
                             </a>
                           {% endif %}
@@ -921,7 +945,7 @@
                 }
                 $('#consoleLogger-content').append(data_result);
               }
-              timer.set_interval(2000);
+              timer.set_interval(5000);
               length_console_logs = Object.keys(res.data).length;
               if (error_counter_for_reload_message > 4){
                 error_counter_for_reload_message = 0;

@@ -433,14 +433,14 @@ def decimalToAscii(content):
     Logger.printMessage(message='{methodName}'.format(methodName='decimalToAscii'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
     return ''.join([chr(dec) for dec in content])
 
-def randomText(length=8, alphabet='lalpha', try_pattern=None, pattern_force_chars=''):
+def randomText(length=8, alphabet='lalpha', try_pattern=None, pattern_force_chars=None):
     try:
         if try_pattern:
             alphabets_patter = []
             for char in try_pattern:
                 char_alphabet = fromWhatDictListIsChar(char=char)
 
-                if char_alphabet and not char in pattern_force_chars:
+                if char_alphabet and pattern_force_chars and not char in pattern_force_chars:
                     alphabets_patter.append(char_alphabet)
                 else:
                     alphabets_patter.append(char)

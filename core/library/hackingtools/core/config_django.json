@@ -75,7 +75,7 @@
                 "__in_map_createStub__": false
             },
             "crypt_file": {
-                "__in_map_crypt_file__": true
+                "__in_map_crypt_file__": false
             },
             "help": {
                 "__in_map_help__": false

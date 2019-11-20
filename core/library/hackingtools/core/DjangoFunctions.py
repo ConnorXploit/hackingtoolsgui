@@ -1,5 +1,8 @@
 from . import Config, Logger, Utils
-from core.library import hackingtools as ht
+if Utils.amIdjango(__name__):
+    from core.library import hackingtools as ht
+else:
+    import hackingtools as ht
 ht.Logger.setDebugModule(True)
 
 from colorama import Fore
@@ -127,19 +130,22 @@ def getModulesFunctionsCalls():
 def getModulesFunctionsForMap():
     functions = {}
     for module in ht.modules_loaded:
+        functions[module.split('.')[-1]] = []
         for f in ht.modules_loaded[module]:
-            functions[module.split('.')[-1]] = []
             functionName = f.split('.')[-1]
             conf_func = Config.getConfig(parentKey='django', key='maps', subkey=module.split('.')[-1], extrasubkey=functionName)
+
             if not conf_func:
                 Config.switch_function_for_map(ht.getModuleCategory(module.split('.')[-1]), module.split('.')[-1], functionName)
             else:
                 in_maps = '__in_map_{f}__'.format(f=functionName)
+
                 if in_maps in conf_func and conf_func[in_maps] == True:
                     functions[module.split('.')[-1]].append(functionName)
-            if not functions[module.split('.')[-1]]:
-                del functions[module.split('.')[-1]]
-    print(functions)
+
+        if not functions[module.split('.')[-1]]:
+            functions[module.split('.')[-1]] = []
+
     return functions
 
 def __getModulesConfig_treeView__():

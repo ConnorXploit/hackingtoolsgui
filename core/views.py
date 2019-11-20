@@ -56,6 +56,7 @@ def load_data():
     is_heroku = True if 'DYNO' in os.environ else False
     my_node_id_pool = ht.Pool.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
+    funcs_map = ht.DjangoFunctions.getModulesFunctionsForMap()
     ht_data =  { 
         'modules':modules_names, 
         'modules_names_repo':modules_names_repo,
@@ -73,7 +74,8 @@ def load_data():
         'is_heroku':is_heroku,
         'ngrokService':ngrokService,
         'my_node_id_pool':my_node_id_pool,
-        'status_pool':status_pool}
+        'status_pool':status_pool,
+        'funcs_map':funcs_map}
 
 def load_data_maps():
     global ht_data_maps
@@ -103,7 +105,7 @@ def switchFunctionMap(request):
     mod = request.POST.get('module')
     cat = ht.getModuleCategory(mod)
     fun = request.POST.get('functionName')
-    ht.Config.switch_function_for_map(cat, mod, fun)
+    Config.switch_function_for_map(cat, mod, fun)
     return JsonResponse({'data':'Ok'})
 
 def home(request, popup_text=''):
