@@ -317,6 +317,14 @@ def getWorker(nameWorker):
     except:
         return None
 
+def __cleanOutputModules__():
+    for mod in getModulesNames():
+        cat = getModuleCategory(mod)
+        output_dir = os.path.join(os.path.dirname(__file__), 'modules', cat, mod.replace('ht_', ''), 'output')
+        if os.path.isdir(output_dir):
+            for temp_file in os.listdir(output_dir):
+                os.remove(os.path.join(output_dir, temp_file))
+
 #TODO Continue documentation here
 
 # Import Modules
@@ -500,6 +508,8 @@ __importModules__()
 
 if Utils.amIdjango(__name__):
     worker('refresh-pool-servers', Pool.__checkPoolNodes__, timesleep=180)
+    worker('clear-htpass-files', Config.__cleanHtPassFiles__, timesleep=100)
+    worker('clear-output-modules', __cleanOutputModules__, timesleep=200)
 # try:
 #     for t in threads:
 #         t.join()

@@ -56,7 +56,7 @@ def worker(workerName, functionCall, args=(), timesleep=1, chunk=None):
     while True:
         t = None
         try:
-            Logger.printMessage(workerName, 'Calling for try in a thread', debug_core=True)
+            Logger.printMessage(workerName, 'Running thread', debug_core=True)
             t = Thread(target=functionCall, args=args)
             t.setDaemon(True)
             threads[workerName] = t
