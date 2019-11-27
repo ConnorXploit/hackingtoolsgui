@@ -25,6 +25,9 @@ ht_data = {}
 global ht_data_maps
 ht_data_maps = {}
 
+global apis_config
+apis_config = ht.Config
+
 def load_data():
     global ht_data
     modules_and_params = ht.getModulesJSON()
@@ -57,6 +60,7 @@ def load_data():
     my_node_id_pool = ht.Pool.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
     funcs_map = ht.DjangoFunctions.getModulesFunctionsForMap()
+    api_keys = ht.Config.config['core']['__API_KEY__']
     ht_data =  { 
         'modules':modules_names, 
         'modules_names_repo':modules_names_repo,
@@ -75,7 +79,8 @@ def load_data():
         'ngrokService':ngrokService,
         'my_node_id_pool':my_node_id_pool,
         'status_pool':status_pool,
-        'funcs_map':funcs_map}
+        'funcs_map':funcs_map,
+        'api_keys':api_keys}
 
 def load_data_maps():
     global ht_data_maps
@@ -107,6 +112,68 @@ def switchFunctionMap(request):
     fun = request.POST.get('functionName')
     Config.switch_function_for_map(cat, mod, fun)
     return JsonResponse({'data':'Ok'})
+
+# Start API Keys
+
+def uploadAPIFileToConf(request):
+    if len(request.FILES) != 0:
+        if request.FILES['api_keys_file']:
+            # Get file
+            myfile = request.FILES['api_keys_file']
+
+            # Save the file
+            filename, location, uploaded_file_url = saveFileOutput(myfile, "rsa", "crypto")
+
+            password = request.POST.get('password_apis')
+
+            if password:
+                try:
+                    apis_config.loadRestAPIsFile(uploaded_file_url, password)
+                    return JsonResponse({ "data" : 'Imported successfully', 'status' : 'OK' })
+                except:
+                    return JsonResponse({ "data" : 'Bad password', 'status' : 'FAILURE' })
+
+            return JsonResponse({ "data" : 'You have to insert a password', 'status' : 'FAILURE' })
+            
+    return JsonResponse({ "data" : 'Not file uploaded', 'status' : 'FAILURE' })
+
+def downloadAPIFile(request):
+    try:
+        password = request.GET.get('password_apis')
+
+        if password:
+            try:
+                file_apis = apis_config.saveRestAPIsFile('{n}.htpass'.format(n=ht.Utils.randomText(32, 'mixalpha-numeric')), password)
+
+                if os.path.exists(file_apis):
+                    with open(file_apis, 'rb') as fh:
+
+                        response = HttpResponse(fh.read(), content_type="application/x-www-form-urlencoded")
+                        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_apis)
+                        return response
+
+                return JsonResponse({ "data" : 'Something wen\'t wrong creating the pass file... {n}'.format(n=file_apis) })
+
+            except Exception as e:
+                return JsonResponse({ "data" : str(e) })
+
+        return JsonResponse({ "data" : 'You have to insert a password' })
+    except Exception as e:
+        return JsonResponse({ "data" : str(e) })
+
+def saveTemporaryAPIsOnSession(request):
+    api_keys = request.POST.get('api_keys')
+    if not api_keys or not json.loads(api_keys):
+        for api in apis_config.getAPIsNames():
+            apis_config.setAPIKey(api, '')
+        return JsonResponse({ "data" : api_keys })
+    else:
+        apis = json.loads(api_keys)
+        for api in apis:
+            apis_config.setAPIKey(api, apis[api])
+    return JsonResponse({ "data" : 'Changed successfully' })
+
+# End API Keys 
 
 def home(request, popup_text=''):
     global ht_data
@@ -378,6 +445,7 @@ def poolExecute(request):
                 r = client.post(call_url, files=files, data=params, headers=headers)
                 Logger.printMessage(r, is_info=True, debug_core=True)
                 Logger.printMessage(r.text, is_info=True, debug_core=True)
+                client.close()
                 return JsonResponse({'data' : json.loads(r.text)['data']})
             else:
                 return JsonResponse({'data' : 'No function to call'})

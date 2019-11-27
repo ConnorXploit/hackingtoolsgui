@@ -191,13 +191,13 @@
         },
         "ht_nmap": {
             "getConnectedDevices": {
-                "__in_map_getConnectedDevices__": false
+                "__in_map_getConnectedDevices__": true
             },
             "getDevicePorts": {
                 "__in_map_getDevicePorts__": false
             },
             "hasDevicePortOpened": {
-                "__in_map_hasDevicePortOpened__": false
+                "__in_map_hasDevicePortOpened__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -245,7 +245,7 @@
                 "__in_map_cantidadTuplasEnTapla__": false
             },
             "cogerColumnasTabla": {
-                "__in_map_cogerColumnasTabla__": false
+                "__in_map_cogerColumnasTabla__": true
             },
             "cogerNombreDeTablaPorID": {
                 "__in_map_cogerNombreDeTablaPorID__": false

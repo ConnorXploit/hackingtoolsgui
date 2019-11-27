@@ -17,6 +17,7 @@ hackingtoolsgui/__pycache__/
 
 build/*
 dist/*
+core/library/hackingtools/core/apis_files
 core/library/hackingtools/modules/*/*/output/
 core/migrations/*
 dist/

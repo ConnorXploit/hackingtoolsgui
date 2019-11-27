@@ -100,6 +100,8 @@ def __save_config__(new_conf, config_file='config.json'):
             The List with the configuration you 
             want to dump onto the file
     """
+    for api_name in new_conf['core']['__API_KEY__']:
+        new_conf['core']['__API_KEY__'][api_name] = ''
     with open(os.path.join(os.path.dirname(__file__) , config_file), 'w', encoding='utf8') as outfile:  
         json.dump(new_conf, outfile, indent=4, ensure_ascii=False)
 
@@ -199,6 +201,63 @@ def add_requirements_ignore(moduleName, requirementModuleName):
         config['core']['cant_install_requirements'][moduleName].append(str(requirementModuleName))
 
     __save_config__(config)
+
+# API Keys
+
+def getAPIsNames():
+    return list(config['core']['__API_KEY__'].keys())
+
+# === getAPIKey ===
+def getAPIKey(api_name):
+    """
+    Return an API Key registered into configuration
+    
+    Arguments
+    ---------
+        apiName : str
+            
+            The API Key name in String that is 
+            registered into config.json
+    
+    Returns
+    -------
+        str
+            
+            The API Key into your config.json into 
+            the apiName you selected / None
+    """
+    try:
+        return config['core']['__API_KEY__'][api_name]
+    except:
+        return None
+
+# === setAPIKey ===
+def setAPIKey(api_name, api_key):
+    config['core']['__API_KEY__'][api_name] = api_key
+
+def loadRestAPIsFile(rest_api_file, password):
+    with open(rest_api_file, 'r') as res:
+        from hackingtools.modules.crypto.rsa import ht_rsa as r
+        mod_rsa = r.StartModule()
+        import hashlib
+        deciphered = mod_rsa.decode(hashlib.md5(password.encode()).hexdigest(), res.read().replace('\n', ''))
+        api_keys = json.loads(deciphered)
+        config['core']['__API_KEY__'] = api_keys
+
+def saveRestAPIsFile(rest_api_file, password):
+    api_keys = config['core']['__API_KEY__']
+    data = json.dumps(api_keys)
+    from hackingtools.modules.crypto.rsa import ht_rsa as r
+    mod_rsa = r.StartModule()
+    import hashlib
+    ciphered = mod_rsa.encode(hashlib.md5(password.encode()).hexdigest(), data)
+    max_width = 64
+    ciphered = '\n'.join([ciphered[y-max_width:y] for y in range(max_width, len(ciphered)+max_width,max_width)])
+    with open(os.path.join(os.path.dirname(__file__), 'apis_files', rest_api_file), 'w') as n:
+        n.write(ciphered)
+    return os.path.join(os.path.dirname(__file__), 'apis_files', rest_api_file)
+
+# End API Keys
 
 # === __save_config__ ===
 def __save_django_module_config__(new_conf, category, moduleName, functionName):
@@ -397,30 +456,6 @@ def getConfig(parentKey, key, subkey=None, extrasubkey=None):
             except:
                 return
         return config[parentKey][key]
-    except:
-        return None
-
-# === getApiKey ===
-def getApiKey(apiName):
-    """
-    Return an API Key registered into configuration
-    
-    Arguments
-    ---------
-        apiName : str
-            
-            The API Key name in String that is 
-            registered into config.json
-    
-    Returns
-    -------
-        str
-            
-            The API Key into your config.json into 
-            the apiName you selected / None
-    """
-    try:
-        return config['core']['__API_KEY__'][apiName]
     except:
         return None
 

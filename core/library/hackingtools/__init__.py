@@ -11,7 +11,7 @@ import types
 import inspect, shutil
 import ast
 import progressbar
-import requests, json
+import json
 import sys
 import readline
 readline.parse_and_bind('tab: complete')

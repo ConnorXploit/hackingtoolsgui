@@ -183,9 +183,147 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">
+          <div class="modal fade" id="configurarAPIKeys" tabindex="-1" role="dialog" aria-labelledby="configurarAPIKeysLabel" aria-hidden="true">
+            <div class="modal-dialog api-keys-table" role="document">
+              <div class="modal-content">
+                <form action="{% url 'downloadAPIFile' %}" method="post" id="form-api-keys">
+                  {% csrf_token %}
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="configurarAPIKeysLabel">Configure API keys</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div id="table-edit" class="table-editable">
+                      <table class="table table-bordered table-responsive-md table-striped text-center">
+                        <thead>
+                          <tr>
+                            <th class="text-center">API Name</th>
+                            <th class="text-center">API Key</th>
+                            <th class="text-center">Remove</th>
+                          </tr>
+                        </thead>
+                        <tbody class="table-api-keys">
+                          {% for api_name, api_key in api_keys.items %}
+                            {% if api_key != '' %}
+                              <!-- -->
+                              <tr class="hide">
+                                <td class="pt-3-half apiName" contenteditable="true" placeholder="Example">{{api_name}}</td>
+                                <td class="pt-3-half apiKey" contenteditable="true" placeholder="XXXXXXXXX">{{api_key}}</td>
+                                <td>
+                                  <span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 waves-effect waves-light">Remove</button></span>
+                                </td>
+                              </tr>
+                            {% endif %}
+                          {% endfor %}
+                        </tbody>
+                        <input type="password" class="form-control" id="password_apis" placeholder="Password" required>
+                        <div class='input-group'>
+                          <input type='file' class='custom-file-input' name='api_keys_file' id='api_keys_file'>
+                          <label class='custom-file-label' for='api_keys_file'>Import your APIs file here</label>
+                        </div>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <span class="table-add float-right mb-3 mr-2 button-add-api">
+                      <a href="#!" class="text-success">
+                        <i class="fas fa-plus fa-2x" aria-hidden="true"></i>
+                      </a>
+                    </span>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Download APIs"></button>
+                  </div>
+                </form>
+                <script>
+                  $("#form-api-keys").on('submit',(function(e) {
+                    e.preventDefault();
+                    var arr = {};
+                    $(function () {
+                      $('.table-api-keys tr').each(function (a, b) {
+                        var name = $('.apiName', b).text();
+                        var value = $('.apiKey', b).text();
+                        arr[name] = value;
+                      });
+                      var formDat = new FormData();
+                      formDat.append('api_keys', JSON.stringify(arr))
+                      $.ajax({
+                        headers: { "X-CSRFToken": '{{csrf_token}}' },
+                        url: '{% url "saveTemporaryAPIsOnSession" %}',
+                        type: "POST",
+                        data: formDat,
+                        async: true,
+                        enctype: 'multipart/form-data',
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success : function(res) {
+                          $.ajax({
+                            headers: { "X-CSRFToken": '{{csrf_token}}' },
+                            url: '{% url "downloadAPIFile" %}?password_apis=' + $('#password_apis').val(),
+                            type: "GET",
+                            async: true,
+                            xhrFields: {
+                                responseType: 'blob'
+                            },
+                            success : function(data) {
+                              var a = document.createElement('a');
+                              var url = window.URL.createObjectURL(data);
+                              a.href = url;
+                              a.download = 'MyKeys.htpass';
+                              document.body.append(a);
+                              a.click();
+                              a.remove();
+                              window.URL.revokeObjectURL(url);
+                              $.notify("Download APIs:\n" + 'MyKeys.htpass', "success");
+                            },
+                            error : function(res) {
+                              $.notify("Download APIs:\n" + res, "error");
+                            }
+                          });
+                        },
+                        error : function(res) {
+                          $.notify("Saving On Session APIs:\n" + res, "error");
+                        }
+                      });
+                    });
+                  }));
+                  $("#api_keys_file").change(function(){
+                    var formDat = new FormData();
+                    formDat.append('password_apis', $('#password_apis').val())
+                    formDat.append('api_keys_file', $('#api_keys_file')[0].files[0]); 
+                    $.ajax({
+                      headers: { "X-CSRFToken": '{{csrf_token}}' },
+                      url: '{% url "uploadAPIFileToConf" %}',
+                      type: "POST",
+                      data: formDat,
+                      async: true,
+                      enctype: 'multipart/form-data',
+                      contentType: false,
+                      cache: false,
+                      processData: false,
+                      success : function(res) {
+                        if (res.status == 'OK'){
+                          $.notify("Upload API File:\n" + res.data, "success");
+                          location.reload();
+                        } else {
+                          $.notify("Upload API File:\n" + res.data, "error");
+                        }
+                      },
+                      error : function(res) {
+                        $.notify("Upload API File:\n" + res, "error");
+                      }
+                    });
+                  });
+                </script>
+              </div>
+            </div>
+          </div>
+          <a class="nav-link" href="#" data-toggle="modal" data-target="#configurarAPIKeys">
             <i class="fas fa-fw fa-table"></i>
-            <span>API Keys</span></a>
+            <span>API Keys</span>
+          </a>
         </li>
 
         <!-- Divider -->
@@ -235,6 +373,9 @@
 
     <!-- Notifications for ajax success or error messages -->
     <script src="{% static 'core/js/notify.min.js' %}"></script>
+
+    <!-- Editable Table for API Keys -->
+    <script src="{% static 'core/js/table-editable.js' %}"></script>
 
     <!-- Live Refresh for Django  -->
     <!--<script src="{% static 'core/js/live.js' %}"></script>-->

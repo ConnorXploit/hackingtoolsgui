@@ -148,6 +148,14 @@ def getModulesFunctionsForMap():
 
     return functions
 
+def getAPIKeysForTable():
+    data = {}
+    for api in ht.Config.getAPIsNames():
+        api_key = ht.Config.getAPIKey(api)
+        if api_key:
+            data[api] = api_key
+    return data
+
 def __getModulesConfig_treeView__():
     """Return a String with the config for the GUI Treeview
 
@@ -322,15 +330,9 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                             options_from_function = eval(functionCall)
 
                 if input_type == 'file':
-                    #html += "<label class=\"btn btn-default\">{input_label_desc}<span class=\"name-file\"></span><input type=\"file\" name=\"{id}\" class=\"{className}\" hidden {required} /></label>".format(input_label_desc=input_label_desc, className=input_className, id=m, required=required)
                     html += "<div class='input-group'>"
-                    # html += "<div class='input-group-prepend'>"
-                    # html += "<span class='input-group-text' id='inputGroupFileAddon01{id}'>{input_label_desc}</span>".format(id=m, input_label_desc=input_label_desc)
-                    # html += "</div>"
-                    # html += "<div class='custom-file'>"
                     html += "<input type='file' class='custom-file-input' name='{id}' {required}>".format(id=m, required=required)
                     html += "<label class='custom-file-label' for='{id}'>Choose file</label>".format(id=m)
-                    # html += "</div>"
                     html += "</div>"
 
                 elif input_type == 'checkbox':
