@@ -505,3 +505,6 @@ textarea.form-control {
     padding-right: 8px;
     padding-bottom: 0px;
 }
+.apiKey {
+    filter: blur(3px);
+}

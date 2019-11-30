@@ -146,7 +146,7 @@
                 "__in_map_searchFromConfig__": false
             },
             "setApi": {
-                "__in_map_setApi__": false
+                "__in_map_setApi__": true
             }
         },
         "ht_metadata": {
@@ -191,13 +191,13 @@
         },
         "ht_nmap": {
             "getConnectedDevices": {
-                "__in_map_getConnectedDevices__": true
+                "__in_map_getConnectedDevices__": false
             },
             "getDevicePorts": {
                 "__in_map_getDevicePorts__": false
             },
             "hasDevicePortOpened": {
-                "__in_map_hasDevicePortOpened__": true
+                "__in_map_hasDevicePortOpened__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -245,7 +245,7 @@
                 "__in_map_cantidadTuplasEnTapla__": false
             },
             "cogerColumnasTabla": {
-                "__in_map_cogerColumnasTabla__": true
+                "__in_map_cogerColumnasTabla__": false
             },
             "cogerNombreDeTablaPorID": {
                 "__in_map_cogerNombreDeTablaPorID__": false

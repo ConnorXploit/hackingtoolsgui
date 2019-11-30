@@ -24,10 +24,18 @@
     $("#search_form").on('submit',(function(e) {
       e.preventDefault();
       var form = $('#search_form');
-      var shodan_key = prompt("Insert API Key", "Shodan"); 
+      var shodan_key = '';
+      {% for apis, apis_keys in API.items %}
+        {% if 'shodan_api' == apis %}
+          {% if apis_keys == '' %}
+            shodan_key = prompt("Insert API Key", "Shodan");
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
       var params = {
         serviceName: $('#search_this').val(),
-        shodanKeyString: shodan_key,
+        shodan_api: shodan_key,
         is_async_getIPListfromServices: true
       }
       $.ajax({
@@ -43,7 +51,16 @@
             }
             if(res.data instanceof Array){
               var data = '';
-              var api_key = prompt("Insert API Key", "IpInfoDB"); 
+              var api_key = '';
+
+              {% for api_name, api_k in api_keys.items %}
+                {% if 'ipinfodb_api' == api_name %}
+                  {% if apis_k == '' %}
+                    api_key = prompt("Insert API Key", "IpInfoDB");
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              
               if (api_key != null) {
                 for(var i=0; i < res.data.length; i++){
                   var params = {
@@ -63,7 +80,7 @@
                         }
                         var params = {
                           ip: r.data['ip'],
-                          api: shodan_key,
+                          shodan_api: shodan_key,
                           is_async_search_host: true
                         }
                         $.ajax({

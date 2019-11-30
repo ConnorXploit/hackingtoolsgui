@@ -91,6 +91,7 @@ def load_data_maps():
         ht_data_maps['funcs_map'] = ht.DjangoFunctions.getModulesFunctionsForMap()
     except:
         pass
+    ht_data_maps['api_keys'] = ht.Config.config['core']['__API_KEY__']
 
 def renderMainPanel(request, popup_text=''):
     global ht_data

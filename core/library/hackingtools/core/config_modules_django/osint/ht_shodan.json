@@ -38,10 +38,10 @@
                 "placeholder": "serviceName",
                 "required": true
             },
-            "shodanKeyString": {
+            "shodan_api": {
                 "__type__": "text",
-                "label_desc": "shodanKeyString",
-                "placeholder": "shodanKeyString",
+                "label_desc": "shodan_api",
+                "placeholder": "shodan_api",
                 "value": null
             },
             "__pool_it_getIPListfromServices__": {
@@ -60,10 +60,10 @@
                 "placeholder": "ip",
                 "required": true
             },
-            "api": {
+            "shodan_api": {
                 "__type__": "text",
-                "label_desc": "api",
-                "placeholder": "api",
+                "label_desc": "shodan_api",
+                "placeholder": "shodan_api",
                 "value": null
             },
             "__pool_it_search_host__": {
@@ -81,6 +81,12 @@
                 "label_desc": "ip",
                 "placeholder": "ip",
                 "required": true
+            },
+            "shodan_api": {
+                "__type__": "text",
+                "label_desc": "shodan_api",
+                "placeholder": "shodan_api",
+                "value": null
             },
             "__pool_it_getSSLCerts__": {
                 "__type__": "checkbox",
@@ -104,6 +110,12 @@
                 "placeholder": "osintDays",
                 "value": 100
             },
+            "shodan_api": {
+                "__type__": "text",
+                "label_desc": "shodan_api",
+                "placeholder": "shodan_api",
+                "value": null
+            },
             "__pool_it_queryShodan__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -126,6 +138,12 @@
                 "placeholder": "keyword",
                 "value": ""
             },
+            "shodan_api": {
+                "__type__": "text",
+                "label_desc": "shodan_api",
+                "placeholder": "shodan_api",
+                "value": null
+            },
             "__pool_it_searchFromConfig__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
@@ -136,12 +154,6 @@
             "__function__": "setApi",
             "__async__": false,
             "__return__": "",
-            "shodanKeyString": {
-                "__type__": "text",
-                "label_desc": "shodanKeyString",
-                "placeholder": "shodanKeyString",
-                "value": null
-            },
             "__pool_it_setApi__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
