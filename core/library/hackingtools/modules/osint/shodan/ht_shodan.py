@@ -19,9 +19,9 @@ class StartModule():
     def help(self):
         Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_shodan'), debug_module=True) 
 
-    def __getShodanByAPI__(self, shodan_api=''):
+    def __getShodanByAPI__(self, shodan_api='', session_id=None):
         if not shodan_api:
-            return Shodan(ht.Config.getAPIKey('shodan_api'))
+            return Shodan(ht.Config.getAPIKey('shodan_api', session_id))
         return Shodan(shodan_api)
 
     def getIPListfromServices(self, serviceName, shodan_api=None):

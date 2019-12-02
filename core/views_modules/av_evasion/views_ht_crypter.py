@@ -58,7 +58,7 @@ def crypt_file(request):
             is_last = False
             if iterate_count == 1:
                 is_last = True
-
+            
             crypted_file = crypter.crypt_file(filename=uploaded_file_url, new_file_name=new_file_name, drop_file_name=drop_file_name, prime_length=prime_length, iterate_count=iterate_count, is_last=is_last, compile_exe=compile_exe)
 
             if crypted_file:
@@ -150,4 +150,3 @@ def createStub(request):
 		if request.POST.get('is_async_createStub', False):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
-	

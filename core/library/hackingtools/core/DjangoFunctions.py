@@ -148,14 +148,6 @@ def getModulesFunctionsForMap():
 
     return functions
 
-def getAPIKeysForTable():
-    data = {}
-    for api in ht.Config.getAPIsNames():
-        api_key = ht.Config.getAPIKey(api)
-        if api_key:
-            data[api] = api_key
-    return data
-
 def __getModulesConfig_treeView__():
     """Return a String with the config for the GUI Treeview
 

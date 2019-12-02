@@ -29,6 +29,9 @@ import json
 global config
 config = {}
 
+global api_keys_sessions
+api_keys_sessions = False
+
 global switching_to_map
 switching_to_map = False
 
@@ -204,11 +207,16 @@ def add_requirements_ignore(moduleName, requirementModuleName):
 
 # API Keys
 
-def getAPIsNames():
+def getAPIsNames(session_id=None):
+    if session_id:
+        try:
+            config['core']['__API_KEY_{sess}__'.format(sess=session_id)].keys()
+        except:
+            pass
     return list(config['core']['__API_KEY__'].keys())
 
 # === getAPIKey ===
-def getAPIKey(api_name):
+def getAPIKey(api_name, session_id=None):
     """
     Return an API Key registered into configuration
     
@@ -227,29 +235,60 @@ def getAPIKey(api_name):
             the apiName you selected / None
     """
     try:
+        if session_id:
+            try:
+                sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+                return config['core'][sess_key][api_name]
+            except:
+                pass
         return config['core']['__API_KEY__'][api_name]
     except:
         return None
 
 # === setAPIKey ===
-def setAPIKey(api_name, api_key):
-    config['core']['__API_KEY__'][api_name] = api_key
+def setAPIKey(api_name, api_key, session_id=None):
+    if session_id:
+        try:
+            sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+            if not sess_key in config['core']:
+                config['core'][sess_key] = {}
+            config['core'][sess_key][api_name] = api_key
+        except:
+            config['core']['__API_KEY__'][api_name] = api_key
+    else:
+        config['core']['__API_KEY__'][api_name] = api_key
 
 def __cleanHtPassFiles__():
     for htpass_file in os.listdir(os.path.join(os.path.dirname(__file__), 'apis_files')):
         os.remove(os.path.join(os.path.dirname(__file__), 'apis_files', htpass_file))
 
-def loadRestAPIsFile(rest_api_file, password):
+def loadRestAPIsFile(rest_api_file, password, session_id=None):
     with open(rest_api_file, 'r') as res:
         from hackingtools.modules.crypto.rsa import ht_rsa as r
         mod_rsa = r.StartModule()
         import hashlib
         deciphered = mod_rsa.decode(hashlib.md5(password.encode()).hexdigest(), res.read().replace('\n', ''))
         api_keys = json.loads(deciphered)
-        config['core']['__API_KEY__'] = api_keys
+        if session_id:
+            try:
+                sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+                if not sess_key in config['core']:
+                    config['core'][sess_key] = {}
+                config['core'][sess_key] = api_keys
+            except:
+                config['core']['__API_KEY__'] = api_keys
+        else:
+            config['core']['__API_KEY__'] = api_keys
 
-def saveRestAPIsFile(rest_api_file, password):
-    api_keys = config['core']['__API_KEY__']
+def saveRestAPIsFile(rest_api_file, password, session_id=None):
+    if session_id:
+        try:
+            sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+            api_keys = config['core'][sess_key]
+        except:
+            api_keys = config['core']['__API_KEY__']
+    else:
+        api_keys = config['core']['__API_KEY__']
     data = json.dumps(api_keys)
     from hackingtools.modules.crypto.rsa import ht_rsa as r
     mod_rsa = r.StartModule()

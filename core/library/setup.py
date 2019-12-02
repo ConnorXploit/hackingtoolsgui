@@ -32,7 +32,7 @@ def checkPackages():
 checkPackages()
 
 setup(name='hackingtools',
-        version='1.9.8',
+        version='2.0.1',
         description='All Hacking Tools in this Python with Manually Created Modules',
         url='http://github.com/ConnorXploit/hackingtools-py',
         author='Connor',

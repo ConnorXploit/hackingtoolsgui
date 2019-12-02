@@ -28,7 +28,7 @@ ht_data_maps = {}
 global apis_config
 apis_config = ht.Config
 
-def load_data():
+def load_data(session_id=None):
     global ht_data
     modules_and_params = ht.getModulesJSON()
     modules_forms = ht.DjangoFunctions.__getModulesDjangoForms__()
@@ -60,7 +60,16 @@ def load_data():
     my_node_id_pool = ht.Pool.MY_NODE_ID
     status_pool = ht.WANT_TO_BE_IN_POOL
     funcs_map = ht.DjangoFunctions.getModulesFunctionsForMap()
-    api_keys = ht.Config.config['core']['__API_KEY__']
+
+    if session_id:
+        sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+        if sess_key in ht.Config.config['core']:
+            api_keys = ht.Config.config['core'][sess_key]
+        else:
+            api_keys = {}
+
+    else:
+        api_keys = ht.Config.config['core']['__API_KEY__']
     ht_data =  { 
         'modules':modules_names, 
         'modules_names_repo':modules_names_repo,
@@ -94,18 +103,32 @@ def load_data_maps():
     ht_data_maps['api_keys'] = ht.Config.config['core']['__API_KEY__']
 
 def renderMainPanel(request, popup_text=''):
+    if not 'htpass' in request.COOKIES:
+        session_id = ht.Utils.randomText(40, 'mixalpha-numeric-symbol14')
+    else:
+        session_id = request.COOKIES['htpass']
     global ht_data
     if not ht_data:
-        load_data()
+        load_data(session_id)
     if popup_text != '':
         ht_data['popup_text'] = popup_text
-    return render(request, 'core/index.html', dict(ht_data))
+    
+    response = render(request, 'core/index.html', dict(ht_data))
+    response.set_cookie('htpass', session_id)
+    return response
 
 def renderMaps(request):
+    if not 'htpass' in request.COOKIES:
+        session_id = ht.Utils.randomText(40, 'mixalpha-numeric-symbol14')
+    else:
+        session_id = request.COOKIES['htpass']
     global ht_data_maps
     if not ht_data_maps:
         load_data_maps()
-    return render(request, 'core/maps.html', dict(ht_data_maps))
+    
+    response = render(request, 'core/maps.html', dict(ht_data_maps))
+    response.set_cookie('htpass', session_id)
+    return response
 
 def switchFunctionMap(request):
     mod = request.POST.get('module')
@@ -117,6 +140,7 @@ def switchFunctionMap(request):
 # Start API Keys
 
 def uploadAPIFileToConf(request):
+    session_id = request.COOKIES['htpass']
     if len(request.FILES) != 0:
         if request.FILES['api_keys_file']:
             # Get file
@@ -129,7 +153,7 @@ def uploadAPIFileToConf(request):
 
             if password:
                 try:
-                    apis_config.loadRestAPIsFile(uploaded_file_url, password)
+                    apis_config.loadRestAPIsFile(uploaded_file_url, password, session_id)
                     return JsonResponse({ "data" : 'Imported successfully', 'status' : 'OK' })
                 except:
                     return JsonResponse({ "data" : 'Bad password', 'status' : 'FAILURE' })
@@ -139,12 +163,13 @@ def uploadAPIFileToConf(request):
     return JsonResponse({ "data" : 'Not file uploaded', 'status' : 'FAILURE' })
 
 def downloadAPIFile(request):
+    session_id = request.COOKIES['htpass']
     try:
         password = request.GET.get('password_apis')
 
         if password:
             try:
-                file_apis = apis_config.saveRestAPIsFile('{n}.htpass'.format(n=ht.Utils.randomText(32, 'mixalpha-numeric')), password)
+                file_apis = apis_config.saveRestAPIsFile('{n}.htpass'.format(n=ht.Utils.randomText(32, 'mixalpha-numeric')), password, session_id)
 
                 if os.path.exists(file_apis):
                     with open(file_apis, 'rb') as fh:
@@ -163,22 +188,27 @@ def downloadAPIFile(request):
         return JsonResponse({ "data" : str(e) })
 
 def saveTemporaryAPIsOnSession(request):
+    session_id = request.COOKIES['htpass']
     api_keys = request.POST.get('api_keys')
     if not api_keys or not json.loads(api_keys):
         for api in apis_config.getAPIsNames():
-            apis_config.setAPIKey(api, '')
+            apis_config.setAPIKey(api, '', session_id)
         return JsonResponse({ "data" : api_keys })
     else:
         apis = json.loads(api_keys)
         for api in apis:
-            apis_config.setAPIKey(api, apis[api])
+            apis_config.setAPIKey(api, apis[api], session_id)
     return JsonResponse({ "data" : 'Changed successfully' })
 
 # End API Keys 
 
 def home(request, popup_text=''):
+    if not 'htpass' in request.COOKIES:
+        session_id = ht.Utils.randomText(40, 'mixalpha-numeric-symbol14')
+    else:
+        session_id = request.COOKIES['htpass']
     global ht_data
-    load_data()
+    load_data(session_id)
     if popup_text != '':
         ht_data['popup_text'] = popup_text
     return renderMainPanel(request=request)
@@ -296,8 +326,12 @@ def createScript(request):
     return renderMainPanel(request=request)
 
 def config_look_for_changes(request):
+    if not 'htpass' in request.COOKIES:
+        session_id = ht.Utils.randomText(40, 'mixalpha-numeric-symbol14')
+    else:
+        session_id = request.COOKIES['htpass']
     ht.Config.__look_for_changes__()
-    load_data()
+    load_data(session_id)
     return renderMainPanel(request=request)
 
 def saveFileOutput(myfile, module_name, category):
