@@ -259,8 +259,9 @@ def setAPIKey(api_name, api_key, session_id=None):
         config['core']['__API_KEY__'][api_name] = api_key
 
 def __cleanHtPassFiles__():
-    for htpass_file in os.listdir(os.path.join(os.path.dirname(__file__), 'apis_files')):
-        os.remove(os.path.join(os.path.dirname(__file__), 'apis_files', htpass_file))
+    if 'apis_files' in os.listdir(os.path.dirname(__file__)):
+        for htpass_file in os.listdir(os.path.join(os.path.dirname(__file__), 'apis_files')):
+            os.remove(os.path.join(os.path.dirname(__file__), 'apis_files', htpass_file))
 
 def loadRestAPIsFile(rest_api_file, password, session_id=None):
     with open(rest_api_file, 'r') as res:
