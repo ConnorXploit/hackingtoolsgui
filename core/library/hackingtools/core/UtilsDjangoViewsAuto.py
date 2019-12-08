@@ -1,10 +1,10 @@
 
-from core.library import hackingtools as ht
 from core.library.hackingtools.core import Utils
+from core.library import hackingtools as ht
 import os, inspect
 
-ht.setDebugCore(True)
-ht.setDebugModule(True)
+# ht.setDebugCore(True)
+# ht.setDebugModule(True)
 
 default_view_init = """from django.http import HttpResponse, JsonResponse
 import os

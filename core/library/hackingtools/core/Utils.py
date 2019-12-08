@@ -155,6 +155,7 @@ def getFunctionFullCall(moduleName, category, functionName):
 def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
     params_func = None
     function = getFunctionFullCall(moduleName=moduleName, category=category, functionName=functionName)
+    
     try:
         params_func = inspect.getfullargspec(eval(function))[0]
         params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
@@ -191,6 +192,7 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
 
         return {"params":params_func}
     except Exception as e:
+        print(str(e))
         pass
     return []
 

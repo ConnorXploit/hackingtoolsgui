@@ -508,3 +508,92 @@ textarea.form-control {
 .apiKey {
     filter: blur(3px);
 }
+.on_off_in_map {
+    position: absolute !important;
+    right: 30px !important;
+    bottom: 20px !important;
+}
+
+/* DARK MODE */
+#content-wrapper {
+    background: #0e0e0e8c !important;
+}
+.bg-success {
+    background-color: #02503d !important;
+}
+.bg-gradient-primary {
+    background-color: #0737c3;
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(10%,#4e73df),to(#224abe));
+    background-image: linear-gradient(180deg,#2f5de4 10%,#040d25 100%);
+    background-size: cover;
+}
+.console-logger-nav {
+    background: #0f2257 !important;
+}
+.logger-console {
+    background: #203484 !important;
+}
+.consoleLogger-content {
+    background: #203484 !important;
+}
+.consoleLogger-content p {
+    padding: 2px;
+}
+.logger-results {
+    background: #017356 !important;
+    color: white !important;
+}
+.bg-info {
+    background-color: #031f31 !important;
+}
+.moduleFunctions {
+    border: none !important;
+}
+.mouseOverModule:hover{
+    border: 3px solid #0e1671 !important;
+    margin: -3px;
+}
+.mouseOverFunction:hover{
+    border: 5px solid #0e1671 !important;
+    margin: -5px 0;
+}
+.mouseOverCategory:hover{
+    border: 3px solid #017356 !important;
+    margin: -3px;
+}
+.overMouseButtons:hover{
+    border: 3px solid #017356 !important;
+    margin: -3px;
+}
+.text-primary {
+    color: #599ce2 !important;
+}
+.text-gray-800 {
+    color: #8b8ea5!important;
+}
+#consoleLogger-content > * {
+    padding: 0 3px !important;
+    background: #242444 !important;
+    /*display: block;*/
+}
+input {
+    background: #2f2e5a !important;
+    color: white !important;
+}
+.dropdown-menu {
+    background: #2a5179 !important;
+}
+#search_this {
+    background: #375a7f !important;
+    color: white !important;
+}
+.custom-file-label, .form-control {
+    background: #2f2e5a !important;
+}
+.form-control {
+    color: #d6cece !important;
+}
+.reloading_dark {
+    background: black !important;
+}
+/* END DARK MODE */

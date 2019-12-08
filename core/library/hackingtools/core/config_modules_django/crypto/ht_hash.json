@@ -1,0 +1,20 @@
+{
+    "django_form_module_function": {
+        "hashContent": {
+            "__function__": "hashContent",
+            "__async__": false,
+            "__return__": "text",
+            "content": {
+                "__type__": "text",
+                "label_desc": "content",
+                "placeholder": "content",
+                "required": true
+            },
+            "__pool_it_hashContent__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

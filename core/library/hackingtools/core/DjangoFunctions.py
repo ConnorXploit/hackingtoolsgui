@@ -1,4 +1,4 @@
-from . import Config, Logger, Utils
+from . import Config, Logger, Utils, UtilsDjangoViewsAuto
 if Utils.amIdjango(__name__):
     from core.library import hackingtools as ht
 else:
@@ -96,7 +96,7 @@ def getModulesModalTests():
     """
     tools_functions = {}
     for tool in ht.getModulesNames():
-        tool_functions = ht.Config.getConfig(parentKey='modules', key=tool, subkey='django_form_module_function')
+        tool_functions = Config.getConfig(parentKey='modules', key=tool, subkey='django_form_module_function')
         if tool_functions:
             tools_functions[tool] = tool_functions
     return tools_functions
@@ -165,6 +165,9 @@ def __getModulesConfig_treeView__():
     __treeview_load_all__(config=tools_config, result_text=result_text)
     response =  ','.join(result_text)
     return response
+
+def __regenerateConfigView__(moduleName):
+    Config.__regenerateConfigModulesDjango__({}, ht.getModuleCategory(moduleName), moduleName)
 
 # TreeView for Modules Configuration in Modal Panel
 global __treeview_counter__
@@ -247,6 +250,13 @@ def __getModulesDjangoForms__():
     forms = {}
     for mod in ht.getModulesNames():
         form = __createHtmlModalForm__(mod)
+        # if not form:
+        #     __regenerateConfigView__(mod)
+        #     for f in ht.getFunctionsNamesFromModule(mod):
+        #         if not f == 'help':
+        #             createModuleFunctionView(mod, f)
+        #     Config.__readFilesAuto__()
+        #     form = __createHtmlModalForm__(mod)
         if form:
             for url in form:
                 if form[url]:
@@ -254,10 +264,10 @@ def __getModulesDjangoForms__():
     return forms
 
 def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', config_extrasubkey=None):
-    module_form = ht.Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
-    functionModal = ht.Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey='__function__')
-    default_classnames_per_type = ht.Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
-
+    module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
+    functionModal = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey='__function__')
+    default_classnames_per_type = Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
+    
     if not module_form:
         return
     

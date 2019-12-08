@@ -23,7 +23,8 @@ class StartModule():
 			unzipper = ht.getModule('ht_unzip')
 		if log:
 			Logger.setDebugCore(True)
-		for texts in [Utils.getCombinationPosibilitiesByPattern(try_pattern=password_pattern) if password_pattern else Utils.getDict(length=password_length, alphabet=alphabet)]:
+
+		for text in [Utils.getCombinationPosibilitiesByPattern(try_pattern=password_pattern) if password_pattern else Utils.getDict(length=password_length, alphabet=alphabet)]:
 			# if len(texts) > max_length_posibilities:
 			# 	texts_list = numpy.array_split(texts, max_length_posibilities)
 			# else:

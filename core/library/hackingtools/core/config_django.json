@@ -83,7 +83,7 @@
         },
         "ht_bruteforce": {
             "crackZip": {
-                "__in_map_crackZip__": false
+                "__in_map_crackZip__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -94,7 +94,7 @@
                 "__in_map_extractFilePassword__": false
             },
             "extractFile": {
-                "__in_map_extractFile__": false
+                "__in_map_extractFile__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -105,22 +105,22 @@
         },
         "ht_rsa": {
             "encrypt": {
-                "__in_map_encrypt__": false
+                "__in_map_encrypt__": true
             },
             "getRandomKeypair": {
-                "__in_map_getRandomKeypair__": false
+                "__in_map_getRandomKeypair__": true
             },
             "generate_keypair": {
-                "__in_map_generate_keypair__": false
+                "__in_map_generate_keypair__": true
             },
             "decode": {
-                "__in_map_decode__": false
+                "__in_map_decode__": true
             },
             "encode": {
-                "__in_map_encode__": false
+                "__in_map_encode__": true
             },
             "decrypt": {
-                "__in_map_decrypt__": false
+                "__in_map_decrypt__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -151,10 +151,10 @@
         },
         "ht_metadata": {
             "get_image_exif": {
-                "__in_map_get_image_exif__": false
+                "__in_map_get_image_exif__": true
             },
             "get_pdf_exif": {
-                "__in_map_get_pdf_exif__": false
+                "__in_map_get_pdf_exif__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -172,11 +172,11 @@
             }
         },
         "ht_infector": {
+            "injectPayloadToWindowsTerminalProfile": {
+                "__in_map_injectPayloadToWindowsTerminalProfile__": true
+            },
             "help": {
                 "__in_map_help__": false
-            },
-            "injectPayloadToWindowsTerminalProfile": {
-                "__in_map_injectPayloadToWindowsTerminalProfile__": false
             }
         },
         "ht_rat": {
@@ -214,27 +214,27 @@
             }
         },
         "ht_cve": {
+            "search": {
+                "__in_map_search__": true
+            },
             "help": {
                 "__in_map_help__": false
-            },
-            "search": {
-                "__in_map_search__": false
             }
         },
         "ht_cwe": {
-            "help": {
-                "__in_map_help__": false
-            },
             "searchCWE": {
-                "__in_map_searchCWE__": false
+                "__in_map_searchCWE__": true
             },
             "searchWeakness": {
-                "__in_map_searchWeakness__": false
+                "__in_map_searchWeakness__": true
+            },
+            "help": {
+                "__in_map_help__": false
             }
         },
         "ht_spider": {
             "crawl": {
-                "__in_map_crawl__": false
+                "__in_map_crawl__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -242,46 +242,71 @@
         },
         "ht_sqlinjection": {
             "cantidadTuplasEnTapla": {
-                "__in_map_cantidadTuplasEnTapla__": false
+                "__in_map_cantidadTuplasEnTapla__": true
             },
             "cogerColumnasTabla": {
-                "__in_map_cogerColumnasTabla__": false
+                "__in_map_cogerColumnasTabla__": true
             },
             "cogerNombreDeTablaPorID": {
-                "__in_map_cogerNombreDeTablaPorID__": false
+                "__in_map_cogerNombreDeTablaPorID__": true
             },
             "cogerTablas": {
-                "__in_map_cogerTablas__": false
+                "__in_map_cogerTablas__": true
             },
             "color": {
-                "__in_map_color__": false
+                "__in_map_color__": true
             },
             "compareTextExistWhereSubstringACII": {
-                "__in_map_compareTextExistWhereSubstringACII__": false
+                "__in_map_compareTextExistWhereSubstringACII__": true
             },
             "ejecutarSQL": {
-                "__in_map_ejecutarSQL__": false
+                "__in_map_ejecutarSQL__": true
+            },
+            "longitudCampoIDtablaCampo": {
+                "__in_map_longitudCampoIDtablaCampo__": true
+            },
+            "md5_decrypt": {
+                "__in_map_md5_decrypt__": true
+            },
+            "mostrarUserPass": {
+                "__in_map_mostrarUserPass__": true
+            },
+            "sacarValorPorTablaColumnaID": {
+                "__in_map_sacarValorPorTablaColumnaID__": true
+            },
+            "setParams": {
+                "__in_map_setParams__": true
+            },
+            "transformAsciiToHex": {
+                "__in_map_transformAsciiToHex__": true
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_hash": {
+            "hashContent": {
+                "__in_map_hashContent__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_test": {
+            "hola": {
+                "__in_map_hola__": false
+            },
+            "liwiskas": {
+                "__in_map_liwiskas__": true
+            },
+            "mimimi": {
+                "__in_map_mimimi__": false
             },
             "help": {
                 "__in_map_help__": false
             },
-            "longitudCampoIDtablaCampo": {
-                "__in_map_longitudCampoIDtablaCampo__": false
-            },
-            "md5_decrypt": {
-                "__in_map_md5_decrypt__": false
-            },
-            "mostrarUserPass": {
-                "__in_map_mostrarUserPass__": false
-            },
-            "sacarValorPorTablaColumnaID": {
-                "__in_map_sacarValorPorTablaColumnaID__": false
-            },
-            "setParams": {
-                "__in_map_setParams__": false
-            },
-            "transformAsciiToHex": {
-                "__in_map_transformAsciiToHex__": false
+            "mimismi": {
+                "__in_map_mimismi__": false
             }
         }
     }

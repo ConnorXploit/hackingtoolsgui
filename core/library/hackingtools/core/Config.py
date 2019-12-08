@@ -343,6 +343,22 @@ def __save_django_module_config__(new_conf, category, moduleName, functionName):
     with open(module_views_config_file, 'w', encoding='utf8') as outfile:  
         json.dump(config, outfile, indent=4, ensure_ascii=False)
 
+def __regenerateConfigModulesDjango__(new_conf, category, moduleName):
+    config_file='ht_{moduleName}.json'.format(moduleName=moduleName.replace('ht_', ''))
+    module_views_config_file = os.path.join(os.path.dirname(__file__) , 'config_modules_django', category, config_file)
+
+    config = {}
+
+    if os.path.isfile(module_views_config_file):
+        with open(module_views_config_file, 'r', encoding='utf8') as outfile:
+            if outfile:
+                config = json.load(outfile)
+
+    config['django_form_module_function'] = new_conf
+    
+    with open(module_views_config_file, 'w', encoding='utf8') as outfile:  
+        json.dump(config, outfile, indent=4, ensure_ascii=False)
+
 # === __createModuleTemplateConfig__ ===
 def __createModuleTemplateConfig__(module_name, category):
     """

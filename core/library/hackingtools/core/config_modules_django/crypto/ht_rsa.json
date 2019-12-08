@@ -1,23 +1,23 @@
 {
     "__gui_label__": "RSA Cypher",
     "django_form_module_function": {
-        "encrypt": {
-            "__function__": "encrypt",
+        "decode": {
+            "__function__": "decode",
             "__async__": false,
             "__return__": "text",
-            "private_key": {
+            "key": {
                 "__type__": "text",
-                "label_desc": "private_key",
-                "placeholder": "private_key",
+                "label_desc": "key",
+                "placeholder": "key",
                 "required": true
             },
-            "plaintext": {
+            "ciphertext": {
                 "__type__": "text",
-                "label_desc": "plaintext",
-                "placeholder": "plaintext",
+                "label_desc": "ciphertext",
+                "placeholder": "ciphertext",
                 "required": true
             },
-            "__pool_it_encrypt__": {
+            "__pool_it_decode__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
@@ -40,6 +40,50 @@
                 "required": true
             },
             "__pool_it_decrypt__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "encode": {
+            "__function__": "encode",
+            "__async__": false,
+            "__return__": "text",
+            "key": {
+                "__type__": "text",
+                "label_desc": "key",
+                "placeholder": "key",
+                "required": true
+            },
+            "plaintext": {
+                "__type__": "text",
+                "label_desc": "plaintext",
+                "placeholder": "plaintext",
+                "required": true
+            },
+            "__pool_it_encode__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "encrypt": {
+            "__function__": "encrypt",
+            "__async__": false,
+            "__return__": "text",
+            "private_key": {
+                "__type__": "text",
+                "label_desc": "private_key",
+                "placeholder": "private_key",
+                "required": true
+            },
+            "plaintext": {
+                "__type__": "text",
+                "label_desc": "plaintext",
+                "placeholder": "plaintext",
+                "required": true
+            },
+            "__pool_it_encrypt__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
@@ -78,50 +122,6 @@
                 "value": 8
             },
             "__pool_it_getRandomKeypair__": {
-                "__type__": "checkbox",
-                "label_desc": "Pool the execution to the pool list",
-                "selected": false
-            }
-        },
-        "decode": {
-            "__function__": "decode",
-            "__async__": false,
-            "__return__": "text",
-            "key": {
-                "__type__": "text",
-                "label_desc": "key",
-                "placeholder": "key",
-                "required": true
-            },
-            "ciphertext": {
-                "__type__": "text",
-                "label_desc": "ciphertext",
-                "placeholder": "ciphertext",
-                "required": true
-            },
-            "__pool_it_decode__": {
-                "__type__": "checkbox",
-                "label_desc": "Pool the execution to the pool list",
-                "selected": false
-            }
-        },
-        "encode": {
-            "__function__": "encode",
-            "__async__": false,
-            "__return__": "text",
-            "key": {
-                "__type__": "text",
-                "label_desc": "key",
-                "placeholder": "key",
-                "required": true
-            },
-            "plaintext": {
-                "__type__": "text",
-                "label_desc": "plaintext",
-                "placeholder": "plaintext",
-                "required": true
-            },
-            "__pool_it_encode__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false

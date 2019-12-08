@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
-from .library.hackingtools.core import Utils, Logger, Config, Connections, UtilsDjangoViewsAuto
+from .library.hackingtools.core import Utils, Logger, Config, Connections, UtilsDjangoViewsAuto, DjangoFunctions
 from importlib import reload
 import os, sys, requests
 import json
@@ -32,7 +32,7 @@ def load_data(session_id=None):
     global ht_data
     modules_and_params = ht.getModulesJSON()
     modules_forms = ht.DjangoFunctions.__getModulesDjangoForms__()
-    modules_forms_modal = ht.DjangoFunctions.__getModulesDjangoFormsModal__()
+    modules_forms_modal = DjangoFunctions.__getModulesDjangoFormsModal__()
     modules_config = ht.getModulesConfig()
     # ! Slows down a lot the charge of Django home view
     #modules_config_treeview = ht.DjangoFunctions.__getModulesConfig_treeView__()
