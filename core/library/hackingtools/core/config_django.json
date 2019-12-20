@@ -308,6 +308,14 @@
             "mimismi": {
                 "__in_map_mimismi__": false
             }
+        },
+        "ht_pastebin": {
+            "mensaje": {
+                "__in_map_mensaje__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
         }
     }
 }
