@@ -63,9 +63,12 @@ def load_data(session_id=None):
 
     if session_id:
         sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+        print(sess_key)
         if sess_key in ht.Config.config['core']:
+            print('Existe', ht.Config.config['core'][sess_key])
             api_keys = ht.Config.config['core'][sess_key]
         else:
+            print('No existe', {})
             api_keys = {}
 
     else:
@@ -91,7 +94,7 @@ def load_data(session_id=None):
         'funcs_map':funcs_map,
         'api_keys':api_keys}
 
-def load_data_maps():
+def load_data_maps(session_id=None):
     global ht_data_maps
     if ht_data_maps:
         ht_data_maps = {}
@@ -100,7 +103,17 @@ def load_data_maps():
         ht_data_maps['funcs_map'] = ht.DjangoFunctions.getModulesFunctionsForMap()
     except:
         pass
-    ht_data_maps['api_keys'] = ht.Config.config['core']['__API_KEY__']
+    if session_id:
+        sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+        print(sess_key)
+        if sess_key in ht.Config.config['core']:
+            print('Existe', ht.Config.config['core'][sess_key])
+            ht_data_maps['api_keys'] = ht.Config.config['core'][sess_key]
+        else:
+            print('No existe', {})
+            ht_data_maps['api_keys'] = {}
+    else:
+        ht_data_maps['api_keys'] = ht.Config.config['core']['__API_KEY__']
 
 def renderMainPanel(request, popup_text=''):
     if not 'htpass' in request.COOKIES:
@@ -124,8 +137,8 @@ def renderMaps(request):
         session_id = request.COOKIES['htpass']
     global ht_data_maps
     if not ht_data_maps:
-        load_data_maps()
-    
+        load_data_maps(session_id)
+
     response = render(request, 'core/maps.html', dict(ht_data_maps))
     response.set_cookie('htpass', session_id)
     return response
@@ -154,6 +167,8 @@ def uploadAPIFileToConf(request):
             if password:
                 try:
                     apis_config.loadRestAPIsFile(uploaded_file_url, password, session_id)
+                    load_data(session_id=session_id)
+                    load_data_maps(session_id=session_id)
                     return JsonResponse({ "data" : 'Imported successfully', 'status' : 'OK' })
                 except:
                     return JsonResponse({ "data" : 'Bad password', 'status' : 'FAILURE' })
@@ -357,9 +372,9 @@ def getLogs(request):
 
 def getIPLocationGPS(request):
     ip = request.POST.get('ip', None)
-    api = request.POST.get('api', None)
+    #api = request.POST.get('api', None)
     data = {
-        'data' : ht.Utils.getIPLocationGPS(ip, api),
+        'data' : ht.Utils.getIPLocationGPS_v2(ip),
         'status' : 'OK'
     }
     

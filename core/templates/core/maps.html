@@ -5,6 +5,8 @@
     <form id="search_form">
       <input id="search_this" type="text" placeholder="Search..." class="form-control searcher_map" />
     </form>
+    <div id="search_queue" class="search_queue">
+    </div>
     <div class="btn-group btn-group-justified functions_button_bar">
       {% for module, module_funcs in funcs_map.items %}
         {% if module_funcs|length > 0 %}
@@ -24,20 +26,18 @@
     $("#search_form").on('submit',(function(e) {
       e.preventDefault();
       var form = $('#search_form');
-      var shodan_key = '';
-      {% for apis, apis_keys in API.items %}
-        {% if 'shodan_api' == apis %}
-          {% if apis_keys == '' %}
-            shodan_key = prompt("Insert API Key", "Shodan");
-          {% endif %}
-        {% endif %}
-      {% endfor %}
+      {% if api_keys.shodan_api == '' %}
+        var shodan_key = prompt("Insert API Key", "Shodan");
+      {% else %}
+        var shodan_key = '{{api_keys.shodan_api}}'
+      {% endif %}
 
       var params = {
         serviceName: $('#search_this').val(),
         shodan_api: shodan_key,
         is_async_getIPListfromServices: true
       }
+      $('#search_queue').append('<div class="queue_item search_' + $('#search_this').val() + '">' + $('#search_this').val() + '</div>')
       $.ajax({
         headers: { "X-CSRFToken": '{{csrf_token}}' },
         url: '/modules/osint/shodan/getIPListfromServices/',
@@ -50,65 +50,64 @@
                 return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
             }
             if(res.data instanceof Array){
-              var data = '';
-              var api_key = '';
-
-              {% for api_name, api_k in api_keys.items %}
-                {% if 'ipinfodb_api' == api_name %}
-                  {% if apis_k == '' %}
-                    api_key = prompt("Insert API Key", "IpInfoDB");
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
+              /*var data = '';
+              {% if api_keys.ipinfodb_api == '' %}
+                var api_key = prompt("Insert API Key", "IpInfoDB");
+              {% else %}
+                var api_key = '{{api_keys.ipinfodb_api}}'
+              {% endif %}*/
               
-              if (api_key != null) {
-                for(var i=0; i < res.data.length; i++){
-                  var params = {
-                    ip: res.data[i],
-                    api: api_key
-                  }
-                  $.ajax({
-                    headers: { "X-CSRFToken": '{{csrf_token}}' },
-                    url: '/core/utils/getIPLocationGPS/',
-                    type: "POST",
-                    data : params,
-                    async: true,
-                    success : function(r) {
-                      if('data' in r && r.data && Object.keys(r.data).length !== 0){
-                        function isDict(v) {
-                            return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
-                        }
-                        var params = {
-                          ip: r.data['ip'],
-                          shodan_api: shodan_key,
-                          is_async_search_host: true
-                        }
-                        $.ajax({
-                          headers: { "X-CSRFToken": '{{csrf_token}}' },
-                          url: '/modules/osint/shodan/search_host/',
-                          type: "POST",
-                          data : params,
-                          async: true,
-                          success : function(res) {
-                            if('data' in res && res.data && Object.keys(res.data).length !== 0){
-                              function isDict(v) {
-                                  return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
-                              }
-                              if(isDict(res.data)){
-                                $.notify("Getting data from:\n" + r.data['ip'], "success");
-                                data = JSON.stringify(res.data, null, 2);
-                                var marker = new mapboxgl.Marker()
-                                var popup = new mapboxgl.Popup({ offset: 25 }).setText(data);
-                                marker.setLngLat(r.data['location']).setPopup(popup).addTo(map);
-                              }
+              //if (api_key != null) {
+              for(var i=0; i < res.data.length; i++){
+                var params = {
+                  ip: res.data[i]
+                }
+                $.ajax({
+                  headers: { "X-CSRFToken": '{{csrf_token}}' },
+                  url: '/core/utils/getIPLocationGPS/',
+                  type: "POST",
+                  data : params,
+                  async: true,
+                  success : function(r) {
+                    if('data' in r && r.data && Object.keys(r.data).length !== 0){
+                      function isDict(v) {
+                          return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+                      }
+                      var params = {
+                        ip: r.data['ip'],
+                        shodan_api: shodan_key,
+                        is_async_search_host: true
+                      }
+                      $.ajax({
+                        headers: { "X-CSRFToken": '{{csrf_token}}' },
+                        url: '/modules/osint/shodan/search_host/',
+                        type: "POST",
+                        data : params,
+                        async: true,
+                        success : function(res) {
+                          $('.search_' + $('#search_this').val()).remove()
+                          if('data' in res && res.data && Object.keys(res.data).length !== 0){
+                            function isDict(v) {
+                                return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+                            }
+                            if(isDict(res.data)){
+                              $.notify("Getting data from:\n" + r.data['ip'], "success");
+                              data = JSON.stringify(res.data, null, 2);
+                              var marker = new mapboxgl.Marker()
+                              var popup = new mapboxgl.Popup({ offset: 25 }).setText(data);
+                              marker.setLngLat(r.data['location']).setPopup(popup).addTo(map);
                             }
                           }
-                        });
-                      }
+                        },
+                        failure : function(res) {
+                          $('.search_' + $('#search_this').val()).remove()
+                        }
+                      });
                     }
-                  });
-                }
+                  }
+                });
               }
+              //}
             }
           }
         }

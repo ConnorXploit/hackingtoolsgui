@@ -83,7 +83,7 @@
         },
         "ht_bruteforce": {
             "crackZip": {
-                "__in_map_crackZip__": true
+                "__in_map_crackZip__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -94,7 +94,7 @@
                 "__in_map_extractFilePassword__": false
             },
             "extractFile": {
-                "__in_map_extractFile__": true
+                "__in_map_extractFile__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -105,22 +105,22 @@
         },
         "ht_rsa": {
             "encrypt": {
-                "__in_map_encrypt__": true
+                "__in_map_encrypt__": false
             },
             "getRandomKeypair": {
-                "__in_map_getRandomKeypair__": true
+                "__in_map_getRandomKeypair__": false
             },
             "generate_keypair": {
-                "__in_map_generate_keypair__": true
+                "__in_map_generate_keypair__": false
             },
             "decode": {
-                "__in_map_decode__": true
+                "__in_map_decode__": false
             },
             "encode": {
-                "__in_map_encode__": true
+                "__in_map_encode__": false
             },
             "decrypt": {
-                "__in_map_decrypt__": true
+                "__in_map_decrypt__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -151,10 +151,10 @@
         },
         "ht_metadata": {
             "get_image_exif": {
-                "__in_map_get_image_exif__": true
+                "__in_map_get_image_exif__": false
             },
             "get_pdf_exif": {
-                "__in_map_get_pdf_exif__": true
+                "__in_map_get_pdf_exif__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -173,7 +173,7 @@
         },
         "ht_infector": {
             "injectPayloadToWindowsTerminalProfile": {
-                "__in_map_injectPayloadToWindowsTerminalProfile__": true
+                "__in_map_injectPayloadToWindowsTerminalProfile__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -215,7 +215,7 @@
         },
         "ht_cve": {
             "search": {
-                "__in_map_search__": true
+                "__in_map_search__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -223,10 +223,10 @@
         },
         "ht_cwe": {
             "searchCWE": {
-                "__in_map_searchCWE__": true
+                "__in_map_searchCWE__": false
             },
             "searchWeakness": {
-                "__in_map_searchWeakness__": true
+                "__in_map_searchWeakness__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -234,7 +234,7 @@
         },
         "ht_spider": {
             "crawl": {
-                "__in_map_crawl__": true
+                "__in_map_crawl__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -242,43 +242,43 @@
         },
         "ht_sqlinjection": {
             "cantidadTuplasEnTapla": {
-                "__in_map_cantidadTuplasEnTapla__": true
+                "__in_map_cantidadTuplasEnTapla__": false
             },
             "cogerColumnasTabla": {
-                "__in_map_cogerColumnasTabla__": true
+                "__in_map_cogerColumnasTabla__": false
             },
             "cogerNombreDeTablaPorID": {
-                "__in_map_cogerNombreDeTablaPorID__": true
+                "__in_map_cogerNombreDeTablaPorID__": false
             },
             "cogerTablas": {
-                "__in_map_cogerTablas__": true
+                "__in_map_cogerTablas__": false
             },
             "color": {
-                "__in_map_color__": true
+                "__in_map_color__": false
             },
             "compareTextExistWhereSubstringACII": {
-                "__in_map_compareTextExistWhereSubstringACII__": true
+                "__in_map_compareTextExistWhereSubstringACII__": false
             },
             "ejecutarSQL": {
-                "__in_map_ejecutarSQL__": true
+                "__in_map_ejecutarSQL__": false
             },
             "longitudCampoIDtablaCampo": {
-                "__in_map_longitudCampoIDtablaCampo__": true
+                "__in_map_longitudCampoIDtablaCampo__": false
             },
             "md5_decrypt": {
-                "__in_map_md5_decrypt__": true
+                "__in_map_md5_decrypt__": false
             },
             "mostrarUserPass": {
-                "__in_map_mostrarUserPass__": true
+                "__in_map_mostrarUserPass__": false
             },
             "sacarValorPorTablaColumnaID": {
-                "__in_map_sacarValorPorTablaColumnaID__": true
+                "__in_map_sacarValorPorTablaColumnaID__": false
             },
             "setParams": {
-                "__in_map_setParams__": true
+                "__in_map_setParams__": false
             },
             "transformAsciiToHex": {
-                "__in_map_transformAsciiToHex__": true
+                "__in_map_transformAsciiToHex__": false
             },
             "help": {
                 "__in_map_help__": false

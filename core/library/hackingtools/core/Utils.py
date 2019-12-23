@@ -252,6 +252,14 @@ def getIPLocationGPS(ip, api):
     else:
         return {'ip' : ip, 'location' : [0, 0] }
 
+def getIPLocationGPS_v2(ip):
+    url = 'https://api.ipgeolocationapi.com/geolocate/{ip}'.format(ip=ip)
+    res = json.loads(requests.get(url).content.decode())
+    if res['geo']:
+        return {'ip' : ip, 'location' : [ res['geo']['longitude'], res['geo']['latitude'] ] }
+    else:
+        return {'ip' : ip, 'location' : [0, 0] }
+
 # Maths
 def euclides(a, b):
     """Euclid's algorithm for determining the greatest common divisor
