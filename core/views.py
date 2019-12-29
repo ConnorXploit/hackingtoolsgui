@@ -186,7 +186,8 @@ def downloadAPIFile(request):
                         response = HttpResponse(fh.read(), content_type="application/x-www-form-urlencoded")
                         response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_apis)
                         return response
-
+                else:
+                    return JsonResponse({ "data" : 'Seem\'s that the file {n} doesn\'t exist'.format(n=file_apis) })
                 return JsonResponse({ "data" : 'Something wen\'t wrong creating the pass file... {n}'.format(n=file_apis) })
 
             except Exception as e:
