@@ -4,9 +4,9 @@ python_version = "python"
 if 'DYNO' in os.environ:
     python_version = "python3"
     
-if not os.name == 'nt':
-    if not os.geteuid() == 0:
-        sys.exit("\nOnly root can run this script\n")
+# if not os.name == 'nt':
+#     if not os.geteuid() == 0:
+#         sys.exit("\nOnly root can run this script\n")
 
 parser = argparse.ArgumentParser()
    
