@@ -63,12 +63,9 @@ def load_data(session_id=None):
 
     if session_id:
         sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
-        print(sess_key)
         if sess_key in ht.Config.config['core']:
-            print('Existe', ht.Config.config['core'][sess_key])
             api_keys = ht.Config.config['core'][sess_key]
         else:
-            print('No existe', {})
             api_keys = {}
 
     else:
@@ -105,12 +102,9 @@ def load_data_maps(session_id=None):
         pass
     if session_id:
         sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
-        print(sess_key)
         if sess_key in ht.Config.config['core']:
-            print('Existe', ht.Config.config['core'][sess_key])
             ht_data_maps['api_keys'] = ht.Config.config['core'][sess_key]
         else:
-            print('No existe', {})
             ht_data_maps['api_keys'] = {}
     else:
         ht_data_maps['api_keys'] = ht.Config.config['core']['__API_KEY__']
