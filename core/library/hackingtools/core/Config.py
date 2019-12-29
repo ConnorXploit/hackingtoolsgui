@@ -275,6 +275,9 @@ def loadRestAPIsFile(rest_api_file, password, session_id=None):
                 sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
                 if not sess_key in config['core']:
                     config['core'][sess_key] = {}
+                for k in config['core'][sess_key]:
+                    if not k in api_keys:
+                        api_keys[k] = config['core'][sess_key][k]
                 config['core'][sess_key] = api_keys
             except:
                 config['core']['__API_KEY__'] = api_keys

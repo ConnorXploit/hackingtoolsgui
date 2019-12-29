@@ -7,7 +7,7 @@ from .library import hackingtools as ht
 from .library.hackingtools.core import Utils, Logger, Config, Connections, UtilsDjangoViewsAuto, DjangoFunctions
 from importlib import reload
 import os, sys, requests
-import json
+import json, collections
 from requests import Response
 from colorama import Fore
 
@@ -89,7 +89,7 @@ def load_data(session_id=None):
         'my_node_id_pool':my_node_id_pool,
         'status_pool':status_pool,
         'funcs_map':funcs_map,
-        'api_keys':api_keys}
+        'api_keys':collections.OrderedDict(sorted(api_keys.items()))}
 
 def load_data_maps(session_id=None):
     global ht_data_maps
@@ -108,6 +108,8 @@ def load_data_maps(session_id=None):
             ht_data_maps['api_keys'] = {}
     else:
         ht_data_maps['api_keys'] = ht.Config.config['core']['__API_KEY__']
+
+    ht_data_maps['api_keys'] = collections.OrderedDict(sorted(ht_data_maps['api_keys'].items()))
 
 def renderMainPanel(request, popup_text=''):
     if not 'htpass' in request.COOKIES:
