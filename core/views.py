@@ -170,8 +170,8 @@ def uploadAPIFileToConf(request):
                     load_data(session_id=session_id)
                     load_data_maps(session_id=session_id)
                     return JsonResponse({ "data" : 'Imported successfully', 'status' : 'OK' })
-                except:
-                    return JsonResponse({ "data" : 'Bad password', 'status' : 'FAILURE' })
+                except Exception as e:
+                    return JsonResponse({ "data" : 'Bad password - {e}'.format(e=str(e)), 'status' : 'FAILURE' })
 
             return JsonResponse({ "data" : 'You have to insert a password', 'status' : 'FAILURE' })
             

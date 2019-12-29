@@ -117,6 +117,9 @@
             ],
             "ht_cwe": [
                 "requests_html"
+            ],
+            "ht_pastebin": [
+                "StringIO"
             ]
         },
         "Connections": {

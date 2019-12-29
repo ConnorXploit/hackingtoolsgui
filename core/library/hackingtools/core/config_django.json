@@ -315,6 +315,12 @@
             },
             "help": {
                 "__in_map_help__": false
+            },
+            "search": {
+                "__in_map_search__": true
+            },
+            "search_pastebin": {
+                "__in_map_search_pastebin__": false
             }
         }
     }

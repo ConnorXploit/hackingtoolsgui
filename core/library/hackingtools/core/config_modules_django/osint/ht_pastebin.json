@@ -20,30 +20,35 @@
         }
     },
     "django_form_module_function": {
-        "mensaje": {
-            "__function__": "mensaje",
+        "search_pastebin": {
+            "__function__": "search_pastebin",
             "__async__": false,
             "__return__": "text",
-            "men1": {
+            "keywords": {
                 "__type__": "text",
-                "label_desc": "men1",
-                "placeholder": "men1",
+                "label_desc": "keywords",
+                "placeholder": "keywords",
                 "required": true
             },
-            "edad": {
+            "run_time": {
                 "__type__": "number",
-                "label_desc": "edad",
-                "placeholder": "edad",
-                "value": 19
+                "label_desc": "run_time",
+                "placeholder": "run_time",
+                "value": 0
             },
-            "casado": {
-                "__type__": "checkbox",
-                "label_desc": "casado",
-                "placeholder": "casado",
-                "value": false,
-                "selected": false
+            "match_total": {
+                "__type__": "text",
+                "label_desc": "match_total",
+                "placeholder": "match_total",
+                "value": null
             },
-            "__pool_it_mensaje__": {
+            "crawl_total": {
+                "__type__": "text",
+                "label_desc": "crawl_total",
+                "placeholder": "crawl_total",
+                "value": 20
+            },
+            "__pool_it_search_pastebin__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
