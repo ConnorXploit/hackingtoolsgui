@@ -26,7 +26,7 @@ while not want_exit:
     try:
         if not p:
             print(menu)
-            p = subprocess.call(['python', 'manage.py', 'runserver', '0.0.0.0:{p}'.format(p=port)])
+            p = subprocess.call(['python3', 'manage.py', 'runserver', '0.0.0.0:{p}'.format(p=port)])
         time.sleep(2)
     except KeyboardInterrupt:
         res = input('[DJANGO AUTO-RESTARTER] - Want to close autoloader? (N/y): ')
