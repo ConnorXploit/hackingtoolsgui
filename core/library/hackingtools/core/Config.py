@@ -282,24 +282,27 @@ def loadRestAPIsFile(rest_api_file, password, session_id=None):
             config['core']['__API_KEY__'] = api_keys
 
 def saveRestAPIsFile(rest_api_file, password, session_id=None):
-    if session_id:
-        try:
-            sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
-            api_keys = config['core'][sess_key]
-        except:
+    try:
+        if session_id:
+            try:
+                sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
+                api_keys = config['core'][sess_key]
+            except:
+                api_keys = config['core']['__API_KEY__']
+        else:
             api_keys = config['core']['__API_KEY__']
-    else:
-        api_keys = config['core']['__API_KEY__']
-    data = json.dumps(api_keys)
-    from hackingtools.modules.crypto.rsa import ht_rsa as r
-    mod_rsa = r.StartModule()
-    import hashlib
-    ciphered = mod_rsa.encode(hashlib.md5(password.encode()).hexdigest(), data)
-    max_width = 64
-    ciphered = '\n'.join([ciphered[y-max_width:y] for y in range(max_width, len(ciphered)+max_width,max_width)])
-    with open(os.path.join(os.path.dirname(__file__), 'apis_files', rest_api_file), 'w') as n:
-        n.write(ciphered)
-    return os.path.join(os.path.dirname(__file__), 'apis_files', rest_api_file)
+        data = json.dumps(api_keys)
+        from hackingtools.modules.crypto.rsa import ht_rsa as r
+        mod_rsa = r.StartModule()
+        import hashlib
+        ciphered = mod_rsa.encode(hashlib.md5(password.encode()).hexdigest(), data)
+        max_width = 64
+        ciphered = '\n'.join([ciphered[y-max_width:y] for y in range(max_width, len(ciphered)+max_width,max_width)])
+        with open(os.path.join(os.path.dirname(__file__), 'apis_files', rest_api_file), 'w') as n:
+            n.write(ciphered)
+        return os.path.join(os.path.dirname(__file__), 'apis_files', rest_api_file)
+    except Exception as e:
+        return str(e)
 
 # End API Keys
 
