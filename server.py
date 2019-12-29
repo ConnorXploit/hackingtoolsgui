@@ -1,5 +1,8 @@
 import subprocess, time, argparse, os, requests
 
+if not os.geteuid() == 0:
+    sys.exit("\nOnly root can run this script\n")
+
 parser = argparse.ArgumentParser()
    
 parser.add_argument('-p', '--port', help="set django server port")
