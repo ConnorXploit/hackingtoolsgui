@@ -1,5 +1,5 @@
 altgraph==0.16.1
-astroid==2.2.5
+astroid
 beautifulsoup4==4.8.0
 bleach==3.1.0
 certifi
@@ -15,7 +15,7 @@ docutils==0.14
 entrypoints==0.3
 Flask
 future==0.17.1
-hackingtools==2.2.0
+hackingtools==2.2.1
 html5lib==1.0.1
 httplib2==0.12.0
 idna==2.8
