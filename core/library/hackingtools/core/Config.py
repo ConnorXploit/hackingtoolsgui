@@ -311,7 +311,7 @@ def saveRestAPIsFile(rest_api_file, password, session_id=None):
 
 # Maps
 
-def saveHostSearchedInMap(ip, location, info, session_id=None):
+def saveHostSearchedInMap(ip, location, country, info, searched_term, session_id=None):
     config_root = config['core']
 
     if session_id:
@@ -328,8 +328,11 @@ def saveHostSearchedInMap(ip, location, info, session_id=None):
     
     config_root[ip]['longitude'] = location[0]
     config_root[ip]['latitude'] = location[1]
+
+    config_root[ip]['country'] = country
     
     config_root[ip]['info'] = info
+    config_root[ip]['searched_term'] = searched_term
 
 def getSearchedHostsInMap(session_id=None):
     try:

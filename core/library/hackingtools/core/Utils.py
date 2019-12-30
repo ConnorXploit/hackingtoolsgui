@@ -253,12 +253,15 @@ def getIPLocationGPS(ip, api):
         return {'ip' : ip, 'location' : [0, 0] }
 
 def getIPLocationGPS_v2(ip):
-    url = 'https://api.ipgeolocationapi.com/geolocate/{ip}'.format(ip=ip)
-    res = json.loads(requests.get(url).content.decode())
-    if res['geo']:
-        return {'ip' : ip, 'location' : [ res['geo']['longitude'], res['geo']['latitude'] ] }
-    else:
-        return {'ip' : ip, 'location' : [0, 0] }
+    try:
+        url = 'https://api.ipgeolocationapi.com/geolocate/{ip}'.format(ip=ip)
+        res = json.loads(requests.get(url).content.decode())
+        if res['geo']:
+            return {'ip' : ip, 'location' : [ res['geo']['longitude'], res['geo']['latitude'] ], 'country' : res['alpha2'].lower() }
+        else:
+            return {'ip' : ip, 'location' : [0, 0], 'country' : 'us' }
+    except:
+        return {'ip' : ip, 'location' : [0, 0], 'country' : 'us' }
 
 # Maths
 def euclides(a, b):

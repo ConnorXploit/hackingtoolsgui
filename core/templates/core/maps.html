@@ -5,6 +5,8 @@
     <form id="search_form">
       <input id="search_this" type="text" placeholder="Search..." class="form-control searcher_map" />
     </form>
+    <div id="searched_hosts" style="display: none">
+    </div>
     <div id="search_queue" class="search_queue">
     </div>
     <div class="btn-group btn-group-justified functions_button_bar">
@@ -25,6 +27,7 @@
   <script>
     $("#search_form").on('submit',(function(e) {
       e.preventDefault();
+      $("#search_this").prop("readonly", true);
       var form = $('#search_form');
       {% if api_keys.shodan_api|length == 0 %}
         var shodan_key = prompt("Insert API Key", "Shodan");
@@ -91,7 +94,35 @@
                                 return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
                             }
                             if(isDict(res.data)){
-                              $.notify("Getting data from:\n" + r.data['ip'], "success");
+                              /*$.notify("Getting data from:\n" + r.data['ip'], "success");*/
+                              $('#searched_hosts').css("display", "block");
+                              $('#searched_hosts').append('<div id="searched_host_'+r.data['ip']+'" class="searched_host"><i class="fas fa-desktop host_info"> <div class="flag flag-'+r.data['country']+'"></div> ('+$('#search_this').val()+') '+r.data['ip']+' </i></div>')
+                              document.getElementById('searched_host_'+r.data['ip']).addEventListener('click', function() {
+                                var params = {
+                                  ip: r.data['ip']
+                                }
+                                $.ajax({
+                                  headers: { "X-CSRFToken": '{{csrf_token}}' },
+                                  url: '/core/utils/getIPLocationGPS/',
+                                  type: "POST",
+                                  data : params,
+                                  async: true,
+                                  success : function(r) {
+                                    if('data' in r && r.data && Object.keys(r.data).length !== 0){
+                                      function isDict(v) {
+                                          return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+                                      }
+                                      var lonEvent = r.data['location'][0];
+                                      var latEvent = r.data['location'][1];
+                                      var lonLatEvent = [lonEvent,latEvent];
+                                      map.flyTo({
+                                        center: lonLatEvent,
+                                        essential: true
+                                      });
+                                    }
+                                  }
+                                });
+                              });
                               data = JSON.stringify(res.data, null, 2);
                               var marker = new mapboxgl.Marker()
                               var popup = new mapboxgl.Popup({ offset: 25 }).setText(data);
@@ -100,6 +131,8 @@
                                 ip: r.data['ip'],
                                 longitude: r.data['location'][0],
                                 latitude: r.data['location'][1],
+                                country: r.data['country'],
+                                searched_term : $('#search_this').val(),
                                 info: data
                               }
                               $.ajax({
@@ -110,6 +143,7 @@
                                 async: true,
                                 success : function(res) {
                                   $.notify("Saved to memory:\n" + res.data, "success");
+                                  $("#search_this").prop("readonly", false); 
                                 }
                               });
                             }
@@ -239,11 +273,16 @@
       {% if map_search %}
         {% for ip, data in map_search.items %}
           var info = '';
+          var country = 'us'
+          var searched_term = ''
           var lon = 0;
           var lat = 0;
           {% for key, value in data.items %}
             {% if key == 'info' %}
               info = {{value|safe}}
+            {% endif %}
+            {% if key == 'country' %}
+              country = '{{value|safe}}'
             {% endif %}
             {% if key == 'longitude' %}
               lon = {{value|safe}}
@@ -251,9 +290,33 @@
             {% if key == 'latitude' %}
               lat = {{value|safe}}
             {% endif %}
+            {% if key == 'searched_term' %}
+              searched_term = '{{value|safe}}'
+            {% endif %}
           {% endfor %}
-          var lonLat = [lon,lat]
-          var marker = new mapboxgl.Marker()
+
+          var lonLat = [lon,lat];
+
+          $('#searched_hosts').css("display", "block");
+          $('#searched_hosts').append('<div id="searched_host_{{ip}}" class="searched_host"><i class="fas fa-desktop host_info"> <div class="flag flag-'+country+'"></div> ('+searched_term+') {{ip}} </i></div>');
+          document.getElementById('searched_host_{{ip}}').addEventListener('click', function() {
+            var lonEvent = 0;
+            var latEvent = 0;
+            {% for key, value in data.items %}
+              {% if key == 'longitude' %}
+                lonEvent = {{value|safe}}
+              {% endif %}
+              {% if key == 'latitude' %}
+                latEvent = {{value|safe}}
+              {% endif %}
+            {% endfor %}
+            var lonLatEvent = [lonEvent,latEvent];
+            map.flyTo({
+              center: lonLatEvent,
+              essential: true
+            });
+          });
+          var marker = new mapboxgl.Marker();
           var popup = new mapboxgl.Popup({ offset: 25 }).setText(JSON.stringify(info));
           marker.setLngLat(lonLat).setPopup(popup).addTo(map);
         {% endfor %}

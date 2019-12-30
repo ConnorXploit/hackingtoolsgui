@@ -389,7 +389,9 @@ def saveHostSearchedInMap(request):
         ip = request.POST.get('ip')
         location = [ request.POST.get('longitude', 0), request.POST.get('latitude', 0) ]
         info = request.POST.get('info')
-        ht.Config.saveHostSearchedInMap(ip, location, info, session_id=session_id)
+        country = request.POST.get('country')
+        searched_term = request.POST.get('searched_term')
+        ht.Config.saveHostSearchedInMap(ip, location, country, info, searched_term, session_id=session_id)
         return JsonResponse({'data' : 'Saved Successfuly'})
     except Exception as e:
         print(str(e))
