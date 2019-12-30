@@ -309,6 +309,38 @@ def saveRestAPIsFile(rest_api_file, password, session_id=None):
 
 # End API Keys
 
+# Maps
+
+def saveHostSearchedInMap(ip, location, info, session_id=None):
+    config_root = config['core']
+
+    if session_id:
+        if not session_id in config_root:
+            config_root[session_id] = {}
+        config_root = config_root[session_id]
+
+    if not 'map_search' in config_root:
+        config_root['map_search'] = {}
+
+    config_root = config_root['map_search']
+
+    config_root[ip] = {}
+    
+    config_root[ip]['longitude'] = location[0]
+    config_root[ip]['latitude'] = location[1]
+    
+    config_root[ip]['info'] = info
+
+def getSearchedHostsInMap(session_id=None):
+    try:
+        if session_id:
+            return config['core'][session_id]['map_search']
+        return config['core']['map_search']
+    except:
+        return {}
+
+# End Maps
+
 # === __save_config__ ===
 def __save_django_module_config__(new_conf, category, moduleName, functionName):
     """

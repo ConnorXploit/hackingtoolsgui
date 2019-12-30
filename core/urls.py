@@ -24,6 +24,7 @@ urlpatterns = [
     path('core/config/uploadAPIFileToConf/', views.uploadAPIFileToConf, name="uploadAPIFileToConf"),
     path('core/config/downloadAPIFile/', views.downloadAPIFile, name="downloadAPIFile"),
     path('core/config/saveTemporaryAPIsOnSession/', views.saveTemporaryAPIsOnSession, name="saveTemporaryAPIsOnSession"),
+    path('core/config/saveHostSearchedInMap/', views.saveHostSearchedInMap, name="saveHostSearchedInMap"),
     path('core/logger/getLogs/', views.getLogs, name="getLogs"),
     path('core/pool/getNodeId/', views.getNodeId, name="getNodeId"),
     path('core/pool/switchPool/', views.switchPool, name="switchPool"),

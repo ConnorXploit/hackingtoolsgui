@@ -96,6 +96,22 @@
                               var marker = new mapboxgl.Marker()
                               var popup = new mapboxgl.Popup({ offset: 25 }).setText(data);
                               marker.setLngLat(r.data['location']).setPopup(popup).addTo(map);
+                              var params = {
+                                ip: r.data['ip'],
+                                longitude: r.data['location'][0],
+                                latitude: r.data['location'][1],
+                                info: data
+                              }
+                              $.ajax({
+                                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                                url: '/core/config/saveHostSearchedInMap/',
+                                type: "POST",
+                                data : params,
+                                async: true,
+                                success : function(res) {
+                                  $.notify("Saved to memory:\n" + res.data, "success");
+                                }
+                              });
                             }
                           }
                         },
@@ -220,6 +236,28 @@
           }
         });
       });
+      {% if map_search %}
+        {% for ip, data in map_search.items %}
+          var info = '';
+          var lon = 0;
+          var lat = 0;
+          {% for key, value in data.items %}
+            {% if key == 'info' %}
+              info = {{value|safe}}
+            {% endif %}
+            {% if key == 'longitude' %}
+              lon = {{value|safe}}
+            {% endif %}
+            {% if key == 'latitude' %}
+              lat = {{value|safe}}
+            {% endif %}
+          {% endfor %}
+          var lonLat = [lon,lat]
+          var marker = new mapboxgl.Marker()
+          var popup = new mapboxgl.Popup({ offset: 25 }).setText(JSON.stringify(info));
+          marker.setLngLat(lonLat).setPopup(popup).addTo(map);
+        {% endfor %}
+      {% endif %}
     </script>
   </div>
 {% endblock %}

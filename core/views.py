@@ -111,6 +111,8 @@ def load_data_maps(session_id=None):
 
     ht_data_maps['api_keys'] = collections.OrderedDict(sorted(ht_data_maps['api_keys'].items()))
 
+    ht_data_maps['map_search'] = ht.Config.getSearchedHostsInMap(session_id=session_id)
+
 def renderMainPanel(request, popup_text=''):
     if not 'htpass' in request.COOKIES:
         session_id = ht.Utils.randomText(40, 'mixalpha-numeric-symbol14')
@@ -132,8 +134,8 @@ def renderMaps(request):
     else:
         session_id = request.COOKIES['htpass']
     global ht_data_maps
-    if not ht_data_maps:
-        load_data_maps(session_id)
+    
+    load_data_maps(session_id)
 
     response = render(request, 'core/maps.html', dict(ht_data_maps))
     response.set_cookie('htpass', session_id)
@@ -376,6 +378,22 @@ def getIPLocationGPS(request):
     }
     
     return JsonResponse(data)
+
+@csrf_exempt
+def saveHostSearchedInMap(request):
+    if not 'htpass' in request.COOKIES:
+        session_id = ht.Utils.randomText(40, 'mixalpha-numeric-symbol14')
+    else:
+        session_id = request.COOKIES['htpass']
+    try:
+        ip = request.POST.get('ip')
+        location = [ request.POST.get('longitude', 0), request.POST.get('latitude', 0) ]
+        info = request.POST.get('info')
+        ht.Config.saveHostSearchedInMap(ip, location, info, session_id=session_id)
+        return JsonResponse({'data' : 'Saved Successfuly'})
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({'data' : str(e)})
 
 @csrf_exempt
 def add_pool_node(request):
