@@ -1,11 +1,13 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block content %}
+  <div class="flag flag-us" hidden></div> <!-- For preloading flags.png in css-->
   <div id='map'>
     <form id="search_form">
       <input id="search_this" type="text" placeholder="Search..." class="form-control searcher_map" />
     </form>
     <div id="searched_hosts" style="display: none">
+      
     </div>
     <div id="search_queue" class="search_queue">
     </div>
@@ -97,6 +99,7 @@
                               /*$.notify("Getting data from:\n" + r.data['ip'], "success");*/
                               $('#searched_hosts').css("display", "block");
                               $('#searched_hosts').append('<div id="searched_host_'+r.data['ip']+'" class="searched_host"><i class="fas fa-desktop host_info"> <div class="flag flag-'+r.data['country']+'"></div> ('+$('#search_this').val()+') '+r.data['ip']+' </i></div>')
+                              document.getElementById('searched_hosts').scrollTop = document.getElementById('searched_hosts').scrollHeight;
                               document.getElementById('searched_host_'+r.data['ip']).addEventListener('click', function() {
                                 var params = {
                                   ip: r.data['ip']
@@ -143,7 +146,6 @@
                                 async: true,
                                 success : function(res) {
                                   $.notify("Saved to memory:\n" + res.data, "success");
-                                  $("#search_this").prop("readonly", false); 
                                 }
                               });
                             }
@@ -157,6 +159,7 @@
                   }
                 });
               }
+              $("#search_this").prop("readonly", false);
               //}
             }
           }
