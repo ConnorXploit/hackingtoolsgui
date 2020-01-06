@@ -206,7 +206,7 @@ def getModule(moduleName):
         if moduleName in m:
             if not 'ht_' in moduleName:
                 moduleName = 'ht_{m}'.format(m=moduleName)
-            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod=moduleName.split('_')[1], moduleName=moduleName)
+            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod='_'.join(moduleName.split('_')[1:]), moduleName=moduleName)
             return eval(sentence)
     Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), is_error=True)
 
@@ -281,6 +281,28 @@ def createModule(moduleName, category):
     Config.__createModuleTemplateConfig__(moduleName, category)
     trying_something = __importModules__()
     return
+
+# def createFunction(moduleName):
+#     try:
+#         category = getModuleCategory(moduleName)
+#         if category:
+#             Logger.printMessage("Enter/Paste your content:")
+#             contents = []
+#             new_lines_for_end = 3
+#             new_lines = 0
+#             while new_lines < new_lines_for_end:
+#                 try:
+#                     line = input()
+#                     if line != '':
+#                         new_lines = 0
+#                     else:
+#                         new_lines += 1
+#                 except:
+#                     new_lines += 1
+#                 contents.append(line)
+#             Logger.printMessage('\n'.join(contents))
+#     except Exception as e:
+#         Logger.printMessage(str(e), is_error=True)
 
 def removeModule(moduleName, category):
     modulePath = os.path.join(this_dir, 'modules', category, moduleName.replace('ht_', ''))

@@ -152,29 +152,13 @@ def getValidDictNoEmptyKeys(data):
 def getFunctionFullCall(moduleName, category, functionName):
     return 'ht.modules.{category}.{modDir}.{module}.{callClass}().{function}'.format(category=category, modDir=moduleName.replace('ht_', ''), module=moduleName, callClass=default_class_name_for_all, function=functionName)
 
-def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
-    params_func = None
-    function = getFunctionFullCall(moduleName=moduleName, category=category, functionName=functionName)
-    
+def getAnyFunctionParams(functionObjectStr, i_want_list=False):
     try:
-        params_func = inspect.getfullargspec(eval(function))[0]
+        params_func = inspect.getfullargspec(eval(functionObjectStr))[0]
         params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
 
-        args, varargs, keywords, defaults = inspect.getargspec(eval(function))
+        args, varargs, keywords, defaults = inspect.getargspec(eval(functionObjectStr))
         args = [param for param in args if not param in function_param_exclude] if args else []
-
-        # if not params_func and not defaults and not args: # Try to import explicitly the file and get the params
-        #     modules_dir = os.path.join(os.path.split(path)[0], 'modules')
-        #     module_file = os.path.join(modules_dir, category, moduleName.replace('ht_', ''), 'ht_{m}.py'.format(m=moduleName.replace('ht_', '')))
-        #     if os.path.isfile(module_file):
-        #         module = importlib.import_module(function.split(default_class_name_for_all)[0])
-        #         function = '{m}.{f}'.format(m=module, f=functionName)
-
-        #         params_func = inspect.getfullargspec(eval(function))[0]
-        #         params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
-
-        #         args, varargs, keywords, defaults = inspect.getargspec(eval(function))
-        #         args = [param for param in args if not param in function_param_exclude] if args else []
 
         if defaults:
             new_params_func = params_func[:-len(defaults)]
@@ -195,6 +179,11 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
         print(str(e))
         pass
     return []
+
+def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
+    params_func = None
+    function = getFunctionFullCall(moduleName=moduleName, category=category, functionName=functionName)
+    return getAnyFunctionParams(function, i_want_list)
 
 def getValueType(value):
     try:
@@ -515,3 +504,6 @@ def getDict(length=8, maxvalue=10000, alphabet='lalpha', try_pattern=None):
         res = getCombinationPosibilitiesLength(alphabet=alphabet, length=length)
         Logger.printMessage(message='getDict', description='{data} - {count}'.format(data=res[:10], count=len(res)), debug_core=True)
         return res
+
+def getPosibleAlphabet():
+    return list(config_utils.keys())
