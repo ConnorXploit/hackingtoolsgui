@@ -201,6 +201,9 @@
             },
             "help": {
                 "__in_map_help__": false
+            },
+            "getCVEsFromHost": {
+                "__in_map_getCVEsFromHost__": false
             }
         },
         "ht_twitter": {
@@ -321,6 +324,14 @@
             },
             "search_pastebin": {
                 "__in_map_search_pastebin__": false
+            }
+        },
+        "ht_banner_grabber": {
+            "grabPortBanner": {
+                "__in_map_grabPortBanner__": false
+            },
+            "help": {
+                "__in_map_help__": false
             }
         }
     }

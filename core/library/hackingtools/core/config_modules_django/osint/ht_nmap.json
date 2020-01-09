@@ -86,6 +86,22 @@
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
             }
+        },
+        "getCVEsFromHost": {
+            "__function__": "getCVEsFromHost",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
+            },
+            "__pool_it_getCVEsFromHost__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
         }
     }
 }

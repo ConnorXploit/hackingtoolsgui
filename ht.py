@@ -1,7 +1,7 @@
 import hackingtools as ht
 import math
 from getpass import getpass
-import pkg_resources, inspect
+import pkg_resources, inspect, os
 
 HEADER_MENU = 'HackingTools v{v}'.format(v=pkg_resources.get_distribution('hackingtools').version)
 MAX_ANCHOR_TITLE = len(HEADER_MENU) + 2
@@ -9,6 +9,12 @@ MAX_ANCHOR_TITLE = len(HEADER_MENU) + 2
 main_menu = ["Modules", "Categories", "Utils", "Pool", "Repositories", "APIs"]
 
 api_dict = {}
+
+def clearConsole():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
 
 def __createTable__(items, title='', force=None, back=False, exit_option=False):
     if items:
@@ -69,6 +75,7 @@ def menu(items, title='', force=None, back=False, exit_option=False):
                 if type(items) == list:
                     selected = int(input('  * Select an option: '))
                     if not selected in range(min_option, len(items)+1):
+                        clearConsole()
                         return menu(items, title, force, back, exit_option)
                 else:
                     all_vars_setted = True
@@ -82,35 +89,47 @@ def menu(items, title='', force=None, back=False, exit_option=False):
                         setted_value = input('  * You con now \'run\' for execute it (all params setted): ')
                     else:
                         setted_value = input('  * Set value (set VARIABLE value): ')
+                        if setted_value == 'run':
+                            clearConsole()
+                            return menu(items, title, force, back, exit_option)
                     
                     if not setted_value == 'run':
                         try:
                             selected = int(setted_value.split(' ')[0])
                             if selected == 0:
+                                clearConsole()
                                 return None
                         except:
                             selected = -2
+                        if not selected == 'run':
+                            var_setted = setted_value.split(' ')[1]
+                            value_setted = ' '.join(setted_value.split(' ')[2:])
+                            
+                            if var_setted not in items:
+                                print('Error on setted variable for this function')
+                            else:
+                                items[var_setted] = value_setted
 
-                        var_setted = setted_value.split(' ')[1]
-                        value_setted = ' '.join(setted_value.split(' ')[2:])
-                        
-                        if var_setted not in items:
-                            print('Error on setted variable for this function')
-                        else:
-                            items[var_setted] = value_setted
-
+                        clearConsole()
                         return menu(items, title, force, back, exit_option)
                     else:
+                        clearConsole()
                         return items
             except:
+                clearConsole()
                 return menu(items, title, force, back, exit_option)
         
         if selected == 0:
+            clearConsole()
             return None
         if selected == -1:
+            clearConsole()
             return -1
         if type(items) == list:
+            clearConsole()
             return items[selected-1]
+        
+        clearConsole()
         return items
 
     else:
@@ -141,11 +160,12 @@ def prepareFunctionParams(function_params):
 def executeFunction(call_to_function, arguments):
     func_params = []
     for f in full_params:
-        try:
-            int(full_params[f])
-            func_params.append('{var}={val}'.format(var=f, val=full_params[f]))
-        except:
-            func_params.append('{var}="{val}"'.format(var=f, val=full_params[f]))
+        if not full_params[f] == None and not full_params[f] == '':
+            try:
+                int(full_params[f])
+                func_params.append('{var}={val}'.format(var=f, val=full_params[f]))
+            except:
+                func_params.append('{var}="{val}"'.format(var=f, val=full_params[f]))
     function_call_params = ','.join(func_params)
     res = None
     function_full_call = '{func}({pa})'.format(func=call_to_function, pa=function_call_params)

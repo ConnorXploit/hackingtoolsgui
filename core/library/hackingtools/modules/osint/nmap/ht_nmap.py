@@ -18,12 +18,49 @@ class StartModule():
 	def getConnectedDevices(self, ip):
 		Logger.printMessage(message='{methodName}'.format(methodName='getConnectedDevices'), description='{param}'.format(param=ip), debug_module=True)
 		nm = nmap.PortScanner()
-		results = nm.scan(ip, '-sP')
-		hosts = []
-		for host in results.all_hosts():
-			if results[host].state() == 'up':
-				hosts.append(host)
-		return hosts
+		results = nm.scan(hosts=ip, arguments='-n -sP -PE -PA21,23,80,3389')
+		if 'scan' in results: 
+			hosts = {}
+			for host in results['scan']:
+				if results['scan'][host]['status']['state'] == 'up':
+					mac_address = None
+
+					if 'mac' in results['scan'][host]['addresses']:
+						mac_address = results['scan'][host]['addresses']['mac']
+
+					hosts[host] = '' if not mac_address else results['scan'][host]['vendor'][ mac_address ]
+					
+			return hosts
+		return []
+
+	def getCVEsFromHost(self, ip):
+		Logger.printMessage(message='{methodName}'.format(methodName='getConnectedDevices'), description='{param}'.format(param=ip), debug_module=True)
+		nm = nmap.PortScanner()
+		results = nm.scan(hosts=ip, arguments='-Pn --script vuln')
+		protocols = ('tcp', 'udp')
+		discard_vuln_by_description = ('ERROR:', 'Couldn\'t', '\n  /jmx-console/: Authentication was not required\n')
+		res = {}
+		for p in protocols:
+			if 'scan' in results and ip in results['scan']:
+				if p in results['scan'][ip]:
+					for port in results['scan'][ip][p]:
+						res[port] = []
+						if 'script' in results['scan'][ip][p][port]:
+							for vuln in results['scan'][ip][p][port]['script']:
+								discard = False
+								for dis in discard_vuln_by_description:
+									if results['scan'][ip][p][port]['script'][vuln].startswith(dis):
+										discard = True
+								if not discard:
+									if not results['scan'][ip][p][port]['script'][vuln] == '\n':
+										if 'CVE:' in results['scan'][ip][p][port]['script'][vuln]:
+											res[port].append( { vuln : results['scan'][ip][p][port]['script'][vuln].split('CVE:')[1].split('\n')[0].split(' ')[0] } )
+										else:
+											res[port].append( { vuln : results['scan'][ip][p][port]['script'][vuln] } )
+						if len(res[port]) == 0:
+							del res[port]
+		
+		return res
 
 	def getDevicePorts(self, ip, tcp=True, udp=False):
 		Logger.printMessage(message='{methodName}'.format(methodName='getDevicePorts'), description='{param} - TCP {tcp} - UDP {udp}'.format(param=ip, tcp=tcp, udp=udp), debug_module=True)

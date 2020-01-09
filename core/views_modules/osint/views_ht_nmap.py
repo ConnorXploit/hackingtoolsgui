@@ -90,3 +90,27 @@ def hasDevicePortOpened(request):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
+# Automatic view function for getCVEsFromHost
+def getCVEsFromHost(request):
+	# Init of the view getCVEsFromHost
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'getCVEsFromHost')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter ip
+			ip = request.POST.get('ip')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_nmap').getCVEsFromHost( ip=ip )
+			if request.POST.get('is_async_getCVEsFromHost', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_getCVEsFromHost', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
