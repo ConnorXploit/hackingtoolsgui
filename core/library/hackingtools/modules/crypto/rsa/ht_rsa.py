@@ -114,19 +114,95 @@ class StartModule():
 		ba64 = base64.b64decode(deasc.encode())
 		return ba64
 
-	def encode(self, key, plaintext):
+	def encode(self, password, plaintext):
 		enc = []
 		for i in range(len(plaintext)):
-			key_c = key[i % len(key)]
+			key_c = password[i % len(password)]
 			enc_c = chr((ord(plaintext[i]) + ord(key_c)) % 256)
 			enc.append(enc_c)
 		return base64.urlsafe_b64encode("".join(enc).encode()).decode()
 
-	def decode(self, key, ciphertext):
+	def decode(self, password, ciphertext):
 		dec = []
 		ciphertext = base64.urlsafe_b64decode(ciphertext).decode()
 		for i in range(len(ciphertext)):
-			key_c = key[i % len(key)]
+			key_c = password[i % len(password)]
 			dec_c = chr((256 + ord(ciphertext[i]) - ord(key_c)) % 256)
 			dec.append(dec_c)
 		return "".join(dec)
+
+	def encodeFromComplexMap(self, password, plaintext):
+		data = self.encode(password, plaintext)
+		complexMap = [ ht.Utils.randomText(length=16, alphabet='mixalpha-numeric-symbol14') for i in range(16) ]
+
+		data_rss_encoded = []
+		for char in data:
+			char_mapped = False
+			rss_appearances = ''
+			for line_index, line in enumerate(complexMap):
+				if not char_mapped:
+					appearances = [i for i in range(len(line)) if line.startswith(char, i)]
+					for app in appearances:
+						if not char_mapped:
+							use_this_appearance = bool(random.getrandbits(1))
+							if use_this_appearance:
+								rss_appearances = '{l}{s}{a}{ss}'.format( l=line_index, a=app, s=ht.Utils.getRandomCharFromDict('symbols14'), ss=ht.Utils.getRandomCharFromDict('symbols14') )
+								char_mapped = True
+
+			if not char_mapped:
+				print('No mapeado: ', char)
+				rss_appearances = '{l}{s}{l}{ss}'.format( l=char, a=char, s=ht.Utils.getRandomCharFromDict('symbols14'), ss=ht.Utils.getRandomCharFromDict('symbols14') )
+
+			data_rss_encoded.append(rss_appearances)
+
+		return ( ''.join(data_rss_encoded), ''.join(complexMap) )
+
+	def decodeFromComplexMap(self, password, ciphertext, complexMap):
+		try:
+			full_data = ciphertext
+
+			symbols14 = Config.getConfig('core', 'Utils', 'dictionaries', 'symbols14')
+
+			full_lines = []
+
+			if not isinstance(complexMap, list):
+				complexMap = ''.join(complexMap.split('\n'))
+				chunks, chunk_size = len(complexMap), len(complexMap)//16
+				complexMap = [ complexMap[i:i+chunk_size] for i in range(0, chunks, chunk_size) ]
+
+			better_decoded = full_data
+			for symb in symbols14:
+				better_decoded = ' '.join(better_decoded.split(symb))
+
+			list_decoded = better_decoded.split(' ')
+
+			count = 0
+			for row in range( int(len(list_decoded)/2) ):
+				full_lines.append( [ list_decoded[row + count], list_decoded[row + count + 1] ] )
+				count += 1
+
+			rss_decoded = []
+
+			for lines in full_lines:
+				row_n = lines[0]
+				char_n = lines[1]
+				if row_n == '':
+					row_n = -1
+				if char_n == '':
+					char_n = -1
+				try:
+					row_n = int(row_n)
+				except:
+					pass
+				try:
+					char_n = int(char_n)
+				except:
+					pass
+				if not isinstance(row_n, int) or not isinstance(char_n, int):
+					rss_decoded.append(row_n)
+				else:
+					rss_decoded.append(complexMap[row_n][char_n])
+
+			return self.decode(password, ''.join(rss_decoded))
+		except:
+			return 'Bad password'

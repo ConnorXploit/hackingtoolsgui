@@ -165,4 +165,62 @@ def encode(request):
 		if request.POST.get('is_async_encode', False):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
+
+	
+# Automatic view function for decodeFromComplexMap
+def decodeFromComplexMap(request):
+	# Init of the view decodeFromComplexMap
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'decodeFromComplexMap')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter password
+			password = request.POST.get('password')
+
+			# Parameter ciphertext
+			ciphertext = request.POST.get('ciphertext')
+
+			# Parameter complexMap
+			complexMap = request.POST.get('complexMap')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_rsa').decodeFromComplexMap( password=password, ciphertext=ciphertext, complexMap=complexMap )
+			if request.POST.get('is_async_decodeFromComplexMap', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_decodeFromComplexMap', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	
+# Automatic view function for encodeFromComplexMap
+def encodeFromComplexMap(request):
+	# Init of the view encodeFromComplexMap
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'encodeFromComplexMap')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter password
+			password = request.POST.get('password')
+
+			# Parameter plaintext
+			plaintext = request.POST.get('plaintext')
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_rsa').encodeFromComplexMap( password=password, plaintext=plaintext )
+			if request.POST.get('is_async_encodeFromComplexMap', False):
+				return JsonResponse({ "data" : result })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_encodeFromComplexMap', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
 	

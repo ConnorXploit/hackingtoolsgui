@@ -6,8 +6,10 @@ def amIdjango(fileCall):
 
 if amIdjango(__name__):
     from core.library import hackingtools as ht
+    from core.library.hackingtools.core.Objects import Worker
 else:
     import hackingtools as ht
+    from hackingtools.core.Objects import Worker
 config = Config.getConfig(parentKey='core', key='Utils')
 config_logger = Config.getConfig(parentKey='core', key='Logger')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
@@ -28,6 +30,7 @@ from itertools import product
 
 from datetime import datetime
 
+
 global lock
 lock = Lock()
 
@@ -40,35 +43,32 @@ def getWorkers():
     global threads
     return threads
 
-def startWorker(workerName, functionCall, args=(), timesleep=1, chunk=None):
+def startWorker(workerName, functionCall, args=(), timesleep=1, run_until_ht_stops=False):
     t = None
     try:
-        main_worker_name = 'main_{w}'.format(w=workerName)
-        Logger.printMessage(main_worker_name, 'Starting thread for control threads to a functioncall', debug_core=True)
-        t = Thread(target=worker, args=(workerName, functionCall, args, int(timesleep), chunk,))
-        t.setDaemon(True)
-        threads[main_worker_name] = t
+        w = Worker()
+        Logger.printMessage('Starting Worker: {w}'.format(w=workerName))
+        t = Thread(target=w.run, args=(functionCall, args, int(timesleep) ), daemon=run_until_ht_stops)
+        threads[workerName] = [ w, t ]
         t.start()
-    except:
-        t.join()
-
-def worker(workerName, functionCall, args=(), timesleep=1, chunk=None):
-    while True:
-        t = None
-        try:
-            Logger.printMessage(workerName, 'Running thread', debug_core=True)
-            t = Thread(target=functionCall, args=args)
-            t.setDaemon(True)
-            threads[workerName] = t
-            t.start()
-        except:
-            if t:
-                t.join()
-        time.sleep(timesleep)
+    except Exception as e:
+        Logger.printMessage(str(e), is_error=True)
 
 def killAllWorkers(workers):
+    global threads
     for t in threads:
-        threads[t].join()
+        threads[t][0].terminate()
+        threads[t][1].join()
+
+def stopWorker(workerName):
+    global threads
+    if workerName in threads:
+        try:
+            threads[workerName][0].terminate()
+            threads[workerName][1].join()
+        except Exception as e:
+            Logger.printMessage(str(e), is_error=True)
+        del threads[workerName]
 
 # File Manipulation
 def getFileContentInByteArray(filePath):

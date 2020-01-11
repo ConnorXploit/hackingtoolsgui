@@ -126,6 +126,56 @@
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
             }
+        },
+        "decodeFromComplexMap": {
+            "__function__": "decodeFromComplexMap",
+            "__async__": false,
+            "__return__": "text",
+            "password": {
+                "__type__": "text",
+                "label_desc": "password",
+                "placeholder": "password",
+                "required": true
+            },
+            "ciphertext": {
+                "__type__": "text",
+                "label_desc": "ciphertext",
+                "placeholder": "ciphertext",
+                "required": true
+            },
+            "complexMap": {
+                "__type__": "text",
+                "label_desc": "complexMap",
+                "placeholder": "complexMap",
+                "required": true
+            },
+            "__pool_it_decodeFromComplexMap__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "encodeFromComplexMap": {
+            "__function__": "encodeFromComplexMap",
+            "__async__": false,
+            "__return__": "text",
+            "password": {
+                "__type__": "text",
+                "label_desc": "password",
+                "placeholder": "password",
+                "required": true
+            },
+            "plaintext": {
+                "__type__": "text",
+                "label_desc": "plaintext",
+                "placeholder": "plaintext",
+                "required": true
+            },
+            "__pool_it_encodeFromComplexMap__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
         }
     }
 }

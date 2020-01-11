@@ -330,14 +330,26 @@ def wantPool():
     global WANT_TO_BE_IN_POOL
     return WANT_TO_BE_IN_POOL
 
-def worker(workerName, functionCall, args={}, timesleep=1, chunk=None):
-    Utils.startWorker(workerName, functionCall, args, int(timesleep), chunk)
+def worker(workerName, functionCall, args=(), timesleep=1, run_until_ht_stops=False):
+    Utils.startWorker(workerName, functionCall, args, int(timesleep), run_until_ht_stops)
 
 def getWorker(nameWorker):
     try:
         return Utils.getWorkers()[nameWorker]
     except:
         return None
+
+def getWorkerLastResponse(nameWorker):
+    try:
+        return Utils.getWorkers()[nameWorker][0].getLastResponse()
+    except:
+        return ''
+
+def stopWorker(nameWorker):
+    try:
+        Utils.stopWorker(nameWorker)
+    except Exception as e:
+        Logger.printMessage(str(e), is_error=True)
 
 def __cleanOutputModules__():
     for mod in getModulesNames():
@@ -529,9 +541,9 @@ def __importModules__():
 __importModules__()
 
 if Utils.amIdjango(__name__):
-    worker('refresh-pool-servers', Pool.__checkPoolNodes__, timesleep=180)
-    worker('clear-htpass-files', Config.__cleanHtPassFiles__, timesleep=100)
-    worker('clear-output-modules', __cleanOutputModules__, timesleep=200)
+    worker('refresh-pool-servers', 'ht.Pool.__checkPoolNodes__', timesleep=180, run_until_ht_stops=True)
+    worker('clear-htpass-files', 'ht.Config.__cleanHtPassFiles__', timesleep=100, run_until_ht_stops=True)
+    worker('clear-output-modules', 'ht.__cleanOutputModules__', timesleep=200, run_until_ht_stops=True)
 # try:
 #     for t in threads:
 #         t.join()

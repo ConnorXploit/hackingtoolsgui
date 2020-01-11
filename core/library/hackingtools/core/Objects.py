@@ -1,5 +1,7 @@
 from . import Logger, Utils
-import json
+import json, time
+
+import hackingtools as ht
 
 class Host():
 
@@ -344,3 +346,22 @@ class Historical():
 
     def getData(self):
         return self.data
+        
+class Worker():
+    
+    def __init__(self): 
+        self._running = True
+        self.responses = []
+
+    def terminate(self): 
+        self._running = False
+    
+    def getLastResponse(self):
+        return self.responses[-1]
+
+    def run(self, functionCall, args, timesleep):
+        while self._running:
+            func = '{f}{a}'.format(f=functionCall, a=args)
+            res = eval(func)
+            self.responses.append( res )
+            time.sleep(timesleep) 

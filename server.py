@@ -36,6 +36,7 @@ while not want_exit:
     if want_update:
         print('Updating...')
         p = subprocess.call(['bash', 'update_server.sh'])
+        want_update = False
 
     try:
         if not p:
