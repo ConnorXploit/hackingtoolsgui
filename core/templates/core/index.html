@@ -509,13 +509,124 @@
 
       <!-- Pending Requests Card Example -->
       <div class="modal fade" id="testModuleModal" tabindex="-1" role="dialog" aria-labelledby="testModuleLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-bigger" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="testModuleLabel">Test your Module</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
+            </div>
+            <script>
+              function allowDrop(ev) {
+                ev.preventDefault();
+              }
+
+              function drag(ev) {
+                ev.dataTransfer.setData("text", ev.target.id);
+              }
+
+              function drop(ev) {
+                ev.preventDefault();
+                var data = ev.dataTransfer.getData("text");
+                var div = document.getElementById(data);
+                /*var clone = div.cloneNode(true);
+                clone.id = "dragged_" + data;*/
+                {% for name, funct in modules_all.items %}
+                  if(data.includes('{{name}}')){
+                    {% if funct.items|length > 1 %}
+                      {% for funct_name, funct_params in funct.items %}
+                        {% if funct_name != 'help' %}
+                          {% for tool, function in modules_functions_modals.items %}
+                            {% for functi, data in function.items %}
+                              {% if functi == funct_name and 'ht_'|add:name == tool %}
+                                if(data.includes('{{functi}}')){
+                                  {% for modCommand, funcCommand in console_command.items %}
+                                    if(data.includes('{{modCommand}}'.split('_')[1])){
+                                      {% for funcCom, funcComText in funcCommand.items %}
+                                        if(data.includes('{{funcCom}}')){
+                                          if(!document.getElementById("code_panel").value.includes('import hackingtools as ht')){
+                                            document.getElementById("code_panel").value += '\nimport hackingtools as ht\n\n';
+                                          }
+                                          document.getElementById("code_panel").value += '{{funcComText|escapejs }}\n\n';
+                                        }
+                                      {% endfor %}
+                                    }
+                                  {% endfor %}
+                                }
+                              {% endif %}
+                            {% endfor %}
+                          {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  }
+                {% endfor %}
+                ev.target.appendChild(div);
+              }
+            </script>
+            <div class="modal-body modal-body-limited">
+              <div id="execute_functions_panel" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+              </div>
+              <div id="code_functions_panel">
+                <textarea id="code_panel" ondrop="return false;">import hackingtools as ht
+
+</textarea>
+              </div>
+              <div class="row">
+                <div id="accordion">
+                  {% for name, funct in modules_all.items %}
+                    <div class="card">
+                      <div class="card-header" id="heading-{{name}}">
+                        <h5 class="mb-0">
+                          <a role="button" data-toggle="collapse" href="#collapse-{{name}}" aria-expanded="true" aria-controls="collapse-{{name}}">
+                            {{name}}
+                          </a>
+                        </h5>
+                      </div>
+                      <div id="collapse-{{name}}" class="collapse" data-parent="#accordion" aria-labelledby="heading-{{name}}">
+                        <div class="card-body drag-zone" id="div_{{name}}_{{functi}}" ondrop="drop(event)" ondragover="allowDrop(event)">
+                          {% if funct.items|length > 1 %}
+                            {% for funct_name, funct_params in funct.items %}
+                              {% if funct_name != 'help' %}
+                                {% for tool, function in modules_functions_modals.items %}
+                                  {% for functi, data in function.items %}
+                                    {% if functi == funct_name and 'ht_'|add:name == tool %}
+                                      <div draggable="true" ondragstart="drag(event)" id="drag_{{name}}_{{functi}}" class="function_lateral_drag">
+                                        <span>{{functi}}</span>
+                                      </div>
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endfor %}
+                              {% endif %}
+                            {% endfor %}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Save script" onclick="saveFile()"></button>
+              
+              <script>
+                let saveFile = () => {
+                  var element = document.createElement('a');
+                  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(document.getElementById('code_panel').value));
+                  element.setAttribute('download', 'Script_ht.py');
+
+                  element.style.display = 'none';
+                  document.body.appendChild(element);
+
+                  element.click();
+
+                  document.body.removeChild(element);
+                }
+              </script>
             </div>
           </div>
         </div>

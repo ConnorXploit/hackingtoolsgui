@@ -482,9 +482,11 @@ def __importModule__(modules, category, moduleName):
             modules_loaded[module_import_string_no_from] = {}
             for mod_func in module_functions:
                 functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=mod_func, i_want_list=True)
+                original_params = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=mod_func)
 
                 modules_loaded[module_import_string_no_from][mod_func] = {}
                 modules_loaded[module_import_string_no_from][mod_func]['params'] = functionParams if len(functionParams) > 0 else False
+                modules_loaded[module_import_string_no_from][mod_func]['original_params'] = original_params if original_params else None
 
         else:
             modules_loaded[module_import_string_no_from] = 'Sin funciones...'   

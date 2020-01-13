@@ -340,7 +340,7 @@
         },
         "ht_banner_grabber": {
             "grabPortBanner": {
-                "__in_map_grabPortBanner__": false
+                "__in_map_grabPortBanner__": true
             },
             "help": {
                 "__in_map_help__": false

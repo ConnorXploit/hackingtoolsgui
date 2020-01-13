@@ -6,7 +6,7 @@ else:
 ht.Logger.setDebugModule(True)
 
 from colorama import Fore
-import os
+import os, json
 
 config_locales = ht.Config.getConfig(parentKey='core', key='locales')
 
@@ -115,15 +115,51 @@ def getModulesFunctionsCalls():
         Array
     """
     modulesCalls = {}
-    header = 'import hackingtools as ht\n\nht_mod = ht.getModule("{module_name}")\nmod_result = ht_mod.{module_function}({module_function_params})\n\nprint(mod_result)'
+    header = "# Get the module from hackingtools\nht_loaded_{module_name} = ht.getModule(\"{module_name}\"){header_params}\n\n# Call the module\'s function for getting a result\nmod_result = ht_loaded_{module_name}.{module_function}({params})\n\n# Return it\nprint(mod_result)"
+
+    header_params = {}
+    header_params_arg = {}
+    for module in ht.modules_loaded:
+        if not module in header_params:
+            header_params[module] = {}
+        if not module in header_params_arg:
+            header_params_arg[module] = {}
+        for func in ht.modules_loaded[module]:
+            if not func in header_params[module]:
+                header_params[module][func] = "\n\n# Load the params you need\nparams = {}"
+            if not func in header_params_arg[module]:
+                header_params_arg[module][func] = []
+            try:
+                if 'original_params' in ht.modules_loaded[module][func]: 
+                    required_params = None
+                    default_params = None
+                    for param in ht.modules_loaded[module][func]['original_params']:
+
+                        if 'params' == param:
+                            required_params = ht.modules_loaded[module][func]['original_params'][param]
+                            for reqpar in required_params:
+                                header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p}: \')'.format(p=reqpar)
+                                header_params_arg[module][func].append('{p}=params[\'{p}\']'.format(p=reqpar))
+
+                        if 'defaults' == param:
+                            default_params = ht.modules_loaded[module][func]['original_params'][param]
+                            for defpar in default_params:
+                                if default_params[defpar] == 'None' or default_params[defpar] == None or isinstance(default_params[defpar], int) or isinstance(default_params[defpar], list) or isinstance(default_params[defpar], dict):
+                                    header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p} (Default value: {d}): \')\nif not params[\'{p}\']:\n\tparams[\'{p}\'] = {d}'.format(p=defpar, d=default_params[defpar])
+                                else:
+                                    header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p} (Default value: {d}): \')\nparams[\'if not {p}\']:\n\tparams[\'{p}\'] = \'{d}\''.format(p=defpar, d=default_params[defpar])
+                                header_params_arg[module][func].append('{p}=params[\'{p}\']'.format(p=defpar))
+
+            except:
+                header_params[module][func] = ''
     for module in ht.modules_loaded:
         module_funcs = {}
         for func in ht.modules_loaded[module]:
             try:
-                for param in ht.modules_loaded[module][func]:
-                    module_funcs[func] = header.format(module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(ht.modules_loaded[module][func][param]))
+                for param in ht.modules_loaded[module][func]['original_params']:
+                    module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(ht.modules_loaded[module][func]['original_params'][param]), params=', '.join(header_params_arg[module][func]))
             except:
-                module_funcs[func] = header.format(module_name=module.split('.')[-1], module_function=func, module_function_params='')
+                module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params='')
         modulesCalls[module.split('.')[-1]] = module_funcs
     return modulesCalls
 
