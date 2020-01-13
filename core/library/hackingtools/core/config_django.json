@@ -338,14 +338,6 @@
                 "__in_map_search_pastebin__": false
             }
         },
-        "ht_banner_grabber": {
-            "grabPortBanner": {
-                "__in_map_grabPortBanner__": true
-            },
-            "help": {
-                "__in_map_help__": false
-            }
-        },
         "ht_bannergrabber": {
             "grabPortBanner": {
                 "__in_map_grabPortBanner__": true

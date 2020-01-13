@@ -531,13 +531,13 @@ def __importModules__():
         for modu in modules:
             for submod in modules[modu]:
                 for files in modules[modu][submod]:
-                    module_name = modules[modu][submod][files][0].split(".")[0]
                     try:
+                        module_name = modules[modu][submod][files][0].split(".")[0]
                         #worker("import-module-{m}".format(m=module_name), __importModule__, args=(modu, submod, module_name, bar)) # Threaded
                         __importModule__(modules=modu, category=submod, moduleName=module_name)
                         bar.update(1)
                     except Exception as e:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} File not found: {error}'.format(moduleName=module_name, error=str(e)), is_error=True)
+                        Logger.printMessage(message='__importModules__', description='{moduleName} File not found: {error}'.format(moduleName=files, error=str(e)), is_error=True)
                         pass
 
 __importModules__()
