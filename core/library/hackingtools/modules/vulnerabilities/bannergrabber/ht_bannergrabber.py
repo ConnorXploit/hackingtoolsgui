@@ -3,11 +3,9 @@ if Utils.amIdjango(__name__):
 	from .library.core import hackingtools as ht
 else:
 	import hackingtools as ht
-import os
+import os, socket
 
-import socket, sys
-
-config = Config.getConfig(parentKey='modules', key='ht_banner_grabber')
+config = Config.getConfig(parentKey='modules', key='ht_bannergrabber')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
 class StartModule():
@@ -16,7 +14,7 @@ class StartModule():
 		pass
 
 	def help(self):
-		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_banner_grabber'), debug_module=True)
+		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_bannergrabber'), debug_module=True)
 
 	def grabPortBanner(self, ip, port):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

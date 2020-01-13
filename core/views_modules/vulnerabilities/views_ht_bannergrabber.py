@@ -5,8 +5,7 @@ from requests import Response
 from core import views
 from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
 
-# Create your views here.
-
+	
 # Automatic view function for grabPortBanner
 def grabPortBanner(request):
 	# Init of the view grabPortBanner
@@ -25,7 +24,7 @@ def grabPortBanner(request):
 			port = request.POST.get('port')
 
 			# Execute, get result and show it
-			result = ht.getModule('ht_banner_grabber').grabPortBanner( ip=ip, port=port )
+			result = ht.getModule('ht_bannergrabber').grabPortBanner( ip=ip, port=port )
 			if request.POST.get('is_async_grabPortBanner', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)

@@ -132,7 +132,7 @@
                 "__in_map_encodeFromRSS__": false
             },
             "decodeFromComplexMap": {
-                "__in_map_decodeFromComplexMap__": true
+                "__in_map_decodeFromComplexMap__": false
             },
             "encodeFromComplexMap": {
                 "__in_map_encodeFromComplexMap__": false
@@ -339,6 +339,14 @@
             }
         },
         "ht_banner_grabber": {
+            "grabPortBanner": {
+                "__in_map_grabPortBanner__": true
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_bannergrabber": {
             "grabPortBanner": {
                 "__in_map_grabPortBanner__": true
             },

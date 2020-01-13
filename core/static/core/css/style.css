@@ -702,3 +702,19 @@ input {
     padding-bottom: 100% !important;
     background: #525151e8 !important;
 }
+.notification {
+    color: white !important;
+    text-decoration: none !important;
+    position: relative !important;
+    border-radius: 2px !important;
+}
+.notification .badge {
+    font-size: 10px !important;
+    position: absolute !important;
+    top: 5px !important;
+    left: 10px !important;
+    padding: 4px 7px !important;
+    border-radius: 50% !important;
+    background: red !important;
+    color: white !important;
+}

@@ -106,7 +106,8 @@
         "ht_cpe": {},
         "ht_cwe": {},
         "ht_hash": {},
-        "ht_pastebin": {}
+        "ht_pastebin": {},
+        "ht_bannergrabber": {}
     },
     "core": {
         "WANT_TO_BE_IN_POOL": true,
