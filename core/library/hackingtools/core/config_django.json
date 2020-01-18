@@ -234,8 +234,8 @@
             "get_user": {
                 "__in_map_get_user__": false
             },
-            "search": {
-                "__in_map_search__": false
+            "searchTweets": {
+                "__in_map_searchTweets__": false
             }
         },
         "ht_cpe": {
@@ -244,7 +244,7 @@
             }
         },
         "ht_cve": {
-            "search": {
+            "searchCVE": {
                 "__in_map_search__": false
             },
             "help": {
@@ -320,23 +320,6 @@
             },
             "help": {
                 "__in_map_help__": false
-            }
-        },
-        "ht_test": {
-            "hola": {
-                "__in_map_hola__": false
-            },
-            "liwiskas": {
-                "__in_map_liwiskas__": true
-            },
-            "mimimi": {
-                "__in_map_mimimi__": false
-            },
-            "help": {
-                "__in_map_help__": false
-            },
-            "mimismi": {
-                "__in_map_mimismi__": false
             }
         },
         "ht_pastebin": {

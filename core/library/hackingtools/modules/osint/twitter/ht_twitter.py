@@ -98,7 +98,7 @@ class StartModule():
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_twitter'))
 
-	def search(self, username="", since="", until="", query="", limit=1000, verified=False, proxy="", interval=0):
+	def searchTweets(self, username="", since="", until="", query="", limit=1000, verified=False, proxy="", interval=0):
 		"""Advanced search engine"""
 
 		cursor = "-1"

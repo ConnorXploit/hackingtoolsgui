@@ -20,8 +20,8 @@
         }
     },
     "django_form_module_function": {
-        "search": {
-            "__function__": "search",
+        "searchCVE": {
+            "__function__": "searchCVE",
             "__async__": false,
             "__return__": "text",
             "cve_id": {
@@ -30,7 +30,7 @@
                 "placeholder": "cve_id",
                 "value": ""
             },
-            "__pool_it_search__": {
+            "__pool_it_searchCVE__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false

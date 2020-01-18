@@ -121,12 +121,12 @@ def get_user(request):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
-# Automatic view function for search
-def search(request):
-	# Init of the view search
+# Automatic view function for searchTweets
+def searchTweets(request):
+	# Init of the view searchTweets
 	try:
 		# Pool call
-		response, repool = sendPool(request, 'search')
+		response, repool = sendPool(request, 'searchTweets')
 		if response or repool:
 			if repool:
 				return HttpResponse(response)
@@ -167,12 +167,12 @@ def search(request):
 			interval = int(request.POST.get('interval', 0))
 
 			# Execute, get result and show it
-			result = ht.getModule('ht_twitter').search( username=username, since=since, until=until, query=query, limit=limit, verified=verified, proxy=proxy, interval=interval )
-			if request.POST.get('is_async_search', False):
+			result = ht.getModule('ht_twitter').searchTweets( username=username, since=since, until=until, query=query, limit=limit, verified=verified, proxy=proxy, interval=interval )
+			if request.POST.get('is_async_searchTweets', False):
 				return JsonResponse({ "data" : result })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
-		if request.POST.get('is_async_search', False):
+		if request.POST.get('is_async_searchTweets', False):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	

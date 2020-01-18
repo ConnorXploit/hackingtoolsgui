@@ -102,8 +102,8 @@
                 "selected": false
             }
         },
-        "search": {
-            "__function__": "search",
+        "searchTweets": {
+            "__function__": "searchTweets",
             "__async__": false,
             "__return__": "text",
             "username": {
@@ -155,7 +155,7 @@
                 "placeholder": "interval",
                 "value": 0
             },
-            "__pool_it_search__": {
+            "__pool_it_searchTweets__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
