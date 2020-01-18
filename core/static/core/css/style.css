@@ -699,7 +699,8 @@ input {
     white-space: nowrap !important;
 }
 .drag-zone {
-    padding-bottom: 100% !important;
+    margin-bottom: -1000px !important;
+    padding-bottom: 1000px !important;
     background: #525151e8 !important;
 }
 .notification {

@@ -221,6 +221,21 @@
         "ht_twitter": {
             "help": {
                 "__in_map_help__": false
+            },
+            "get_followers": {
+                "__in_map_get_followers__": false
+            },
+            "get_friends": {
+                "__in_map_get_friends__": false
+            },
+            "get_timeline": {
+                "__in_map_get_timeline__": false
+            },
+            "get_user": {
+                "__in_map_get_user__": false
+            },
+            "search": {
+                "__in_map_search__": false
             }
         },
         "ht_cpe": {
@@ -340,7 +355,7 @@
         },
         "ht_bannergrabber": {
             "grabPortBanner": {
-                "__in_map_grabPortBanner__": true
+                "__in_map_grabPortBanner__": false
             },
             "help": {
                 "__in_map_help__": false

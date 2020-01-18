@@ -341,7 +341,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 if 'value' in temp_m_form[m]:
                     input_value = temp_m_form[m]['value']
                 
-                if not input_value or 'None' == input_value or 'null' == input_value:
+                if input_value != 0 and (not input_value or 'None' == input_value or 'null' == input_value):
                     input_value = ''
 
                 checkbox_selected = False

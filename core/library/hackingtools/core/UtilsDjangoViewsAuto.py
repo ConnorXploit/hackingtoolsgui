@@ -94,11 +94,17 @@ def getViewTemplateByFunctionParams(moduleName, functionName, category, params=[
                     template = '{temp}\n\t\t\t# Parameter {p} (Optional - Default {v})\n'.format(temp=template, v=val, p=p)
                     
                     if isinstance(val, str):
-                        template = '{temp}\t\t\t{p} = request.POST.get(\'{p}\', \'{v}\')\n'.format(temp=template, p=p, v=val)
+                        template = '{temp}\t\t\t{p} = str(request.POST.get(\'{p}\', \'{v}\'))\n'.format(temp=template, p=p, v=val)
+                    elif isinstance(val, int):
+                            template = '{temp}\t\t\t{p} = int(request.POST.get(\'{p}\', {v}))\n'.format(temp=template, p=p, v=val)
+                    elif isinstance(val, float):
+                            template = '{temp}\t\t\t{p} = float(request.POST.get(\'{p}\', {v}))\n'.format(temp=template, p=p, v=val)
+                    elif isinstance(val, bool):
+                            template = '{temp}\t\t\t{p} = bool(request.POST.get(\'{p}\', {v}))\n'.format(temp=template, p=p, v=val)
                     else:
-                        template = '{temp}\t\t\t{p} = request.POST.get(\'{p}\', {v})\n'.format(temp=template, p=p, v=val)
+                        template = '{temp}\t\t\t{p} = request.POST.get(\'{p}\', \'{v}\')\n'.format(temp=template, p=p, v=val)
 
-                    if not val:
+                    if val != 0 and not val:
                         template = '{temp}\t\t\tif not {p}:\n'.format(temp=template, p=p)
                         template = '{temp}\t\t\t\t{p} = None\n'.format(temp=template, p=p)
 

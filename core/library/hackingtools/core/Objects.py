@@ -1,5 +1,5 @@
 from . import Logger, Utils
-import json, time
+import json, time, requests
 
 import hackingtools as ht
 
@@ -364,4 +364,66 @@ class Worker():
             func = '{f}{a}'.format(f=functionCall, a=args)
             res = eval(func)
             self.responses.append( res )
-            time.sleep(timesleep) 
+            time.sleep(timesleep)
+
+class RequestHandler:
+	"""
+	Handle all requests with specific user-agent
+	"""
+	def __init__(self, user_agent, ret="text"):
+		self.user_agent = user_agent
+		self.current_proxy = None
+		self.ret = ret
+
+	@property
+	def proxy(self):
+		return self.proxy
+
+	@proxy.setter
+	def proxy(self, new_proxy):
+		self.current_proxy = new_proxy
+
+	def get(self, url):
+		"""
+		make request
+		:param url:
+		:return:
+		"""
+		proxies = {
+			"http": f"http://{self.current_proxy}",
+			"https": f"https://{self.current_proxy}"
+		}
+		headers = {
+			"User-Agent": self.header_maker(self.user_agent)
+		}
+		try:
+			s = requests.Session()
+			if self.current_proxy:
+				res = s.get(url, headers=headers, proxies=proxies)
+			else:
+				res = s.get(url, headers=headers)
+			if res.status_code == 200:
+				# check return mode
+				if self.ret == "text":
+					return res.text
+				else:
+					return res.json()
+			else:
+				return None
+		except requests.exceptions.ConnectionError:
+			raise requests.exceptions.ConnectionError
+		except json.decoder.JSONDecodeError:
+			return None
+
+	def header_maker(self, mode):
+		"""
+		make header and return as dict
+		:param mode:
+		:return:
+		"""
+		user_agents = {
+			"FF": "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36",
+			"TIMELINE": "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36",
+		}
+
+		return user_agents[mode]

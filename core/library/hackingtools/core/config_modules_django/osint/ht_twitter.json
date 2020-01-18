@@ -1,5 +1,165 @@
 {
     "data": "Not exists",
     "status": "FAIL",
-    "django_form_module_function": {}
+    "django_form_module_function": {
+        "get_followers": {
+            "__function__": "get_followers",
+            "__async__": false,
+            "__return__": "text",
+            "username": {
+                "__type__": "text",
+                "label_desc": "username",
+                "placeholder": "username",
+                "required": true
+            },
+            "limit": {
+                "__type__": "number",
+                "label_desc": "limit",
+                "placeholder": "limit",
+                "value": 1000
+            },
+            "interval": {
+                "__type__": "number",
+                "label_desc": "interval",
+                "placeholder": "interval",
+                "value": 0
+            },
+            "__pool_it_get_followers__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "get_friends": {
+            "__function__": "get_friends",
+            "__async__": false,
+            "__return__": "text",
+            "username": {
+                "__type__": "text",
+                "label_desc": "username",
+                "placeholder": "username",
+                "required": true
+            },
+            "limit": {
+                "__type__": "number",
+                "label_desc": "limit",
+                "placeholder": "limit",
+                "value": 1000
+            },
+            "interval": {
+                "__type__": "number",
+                "label_desc": "interval",
+                "placeholder": "interval",
+                "value": 0
+            },
+            "__pool_it_get_friends__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "get_timeline": {
+            "__function__": "get_timeline",
+            "__async__": false,
+            "__return__": "text",
+            "username": {
+                "__type__": "text",
+                "label_desc": "username",
+                "placeholder": "username",
+                "required": true
+            },
+            "limit": {
+                "__type__": "number",
+                "label_desc": "limit",
+                "placeholder": "limit",
+                "value": 1000
+            },
+            "interval": {
+                "__type__": "number",
+                "label_desc": "interval",
+                "placeholder": "interval",
+                "value": 0
+            },
+            "__pool_it_get_timeline__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "get_user": {
+            "__function__": "get_user",
+            "__async__": false,
+            "__return__": "text",
+            "username": {
+                "__type__": "text",
+                "label_desc": "username",
+                "placeholder": "username",
+                "required": true
+            },
+            "__pool_it_get_user__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "search": {
+            "__function__": "search",
+            "__async__": false,
+            "__return__": "text",
+            "username": {
+                "__type__": "text",
+                "label_desc": "username",
+                "placeholder": "username",
+                "value": ""
+            },
+            "since": {
+                "__type__": "text",
+                "label_desc": "since",
+                "placeholder": "since",
+                "value": ""
+            },
+            "until": {
+                "__type__": "text",
+                "label_desc": "until",
+                "placeholder": "until",
+                "value": ""
+            },
+            "query": {
+                "__type__": "text",
+                "label_desc": "query",
+                "placeholder": "query",
+                "value": ""
+            },
+            "limit": {
+                "__type__": "number",
+                "label_desc": "limit",
+                "placeholder": "limit",
+                "value": 1000
+            },
+            "verified": {
+                "__type__": "checkbox",
+                "label_desc": "verified",
+                "placeholder": "verified",
+                "value": false,
+                "selected": false
+            },
+            "proxy": {
+                "__type__": "text",
+                "label_desc": "proxy",
+                "placeholder": "proxy",
+                "value": ""
+            },
+            "interval": {
+                "__type__": "number",
+                "label_desc": "interval",
+                "placeholder": "interval",
+                "value": 0
+            },
+            "__pool_it_search__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
 }
