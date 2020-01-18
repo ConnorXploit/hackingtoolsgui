@@ -195,7 +195,7 @@ class StartModule():
 		:param interval:
 		:return:
 		"""
-		return self-__follower_following__(username=username, limit=limit, proxy=self.proxy, type_="followings", interval=interval)
+		return self.__follower_following__(username=username, limit=limit, proxy=self.proxy, type_="followings", interval=interval)
 
 	def get_timeline(self, username, limit=1000, interval=0):
 		"""
