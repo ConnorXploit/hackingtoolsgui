@@ -99,8 +99,10 @@ def getViewTemplateByFunctionParams(moduleName, functionName, category, params=[
                             template = '{temp}\t\t\t{p} = int(request.POST.get(\'{p}\', {v}))\n'.format(temp=template, p=p, v=val)
                     elif isinstance(val, float):
                             template = '{temp}\t\t\t{p} = float(request.POST.get(\'{p}\', {v}))\n'.format(temp=template, p=p, v=val)
-                    elif isinstance(val, bool):
-                            template = '{temp}\t\t\t{p} = bool(request.POST.get(\'{p}\', {v}))\n'.format(temp=template, p=p, v=val)
+                    elif val == 'None' or not val:
+                            template = '{temp}\t\t\t{p} = request.POST.get(\'{p}\', {v})\n'.format(temp=template, p=p, v=val)
+                    elif isinstance(val, bool) or val in ('True', 'False'):
+                            template = '{temp}\t\t\t{p} = request.POST.get(\'{p}\', {v})\n'.format(temp=template, p=p, v=val)
                     else:
                         template = '{temp}\t\t\t{p} = request.POST.get(\'{p}\', \'{v}\')\n'.format(temp=template, p=p, v=val)
 
@@ -163,7 +165,8 @@ def createTemplateFunctionForModule(moduleName, category, functionName):
 
         ht.DjangoFunctions.createModuleFunctionView(moduleName, functionName)
 
-    except:
+    except Exception as e:
+        ht.Logger.printMessage(message=str(e), is_error=True)
         ht.Logger.printMessage(message='createTemplateFunctionForModule', description='Something wen\'t wrong creating template function modal view for {m}'.format(m=moduleName), is_error=True)
 
 def loadModuleFunctionsToView(moduleName, category):

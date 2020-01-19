@@ -104,7 +104,8 @@
         "ht_cwe": {},
         "ht_hash": {},
         "ht_pastebin": {},
-        "ht_bannergrabber": {}
+        "ht_bannergrabber": {},
+        "ht_facebook": {}
     },
     "core": {
         "WANT_TO_BE_IN_POOL": true,
@@ -118,6 +119,9 @@
             ],
             "ht_pastebin": [
                 "StringIO"
+            ],
+            "ht_twitter": [
+                "pandas"
             ]
         },
         "Connections": {

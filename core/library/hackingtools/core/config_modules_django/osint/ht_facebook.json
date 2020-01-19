@@ -1,0 +1,51 @@
+{
+    "__gui_label__": "ht_facebook",
+    "django_form_module_function": {
+        "get_posts": {
+            "__function__": "get_posts",
+            "__async__": false,
+            "__return__": "text",
+            "account": {
+                "__type__": "text",
+                "label_desc": "account",
+                "placeholder": "account",
+                "value": null
+            },
+            "group": {
+                "__type__": "text",
+                "label_desc": "group",
+                "placeholder": "group",
+                "value": null
+            },
+            "pages": {
+                "__type__": "number",
+                "label_desc": "pages",
+                "placeholder": "pages",
+                "value": 10
+            },
+            "timeout": {
+                "__type__": "number",
+                "label_desc": "timeout",
+                "placeholder": "timeout",
+                "value": 5
+            },
+            "sleep": {
+                "__type__": "number",
+                "label_desc": "sleep",
+                "placeholder": "sleep",
+                "value": 0
+            },
+            "credentials": {
+                "__type__": "text",
+                "label_desc": "credentials",
+                "placeholder": "credentials",
+                "value": null
+            },
+            "__pool_it_get_posts__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

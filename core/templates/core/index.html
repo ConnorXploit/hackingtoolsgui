@@ -386,9 +386,18 @@
                                                           if(res.data instanceof Array){
                                                             var data = '';
                                                             for(var i=0; i < res.data.length; i++){
-                                                              data += res.data[i];
-                                                              if(res.data.length-1 != i){
-                                                                data += "\n";
+                                                              if(isDict(res.data[i])){
+                                                                for(var key in res.data[i]){
+                                                                  data += key + ': ' + res.data[i][key];
+                                                                  if(res.data.length-1 != i){
+                                                                    data += "\n";
+                                                                  }
+                                                                }
+                                                              } else {
+                                                                data += res.data[i];
+                                                                if(res.data.length-1 != i){
+                                                                  data += "\n";
+                                                                }
                                                               }
                                                             }
                                                             $.notify("{{functi}}:\n" + data, "success");
@@ -409,7 +418,19 @@
                                                       } else {
                                                         /*$('#popup_textarea').val(res)
                                                         $('#popup').modal('show');*/
-                                                        $.notify("{{functi}} - " + res, "warn");
+                                                        if('data' in res){
+                                                          if(res.data == ''){
+                                                            $.notify("{{functi}} - Empty response...", "warn");
+                                                          } else {
+                                                            $.notify("{{functi}} - " + res.data, "warn");
+                                                          }
+                                                        } else {
+                                                          if(res == ''){
+                                                            $.notify("{{functi}} - Empty response...", "warn");
+                                                          } else {
+                                                            $.notify("{{functi}} - " + res, "warn");
+                                                          }
+                                                        }
                                                         if($('#resultsLogger').val() != ''){
                                                           $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
                                                         }
@@ -740,7 +761,7 @@
                 <div class="card bg-success text-white shadow mouseOverModule">
                   <div class="card-body">
                     <i class="icon-trash" style="float: right;" onclick="removeModule{{mod}}(event);"></i>
-                    {{mod}}
+                    {{mod|slice:"3:"}}
                     <div class="text-white-50 small">Module</div>
                   </div>
                 </div>

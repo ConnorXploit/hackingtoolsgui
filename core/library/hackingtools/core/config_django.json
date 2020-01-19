@@ -343,6 +343,14 @@
             "help": {
                 "__in_map_help__": false
             }
+        },
+        "ht_facebook": {
+            "get_posts": {
+                "__in_map_get_posts__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
         }
     }
 }
