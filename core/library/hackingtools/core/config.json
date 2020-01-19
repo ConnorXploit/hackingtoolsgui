@@ -122,6 +122,10 @@
             ],
             "ht_twitter": [
                 "pandas"
+            ],
+            "ht_instagram": [
+                "slugify",
+                "igramscraper"
             ]
         },
         "Connections": {

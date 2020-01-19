@@ -28,6 +28,9 @@ import socket
 import itertools
 from itertools import product 
 
+from functools import reduce
+import signal
+
 from datetime import datetime
 
 
@@ -157,7 +160,7 @@ def getAnyFunctionParams(functionObjectStr, i_want_list=False):
         params_func = inspect.getfullargspec(eval(functionObjectStr))[0]
         params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
 
-        args, varargs, keywords, defaults = inspect.getargspec(eval(functionObjectStr))
+        args, _, __, defaults = inspect.getargspec(eval(functionObjectStr))
         args = [param for param in args if not param in function_param_exclude] if args else []
 
         if defaults:
@@ -176,12 +179,10 @@ def getAnyFunctionParams(functionObjectStr, i_want_list=False):
 
         return {"params":params_func}
     except Exception as e:
-        print(str(e))
-        pass
+        Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
     return []
 
 def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
-    params_func = None
     function = getFunctionFullCall(moduleName=moduleName, category=category, functionName=functionName)
     return getAnyFunctionParams(function, i_want_list)
 
@@ -507,3 +508,23 @@ def getDict(length=8, maxvalue=10000, alphabet='lalpha', try_pattern=None):
 
 def getPosibleAlphabet():
     return list(config_utils.keys())
+
+def get_from_dict(data_dict, map_list, default=None):
+    def getitem(source, key):
+        try:
+            if isinstance(source, list):
+                return source[int(key)]
+            if isinstance(source, dict) and key not in source.keys():
+                return default
+            if not source:
+                return default
+        except IndexError:
+            return default
+
+        return source[key]
+
+    if isinstance(map_list, str):
+        map_list = map_list.split('.')
+
+    return reduce(getitem, map_list, data_dict)
+

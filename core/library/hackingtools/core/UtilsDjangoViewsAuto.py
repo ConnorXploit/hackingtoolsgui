@@ -171,7 +171,7 @@ def createTemplateFunctionForModule(moduleName, category, functionName):
 
 def loadModuleFunctionsToView(moduleName, category):
     try:
-        moduleFunctions = ht.getFunctionsNamesFromModule(moduleName).remove('help')
+        #moduleFunctions = ht.getFunctionsNamesFromModule(moduleName).remove('help')
         createViewFileForModule(moduleName, category)
     except:
         ht.Logger.printMessage(message='loadModuleFunctionsToView', description='Something wen\'t wrong creating views file for {m}'.format(m=moduleName), is_error=True)

@@ -195,7 +195,6 @@ def __getModulesConfig_treeView__():
     ----------
         String
     """
-    count = 1
     result_text = []
     tools_config = ht.getModulesFullConfig()
     __treeview_load_all__(config=tools_config, result_text=result_text)
@@ -224,8 +223,6 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
     ----------
         None
     """
-    open_key = "{"
-    close_key = "}"
     count += 1
     count_pid += 1
     for c in config:
