@@ -199,6 +199,9 @@
         "ht_instagram": {
             "help": {
                 "__in_map_help__": false
+            },
+            "getAccountByUsername": {
+                "__in_map_getAccountByUsername__": true
             }
         },
         "ht_nmap": {
