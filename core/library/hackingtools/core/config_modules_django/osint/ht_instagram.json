@@ -1,6 +1,5 @@
 {
-    "data": "Not exists",
-    "status": "FAIL",
+    "__gui_label__": "ht_instagram",
     "django_form_module_function": {
         "getAccountByUsername": {
             "__function__": "getAccountByUsername",
