@@ -12,7 +12,7 @@ output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 class StartModule():
 
 	def __init__(self):
-		pass
+		self._main_gui_func_ = 'hashContent'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_hash'), debug_module=True)

@@ -54,5 +54,49 @@
                 "selected": false
             }
         }
+    },
+    "django_form_main_function": {
+        "__function__": "search_pastebin",
+        "__async__": false,
+        "__return__": "text",
+        "keywords": {
+            "__type__": "text",
+            "label_desc": "keywords",
+            "placeholder": "keywords",
+            "required": true
+        },
+        "run_time": {
+            "__type__": "number",
+            "label_desc": "run_time",
+            "placeholder": "run_time",
+            "value": 0
+        },
+        "match_total": {
+            "__type__": "text",
+            "label_desc": "match_total",
+            "placeholder": "match_total",
+            "value": null
+        },
+        "crawl_total": {
+            "__type__": "number",
+            "label_desc": "crawl_total",
+            "placeholder": "crawl_total",
+            "value": 20
+        },
+        "__pool_it_search_pastebin__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "search_pastebin",
+            "__type__": "submit",
+            "value": "Search Pastebin",
+            "loading_text": "pastebining"
+        }
     }
 }

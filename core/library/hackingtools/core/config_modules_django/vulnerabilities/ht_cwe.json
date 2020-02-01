@@ -52,5 +52,31 @@
                 "selected": false
             }
         }
+    },
+    "django_form_main_function": {
+        "__function__": "searchCWE",
+        "__async__": false,
+        "__return__": "text",
+        "cwe_id": {
+            "__type__": "text",
+            "label_desc": "cwe_id",
+            "placeholder": "cwe_id",
+            "required": true
+        },
+        "__pool_it_searchCWE__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "searchCWE",
+            "__type__": "submit",
+            "value": "Searchcwe",
+            "loading_text": "cweing"
+        }
     }
 }

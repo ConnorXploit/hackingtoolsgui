@@ -93,6 +93,7 @@ class StartModule():
 			return str(self.__dict__)
 
 	def __init__(self):
+		self._main_gui_func_ = 'get_user'
 		self.proxy = ''
 
 	def help(self):

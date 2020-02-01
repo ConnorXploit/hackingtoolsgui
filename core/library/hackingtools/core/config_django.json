@@ -117,7 +117,7 @@
                 "__in_map_decode__": false
             },
             "encode": {
-                "__in_map_encode__": false
+                "__in_map_encode__": true
             },
             "decrypt": {
                 "__in_map_decrypt__": false
@@ -166,7 +166,7 @@
                 "__in_map_get_image_exif__": false
             },
             "get_pdf_exif": {
-                "__in_map_get_pdf_exif__": false
+                "__in_map_get_pdf_exif__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -201,7 +201,7 @@
                 "__in_map_help__": false
             },
             "getAccountByUsername": {
-                "__in_map_getAccountByUsername__": false
+                "__in_map_getAccountByUsername__": true
             }
         },
         "ht_nmap": {
@@ -235,7 +235,7 @@
                 "__in_map_get_timeline__": false
             },
             "get_user": {
-                "__in_map_get_user__": false
+                "__in_map_get_user__": true
             },
             "searchTweets": {
                 "__in_map_searchTweets__": false
@@ -248,7 +248,8 @@
         },
         "ht_cve": {
             "searchCVE": {
-                "__in_map_search__": false
+                "__in_map_search__": false,
+                "__in_map_searchCVE__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -256,7 +257,7 @@
         },
         "ht_cwe": {
             "searchCWE": {
-                "__in_map_searchCWE__": false
+                "__in_map_searchCWE__": true
             },
             "searchWeakness": {
                 "__in_map_searchWeakness__": false
@@ -267,7 +268,7 @@
         },
         "ht_spider": {
             "crawl": {
-                "__in_map_crawl__": false
+                "__in_map_crawl__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -319,7 +320,7 @@
         },
         "ht_hash": {
             "hashContent": {
-                "__in_map_hashContent__": false
+                "__in_map_hashContent__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -336,12 +337,12 @@
                 "__in_map_search__": true
             },
             "search_pastebin": {
-                "__in_map_search_pastebin__": false
+                "__in_map_search_pastebin__": true
             }
         },
         "ht_bannergrabber": {
             "grabPortBanner": {
-                "__in_map_grabPortBanner__": false
+                "__in_map_grabPortBanner__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -349,10 +350,21 @@
         },
         "ht_facebook": {
             "get_posts": {
-                "__in_map_get_posts__": false
+                "__in_map_get_posts__": true
             },
             "help": {
                 "__in_map_help__": false
+            }
+        },
+        "ht_telegram": {
+            "puedoEntrar": {
+                "__in_map_puedoEntrar__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            },
+            "soyTuAmigo": {
+                "__in_map_soyTuAmigo__": true
             }
         }
     }

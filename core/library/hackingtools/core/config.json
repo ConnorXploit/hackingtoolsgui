@@ -98,7 +98,6 @@
             "predicting_no_knn_or_model_path": "Must supply knn classifier either thourgh knn_clf or model_path"
         },
         "ht_spider": {},
-        "ht_infector": {},
         "ht_cve": {},
         "ht_cpe": {},
         "ht_cwe": {},
@@ -224,7 +223,7 @@
             "function_name_starts_with_modules": "__",
             "function_param_exclude": "self",
             "default_class_name_for_all": "StartModule",
-            "default_template_modules_ht": "from hackingtools.core import Logger, Utils, Config\nif Utils.amIdjango(__name__):\n\tfrom .library.core import hackingtools as ht\nelse:\n\timport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tpass\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'), debug_module=True)"
+            "default_template_modules_ht": "from hackingtools.core import Logger, Utils, Config\nif Utils.amIdjango(__name__):\n\tfrom .library.core import hackingtools as ht\nelse:\n\timport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\t_main_gui_func_ = ''\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'), debug_module=True)"
         },
         "Utils": {
             "empty_directory_strict": "modules/",

@@ -59,5 +59,73 @@
                 "selected": false
             }
         }
+    },
+    "django_form_main_function": {
+        "__function__": "crawl",
+        "__async__": false,
+        "__return__": "text",
+        "url": {
+            "__type__": "text",
+            "label_desc": "url",
+            "placeholder": "url",
+            "required": true
+        },
+        "depth": {
+            "__type__": "number",
+            "label_desc": "depth",
+            "placeholder": "depth",
+            "value": 100
+        },
+        "proxies": {
+            "__type__": "text",
+            "label_desc": "proxies",
+            "placeholder": "proxies",
+            "value": null
+        },
+        "proxyhost": {
+            "__type__": "text",
+            "label_desc": "proxyhost",
+            "placeholder": "proxyhost",
+            "value": null
+        },
+        "proxyuser": {
+            "__type__": "text",
+            "label_desc": "proxyuser",
+            "placeholder": "proxyuser",
+            "value": null
+        },
+        "proxypassword": {
+            "__type__": "text",
+            "label_desc": "proxypassword",
+            "placeholder": "proxypassword",
+            "value": null
+        },
+        "proxyport": {
+            "__type__": "text",
+            "label_desc": "proxyport",
+            "placeholder": "proxyport",
+            "value": null
+        },
+        "proxysecure": {
+            "__type__": "text",
+            "label_desc": "proxysecure",
+            "placeholder": "proxysecure",
+            "value": "http"
+        },
+        "__pool_it_crawl__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "crawl",
+            "__type__": "submit",
+            "value": "Crawl",
+            "loading_text": "spidering"
+        }
     }
 }

@@ -15,7 +15,7 @@ docutils==0.14
 entrypoints==0.3
 Flask
 future==0.17.1
-hackingtools==2.6.9
+hackingtools==2.7.3
 html5lib==1.0.1
 httplib2==0.12.0
 idna==2.8

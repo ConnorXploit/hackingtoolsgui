@@ -48,5 +48,60 @@
                 "selected": false
             }
         }
+    },
+    "django_form_main_function": {
+        "__function__": "crackZip",
+        "zipPathName": {
+            "__type__": "text",
+            "label_desc": "zipPathName",
+            "placeholder": "zipPathName",
+            "required": true
+        },
+        "unzipper": {
+            "__type__": "text",
+            "label_desc": "unzipper",
+            "placeholder": "unzipper",
+            "value": null
+        },
+        "alphabet": {
+            "__type__": "text",
+            "label_desc": "alphabet",
+            "placeholder": "alphabet",
+            "value": "lalpha"
+        },
+        "password_length": {
+            "__type__": "number",
+            "label_desc": "password_length",
+            "placeholder": "password_length",
+            "value": 4
+        },
+        "password_pattern": {
+            "__type__": "text",
+            "label_desc": "password_pattern",
+            "placeholder": "password_pattern",
+            "value": null
+        },
+        "log": {
+            "__type__": "checkbox",
+            "label_desc": "log",
+            "placeholder": "log",
+            "value": false,
+            "selected": false
+        },
+        "__pool_it_crackZip__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "crackZip",
+            "__type__": "submit",
+            "value": "Crackzip",
+            "loading_text": "bruteforceing"
+        }
     }
 }

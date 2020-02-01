@@ -32,7 +32,7 @@ def load_data(session_id=None):
     global ht_data
     modules_and_params = ht.getModulesJSON()
     modules_forms = ht.DjangoFunctions.__getModulesDjangoForms__()
-    modules_forms_modal = DjangoFunctions.__getModulesDjangoFormsModal__()
+    modules_forms_modal = DjangoFunctions.__getModulesDjangoFormsModal__(session_id=session_id)
     modules_config = ht.getModulesConfig()
     # ! Slows down a lot the charge of Django home view
     #modules_config_treeview = ht.DjangoFunctions.__getModulesConfig_treeView__()

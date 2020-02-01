@@ -47,5 +47,61 @@
                 "selected": false
             }
         }
+    },
+    "django_form_main_function": {
+        "__function__": "get_posts",
+        "__async__": false,
+        "__return__": "text",
+        "account": {
+            "__type__": "text",
+            "label_desc": "account",
+            "placeholder": "account",
+            "value": null
+        },
+        "group": {
+            "__type__": "text",
+            "label_desc": "group",
+            "placeholder": "group",
+            "value": null
+        },
+        "pages": {
+            "__type__": "number",
+            "label_desc": "pages",
+            "placeholder": "pages",
+            "value": 10
+        },
+        "timeout": {
+            "__type__": "number",
+            "label_desc": "timeout",
+            "placeholder": "timeout",
+            "value": 5
+        },
+        "sleep": {
+            "__type__": "number",
+            "label_desc": "sleep",
+            "placeholder": "sleep",
+            "value": 0
+        },
+        "credentials": {
+            "__type__": "text",
+            "label_desc": "credentials",
+            "placeholder": "credentials",
+            "value": null
+        },
+        "__pool_it_get_posts__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "get_posts",
+            "__type__": "submit",
+            "value": "Get Posts",
+            "loading_text": "facebooking"
+        }
     }
 }

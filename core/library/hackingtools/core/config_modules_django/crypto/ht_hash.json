@@ -16,5 +16,31 @@
                 "selected": false
             }
         }
+    },
+    "django_form_main_function": {
+        "__function__": "hashContent",
+        "__async__": false,
+        "__return__": "text",
+        "content": {
+            "__type__": "text",
+            "label_desc": "content",
+            "placeholder": "content",
+            "required": true
+        },
+        "__pool_it_hashContent__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "hashContent",
+            "__type__": "submit",
+            "value": "Hashcontent",
+            "loading_text": "hashing"
+        }
     }
 }

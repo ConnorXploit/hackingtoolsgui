@@ -10,7 +10,7 @@ import os, json
 
 config_locales = ht.Config.getConfig(parentKey='core', key='locales')
 
-def createModuleFunctionView(moduleName, functionName):
+def createModuleFunctionView(moduleName, functionName, is_main=False):
     try:
         # Creates the JSON config for the view modal form
         category = ht.getModuleCategory(moduleName)
@@ -18,12 +18,14 @@ def createModuleFunctionView(moduleName, functionName):
         moduleViewConfig = {}
 
         moduleViewConfig['__function__'] = functionName
-        moduleViewConfig['__async__'] = False
 
-        if ht.Utils.doesFunctionContainsExplicitReturn(ht.Utils.getFunctionFullCall(moduleName, ht.getModuleCategory(moduleName), functionName)):
-            moduleViewConfig['__return__'] = 'text'
-        else:
-            moduleViewConfig['__return__'] = ''
+        if not is_main:
+            moduleViewConfig['__async__'] = False
+
+            if ht.Utils.doesFunctionContainsExplicitReturn(ht.Utils.getFunctionFullCall(moduleName, ht.getModuleCategory(moduleName), functionName)):
+                moduleViewConfig['__return__'] = 'text'
+            else:
+                moduleViewConfig['__return__'] = ''
 
         if not functionParams:
             # Retry for reload
@@ -57,7 +59,19 @@ def createModuleFunctionView(moduleName, functionName):
         moduleViewConfig[pool_param]['label_desc'] = 'Pool the execution to the pool list'
         moduleViewConfig[pool_param]['selected'] = False
 
-        Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName)
+        if is_main:
+            moduleViewConfig['close'] = {}
+            moduleViewConfig['close']['__type__'] = 'button'
+            moduleViewConfig['close']['value'] = 'Close'
+
+            moduleViewConfig['submit'] = {}
+            moduleViewConfig['submit']['__id__'] = functionName
+            moduleViewConfig['submit']['__type__'] = 'submit'
+            moduleViewConfig['submit']['value'] = ' '.join( [ x.capitalize() for x in functionName.split('_') ] )
+            moduleViewConfig['submit']['loading_text'] = '{m}ing'.format(m=moduleName.replace('ht_', ''))
+
+
+        Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName, is_main=is_main)
         Config.switch_function_for_map(category, moduleName, functionName)
         ht.Config.__look_for_changes__()
         ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_core=True)
@@ -296,7 +310,7 @@ def __getModulesDjangoForms__():
                     forms[mod] = form
     return forms
 
-def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', config_extrasubkey=None):
+def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', config_extrasubkey=None, session_id=None):
     module_form = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey=config_extrasubkey)
     functionModal = Config.getConfig(parentKey='modules', key=mod, subkey=config_subkey, extrasubkey='__function__')
     default_classnames_per_type = Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
@@ -337,7 +351,11 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 input_value = ''
                 if 'value' in temp_m_form[m]:
                     input_value = temp_m_form[m]['value']
-                
+
+                if 'api' in m:
+                    input_value = Config.getAPIKey('{m}_api'.format(m=mod.split('_')[-1]), session_id=session_id)
+                    input_className = ' '.join([input_className, 'apiKey'])
+                    
                 if input_value != 0 and (not input_value or 'None' == input_value or 'null' == input_value):
                     input_value = ''
 
@@ -466,14 +484,14 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
         return {functionModal : html}
     return html
 
-def __getModulesDjangoFormsModal__():
+def __getModulesDjangoFormsModal__(session_id=None):
     forms = {}
     for mod in ht.getModulesNames():
         mod_data = {}
         functions = __getModuleFunctionNamesFromConfig__(mod)
         if functions:
             for functs in functions:
-                form = __createHtmlModalForm__(mod, 'django_form_module_function', functs)
+                form = __createHtmlModalForm__(mod, 'django_form_module_function', functs, session_id)
                 if form:
                     mod_data[functs] = form
         if mod_data:

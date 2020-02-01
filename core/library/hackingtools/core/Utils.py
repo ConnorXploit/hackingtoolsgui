@@ -57,7 +57,7 @@ def startWorker(workerName, functionCall, args=(), timesleep=1, run_until_ht_sto
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
 
-def killAllWorkers(workers):
+def killAllWorkers():
     global threads
     for t in threads:
         threads[t][0].terminate()
@@ -179,7 +179,8 @@ def getAnyFunctionParams(functionObjectStr, i_want_list=False):
 
         return {"params":params_func}
     except Exception as e:
-        Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
+        pass
+        #Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
     return []
 
 def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
@@ -471,7 +472,7 @@ def fromWhatDictListIsChar(char='a'):
             return opt
     return None
 
-def getCombinationPosibilitiesByPattern(try_pattern=None, only_one=False):
+def getCombinationPosibilitiesByPattern(try_pattern=None):
     try:
         alphabets_patter = []
         create_pattern = []
@@ -498,7 +499,7 @@ def getCombinationPosibilitiesByPattern(try_pattern=None, only_one=False):
     except MemoryError:
         Logger.printMessage(message='Memory Error', description='There are so many combinations for this pattern', is_error=True)
 
-def getDict(length=8, maxvalue=10000, alphabet='lalpha', try_pattern=None):
+def getDict(length=8, alphabet='lalpha', try_pattern=None):
     if try_pattern and not try_pattern == '':
         return getCombinationPosibilitiesByPattern(try_pattern=try_pattern)
     else:

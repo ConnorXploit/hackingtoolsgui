@@ -35,14 +35,21 @@ urlpatterns = [
     path('pool/execute/', views.poolExecute, name="execute")
 ]
 
+main_functions_not_loaded = []
 functions_not_loaded = []
 
 def loadModuleUrls(moduleName):
     main_function_config = ht.Config.getConfig(parentKey='modules', key=moduleName, subkey='django_form_main_function')
     functions_config = ht.Config.getConfig(parentKey='modules', key=moduleName, subkey='django_form_module_function')
 
+    main_func = None
+    mod = ht.getModule(moduleName)
+    if hasattr(mod, '_main_gui_func_'):
+        main_func = mod._main_gui_func_
+
     if not functions_config:
         functions = ht.getFunctionsNamesFromModule(moduleName)
+
         if functions and 'help' in functions:
             functions.remove('help')
         if functions:
@@ -89,8 +96,14 @@ def loadModuleUrls(moduleName):
                 functions_not_loaded.append(func_call)
                 UtilsDjangoViewsAuto.createTemplateFunctionForModule(moduleName, ht.getModuleCategory(moduleName), func_call)
     else:
-        pass
-        #Logger.printMessage(message='loadModuleUrls', description='{mod} has no main function'.format(mod=mod), is_warn=True)
+        if main_func:
+            ht.Logger.printMessage(message='loadModuleUrls', description='{mod} has no config for main function. Creating main function setted: {m}'.format(mod=moduleName, m=main_func), is_warn=True)
+            if main_func in ht.getFunctionsNamesFromModule(moduleName):
+                ht.DjangoFunctions.createModuleFunctionView(moduleName, main_func, is_main=True)
+            else:
+                ht.Logger.printMessage(message='loadModuleUrls', description='Error creating main function setted: {m}. Function does not exist in module {mod}'.format(m=main_func, mod=moduleName), is_error=True)
+        else:
+            ht.Logger.printMessage(message='loadModuleUrls', description='The module {mod} does not have any function defined as main for de gui'.format(mod=moduleName), is_error=True)
 
     if functions_config:
         for function_conf in functions_config:
@@ -133,8 +146,12 @@ try:
         #Logger.printMessage(message='Initialize', description='Loading mod \'{mod}\''.format(mod=mod))
         loadModuleUrls(mod)
 
-    if functions_not_loaded:
-        ht.Logger.printMessage(message='CORE VIEWS', description='Loaded new function{s} views: {d}'.format(s='s' if len(functions_not_loaded) > 1 else '', d=', '.join(functions_not_loaded)), is_info=True)
+    if functions_not_loaded or main_functions_not_loaded:
+        if functions_not_loaded:
+            ht.Logger.printMessage(message='CORE VIEWS', description='Loaded new function{s} views: {d}'.format(s='s' if len(functions_not_loaded) > 1 else '', d=', '.join(functions_not_loaded)), is_info=True)
+        if main_functions_not_loaded:
+            ht.Logger.printMessage(message='CORE VIEWS', description='Loaded new main function views: {d}'.format(d=main_functions_not_loaded[0]), is_info=True)
+        
         #ht.Logger.printMessage(message='RESTART SERVER', description='YOU HAVE TO RESTART EXIT AND RUN SERVER AGAIN FOR LOADING THE NEW VIEWS FOR YOUR MODULES', is_error=True)
         
         import sys

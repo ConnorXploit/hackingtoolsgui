@@ -282,28 +282,6 @@ def createModule(moduleName, category):
     trying_something = __importModules__()
     return
 
-# def createFunction(moduleName):
-#     try:
-#         category = getModuleCategory(moduleName)
-#         if category:
-#             Logger.printMessage("Enter/Paste your content:")
-#             contents = []
-#             new_lines_for_end = 3
-#             new_lines = 0
-#             while new_lines < new_lines_for_end:
-#                 try:
-#                     line = input()
-#                     if line != '':
-#                         new_lines = 0
-#                     else:
-#                         new_lines += 1
-#                 except:
-#                     new_lines += 1
-#                 contents.append(line)
-#             Logger.printMessage('\n'.join(contents))
-#     except Exception as e:
-#         Logger.printMessage(str(e), is_error=True)
-
 def removeModule(moduleName, category):
     modulePath = os.path.join(this_dir, 'modules', category, moduleName.replace('ht_', ''))
     if os.path.isdir(modulePath):

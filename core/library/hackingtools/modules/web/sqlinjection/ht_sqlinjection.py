@@ -24,7 +24,7 @@ url_md5_decrypt = config_decrypt['md5_decrypt']
 class StartModule():
 
     def __init__(self):
-        pass
+        self._main_gui_func_ = None
     
     def help(self):
         Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_sqlinjection'))

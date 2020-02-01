@@ -36,5 +36,31 @@
                 "selected": false
             }
         }
+    },
+    "django_form_main_function": {
+        "__function__": "searchCVE",
+        "__async__": false,
+        "__return__": "text",
+        "cve_id": {
+            "__type__": "text",
+            "label_desc": "cve_id",
+            "placeholder": "cve_id",
+            "value": ""
+        },
+        "__pool_it_searchCVE__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "searchCVE",
+            "__type__": "submit",
+            "value": "Searchcve",
+            "loading_text": "cveing"
+        }
     }
 }

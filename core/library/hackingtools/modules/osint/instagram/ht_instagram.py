@@ -28,6 +28,7 @@ instance_cache = None
 class StartModule():
 
     def __init__(self, sleep_between_requests=0):
+        self._main_gui_func_ = 'getAccountByUsername'
         self.__req = requests.session()
         self.paging_time_limit_sec = PAGING_TIME_LIMIT_SEC
         self.paging_delay_minimum_microsec = PAGING_DELAY_MINIMUM_MICROSEC

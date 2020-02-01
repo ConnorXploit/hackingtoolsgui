@@ -12,7 +12,7 @@ class StartModule():
 
 	def __init__(self):
 		Utils.emptyDirectory(output_dir)
-		pass
+		self._main_gui_func_ = 'extractFilePassword'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_unzip'), debug_module=True)

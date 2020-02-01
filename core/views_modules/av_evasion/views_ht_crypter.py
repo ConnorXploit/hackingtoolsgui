@@ -69,8 +69,6 @@ def crypt_file(request):
                         response = HttpResponse(fh.read(), content_type="application/{type}".format(type=new_file_name.split('.')[1]))
                         response['Content-Disposition'] = 'inline; filename=' + os.path.basename(crypted_file)
                         return response
-                        os.remove(uploaded_file_url)
-                        os.remove(crypted_file)
             else:
                 Logger.printMessage(message='crypt_file', description=this_conf['bad_saved'], is_error=True)
             return renderMainPanel(request=request)

@@ -118,13 +118,13 @@
                 "required": true
             },
             "new_file_name": {
-                "__type__": "file",
+                "__type__": "text",
                 "label_desc": "new_file_name",
                 "placeholder": "new_file_name",
                 "required": true
             },
             "drop_file_name": {
-                "__type__": "file",
+                "__type__": "text",
                 "label_desc": "drop_file_name",
                 "placeholder": "drop_file_name",
                 "value": "dropped.py"

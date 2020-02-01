@@ -16,7 +16,7 @@ GOOD_CODE = True
 class StartModule():
 
 	def __init__(self):
-		pass
+		self._main_gui_func_ = 'searchCWE'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_cwe'), debug_module=True)

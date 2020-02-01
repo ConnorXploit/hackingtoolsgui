@@ -345,7 +345,7 @@ def getSearchedHostsInMap(session_id=None):
 # End Maps
 
 # === __save_config__ ===
-def __save_django_module_config__(new_conf, category, moduleName, functionName):
+def __save_django_module_config__(new_conf, category, moduleName, functionName, is_main=True):
     """
     Save configuration passed as parameter
     to this function. This, writes into 
@@ -361,21 +361,37 @@ def __save_django_module_config__(new_conf, category, moduleName, functionName):
     config_file='ht_{moduleName}.json'.format(moduleName=moduleName.replace('ht_', ''))
     module_views_config_file = os.path.join(os.path.dirname(__file__) , 'config_modules_django', category, config_file)
     
+    add_django_modal_to = 'django_form_module_function'
+    if is_main:
+        add_django_modal_to = 'django_form_main_function'
+
     config = {}
     config['__gui_label__'] = moduleName
-    config['django_form_module_function'] = {}
+    config[add_django_modal_to] = {}
 
     if os.path.isfile(module_views_config_file):
         with open(module_views_config_file, 'r', encoding='utf8') as outfile:
             if outfile:
                 config = json.load(outfile)
 
-    if '_django_form_module_function_' in config:
-        del(config['_django_form_module_function_'])
+    if add_django_modal_to in config and not is_main:
+        del(config[add_django_modal_to])
 
-    if not 'django_form_module_function' in config:
-        config['django_form_module_function'] = {}
-    config['django_form_module_function'][functionName] = new_conf
+    if not add_django_modal_to in config:
+        config[add_django_modal_to] = {}
+    else: # is_main - not deleted in last line
+        if '_django_form_main_function_' in config:
+            del(config['_django_form_main_function_'])
+        if not add_django_modal_to in config:
+            config[add_django_modal_to] = {}
+        if '__function__' in config[add_django_modal_to]:
+            if config[add_django_modal_to]['__function__'] != new_conf['__function__']:
+                config[add_django_modal_to] = {}
+
+    if is_main and not config[add_django_modal_to]:
+        config[add_django_modal_to] = new_conf
+    elif add_django_modal_to == 'django_form_module_function':
+        config[add_django_modal_to][functionName] = new_conf
 
     file_path, _ = os.path.split(module_views_config_file)
     if not os.path.isdir(file_path):

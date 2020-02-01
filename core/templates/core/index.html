@@ -472,11 +472,15 @@
                               <div class="card bg-dark text-white shadow mouseOverFunction card-function" id="function_background_{{name}}_{{funct_name}}">
                                 <div class="card-body">
                                   {{funct_name}}
-                                  {% for i, param in funct_params.items %}
+                                  {% for i, param in funct_params.original_params.items %}
                                     {% if param %}
-                                    <div class="text-white-50 small">{{param}}</div>
+                                    <div class="text-white-50 small">{{i}}: {{param}}</div>
                                     {% else %}
-                                    <div class="text-white-50 small">No params</div>
+                                      {% if i == 'params' %}
+                                        <div class="text-white-50 small">No obligatory params</div>
+                                      {% else %}
+                                        <div class="text-white-50 small">No params</div>
+                                      {% endif %}
                                     {% endif %}
                                   {% endfor %}
                                 </div>
