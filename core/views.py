@@ -54,8 +54,8 @@ def load_data(session_id=None):
         modules_names_repo = ['ht_{m}'.format(m=mod.replace('ht_', '')) for mod in ht.Repositories.getModules(server_repo)]
         categories_names_repo = ht.Repositories.getCategories(server_repo)
     pool_list = ht.Pool.getPoolNodes()
-    my_services = ht.Connections.getMyServices()
-    ngrokService = ht.Connections.getNgrokServiceUrl()
+    my_services = ht.__Connections.getMyServices()
+    ngrokService = ht.__Connections.getNgrokServiceUrl()
     is_heroku = True if 'DYNO' in os.environ else False
     my_node_id_pool = ht.Pool.MY_NODE_ID
     status_pool = ht.__WANT_TO_BE_IN_POOL__
@@ -487,8 +487,8 @@ def poolExecute(request):
                 params[key] = value
 
             ht.Pool.__checkPoolNodes__()
-            if ht.Connections.isHeroku():
-                me = ht.Connections.getMyLocalIP(as_service=True, port=False)
+            if ht.__Connections.isHeroku():
+                me = ht.__Connections.getMyLocalIP(as_service=True, port=False)
             else:
                 me = 'http://{url}:{port}/'.format(url=Connections.getMyLocalIP(), port=Connections.getActualPort())
 
@@ -527,7 +527,7 @@ def getNodeId(request):
 # Connections
 
 def startNgrok(request):
-    ngrok = ht.Connections.startNgrok(Connections.getActualPort())
+    ngrok = ht.__Connections.startNgrok(Connections.getActualPort())
     if ngrok:
         ht.Pool.callNodesForInformAboutMyServices()
         return renderMainPanel(request=request, popup_text=ngrok)
