@@ -63,13 +63,13 @@ def load_data(session_id=None):
 
     if session_id:
         sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
-        if sess_key in ht.Config.config['core']:
-            api_keys = ht.Config.config['core'][sess_key]
+        if sess_key in ht.Config.__config__['core']:
+            api_keys = ht.Config.__config__['core'][sess_key]
         else:
             api_keys = {}
 
     else:
-        api_keys = ht.Config.config['core']['__API_KEY__']
+        api_keys = ht.Config.__config__['core']['__API_KEY__']
     ht_data =  { 
         'modules':modules_names, 
         'modules_names_repo':modules_names_repo,
@@ -102,12 +102,12 @@ def load_data_maps(session_id=None):
         pass
     if session_id:
         sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
-        if sess_key in ht.Config.config['core']:
-            ht_data_maps['api_keys'] = ht.Config.config['core'][sess_key]
+        if sess_key in ht.Config.__config__['core']:
+            ht_data_maps['api_keys'] = ht.Config.__config__['core'][sess_key]
         else:
             ht_data_maps['api_keys'] = {}
     else:
-        ht_data_maps['api_keys'] = ht.Config.config['core']['__API_KEY__']
+        ht_data_maps['api_keys'] = ht.Config.__config__['core']['__API_KEY__']
 
     ht_data_maps['api_keys'] = collections.OrderedDict(sorted(ht_data_maps['api_keys'].items()))
 
