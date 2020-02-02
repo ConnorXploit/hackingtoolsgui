@@ -15,7 +15,7 @@ config_logger = Config.getConfig(parentKey='core', key='Logger')
 config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
 
 function_param_exclude = Config.getConfig(parentKey='core', key='import_modules', subkey='function_param_exclude')
-default_class_name_for_all = Config.getConfig(parentKey='core', key='import_modules', subkey='default_class_name_for_all')  
+__default_class_name_for_all__ = Config.getConfig(parentKey='core', key='import_modules', subkey='__default_class_name_for_all__')  
 
 from colorama import Fore
 
@@ -46,11 +46,12 @@ def getWorkers():
     global threads
     return threads
 
-def startWorker(workerName, functionCall, args=(), timesleep=1, run_until_ht_stops=False):
+def startWorker(workerName, functionCall, args=(), timesleep=1, run_until_ht_stops=False, log=False):
     t = None
     try:
         w = Worker()
-        Logger.printMessage('Starting Worker: {w}'.format(w=workerName))
+        if log:
+            Logger.printMessage('Starting Worker: {w}'.format(w=workerName))
         t = Thread(target=w.run, args=(functionCall, args, int(timesleep) ), daemon=run_until_ht_stops)
         threads[workerName] = [ w, t ]
         t.start()
@@ -153,7 +154,7 @@ def getValidDictNoEmptyKeys(data):
     return final_data
 
 def getFunctionFullCall(moduleName, category, functionName):
-    return 'ht.modules.{category}.{modDir}.{module}.{callClass}().{function}'.format(category=category, modDir=moduleName.replace('ht_', ''), module=moduleName, callClass=default_class_name_for_all, function=functionName)
+    return 'ht.modules.{category}.{modDir}.{module}.{callClass}().{function}'.format(category=category, modDir=moduleName.replace('ht_', ''), module=moduleName, callClass=__default_class_name_for_all__, function=functionName)
 
 def getAnyFunctionParams(functionObjectStr, i_want_list=False):
     try:

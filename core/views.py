@@ -30,16 +30,16 @@ apis_config = ht.Config
 
 def load_data(session_id=None):
     global ht_data
-    modules_and_params = ht.getModulesJSON()
+    modules_and_params = ht.__getModulesJSON__()
     modules_forms = ht.DjangoFunctions.__getModulesDjangoForms__()
     modules_forms_modal = DjangoFunctions.__getModulesDjangoFormsModal__(session_id=session_id)
-    modules_config = ht.getModulesConfig()
+    modules_config = ht.__getModulesConfig__()
     # ! Slows down a lot the charge of Django home view
     #modules_config_treeview = ht.DjangoFunctions.__getModulesConfig_treeView__()
     modules_config_treeview = {}
     # TODO 
-    modules_functions_modals = ht.DjangoFunctions.getModulesModalTests()
-    modules_functions_calls_console_string = ht.DjangoFunctions.getModulesFunctionsCalls()
+    modules_functions_modals = ht.DjangoFunctions.__getModulesModalTests__()
+    modules_functions_calls_console_string = ht.DjangoFunctions.__getModulesFunctionsCalls__()
     modules_all = {}
     categories = []
     for mod in modules_and_params:
@@ -58,8 +58,8 @@ def load_data(session_id=None):
     ngrokService = ht.Connections.getNgrokServiceUrl()
     is_heroku = True if 'DYNO' in os.environ else False
     my_node_id_pool = ht.Pool.MY_NODE_ID
-    status_pool = ht.WANT_TO_BE_IN_POOL
-    funcs_map = ht.DjangoFunctions.getModulesFunctionsForMap()
+    status_pool = ht.__WANT_TO_BE_IN_POOL__
+    funcs_map = ht.DjangoFunctions.__getModulesFunctionsForMap__()
 
     if session_id:
         sess_key = '__API_KEY_{sess}__'.format(sess=session_id)
@@ -97,7 +97,7 @@ def load_data_maps(session_id=None):
         ht_data_maps = {}
     ht_data_maps['gps'] = ht.Utils.getLocationGPS()
     try:
-        ht_data_maps['funcs_map'] = ht.DjangoFunctions.getModulesFunctionsForMap()
+        ht_data_maps['funcs_map'] = ht.DjangoFunctions.__getModulesFunctionsForMap__()
     except:
         pass
     if session_id:
@@ -230,12 +230,12 @@ def home(request, popup_text=''):
 def documentation(request, module_name=''):
     this_conf = config['documentation']
     if module_name:
-        for mod in ht.modules_loaded:
+        for mod in ht.__modules_loaded__:
             if module_name == mod.split('.')[-1]:
                 doc_mod = '{documents_dir}/{c}/{b}/{a}.html'.format(documents_dir=this_conf['documents_dir'], c=mod.split('.')[-3], b=module_name.replace('ht_', ''), a=module_name)
                 print(doc_mod)
                 categories = [] 
-                for mod in ht.getModulesJSON():
+                for mod in ht.__getModulesJSON__():
                     if not mod.split('.')[1] in categories:
                         categories.append(mod.split('.')[1])
                 modules_names = ht.getModulesNames()
@@ -265,12 +265,12 @@ def switchPool(request):
     }
     return JsonResponse(data)
 
-def createModule(request):
+def __createModule__(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
     mod_cat = request.POST.get('category_name')
-    created = ht.createModule(mod_name, mod_cat)
+    created = ht.__createModule__(mod_name, mod_cat)
     if created:
-        modules_and_params = ht.getModulesJSON()
+        modules_and_params = ht.__getModulesJSON__()
         load_data()
         UtilsDjangoViewsAuto.loadModuleFunctionsToView(mod_name, mod_cat)
     # ! Tengo que hacer que llame a las funciones de crear views y json con la config...
@@ -281,11 +281,11 @@ def createModule(request):
     # ! solo serán funcionales una vez se reinicie o intentar hacer que se virtualice de alguna forma esa url y se resuelva sola sin tener que recargar
     return renderMainPanel(request=request)
     
-def removeModule(request):
+def __removeModule__(request):
     try:
         mod_name = request.POST.get('module_name').replace(" ", "_").lower()
         category = ht.getModuleCategory(mod_name)
-        ht.removeModule(mod_name, category)
+        ht.__removeModule__(mod_name, category)
         UtilsDjangoViewsAuto.removeModuleView(mod_name, category)
         data = {
             'data' : 'Removed successfully'
@@ -327,13 +327,13 @@ def restartServerDjango(request):
 
 def configModule(request):
     mod_name = request.POST.get('module_name').replace(" ", "_").lower()
-    # mod_conf = ht.getModuleConfig(mod_name)
+    # mod_conf = ht.__getModuleConfig__(mod_name)
     # reload(ht)
     return renderMainPanel(request=request)
 
-def createCategory(request):
+def __createCategory__(request):
     mod_cat = request.POST.get('category_name').replace(" ", "_").lower()
-    ht.createCategory(mod_cat)
+    ht.__createCategory__(mod_cat)
     return renderMainPanel(request=request)
 
 def createScript(request):

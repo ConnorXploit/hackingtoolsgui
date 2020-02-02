@@ -5,12 +5,11 @@ else:
     import hackingtools as ht
 ht.Logger.setDebugModule(True)
 
-from colorama import Fore
-import os, json
+import os as __os
 
-config_locales = ht.Config.getConfig(parentKey='core', key='locales')
+__config_locales__ = ht.Config.getConfig(parentKey='core', key='locales')
 
-def createModuleFunctionView(moduleName, functionName, is_main=False):
+def __createModuleFunctionView__(moduleName, functionName, is_main=False):
     try:
         # Creates the JSON config for the view modal form
         category = ht.getModuleCategory(moduleName)
@@ -79,7 +78,7 @@ def createModuleFunctionView(moduleName, functionName, is_main=False):
     except:
         return None
 
-def getModulesGuiNames():
+def __getModulesGuiNames__():
     """Return's an Array with the Label for GUI for that module
 
     Parameters
@@ -97,7 +96,7 @@ def getModulesGuiNames():
             names[tool] = label
     return names
 
-def getModulesModalTests():
+def __getModulesModalTests__():
     """Return's an Array with all modules as keys and their values, the Modal GUI function forms
 
     Parameters
@@ -115,7 +114,7 @@ def getModulesModalTests():
             tools_functions[tool] = tool_functions
     return tools_functions
 
-def getModulesFunctionsCalls():
+def __getModulesFunctionsCalls__():
     """Return's an Array with modules name as keys and inside it's values, 
     the key are the functions call names with a value of a template for 
     initialaizing and calling that function
@@ -133,30 +132,30 @@ def getModulesFunctionsCalls():
 
     header_params = {}
     header_params_arg = {}
-    for module in ht.modules_loaded:
+    for module in ht.__modules_loaded__:
         if not module in header_params:
             header_params[module] = {}
         if not module in header_params_arg:
             header_params_arg[module] = {}
-        for func in ht.modules_loaded[module]:
+        for func in ht.__modules_loaded__[module]:
             if not func in header_params[module]:
                 header_params[module][func] = "\n\n# Load the params you need\nparams = {}"
             if not func in header_params_arg[module]:
                 header_params_arg[module][func] = []
             try:
-                if 'original_params' in ht.modules_loaded[module][func]: 
+                if 'original_params' in ht.__modules_loaded__[module][func]: 
                     required_params = None
                     default_params = None
-                    for param in ht.modules_loaded[module][func]['original_params']:
+                    for param in ht.__modules_loaded__[module][func]['original_params']:
 
                         if 'params' == param:
-                            required_params = ht.modules_loaded[module][func]['original_params'][param]
+                            required_params = ht.__modules_loaded__[module][func]['original_params'][param]
                             for reqpar in required_params:
                                 header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p}: \')'.format(p=reqpar)
                                 header_params_arg[module][func].append('{p}=params[\'{p}\']'.format(p=reqpar))
 
                         if 'defaults' == param:
-                            default_params = ht.modules_loaded[module][func]['original_params'][param]
+                            default_params = ht.__modules_loaded__[module][func]['original_params'][param]
                             for defpar in default_params:
                                 if default_params[defpar] == 'None' or default_params[defpar] == None or isinstance(default_params[defpar], int) or isinstance(default_params[defpar], list) or isinstance(default_params[defpar], dict):
                                     header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p} (Default value: {d}): \')\nif not params[\'{p}\']:\n\tparams[\'{p}\'] = {d}'.format(p=defpar, d=default_params[defpar])
@@ -166,22 +165,22 @@ def getModulesFunctionsCalls():
 
             except:
                 header_params[module][func] = ''
-    for module in ht.modules_loaded:
+    for module in ht.__modules_loaded__:
         module_funcs = {}
-        for func in ht.modules_loaded[module]:
+        for func in ht.__modules_loaded__[module]:
             try:
-                for param in ht.modules_loaded[module][func]['original_params']:
-                    module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(ht.modules_loaded[module][func]['original_params'][param]), params=', '.join(header_params_arg[module][func]))
+                for param in ht.__modules_loaded__[module][func]['original_params']:
+                    module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(ht.__modules_loaded__[module][func]['original_params'][param]), params=', '.join(header_params_arg[module][func]))
             except:
                 module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params='')
         modulesCalls[module.split('.')[-1]] = module_funcs
     return modulesCalls
 
-def getModulesFunctionsForMap():
+def __getModulesFunctionsForMap__():
     functions = {}
-    for module in ht.modules_loaded:
+    for module in ht.__modules_loaded__:
         functions[module.split('.')[-1]] = []
-        for f in ht.modules_loaded[module]:
+        for f in ht.__modules_loaded__[module]:
             functionName = f.split('.')[-1]
             conf_func = Config.getConfig(parentKey='django', key='maps', subkey=module.split('.')[-1], extrasubkey=functionName)
 
@@ -210,7 +209,7 @@ def __getModulesConfig_treeView__():
         String
     """
     result_text = []
-    tools_config = ht.getModulesFullConfig()
+    tools_config = ht.__getModulesFullConfig__()
     __treeview_load_all__(config=tools_config, result_text=result_text)
     response =  ','.join(result_text)
     return response
@@ -252,9 +251,9 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
                 try:
                     __treeview_load_all__(config=tuple(config[c]),result_text=result_text, count=count, count_pid=count-1)
                     count += 1
-                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_loaded'], key=c, conf_key=config[c]), is_warn=True, debug_core=True)
+                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=__config_locales__['error_json_data_loaded'], key=c, conf_key=config[c]), is_warn=True, debug_core=True)
                 except:
-                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=Fore.RED, debug_core=True)
+                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=__config_locales__['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=ht.Logger.Fore.RED, debug_core=True)
         count += 1
 
 def __treeview_count__(count):
@@ -287,7 +286,7 @@ def __treeview_createJSON__(conf_key, key, count=1, pid=0):
         else:
             return '{open_key}id:{count},name:"{name}",pid:{pid},value:""{close_key}'.format(open_key=open_key, count=count, name=key, pid=pid, close_key=close_key)
     except:
-        ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=config_locales['error_load_json_data'], key=key, conf_key=conf_key), is_error=True)
+        ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=__config_locales__['error_load_json_data'], key=key, conf_key=conf_key), is_error=True)
 
 # End of TreeView
 
@@ -301,7 +300,7 @@ def __getModulesDjangoForms__():
         #     __regenerateConfigView__(mod)
         #     for f in ht.getFunctionsNamesFromModule(mod):
         #         if not f == 'help':
-        #             createModuleFunctionView(mod, f)
+        #             __createModuleFunctionView__(mod, f)
         #     Config.__readFilesAuto__()
         #     form = __createHtmlModalForm__(mod)
         if form:
@@ -330,7 +329,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
 
     for m in m_form:
         temp_m_form = m_form
-        if not m == '__async__' and not m == '__function__' and not '__separator' in m and (isinstance(temp_m_form, dict) and (('systems' in temp_m_form[m] and os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m])):
+        if not m == '__async__' and not m == '__function__' and not '__separator' in m and (isinstance(temp_m_form, dict) and (('systems' in temp_m_form[m] and __os.name in temp_m_form[m]['systems']) or not 'systems' in temp_m_form[m])):
             if '__type__' in temp_m_form[m]:
                 input_type = temp_m_form[m]['__type__']
                 
@@ -394,7 +393,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     color_off = 'warning'
                     
                     
-                    if '__pool_it_' in m and not ht.WANT_TO_BE_IN_POOL:
+                    if '__pool_it_' in m and not ht.__WANT_TO_BE_IN_POOL__:
                         checkbox_disabled = 'disabled'
                         color_on = 'default'
                         color_off = 'default'

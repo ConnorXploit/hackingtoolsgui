@@ -44,10 +44,10 @@ def installModule(server, moduleName):
         open(os.path.join(config_django_module_path, 'ht_{m}.json'.format(m=moduleName.replace('ht_',''))), 'wb').write(req.content)
 
 def updateModule(server, moduleName):
-    removeModule(server, moduleName)
+    __removeModule__(server, moduleName)
     installModule(server, moduleName)
 
-def removeModule(server, moduleName):
+def __removeModule__(server, moduleName):
     moduleName = moduleName.replace('ht_', '')
     req = requests.post('http://{ip}/category/{m}'.format(ip=server, m=moduleName))
 
@@ -63,11 +63,74 @@ def removeModule(server, moduleName):
 def uploadModule(server, category, moduleName):
     module_folder = os.path.join(path, 'modules', category, moduleName.replace('ht_', ''))
     unzipper = ht.getModule('ht_unzip')
+
+    # Zip the module directory
     zipped_file = unzipper.zipDirectory(module_folder)
-    req = requests.post('http://{ip}/new/module/upload/{c}'.format(ip=server, c=category), files={ "module" : (str(os.path.split(zipped_file)[1]), zipped_file)})
+
+    # Create Uploads directory
+    uploadsFolder = os.path.join(os.path.join(os.path.split(zipped_file)[0]), '__uploads__')
+    if not os.path.isdir(uploadsFolder):
+        os.mkdir(uploadsFolder)
+
+    # Create Module directory inside Uploads
+    moduleUploadsFolder = os.path.join(uploadsFolder, moduleName.replace('ht_', ''))
+    if not os.path.isdir(moduleUploadsFolder):
+        os.mkdir(moduleUploadsFolder)
+    
+    # Move zipped module to uploads dir
+    new_file_zipped = os.path.join(moduleUploadsFolder, os.path.split(zipped_file)[-1])
+    try:
+        os.rename(zipped_file, new_file_zipped)
+    except:
+        try:
+            if os.path.isfile(new_file_zipped):
+                os.remove(new_file_zipped)
+            os.rename(zipped_file, new_file_zipped)
+        except:
+            pass
+
+    # Copy the JSON config for the module into the uploads dir
+    moduleConfigFile = os.path.join(path, 'core', 'config_modules_django', category, 'ht_{f}.json'.format(f=moduleName.replace('ht_', '')))
+    newModuleConfigFile = os.path.join(moduleUploadsFolder, 'ht_{f}.json'.format(f=moduleName.replace('ht_', '')))
+    if os.path.isfile(moduleConfigFile):
+        if os.path.isfile(newModuleConfigFile):
+            os.remove(newModuleConfigFile)
+        shutil.copyfile(moduleConfigFile, newModuleConfigFile)
+
+    # Copy the Django view for the module into the uploads dir
+    hackingtoolsDjangoCoreFolder = os.path.split(os.path.split(path)[0])[0]
+    moduleViewsFile = os.path.join(hackingtoolsDjangoCoreFolder, 'views_modules', category, 'views_ht_{f}.py'.format(f=moduleName.replace('ht_', '')))
+    newModuleViewsFile = os.path.join(moduleUploadsFolder, 'views_ht_{f}.py'.format(f=moduleName.replace('ht_', '')))
+    if os.path.isfile(moduleViewsFile):
+        if os.path.isfile(newModuleViewsFile):
+            os.remove(newModuleViewsFile)
+        shutil.copyfile(moduleViewsFile, newModuleViewsFile)
+
+    # Copy the requirements file for the module into the uploads dir
+    moduleRequirementsFile = os.path.join(path, 'modules', '__requirements__', category, 'ht_{f}.txt'.format(f=moduleName.replace('ht_', '')))
+    newModuleRequirementsFile = os.path.join(moduleUploadsFolder, 'ht_{f}.txt'.format(f=moduleName.replace('ht_', '')))
+    if os.path.isfile(moduleRequirementsFile):
+        if os.path.isfile(newModuleRequirementsFile):
+            os.remove(newModuleRequirementsFile)
+        shutil.copyfile(moduleRequirementsFile, newModuleRequirementsFile)
+
+    # Zip all together
+    full_zipped_file = unzipper.zipDirectory(moduleUploadsFolder)
+
+    files = {
+        moduleName.replace('ht_', ''): open(full_zipped_file, 'rb'),
+    }
+    req = requests.post('http://{ip}/new/module/upload/{c}'.format(ip=server, c=category), files=files)
     if req.json()['status'] == 'OK':
         Logger.printMessage(req.json()['data'], debug_core=True)
-    Logger.printMessage(req.json()['data'], is_error=True)
+    else:
+        Logger.printMessage(req.json()['data'], is_error=True)
+
+def clearUploadsTemp():
+    for category in ht.getCategories():
+        uploadFirCategory = os.path.join(path, 'modules', category, '__uploads__')
+        if os.path.isdir(uploadFirCategory):
+            shutil.rmtree(uploadFirCategory)
 
 def addServer(server):
     if not server in servers:

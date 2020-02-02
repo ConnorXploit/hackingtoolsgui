@@ -91,7 +91,7 @@ def send(node_request, functionName):
             else:
                 return (None, None)
         else:
-            Logger.printMessage(message='Disabled pool', description='If want to pool, change WANT_TO_BE_IN_POOL to true', is_warn=True)
+            Logger.printMessage(message='Disabled pool', description='If want to pool, change __WANT_TO_BE_IN_POOL__ to true', is_warn=True)
             return (None, None)
     except Exception as e:
         Logger.printMessage(message='ERROR', description=str(e), is_error=True)
@@ -176,7 +176,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
         if not mine_function_call and not my_own_call:
             for node in nodes:
                 try:
-                    if ht.Connections.serviceNotMine(node):
+                    if ht.Connections.__serviceNotMine__(node):
 
                         node_call = '{node_ip}/pool/execute/'.format(node_ip=node)
 
@@ -198,7 +198,7 @@ def __sendPool__(creator, function_api_call='', params={}, files=[]):
                         
                             if r.status_code == 200:
                                 for n in pool_list:
-                                    if ht.Connections.serviceNotMine(n) and not n == node:
+                                    if ht.Connections.__serviceNotMine__(n) and not n == node:
                                         addNodeToPool(n)
                                 Logger.printMessage(message='Solved by', description=(node), debug_core=True)
                                 try:
