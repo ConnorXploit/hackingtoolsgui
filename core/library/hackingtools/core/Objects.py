@@ -1,6 +1,13 @@
 from . import Logger, Utils
-import json, time, requests, os, textwrap, urllib.parse, threading
-from abc import ABC, abstractmethod
+import json as __json
+import time as __time
+import requests as __requests
+import os as __os
+import textwrap as __textwrap
+import urllib.parse as __parse
+import threading as __threading
+from abc import ABC as __ABC
+from abc import abstractmethod as __abstractmethod
 
 import hackingtools as ht
 
@@ -49,7 +56,7 @@ class Host():
             parameters["os"] = self.getOS()
         if self.data:
             parameters["data"] = self.getData()
-        Logger.printMessage(message='{data}'.format(data=json.dumps(parameters, indent=4, sort_keys=True), debug_core=True))
+        Logger.printMessage(message='{data}'.format(data=__json.dumps(parameters, indent=4, sort_keys=True), debug_core=True))
         return parameters
     
     def setTarget(self, id):
@@ -364,7 +371,7 @@ class Worker():
             func = '{f}{a}'.format(f=functionCall, a=args)
             res = eval(func)
             self.responses.append( res )
-            time.sleep(timesleep)
+            __time.sleep(timesleep)
 
 class RequestHandler:
 	"""
@@ -397,7 +404,7 @@ class RequestHandler:
 			"User-Agent": self.header_maker(self.user_agent)
 		}
 		try:
-			s = requests.Session()
+			s = __requests.Session()
 			if self.current_proxy:
 				res = s.get(url, headers=headers, proxies=proxies)
 			else:
@@ -410,9 +417,9 @@ class RequestHandler:
 					return res.json()
 			else:
 				return None
-		except requests.exceptions.ConnectionError:
-			raise requests.exceptions.ConnectionError
-		except json.decoder.JSONDecodeError:
+		except __requests.exceptions.ConnectionError:
+			raise __requests.exceptions.ConnectionError
+		except __json.decoder.JSONDecodeError:
 			return None
 
 	def header_maker(self, mode):
@@ -442,15 +449,15 @@ class CookieSessionManager:
             return None
 
     def set_saved_cookies(self, cookie_string):
-        if not os.path.exists(self.session_folder):
-            os.makedirs(self.session_folder)
+        if not __os.path.exists(self.session_folder):
+            __os.makedirs(self.session_folder)
 
         with open(self.session_folder + self.filename,"w+") as f:
             f.write(cookie_string)
 
     def empty_saved_cookies(self):
         try:
-            os.remove(self.session_folder + self.filename)
+            __os.remove(self.session_folder + self.filename)
         except FileNotFoundError:
             pass
 
@@ -468,7 +475,7 @@ class InitializerModel:
         """Array of initialization data"""
         self._data = {}
 
-        self.modified = time.time()
+        self.modified = __time.time()
 
         if props is not None and len(props) > 0:
             self._init(props)
@@ -559,7 +566,7 @@ class Account(InitializerModel):
         Is private: {self.is_private if hasattr(self, 'is_private') else '-'}
         Is verified: {self.is_verified if hasattr(self, 'is_verified') else '-'}
         """
-        return textwrap.dedent(string)
+        return __textwrap.dedent(string)
 
     """
      * @param Media $media
@@ -746,7 +753,7 @@ class Media(InitializerModel):
         Media type: {self.type}
         """
 
-        return textwrap.dedent(string)
+        return __textwrap.dedent(string)
 
     def _init_properties_custom(self, value, prop, arr):
 
@@ -949,7 +956,7 @@ class Media(InitializerModel):
 
     @staticmethod
     def __getImageUrls(image_url):
-        parts = '/'.split(urllib.parse.quote_plus(image_url)['path'])
+        parts = '/'.split(__parse.quote_plus(image_url)['path'])
         imageName = parts[len(parts) - 1]
         urls = {
             'thumbnail': InstagramEndPoints().INSTAGRAM_CDN_URL + 't/s150x150/' + imageName,
@@ -982,7 +989,7 @@ class Location(InitializerModel):
         Is public page available: {self.has_public_page}
         """
 
-        return textwrap.dedent(string)
+        return __textwrap.dedent(string)
 
     def _init_properties_custom(self, value, prop, arr):
 
@@ -1058,7 +1065,7 @@ class Story(Media):
         Media type: {self.type if hasattr(self, 'type') else ''}
         """
         
-        return textwrap.dedent(string)
+        return __textwrap.dedent(string)
 
 class CarouselMedia:
 
@@ -1112,107 +1119,107 @@ class InstagramEndPoints:
     request_media_count = 30
 
     def get_account_page_link(self, username):
-        return self.ACCOUNT_PAGE % urllib.parse.quote_plus(username)
+        return self.ACCOUNT_PAGE % __parse.quote_plus(username)
 
     def get_account_json_link(self, username):
-        return self.ACCOUNT_JSON_INFO % urllib.parse.quote_plus(username)
+        return self.ACCOUNT_JSON_INFO % __parse.quote_plus(username)
 
     def get_account_json_private_info_link_by_account_id(self, account_id):
-        return self.ACCOUNT_JSON_PRIVATE_INFO_BY_ID % urllib.parse.quote_plus(str(account_id))
+        return self.ACCOUNT_JSON_PRIVATE_INFO_BY_ID % __parse.quote_plus(str(account_id))
 
     def get_account_medias_json_link(self, variables):
-        return self.ACCOUNT_MEDIAS % urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':')))
+        return self.ACCOUNT_MEDIAS % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
 
     def get_media_page_link(self, code):
-        return self.MEDIA_LINK % urllib.parse.quote_plus(code)
+        return self.MEDIA_LINK % __parse.quote_plus(code)
 
     def get_media_json_link(self, code):
-        return self.MEDIA_JSON_INFO % urllib.parse.quote_plus(code)
+        return self.MEDIA_JSON_INFO % __parse.quote_plus(code)
 
     def get_medias_json_by_location_id_link(self, facebook_location_id, max_id=''):
-        return self.MEDIA_JSON_BY_LOCATION_ID % (urllib.parse.quote_plus(str(facebook_location_id)), urllib.parse.quote_plus(max_id))
+        return self.MEDIA_JSON_BY_LOCATION_ID % (__parse.quote_plus(str(facebook_location_id)), __parse.quote_plus(max_id))
 
     def get_medias_json_by_tag_link(self, tag, max_id=''):
-        return self.MEDIA_JSON_BY_TAG % (urllib.parse.quote_plus(str(tag)), urllib.parse.quote_plus(str(max_id)))
+        return self.MEDIA_JSON_BY_TAG % (__parse.quote_plus(str(tag)), __parse.quote_plus(str(max_id)))
 
     def get_general_search_json_link(self, query):
-        return self.GENERAL_SEARCH % urllib.parse.quote_plus(query)
+        return self.GENERAL_SEARCH % __parse.quote_plus(query)
 
     def get_comments_before_comments_id_by_code(self, variables):
-        return self.COMMENTS_BEFORE_COMMENT_ID_BY_CODE % urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':')))
+        return self.COMMENTS_BEFORE_COMMENT_ID_BY_CODE % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
 
     def get_last_likes_by_code_old(self, code, count, last_like_id):
-        return self.LIKES_BY_SHORTCODE_OLD % (urllib.parse.quote_plus(code), urllib.parse.quote_plus(str(count)), urllib.parse.quote_plus(str(last_like_id)))
+        return self.LIKES_BY_SHORTCODE_OLD % (__parse.quote_plus(code), __parse.quote_plus(str(count)), __parse.quote_plus(str(last_like_id)))
 
     def get_last_likes_by_code(self, variables):
-        return self.LIKES_BY_SHORTCODE % urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':')))
+        return self.LIKES_BY_SHORTCODE % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
 
     def get_follow_url(self, account_id):
-        return self.FOLLOW_URL % urllib.parse.quote_plus(account_id)
+        return self.FOLLOW_URL % __parse.quote_plus(account_id)
 
     def get_unfollow_url(self, account_id):
-        return self.UNFOLLOW_URL % urllib.parse.quote_plus(account_id)
+        return self.UNFOLLOW_URL % __parse.quote_plus(account_id)
 
     def get_followers_json_link_old(self, account_id, count, after=''):
         url = self.FOLLOWERS_URL_OLD.replace(
-            '{{accountId}}', urllib.parse.quote_plus(account_id))
-        url = url.replace('{{count}}', urllib.parse.quote_plus(str(count)))
+            '{{accountId}}', __parse.quote_plus(account_id))
+        url = url.replace('{{count}}', __parse.quote_plus(str(count)))
 
         if after == '':
             url = url.replace('&after={{after}}', '')
         else:
-            url = url.replace('{{after}}', urllib.parse.quote_plus(str(after)))
+            url = url.replace('{{after}}', __parse.quote_plus(str(after)))
 
         return url
 
     def get_followers_json_link(self, variables):
-        return self.FOLLOWERS_URL % urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':')))
+        return self.FOLLOWERS_URL % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
 
     def get_following_json_link_old(self, account_id, count, after=''):
         url = self.FOLLOWING_URL_OLD.replace(
-            '{{accountId}}', urllib.parse.quote_plus(account_id))
-        url = url.replace('{{count}}', urllib.parse.quote_plus(count))
+            '{{accountId}}', __parse.quote_plus(account_id))
+        url = url.replace('{{count}}', __parse.quote_plus(count))
 
         if after == '':
             url = url.replace('&after={{after}}', '')
         else:
-            url = url.replace('{{after}}', urllib.parse.quote_plus(after))
+            url = url.replace('{{after}}', __parse.quote_plus(after))
 
         return url
 
     def get_following_json_link(self, variables):
-        return self.FOLLOWING_URL % urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':')))
+        return self.FOLLOWING_URL % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
 
     def get_user_stories_link(self, ):
-        return self.get_graph_ql_url(self.USER_STORIES, {'variables': json.dumps([], separators=(',', ':'))})
+        return self.get_graph_ql_url(self.USER_STORIES, {'variables': __json.dumps([], separators=(',', ':'))})
 
     def get_graph_ql_url(self, query_id, parameters):
-        url = self.GRAPH_QL_QUERY_URL % urllib.parse.quote_plus(query_id)
+        url = self.GRAPH_QL_QUERY_URL % __parse.quote_plus(query_id)
 
         if len(parameters) > 0:
-            query_string = urllib.parse.urlencode(parameters)
+            query_string = __parse.urlencode(parameters)
             url += '&' + query_string
 
         return url
 
     def get_stories_link(self, variables):
-        return self.get_graph_ql_url(self.STORIES, {'variables': json.dumps(variables, separators=(',', ':'))})
+        return self.get_graph_ql_url(self.STORIES, {'variables': __json.dumps(variables, separators=(',', ':'))})
 
     def get_like_url(self, media_id):
-        return self.LIKE_URL % urllib.parse.quote_plus(str(media_id))
+        return self.LIKE_URL % __parse.quote_plus(str(media_id))
 
     def get_unlike_url(self, media_id):
-        return self.UNLIKE_URL % urllib.parse.quote_plus(str(media_id))
+        return self.UNLIKE_URL % __parse.quote_plus(str(media_id))
 
     def get_add_comment_url(self, media_id):
-        return self.ADD_COMMENT_URL % urllib.parse.quote_plus(str(media_id))
+        return self.ADD_COMMENT_URL % __parse.quote_plus(str(media_id))
 
     def get_delete_comment_url(self, media_id, comment_id):
-        return self.DELETE_COMMENT_URL % (urllib.parse.quote_plus(str(media_id)), urllib.parse.quote_plus(str(comment_id)))
+        return self.DELETE_COMMENT_URL % (__parse.quote_plus(str(media_id)), __parse.quote_plus(str(comment_id)))
 
-class TwoStepVerificationAbstractClass(ABC):
+class TwoStepVerificationAbstractClass(__ABC):
 
-    @abstractmethod
+    @__abstractmethod.
     def get_verification_type(self, possible_values):
         """
         :param possible_values: array of possible values
@@ -1220,7 +1227,7 @@ class TwoStepVerificationAbstractClass(ABC):
         """
         pass
 
-    @abstractmethod
+    @__abstractmethod.
     def get_security_code(self):
         """
 
@@ -1266,9 +1273,9 @@ class TwoStepConsoleVerification(TwoStepVerificationAbstractClass):
 
         return security_code
 
-class Ticker(threading.Thread):
+class Ticker(__threading.Thread):
   """A very simple thread that merely blocks for :attr:`interval` and sets a
-  :class:`threading.Event` when the :attr:`interval` has elapsed. It then waits
+  :class:`__threading.Event` when the :attr:`interval` has elapsed. It then waits
   for the caller to unset this event before looping again.
 
   Example use::
@@ -1278,21 +1285,21 @@ class Ticker(threading.Thread):
     try:
       while t.evt.wait(): # hang out til the time has elapsed
         t.evt.clear() # tell the ticker to loop again
-        print time.time(), "FIRING!"
+        print __time.time(), "FIRING!"
     except:
       t.stop() # tell the thread to stop
       t.join() # wait til the thread actually dies
 
   """
   # SIGALRM based timing proved to be unreliable on various python installs,
-  # so we use a simple thread that blocks on sleep and sets a threading.Event
+  # so we use a simple thread that blocks on sleep and sets a __threading.Event
   # when the timer expires, it does this forever.
   def __init__(self, interval):
     super(Ticker, self).__init__()
     self.interval = interval
-    self.evt = threading.Event()
+    self.evt = __threading.Event()
     self.evt.clear()
-    self.should_run = threading.Event()
+    self.should_run = __threading.Event()
     self.should_run.set()
 
   def stop(self):
@@ -1315,6 +1322,6 @@ class Ticker(threading.Thread):
       Do not call this directly!  Instead call :meth:`start`.
     """
     while self.should_run.is_set():
-      time.sleep(self.interval)
+      __time.sleep(self.interval)
       self.evt.set()
 

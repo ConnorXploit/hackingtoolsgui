@@ -57,7 +57,7 @@ def load_data(session_id=None):
     my_services = ht.__Connections.getMyServices()
     ngrokService = ht.__Connections.getNgrokServiceUrl()
     is_heroku = True if 'DYNO' in os.environ else False
-    my_node_id_pool = ht.Pool.MY_NODE_ID
+    my_node_id_pool = ht.Pool.__MY_NODE_ID__
     status_pool = ht.__WANT_TO_BE_IN_POOL__
     funcs_map = ht.DjangoFunctions.__getModulesFunctionsForMap__()
 
@@ -248,9 +248,9 @@ def sendPool(request, functionName):
     # ! changes here affect all nodes on the network, so should be careful with this
     # ! It loop inside all nodes's known nodes
     if ht.wantPool():
-        response, creator = ht.Pool.send(request, functionName)
+        response, creator = ht.Pool.__send__(request, functionName)
         if response:
-            if creator == ht.Pool.MY_NODE_ID:
+            if creator == ht.Pool.__MY_NODE_ID__:
                 if 'nodes_pool' in response:
                     for n in response['nodes_pool']:
                         ht.Pool.addNodeToPool(n)
@@ -476,7 +476,7 @@ def poolExecute(request):
         functionCall = request.POST.get('functionCall', None)
 
         creator = request.POST.get('creator_id', None)
-        if creator != ht.Pool.MY_NODE_ID:
+        if creator != ht.Pool.__MY_NODE_ID__:
 
             files = None
             if request.FILES and len(request.FILES) > 0:
@@ -522,13 +522,13 @@ def poolExecute(request):
 
 @csrf_exempt
 def getNodeId(request):
-    return JsonResponse({ 'data' : ht.Pool.MY_NODE_ID })
+    return JsonResponse({ 'data' : ht.Pool.__MY_NODE_ID__ })
 
 # Connections
 
 def startNgrok(request):
     ngrok = ht.__Connections.startNgrok(Connections.getActualPort())
     if ngrok:
-        ht.Pool.callNodesForInformAboutMyServices()
+        ht.Pool.__callNodesForInformAboutMyServices__()
         return renderMainPanel(request=request, popup_text=ngrok)
     return renderMainPanel(request=request)
