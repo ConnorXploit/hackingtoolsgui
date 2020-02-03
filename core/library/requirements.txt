@@ -15,7 +15,7 @@ docutils
 entrypoints
 Flask
 future
-hackingtools==2.7.6
+hackingtools==2.7.7
 html5lib
 httplib2
 idna
@@ -33,7 +33,6 @@ mechanize
 msgpack
 msgpack-python
 netaddr
-netifaces
 numpy
 pandas
 pefile

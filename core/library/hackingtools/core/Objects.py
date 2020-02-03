@@ -7,7 +7,7 @@ import textwrap as __textwrap
 import urllib.parse as __parse
 import threading as __threading
 from abc import ABC as __ABC
-from abc import abstractmethod as __abstractmethod
+from abc import abstractmethod
 
 import hackingtools as ht
 
@@ -1219,7 +1219,7 @@ class InstagramEndPoints:
 
 class TwoStepVerificationAbstractClass(__ABC):
 
-    @__abstractmethod.
+    @abstractmethod
     def get_verification_type(self, possible_values):
         """
         :param possible_values: array of possible values
@@ -1227,7 +1227,7 @@ class TwoStepVerificationAbstractClass(__ABC):
         """
         pass
 
-    @__abstractmethod.
+    @abstractmethod
     def get_security_code(self):
         """
 
