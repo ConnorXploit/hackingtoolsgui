@@ -570,7 +570,7 @@ def __look_for_changes__(django=False):
     """
     config_tmp = __readFilesAuto__()
 
-    global config
+    global __config__
     if not sorted(__config__.items()) == sorted(config_tmp.items()):
         __config__ = config_tmp
         return True

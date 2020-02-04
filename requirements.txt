@@ -15,7 +15,7 @@ docutils
 entrypoints
 Flask
 future
-hackingtools==2.7.7
+hackingtools
 html5lib
 httplib2
 idna
@@ -55,7 +55,7 @@ readme-renderer
 requests
 requests_html
 scikit-build
-shodan==
+shodan
 six
 sklearn
 python-slugify

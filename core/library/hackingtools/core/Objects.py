@@ -1,6 +1,6 @@
 from . import Logger, Utils
 import json as __json
-import time as __time
+import time
 import requests as __requests
 import os as __os
 import textwrap as __textwrap
@@ -371,7 +371,7 @@ class Worker():
             func = '{f}{a}'.format(f=functionCall, a=args)
             res = eval(func)
             self.responses.append( res )
-            __time.sleep(timesleep)
+            time.sleep(timesleep)
 
 class RequestHandler:
 	"""
@@ -475,7 +475,7 @@ class InitializerModel:
         """Array of initialization data"""
         self._data = {}
 
-        self.modified = __time.time()
+        self.modified = time.time()
 
         if props is not None and len(props) > 0:
             self._init(props)
@@ -1285,7 +1285,7 @@ class Ticker(__threading.Thread):
     try:
       while t.evt.wait(): # hang out til the time has elapsed
         t.evt.clear() # tell the ticker to loop again
-        print __time.time(), "FIRING!"
+        print time.time(), "FIRING!"
     except:
       t.stop() # tell the thread to stop
       t.join() # wait til the thread actually dies
@@ -1322,6 +1322,6 @@ class Ticker(__threading.Thread):
       Do not call this directly!  Instead call :meth:`start`.
     """
     while self.should_run.is_set():
-      __time.sleep(self.interval)
+      time.sleep(self.interval)
       self.evt.set()
 

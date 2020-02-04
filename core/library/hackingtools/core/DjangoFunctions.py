@@ -253,7 +253,7 @@ def __treeview_load_all__(config, result_text, count=0, count_pid=-1):
                     count += 1
                     ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=__config_locales__['error_json_data_loaded'], key=c, conf_key=config[c]), is_warn=True, debug_core=True)
                 except:
-                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=__config_locales__['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=ht.Logger.Fore.RED, debug_core=True)
+                    ht.Logger.printMessage('{msg} - {key} - {conf_key}'.format(msg=__config_locales__['error_json_data_not_loaded'], key=c, conf_key=config[c]), color=ht.Logger.__Fore.RED, debug_core=True)
         count += 1
 
 def __treeview_count__(count):
@@ -335,7 +335,7 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 
                 input_className = ''
                 if not input_type in default_classnames_per_type:
-                    ht.Logger.printMessage(message='__createHtmlModalForm__', description='There is no __className__ defined for this type of input \'{input_type}\''.format(input_type=input_type), color=ht.Logger.Fore.YELLOW)
+                    ht.Logger.printMessage(message='__createHtmlModalForm__', description='There is no __className__ defined for this type of input \'{input_type}\''.format(input_type=input_type), color=ht.Logger.__Fore.YELLOW)
                 else:
                     input_className = default_classnames_per_type[input_type]['__className__']
 

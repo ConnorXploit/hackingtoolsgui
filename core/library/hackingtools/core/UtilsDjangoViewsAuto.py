@@ -23,7 +23,7 @@ lastly_added_func = ["help"]
 def restartDjangoServer():
     wsgi_file = os.path.join(os.path.split(os.path.split(os.path.split(os.path.split(os.path.abspath(os.path.dirname(__file__)))[0])[0])[0])[0], 'hackingtoolsgui', 'wsgi.py')
     if os.path.isfile(wsgi_file):
-        ht.Logger.printMessage('Restarting the server!', color=ht.Logger.Fore.YELLOW)
+        ht.Logger.printMessage('Restarting the server!', color=ht.Logger.__Fore.YELLOW)
         with open(wsgi_file, 'a+')as f:
             f.write('\n')
         lines = open(wsgi_file, 'r').readlines()

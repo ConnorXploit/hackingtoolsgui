@@ -1,5 +1,6 @@
 from .core import Connections as __Connections
 from .core import Config, Utils, Logger, Repositories
+
 config = Config.getConfig(parentKey='core', key='import_modules')
 
 import os as __os
@@ -11,10 +12,11 @@ import types as __types
 import inspect as __inspect
 import shutil as __shutil
 import ast as __ast
-import progressbar as __progressbar 
+import progressbar as __progressbar
 import json as __json
 import sys as __sys
 import readline as __readline
+
 __readline.parse_and_bind('tab: complete')
 
 # try:
@@ -30,7 +32,8 @@ __WANT_TO_BE_IN_POOL__ = Config.getConfig(parentKey='core', key='__WANT_TO_BE_IN
 if __WANT_TO_BE_IN_POOL__:
     from .core import Pool
 else:
-    Logger.printMessage('Pool not loaded', 'Change config or execute ht.Pool.switchPool() when you want it', is_warn=True)
+    Logger.printMessage('Pool not loaded', 'Change config or execute ht.Pool.switchPool() when you want it',
+                        is_warn=True)
 
 # If it's Django, import it's Functions
 __amidjango__ = Utils.amIdjango(__name__)
@@ -53,6 +56,7 @@ __cant_install_requirements__ = Config.getConfig(parentKey='core', key='__cant_i
 
 __workers__ = []
 
+
 def getModulesNames():
     """Return's an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)
 
@@ -69,6 +73,7 @@ def getModulesNames():
         modules_names.append(tools.split('.')[-1])
     return modules_names
 
+
 def getModulesFromCategory(category):
     mods = []
     for m in getModulesNames():
@@ -76,13 +81,15 @@ def getModulesFromCategory(category):
             mods.append(m)
     return mods
 
+
 def getCategories():
     data = []
     for mods in __modules_loaded__:
         if mods.split('.')[1] not in data:
             data.append(mods.split('.')[1])
     return data
-  
+
+
 def getModule(moduleName):
     """Return's and load's a module into a variable passing a module name as parameter
 
@@ -99,21 +106,30 @@ def getModule(moduleName):
         if moduleName in m:
             if not 'ht_' in moduleName:
                 moduleName = 'ht_{m}'.format(m=moduleName)
-            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod='_'.join(moduleName.split('_')[1:]), moduleName=moduleName)
+            sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1],
+                                                                                    mod='_'.join(
+                                                                                        moduleName.split('_')[1:]),
+                                                                                    moduleName=moduleName)
             return eval(sentence)
-    Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), is_error=True)
-                       
+    Logger.printMessage(
+        'Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(
+            mod=moduleName), is_error=True)
+
+
 def getModules():
     data = []
     for mods in __modules_loaded__:
-        data.append('modules.{name}.{classInit}()'.format(name=mods.split('.')[-1], classInit=__default_class_name_for_all__))
+        data.append(
+            'modules.{name}.{classInit}()'.format(name=mods.split('.')[-1], classInit=__default_class_name_for_all__))
     return data
+
 
 def getModuleCategory(moduleName):
     for m in __modules_loaded__:
         if moduleName.replace('ht_', '') == m.split('.')[3].replace('ht_', ''):
             return m.split('.')[1]
     return None
+
 
 def getFunctionsNamesFromModule(module_name):
     """Returns an Array with the functions of a module you choose
@@ -136,8 +152,10 @@ def getFunctionsNamesFromModule(module_name):
     except:
         return []
 
+
 def getWorkers():
     return __workers__
+
 
 def getWorker(nameWorker):
     try:
@@ -145,11 +163,13 @@ def getWorker(nameWorker):
     except:
         return None
 
+
 def getWorkerLastResponse(nameWorker):
     try:
         return Utils.getWorkers()[nameWorker][0].getLastResponse()
     except:
         return ''
+
 
 def setDebugCore(on=True):
     """Set Debug Log from Core to on/off
@@ -164,6 +184,7 @@ def setDebugCore(on=True):
     """
     Logger.setDebugCore(on)
 
+
 def setDebugModule(on=True):
     """Set Debug Log from Modules to on/off
 
@@ -177,6 +198,7 @@ def setDebugModule(on=True):
     """
     Logger.setDebugModule(on)
 
+
 def switchPool():
     global __WANT_TO_BE_IN_POOL__
     if __WANT_TO_BE_IN_POOL__:
@@ -184,19 +206,23 @@ def switchPool():
     else:
         __WANT_TO_BE_IN_POOL__ = True
 
+
 def wantPool():
     global __WANT_TO_BE_IN_POOL__
     return __WANT_TO_BE_IN_POOL__
 
+
 def worker(workerName, functionCall, args=(), timesleep=1, run_until_ht_stops=False, log=False):
     Utils.startWorker(workerName, functionCall, args, int(timesleep), run_until_ht_stops, log)
     __workers__.append(workerName)
+
 
 def stopWorker(nameWorker):
     try:
         Utils.stopWorker(nameWorker)
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
+
 
 # === __getModulesJSON__ ===
 def __getModulesJSON__():
@@ -217,8 +243,9 @@ def __getModulesJSON__():
             conf[mod] = '1 function'
         else:
             conf[mod] = '{func} functions'.format(func=len(__modules_loaded__[mod]))
-    #Logger.printMessage('Modules loaded as JSON automatically:', conf, debug_module=True)
+    # Logger.printMessage('Modules loaded as JSON automatically:', conf, debug_module=True)
     return __modules_loaded__
+
 
 def __getModuleCalls__(module_name=None):
     """Return an Array with the modules calls you can write for importing directly a module.
@@ -239,6 +266,7 @@ def __getModuleCalls__(module_name=None):
                 return mods
     return [mods for mods in getModules()]
 
+
 def __getModulesFullConfig__():
     """Return's an Array with all the config of all modules loaded
 
@@ -256,6 +284,7 @@ def __getModulesFullConfig__():
         if module_conf:
             modules_conf[module] = module_conf
     return modules_conf
+
 
 def __getModuleConfig__(moduleName):
     """Return's an Array with the config of a module passed as parameter
@@ -275,35 +304,51 @@ def __getModuleConfig__(moduleName):
                 return actualConf[mod]
     return None
 
+
 def __getModulesConfig__():
-    return [{m:Config.getConfig(parentKey='modules', key=m.split('.')[-1])} for m in __modules_loaded__]
+    return [{m: Config.getConfig(parentKey='modules', key=m.split('.')[-1])} for m in __modules_loaded__]
+
 
 def __createModule__(moduleName, category):
     """
     Iniciamos con el comando anterior la instancia del modulo
     """
-    Logger.printMessage('Creating {moduleName} on {category}'.format(moduleName=moduleName, category=category), debug_module=True)
+    Logger.printMessage('Creating {moduleName} on {category}'.format(moduleName=moduleName, category=category),
+                        debug_module=True)
     moduleName = moduleName.replace(" ", "_").lower()
     category = category.lower()
     categories = getCategories()
     if category not in categories:
         __createCategory__(category)
     dir_actual = __os.path.dirname(__file__)
-    if not __os.path.isdir('{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName)):
-        __os.makedirs('{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName))
+    if not __os.path.isdir(
+            '{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName)):
+        __os.makedirs(
+            '{dir}/modules/{category}/{moduleName}'.format(dir=dir_actual, category=category, moduleName=moduleName))
     if not __os.path.exists('{dir}/modules/{category}/__init__.py'.format(dir=dir_actual, category=category)):
         f = open('{dir}/modules/{category}/__init__.py'.format(dir=dir_actual, category=category), "w")
         f.write('')
-    if not __os.path.exists('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
-        f = open('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
+    if not __os.path.exists(
+            '{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category,
+                                                                              moduleName=moduleName)):
+        f = open('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category,
+                                                                                   moduleName=moduleName), "w")
         f.write(__default_template_modules_ht__.format(moduleName=moduleName))
-    if not __os.path.exists('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName)):
-        f = open('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category, moduleName=moduleName), "w")
+    if not __os.path.exists(
+            '{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category,
+                                                                       moduleName=moduleName)):
+        f = open('{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category,
+                                                                            moduleName=moduleName), "w")
         f.write('')
     if not __os.path.isdir('{dir}/core/config_modules_django/{category}/'.format(dir=dir_actual, category=category)):
         __os.mkdir('{dir}/core/config_modules_django/{category}/'.format(dir=dir_actual, category=category))
-    if not __isfile('{dir}/core/config_modules_django/{category}/{moduleName}.json'.format(dir=dir_actual, category=category, moduleName=moduleName)):
-        with open('{dir}/core/config_modules_django/{category}/ht_{moduleName}.json'.format(dir=dir_actual, category=category, moduleName=moduleName), "w") as fp:
+    if not __isfile(
+            '{dir}/core/config_modules_django/{category}/{moduleName}.json'.format(dir=dir_actual, category=category,
+                                                                                   moduleName=moduleName)):
+        with open('{dir}/core/config_modules_django/{category}/ht_{moduleName}.json'.format(dir=dir_actual,
+                                                                                            category=category,
+                                                                                            moduleName=moduleName),
+                  "w") as fp:
             fp.write(__json.dumps({}))
     # temp_path, hackingtools_dir = __os.path.split(dir_actual)
     # temp_path, library_dir = __os.path.split(temp_path)
@@ -311,11 +356,12 @@ def __createModule__(moduleName, category):
     # insert_url_django(urls_file, moduleName) # TODO edit urls for auto URLs when creating module
     # print("{msg}".format(msg=urls_file))
     # Reload variables on client side
-    #global hackingtools
-    #reload(hackingtools)
+    # global hackingtools
+    # reload(hackingtools)
     Config.__createModuleTemplateConfig__(moduleName, category)
     trying_something = __importModules__()
     return
+
 
 def __removeModule__(moduleName, category):
     modulePath = __join(__this_dir__, 'modules', category, moduleName.replace('ht_', ''))
@@ -323,6 +369,7 @@ def __removeModule__(moduleName, category):
         __shutil.rmtree(modulePath)
     if __os.path.isdir(modulePath):
         __os.rmdir(modulePath)
+
 
 def __createCategory__(categoryName):
     categoryName = categoryName.lower()
@@ -332,6 +379,7 @@ def __createCategory__(categoryName):
         if not __os.path.isdir('{dir}/modules/{category}/'.format(dir=dir_actual, category=categoryName)):
             __os.makedirs('{dir}/modules/{category}'.format(dir=dir_actual, category=categoryName))
 
+
 def __cleanOutputModules__():
     for mod in getModulesNames():
         cat = getModuleCategory(mod)
@@ -340,7 +388,8 @@ def __cleanOutputModules__():
             for temp_file in __listdir(output_dir):
                 __os.remove(__join(output_dir, temp_file))
 
-#TODO Continue documentation here
+
+# TODO Continue documentation here
 
 # Import Modules
 
@@ -358,7 +407,7 @@ def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):
         data = [f for f in __listdir(mypath) if __isfile(__join(mypath, f))]
     else:
         data = [f for f in __listdir(mypath) if not __isfile(__join(mypath, f))]
-    
+
     if __blacklist_extensions__:
         new_data = []
         for d in data:
@@ -370,7 +419,7 @@ def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):
                 new_data.append(d)
         data = new_data
 
-    if exclude_pattern_starts_with: 
+    if exclude_pattern_starts_with:
         new_data = []
         for d in data:
             if not d.startswith(exclude_pattern_starts_with):
@@ -395,7 +444,7 @@ def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):
             if not exists:
                 new_data.append(d)
         data = new_data
-    
+
     if files and __ignore_files__:
         new_data = []
         for d in data:
@@ -405,6 +454,7 @@ def __listDirectory__(directory, files=False, exclude_pattern_starts_with=None):
         data = new_data
 
     return data
+
 
 # Core method - Usado por: __importModules__()
 def __getModules__(directory='', exclude_pattern_starts_with='.'):
@@ -417,15 +467,16 @@ def __getModules__(directory='', exclude_pattern_starts_with='.'):
     if dirs:
         for d in dirs:
             if not __isfile(d):
-                sub_dirs = __listDirectory__(directory = d) #Tengo que excluir el __pycache__
+                sub_dirs = __listDirectory__(directory=d)  # Tengo que excluir el __pycache__
                 data[d] = {}
-                for sub in sub_dirs: # Tipo de Herramientas (OSINT, SQLi, etc.)
-                    sub_dirs_tools = __listDirectory__(directory = '{d}/{sub}'.format(d=d, sub=sub))
+                for sub in sub_dirs:  # Tipo de Herramientas (OSINT, SQLi, etc.)
+                    sub_dirs_tools = __listDirectory__(directory='{d}/{sub}'.format(d=d, sub=sub))
                     data[d][sub] = {}
                     for tool in sub_dirs_tools:
-                        sub_dirs_tool_files = __listDirectory__(directory = '{d}/{sub}/{tool}'.format(d=d, sub=sub, tool=tool), files=True)
+                        sub_dirs_tool_files = __listDirectory__(
+                            directory='{d}/{sub}/{tool}'.format(d=d, sub=sub, tool=tool), files=True)
                         data[d][sub][tool] = sub_dirs_tool_files
-                subdirectorio = __listDirectory__(directory = d, files=True)
+                subdirectorio = __listDirectory__(directory=d, files=True)
                 if len(subdirectorio) > 0:
                     data[d]['files'] = subdirectorio
             else:
@@ -435,44 +486,61 @@ def __getModules__(directory='', exclude_pattern_starts_with='.'):
                     data['files'] = []
                     data['files'].append(d)
     else:
-        dirs_files = __listDirectory__(directory = directory, files=True)
+        dirs_files = __listDirectory__(directory=directory, files=True)
         data[directory] = dirs_files
     return data
+
 
 # Core method - Usado por: __importModules__()
 def __methodsFromModule__(cls):
     """
     Devuelve los métodos que tiene una clase pasada como parametro
     """
-    return [x for x in dir(getattr(cls, __default_class_name_for_all__)) if not x.startswith(__function_name_starts_with_modules__)]
+    return [x for x in dir(getattr(cls, __default_class_name_for_all__)) if
+            not x.startswith(__function_name_starts_with_modules__)]
+
 
 # Core method - Usado por: __importModules__()
 def __classNameFromModule__(cls):
-    return [x for x in dir(cls) if __inspect.isclass(getattr(cls, x)) and x.startswith(__class_name_starts_with_modules__)]
+    return [x for x in dir(cls) if
+            __inspect.isclass(getattr(cls, x)) and x.startswith(__class_name_starts_with_modules__)]
+
 
 def __importModule__(modules, category, moduleName, __progressbar=None):
-    module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
-    module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
+    module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(modules=modules,
+                                                                                            category=category,
+                                                                                            tool=moduleName.replace(
+                                                                                                'ht_', ''),
+                                                                                            toolFileName=moduleName)
+    module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(modules=modules,
+                                                                                       category=category,
+                                                                                       tool=moduleName.replace('ht_',
+                                                                                                               ''),
+                                                                                       toolFileName=moduleName)
     try:
         exec(module_import_string)
-        #globals()[module_name] = __importlib.import_module(module_import_string)
+        # globals()[module_name] = __importlib.import_module(module_import_string)
         module_className = __classNameFromModule__(eval(moduleName))
         module_functions = __methodsFromModule__(eval(moduleName))
-        #Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
+        # Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
         if len(module_functions) > 0:
             __modules_loaded__[module_import_string_no_from] = {}
             for mod_func in module_functions:
                 if __progressbar:
                     __progressbar.update(1)
-                functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=mod_func, i_want_list=True)
-                original_params = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=mod_func)
+                functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName,
+                                                          functionName=mod_func, i_want_list=True)
+                original_params = Utils.getFunctionsParams(category=category, moduleName=moduleName,
+                                                           functionName=mod_func)
 
                 __modules_loaded__[module_import_string_no_from][mod_func] = {}
-                __modules_loaded__[module_import_string_no_from][mod_func]['params'] = functionParams if len(functionParams) > 0 else False
-                __modules_loaded__[module_import_string_no_from][mod_func]['original_params'] = original_params if original_params else None
+                __modules_loaded__[module_import_string_no_from][mod_func]['params'] = functionParams if len(
+                    functionParams) > 0 else False
+                __modules_loaded__[module_import_string_no_from][mod_func][
+                    'original_params'] = original_params if original_params else None
 
         else:
-            __modules_loaded__[module_import_string_no_from] = 'Sin funciones...'   
+            __modules_loaded__[module_import_string_no_from] = 'Sin funciones...'
     except Exception as e:
         new_module_name = str(e).split("'")[1]
         if 'No module named' in str(e):
@@ -483,13 +551,19 @@ def __importModule__(modules, category, moduleName, __progressbar=None):
             if not new_module_name in __cant_install_requirements__[moduleName]:
 
                 try:
-                    Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=new_module_name), is_warn=True)
+                    Logger.printMessage(message='__importModules__',
+                                        description='Trying to install module {m}'.format(m=new_module_name),
+                                        is_warn=True)
                     import subprocess
-                    p = subprocess.Popen([__sys.executable, '-m', 'pip', 'install', new_module_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    p = subprocess.Popen([__sys.executable, '-m', 'pip', 'install', new_module_name],
+                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     out = p.communicate()
                     if 'EnvironmentError' in out[0]:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=new_module_name, error='Could not install in environment'), is_error=True)
-                    #pipmain([sys.executable, '-m', 'pip', 'install', '--user', new_module_name])
+                        Logger.printMessage(message='__importModules__',
+                                            description='{moduleName} {error}'.format(moduleName=new_module_name,
+                                                                                      error='Could not install in environment'),
+                                            is_error=True)
+                    # pipmain([sys.executable, '-m', 'pip', 'install', '--user', new_module_name])
                 except:
                     pass
 
@@ -499,7 +573,10 @@ def __importModule__(modules, category, moduleName, __progressbar=None):
                 if not 'hackingtools' in new_module_name:
                     Config.add_requirements_ignore(moduleName, new_module_name)
 
-                Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                Logger.printMessage(message='__importModules__',
+                                    description='{moduleName} {error}'.format(moduleName=module_import_string,
+                                                                              error=str(e)), is_error=True)
+
 
 # Core method
 def __importModules__():
@@ -508,7 +585,8 @@ def __importModules__():
     y como subcarpetas tiene que haber el nombre del tipo de herramienta que es y debajo de esas carpetas
     tienen que estar los directorios individualmente por herramientas que se incorpore a la librería
     """
-    Logger.printMessage(message='{meth}'.format(meth='__importModules__'), description='Loading modules...', debug_module=True)
+    Logger.printMessage(message='{meth}'.format(meth='__importModules__'), description='Loading modules...',
+                        debug_module=True)
     modules = __getModules__()
     with __progressbar.ProgressBar(max_value=__progressbar.UnknownLength) as bar:
         for modu in modules:
@@ -516,19 +594,24 @@ def __importModules__():
                 for files in modules[modu][submod]:
                     try:
                         module_name = modules[modu][submod][files][0].split(".")[0]
-                        #worker("import-module-{m}".format(m=module_name), __importModule__, args=(modu, submod, module_name, bar)) # Threaded
+                        # worker("import-module-{m}".format(m=module_name), __importModule__, args=(modu, submod, module_name, bar)) # Threaded
                         __importModule__(modules=modu, category=submod, moduleName=module_name, __progressbar=bar)
                     except Exception as e:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} File not found: {error}'.format(moduleName=files, error=str(e)), is_error=True)
+                        Logger.printMessage(message='__importModules__',
+                                            description='{moduleName} File not found: {error}'.format(moduleName=files,
+                                                                                                      error=str(e)),
+                                            is_error=True)
                         pass
 
-__importModules__()
 
 worker('refresh-pool-servers', 'ht.Pool.__checkPoolNodes__', timesleep=180, run_until_ht_stops=True, log=__amidjango__)
-worker('clear-htpass-files', 'ht.Config.__cleanHtPassFiles__', timesleep=100, run_until_ht_stops=True, log=__amidjango__)
-worker('clear-uploaded-modules-temp', 'ht.Repositories.clearUploadsTemp', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
+worker('clear-htpass-files', 'ht.Config.__cleanHtPassFiles__', timesleep=100, run_until_ht_stops=True,
+       log=__amidjango__)
+worker('clear-uploaded-modules-temp', 'ht.Repositories.clearUploadsTemp', timesleep=200, run_until_ht_stops=True,
+       log=__amidjango__)
 worker('clear-output-modules', 'ht.__cleanOutputModules__', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
-    
+
+__importModules__()
 # try:
 #     for t in threads:
 #         t.join()
