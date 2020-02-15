@@ -39,5 +39,23 @@
                 }
             }
         }
+    },
+    "django_form_module_function": {
+        "getImports": {
+            "__function__": "getImports",
+            "__async__": false,
+            "__return__": "text",
+            "filemon": {
+                "__type__": "file",
+                "label_desc": "filemon",
+                "placeholder": "filemon",
+                "required": true
+            },
+            "__pool_it_getImports__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
     }
 }

@@ -366,6 +366,14 @@
             "soyTuAmigo": {
                 "__in_map_soyTuAmigo__": true
             }
+        },
+        "ht_radare2": {
+            "getImports": {
+                "__in_map_getImports__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
         }
     }
 }
