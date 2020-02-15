@@ -366,12 +366,17 @@ class Worker():
     def getLastResponse(self):
         return self.responses[-1]
 
-    def run(self, functionCall, args, timesleep):
-        while self._running:
+    def run(self, functionCall, args, timesleep, loop):
+        if loop:
+            while self._running:
+                func = '{f}{a}'.format(f=functionCall, a=args)
+                res = eval(func)
+                self.responses.append( res )
+                time.sleep(timesleep)
+        else:
             func = '{f}{a}'.format(f=functionCall, a=args)
             res = eval(func)
             self.responses.append( res )
-            time.sleep(timesleep)
 
 class RequestHandler:
 	"""

@@ -6,73 +6,66 @@ def amIdjango(fileCall):
 
 if amIdjango(__name__):
     from core.library import hackingtools as ht
-    from core.library.hackingtools.core.Objects import Worker
+    from core.library.hackingtools.core.Objects import Worker as __Worker
 else:
     import hackingtools as ht
-    from hackingtools.core.Objects import Worker
-config = Config.getConfig(parentKey='core', key='Utils')
-config_logger = Config.getConfig(parentKey='core', key='Logger')
-config_utils = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
+    from hackingtools.core.Objects import Worker as __Worker
+__config__ = Config.getConfig(parentKey='core', key='Utils')
+__config_logger__ = Config.getConfig(parentKey='core', key='Logger')
+__config_utils__ = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
 
-function_param_exclude = Config.getConfig(parentKey='core', key='import_modules', subkey='function_param_exclude')
+__function_param_exclude__ = Config.getConfig(parentKey='core', key='import_modules', subkey='__function_param_exclude__')
 __default_class_name_for_all__ = Config.getConfig(parentKey='core', key='import_modules', subkey='__default_class_name_for_all__')  
 
-from colorama import Fore
+import random as __random
+import requests as __requests
+import base64 as __base64
+import os as __os
+import ast
+import inspect
+import json as __json
+from threading import Thread as __Thread
+from threading import Lock as __Lock
+from itertools import product as __product
+from functools import reduce as __reduce
+from datetime import datetime as __datetime
 
-import random, importlib
-import requests
-import base64
-import os, inspect, ast, threading, time, json
-from threading import Thread, Lock
-import socket
-import itertools
-from itertools import product 
+global __threads__
+__threads__ = {}
 
-from functools import reduce
-import signal
-
-from datetime import datetime
-
-
-global lock
-lock = Lock()
-
-global threads
-threads = {}
-
-path = os.path.abspath(os.path.split(os.path.dirname(__file__))[0])
+__path = __os.path.abspath(__os.path.split(__os.path.dirname(__file__))[0])
 
 def getWorkers():
-    global threads
-    return threads
+    global __threads__
+    return __threads__
 
-def startWorker(workerName, functionCall, args=(), timesleep=1, run_until_ht_stops=False, log=False):
+def startWorker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False):
     t = None
     try:
-        w = Worker()
+        w = __Worker()
         if log:
             Logger.printMessage('Starting Worker: {w}'.format(w=workerName))
-        t = Thread(target=w.run, args=(functionCall, args, int(timesleep) ), daemon=run_until_ht_stops)
-        threads[workerName] = [ w, t ]
+        t = __Thread(target=w.run, args=(functionCall, args, int(timesleep), loop ), daemon=run_until_ht_stops)
+        __threads__[workerName] = [ w, t ]
         t.start()
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
 
 def killAllWorkers():
-    global threads
-    for t in threads:
-        threads[t][0].terminate()
-        threads[t][1].join()
+    global __threads__
+    for t in __threads__:
+        __threads__[t][0].terminate()
+        __threads__[t][1].join()
 
 def stopWorker(workerName):
-    global threads
-    if workerName in threads:
+    global __threads__
+    if workerName in __threads__:
         try:
-            threads[workerName][0].terminate()
-            threads[workerName][1].join()
+            __threads__[workerName][0].terminate()
+            __threads__[workerName][1].join()
         except Exception as e:
             Logger.printMessage(str(e), is_error=True)
-        del threads[workerName]
+        del __threads__[workerName]
 
 # File Manipulation
 def getFileContentInByteArray(filePath):
@@ -133,7 +126,7 @@ def emptyDirectory(directory):
     """
     try:
         #Logger.printMessage(message='emptyDirectory', description='Would empty: {path}'.format(path=directory), is_warn=True)
-        #if os.path.isdir(directory):
+        #if __os.path.isdir(directory):
         #    shutil.rmtree(directory)
         #    return True
         # ! Temporary ommited
@@ -159,10 +152,10 @@ def getFunctionFullCall(moduleName, category, functionName):
 def getAnyFunctionParams(functionObjectStr, i_want_list=False):
     try:
         params_func = inspect.getfullargspec(eval(functionObjectStr))[0]
-        params_func = [param for param in params_func if not param in function_param_exclude] if params_func else []
+        params_func = [param for param in params_func if not param in __function_param_exclude__] if params_func else []
 
         args, _, __, defaults = inspect.getargspec(eval(functionObjectStr))
-        args = [param for param in args if not param in function_param_exclude] if args else []
+        args = [param for param in args if not param in __function_param_exclude__] if args else []
 
         if defaults:
             new_params_func = params_func[:-len(defaults)]
@@ -179,7 +172,7 @@ def getAnyFunctionParams(functionObjectStr, i_want_list=False):
             return {"params":new_params_func,"defaults": args_defaults}
 
         return {"params":params_func}
-    except Exception as e:
+    except:
         pass
         #Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
     return []
@@ -227,18 +220,18 @@ def doesFunctionContainsExplicitReturn(functionCall):
 
 # Others
 def getTime():
-    return datetime.utcnow().strftime(config_logger['log_print_date_format'])[:-3]
+    return __datetime.utcnow().strftime(__config_logger__['log_print_date_format'])[:-3]
 
 def getLocationGPS():
-    ip_request = requests.get('https://get.geojs.io/v1/ip.json')
+    ip_request = __requests.get('https://get.geojs.io/v1/ip.json')
     geo_request_url = 'https://get.geojs.io/v1/ip/geo/' + ip_request.json()['ip'] + '.json'
-    geo_request = requests.get(geo_request_url)
+    geo_request = __requests.get(geo_request_url)
     geo_data = geo_request.json()
     return geo_data
 
 def getIPLocationGPS(ip, api):
     url = 'http://api.ipinfodb.com/v3/ip-city/?key={api}&ip={ip}'.format(api=api, ip=ip)
-    res = requests.get(url).content.decode()
+    res = __requests.get(url).content.decode()
     if len(res.split(';')) > 8:
         return {'ip' : ip, 'location' : [ res.split(';')[9], res.split(';')[8] ] }
     else:
@@ -247,7 +240,7 @@ def getIPLocationGPS(ip, api):
 def getIPLocationGPS_v2(ip):
     try:
         url = 'https://api.ipgeolocationapi.com/geolocate/{ip}'.format(ip=ip)
-        res = json.loads(requests.get(url).content.decode())
+        res = __json.loads(__requests.get(url).content.decode())
         if res['geo']:
             return {'ip' : ip, 'location' : [ res['geo']['longitude'], res['geo']['latitude'] ], 'country' : res['alpha2'].lower() }
         else:
@@ -376,7 +369,7 @@ def hexToBase64(content):
         Array -- The content transformed into an Base64 Array
     """
     Logger.printMessage(message='{methodName}'.format(methodName='HexToBase64'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
-    return [base64.b64encode(n.encode()) for n in content]
+    return [__base64.b64encode(n.encode()) for n in content]
 
 def joinBase64(content):
     """Transform Base64 Array to String
@@ -412,7 +405,7 @@ def base64ToHex(content):
         Array -- The content in Base64 Array transformed into an Hex Array
     """
     Logger.printMessage(message='{methodName}'.format(methodName='base64ToHex'), description='Length: {length} - {content} ...'.format(length=len(content), content=content[0:10]), debug_core=True)
-    return [base64.b64decode(b64) for b64 in content]
+    return [__base64.b64decode(b64) for b64 in content]
 
 def hexToDecimal(content):
     """Transform Hex Array to Decimal Array
@@ -452,7 +445,7 @@ def randomText(length=8, alphabet='lalpha', try_pattern=None, pattern_force_char
                     
             return ''.join([ getRandomCharFromDict(alphabet=alp) if getRandomCharFromDict(alphabet=alp) else alp for alp in alphabets_patter ])
 
-        return ''.join(random.SystemRandom().choice(config_utils[alphabet]) for _ in range(int(length)))
+        return ''.join(__random.SystemRandom().choice(__config_utils__[alphabet]) for _ in range(int(length)))
 
     except Exception as e:
         Logger.printMessage(message=randomText, description=e, is_error=True)
@@ -460,16 +453,16 @@ def randomText(length=8, alphabet='lalpha', try_pattern=None, pattern_force_char
 def getRandomCharFromDict(alphabet='lalpha'):
     dictionaryOptions = Config.getConfig(parentKey='core', key='Utils', subkey='dictionaries')
     if alphabet in dictionaryOptions:
-        return random.choice(dictionaryOptions[alphabet])
+        return __random.choice(dictionaryOptions[alphabet])
     return None
 
 def getCombinationPosibilitiesLength(alphabet, length):
-    return [''.join(x) for x in product(config_utils[alphabet], repeat=int(length))]
+    return [''.join(x) for x in __product(__config_utils__[alphabet], repeat=int(length))]
 
 def fromWhatDictListIsChar(char='a'):
     dictionaryOptions = Config.getConfig(parentKey='modules', key='ht_bruteforce', subkey='dictionaryOptions')
     for opt in dictionaryOptions:
-        if char in config_utils[opt]:
+        if char in __config_utils__[opt]:
             return opt
     return None
 
@@ -494,7 +487,7 @@ def getCombinationPosibilitiesByPattern(try_pattern=None):
             if i_alp == 0:
                 final_combinations = getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp])
             else:
-                final_combinations = [r[0] + r[1] for r in itertools.product(final_combinations, getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp]))]
+                final_combinations = [r[0] + r[1] for r in __product(final_combinations, getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp]))]
 
         return final_combinations
     except MemoryError:
@@ -509,7 +502,7 @@ def getDict(length=8, alphabet='lalpha', try_pattern=None):
         return res
 
 def getPosibleAlphabet():
-    return list(config_utils.keys())
+    return list(__config_utils__.keys())
 
 def get_from_dict(data_dict, map_list, default=None):
     def getitem(source, key):
@@ -528,5 +521,7 @@ def get_from_dict(data_dict, map_list, default=None):
     if isinstance(map_list, str):
         map_list = map_list.split('.')
 
-    return reduce(getitem, map_list, data_dict)
+    return __reduce(getitem, map_list, data_dict)
 
+def groupListByLength(dataList, length):
+    return [ dataList[i:i+length] for i in range(0, len(dataList), length) ]

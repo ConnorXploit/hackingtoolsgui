@@ -1,5 +1,5 @@
 from .core import Connections as __Connections
-from .core import Config, Utils, Logger, Repositories
+from .core import Config, Utils, Logger, Repositories, Objects
 
 config = Config.getConfig(parentKey='core', key='import_modules')
 
@@ -56,6 +56,8 @@ __cant_install_requirements__ = Config.getConfig(parentKey='core', key='__cant_i
 
 __workers__ = []
 
+__telegrambot_name__ = 'ht-bot'
+__telegrambot_token__ = ''
 
 def getModulesNames():
     """Return's an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)
@@ -212,8 +214,8 @@ def wantPool():
     return __WANT_TO_BE_IN_POOL__
 
 
-def worker(workerName, functionCall, args=(), timesleep=1, run_until_ht_stops=False, log=False):
-    Utils.startWorker(workerName, functionCall, args, int(timesleep), run_until_ht_stops, log)
+def worker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False):
+    Utils.startWorker(workerName, functionCall, args, int(timesleep), loop, run_until_ht_stops, log)
     __workers__.append(workerName)
 
 
@@ -223,6 +225,10 @@ def stopWorker(nameWorker):
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
 
+
+def startTelegramBot():
+    #setTelegramBotToken
+    worker('telegram-bot', 'ht.core.Objects.TelegramBotCoreHT.run', loop=False, log=__amidjango__)
 
 # === __getModulesJSON__ ===
 def __getModulesJSON__():
@@ -359,7 +365,7 @@ def __createModule__(moduleName, category):
     # global hackingtools
     # reload(hackingtools)
     Config.__createModuleTemplateConfig__(moduleName, category)
-    trying_something = __importModules__()
+    __importModules__()
     return
 
 
@@ -507,16 +513,8 @@ def __classNameFromModule__(cls):
 
 
 def __importModule__(modules, category, moduleName, __progressbar=None):
-    module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(modules=modules,
-                                                                                            category=category,
-                                                                                            tool=moduleName.replace(
-                                                                                                'ht_', ''),
-                                                                                            toolFileName=moduleName)
-    module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(modules=modules,
-                                                                                       category=category,
-                                                                                       tool=moduleName.replace('ht_',
-                                                                                                               ''),
-                                                                                       toolFileName=moduleName)
+    module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
+    module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
     try:
         exec(module_import_string)
         # globals()[module_name] = __importlib.import_module(module_import_string)
@@ -534,10 +532,8 @@ def __importModule__(modules, category, moduleName, __progressbar=None):
                                                            functionName=mod_func)
 
                 __modules_loaded__[module_import_string_no_from][mod_func] = {}
-                __modules_loaded__[module_import_string_no_from][mod_func]['params'] = functionParams if len(
-                    functionParams) > 0 else False
-                __modules_loaded__[module_import_string_no_from][mod_func][
-                    'original_params'] = original_params if original_params else None
+                __modules_loaded__[module_import_string_no_from][mod_func]['params'] = functionParams if len(functionParams) > 0 else False
+                __modules_loaded__[module_import_string_no_from][mod_func]['original_params'] = original_params if original_params else None
 
         else:
             __modules_loaded__[module_import_string_no_from] = 'Sin funciones...'
@@ -605,10 +601,8 @@ def __importModules__():
 
 
 worker('refresh-pool-servers', 'ht.Pool.__checkPoolNodes__', timesleep=180, run_until_ht_stops=True, log=__amidjango__)
-worker('clear-htpass-files', 'ht.Config.__cleanHtPassFiles__', timesleep=100, run_until_ht_stops=True,
-       log=__amidjango__)
-worker('clear-uploaded-modules-temp', 'ht.Repositories.clearUploadsTemp', timesleep=200, run_until_ht_stops=True,
-       log=__amidjango__)
+worker('clear-htpass-files', 'ht.Config.__cleanHtPassFiles__', timesleep=100, run_until_ht_stops=True, log=__amidjango__)
+worker('clear-uploaded-modules-temp', 'ht.Repositories.clearUploadsTemp', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
 worker('clear-output-modules', 'ht.__cleanOutputModules__', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
 
 __importModules__()

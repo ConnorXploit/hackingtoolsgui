@@ -127,6 +127,9 @@
             "ht_instagram": [
                 "slugify",
                 "igramscraper"
+            ],
+            "ht_radare2": [
+                "r2pipe"
             ]
         },
         "Connections": {
@@ -141,6 +144,10 @@
         },
         "Pool": {
             "known_nodes": []
+        },
+        "TelegramBot": {
+            "bot-name" : "HackingTools Portable",
+            "bot-token" : ""
         },
         "__API_KEY__": {
             "botscout_api": "",

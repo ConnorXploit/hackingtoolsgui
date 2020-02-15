@@ -65,8 +65,6 @@ def loadModuleUrls(moduleName):
                 if new_conf:
                     functions_config[function] = new_conf[function]
 
-    main_not_loaded = None
-
     if main_function_config:
         if '__function__' in main_function_config:
             try:
@@ -80,7 +78,7 @@ def loadModuleUrls(moduleName):
 
                 urlpatterns.append(path(url_path, view_object, name=func_call))
             
-            except ImportError as e:
+            except ImportError:
                 ht.Logger.printMessage(message='loadModuleUrls', description='Can\' load {to_import}. Creating it!'.format(to_import=to_import), is_info=True)
                 UtilsDjangoViewsAuto.loadModuleFunctionsToView(moduleName, ht.getModuleCategory(moduleName))
                 loadModuleUrls(moduleName)
@@ -89,22 +87,22 @@ def loadModuleUrls(moduleName):
                 functions_not_loaded.append(func_call)
                 UtilsDjangoViewsAuto.createTemplateFunctionForModule(moduleName, ht.getModuleCategory(moduleName), func_call)
 
-            except Exception as e:
+            except:
                 ht.Logger.printMessage(message='loadModuleUrls', description='There is no View for the URL \'{mod_url}\' Creating it!'.format(mod_url=func_call), is_warn=True)
                 if functions_not_loaded and func_call in functions_not_loaded:
                     functions_not_loaded.remove(func_call)
                 functions_not_loaded.append(func_call)
                 UtilsDjangoViewsAuto.createTemplateFunctionForModule(moduleName, ht.getModuleCategory(moduleName), func_call)
     else:
-        if main_func:
-            ht.Logger.printMessage(message='loadModuleUrls', description='{mod} has no config for main function. Creating main function setted: {m}'.format(mod=moduleName, m=main_func), is_warn=True)
+        if main_func and not main_function_config:
+            #ht.Logger.printMessage(message='loadModuleUrls', description='{mod} has no config for main function. Creating main function setted: {m}'.format(mod=moduleName, m=main_func), is_warn=True)
             if main_func in ht.getFunctionsNamesFromModule(moduleName):
                 ht.DjangoFunctions.__createModuleFunctionView__(moduleName, main_func, is_main=True)
             else:
                 ht.Logger.printMessage(message='loadModuleUrls', description='Error creating main function setted: {m}. Function does not exist in module {mod}'.format(m=main_func, mod=moduleName), is_error=True)
-        else:
-            ht.Logger.printMessage(message='loadModuleUrls', description='The module {mod} does not have any function defined as main for de gui'.format(mod=moduleName), is_error=True)
-
+        #else:
+            #ht.Logger.printMessage(message='loadModuleUrls', description='The module {mod} does not have any function defined as main for de gui'.format(mod=moduleName), is_error=True)
+    
     if functions_config:
         for function_conf in functions_config:
             if '__function__' in functions_config[function_conf]:
@@ -118,7 +116,7 @@ def loadModuleUrls(moduleName):
 
                     urlpatterns.append(path(url_path, view_object, name=func_call))
             
-                except ImportError as e:
+                except ImportError:
                     ht.Logger.printMessage(message='loadModuleUrls', description='Can\' load {to_import}. Creating it!'.format(to_import=to_import), is_info=True)
                     UtilsDjangoViewsAuto.loadModuleFunctionsToView(moduleName, ht.getModuleCategory(moduleName))
                     loadModuleUrls(moduleName)
@@ -127,7 +125,7 @@ def loadModuleUrls(moduleName):
                     functions_not_loaded.append(func_call)
                     UtilsDjangoViewsAuto.createTemplateFunctionForModule(moduleName, ht.getModuleCategory(moduleName), func_call)
 
-                except Exception as e:
+                except:
                     ht.Logger.printMessage(message='loadModuleUrls', description='There is no View for the URL \'{mod_url}\' Creating it!'.format(mod_url=func_call), is_warn=True)
                     if functions_not_loaded and func_call in functions_not_loaded:
                         functions_not_loaded.remove(func_call)
@@ -136,9 +134,6 @@ def loadModuleUrls(moduleName):
     else:
         pass
         #Logger.printMessage(message='loadModuleUrls', description='{mod} has no functions on views config definition'.format(mod=mod), is_warn=True)
-
-    # Review params in all functions views for reloading the json and recreating the view function
-    UtilsDjangoViewsAuto.reviewChangesViewFunctionsParams()
 
 # Automatically creates the URL's get by the modules and the configurations
 try:
