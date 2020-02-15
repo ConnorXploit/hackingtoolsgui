@@ -3,10 +3,7 @@ from core.library.hackingtools.core import Utils
 from core.library import hackingtools as ht
 import os, inspect
 
-# ht.setDebugCore(True)
-# ht.setDebugModule(True)
-
-default_view_init = """from django.http import HttpResponse, JsonResponse
+__default_view_init__ = """from django.http import HttpResponse, JsonResponse
 import os
 from requests import Response
 
@@ -16,9 +13,36 @@ from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, send
 # Create your views here.
 """
 
-default_view_function_init = "\n# Automatic view function for {funcName}\ndef {funcName}(request):\n"
+__default_view_function_init__ = "\n# Automatic view function for {funcName}\ndef {funcName}(request):\n"
 
-lastly_added_func = ["help"]
+__lastly_added_func__ = ["help"]
+
+def createTemplateFunctionForModule(moduleName, category, functionName):
+    try:
+        __createViewFileForModule__(moduleName, category)
+        fileView =  __getModuleViewFilePath__(moduleName, category)
+
+        if not functionName in  __lastly_added_func__:
+            with open(fileView, 'a+') as f:
+                f.write( __default_view_function_init__.format(funcName=functionName, mod=moduleName.replace('ht_', '')))
+
+                f.write( __getViewTemplateByFunctionParams__(moduleName, functionName, category))
+
+            __lastly_added_func__.append(functionName)
+            ht.Logger.printMessage(message='Added a view for the function', description=functionName, debug_core=True)
+
+        ht.DjangoFunctions.__createModuleFunctionView__(moduleName, functionName)
+
+    except Exception as e:
+        ht.Logger.printMessage(message=str(e), is_error=True)
+        ht.Logger.printMessage(message='createTemplateFunctionForModule', description='Something wen\'t wrong creating template function modal view for {m}'.format(m=moduleName), is_error=True)
+
+def loadModuleFunctionsToView(moduleName, category):
+    try:
+        #moduleFunctions = ht.getFunctionsNamesFromModule(moduleName).remove('help')
+         __createViewFileForModule__(moduleName, category)
+    except:
+        ht.Logger.printMessage(message='loadModuleFunctionsToView', description='Something wen\'t wrong creating views file for {m}'.format(m=moduleName), is_error=True)
 
 def restartDjangoServer():
     wsgi_file = os.path.join(os.path.split(os.path.split(os.path.split(os.path.split(os.path.abspath(os.path.dirname(__file__)))[0])[0])[0])[0], 'hackingtoolsgui', 'wsgi.py')
@@ -38,18 +62,18 @@ def removeModuleView(moduleName, category):
     if os.path.isfile(moduleConfPath):
         os.remove(moduleConfPath)
 
-def getModuleViewFilePath(moduleName, category):
+def  __getModuleViewFilePath__(moduleName, category):
     moduleViewFile = 'views_ht_{n}.py'.format(n=moduleName.replace('ht_', ''))
-    categoryDir = getModuleViewCategoryDir(moduleName, category)
+    categoryDir =  __getModuleViewCategoryDir__(moduleName, category)
     filePath = os.path.join(categoryDir, moduleViewFile)
     return filePath
 
-def getModuleViewCategoryDir(moduleName, category):
+def  __getModuleViewCategoryDir__(moduleName, category):
     actualDir = os.path.join('core', 'views_modules')
     categoryDir = os.path.join(actualDir, category)
     return categoryDir
 
-def getViewTemplateByFunctionParams(moduleName, functionName, category, params=[]):
+def  __getViewTemplateByFunctionParams__(moduleName, functionName, category, params=[]):
     params = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
     template = '\t# Init of the view {f}\n\ttry:'.format(f=functionName)
     functionParamsForCallInStr = ""
@@ -140,44 +164,11 @@ def getViewTemplateByFunctionParams(moduleName, functionName, category, params=[
     template = '{temp}\texcept Exception as e:\n\t\tif request.POST.get(\'is_async_{f}\', False):\n\t\t\t{t}'.format(temp=template, f=functionName, t=temp)
     return template
 
-def createViewFileForModule(moduleName, category):
-    categoryDir = getModuleViewCategoryDir(moduleName, category)
-    fileView = getModuleViewFilePath(moduleName, category)
+def  __createViewFileForModule__(moduleName, category):
+    categoryDir =  __getModuleViewCategoryDir__(moduleName, category)
+    fileView =  __getModuleViewFilePath__(moduleName, category)
     if not os.path.isdir(categoryDir):
         os.mkdir(categoryDir)
     if not os.path.isfile(fileView):
         with open(fileView, 'w') as f:
-            f.write(default_view_init)
-
-def createTemplateFunctionForModule(moduleName, category, functionName):
-    try:
-        createViewFileForModule(moduleName, category)
-        fileView = getModuleViewFilePath(moduleName, category)
-
-        if not functionName in lastly_added_func:
-            with open(fileView, 'a+') as f:
-                f.write(default_view_function_init.format(funcName=functionName, mod=moduleName.replace('ht_', '')))
-
-                f.write(getViewTemplateByFunctionParams(moduleName, functionName, category))
-
-            lastly_added_func.append(functionName)
-            ht.Logger.printMessage(message='Added a view for the function', description=functionName, debug_core=True)
-
-        ht.DjangoFunctions.__createModuleFunctionView__(moduleName, functionName)
-
-    except Exception as e:
-        ht.Logger.printMessage(message=str(e), is_error=True)
-        ht.Logger.printMessage(message='createTemplateFunctionForModule', description='Something wen\'t wrong creating template function modal view for {m}'.format(m=moduleName), is_error=True)
-
-def loadModuleFunctionsToView(moduleName, category):
-    try:
-        #moduleFunctions = ht.getFunctionsNamesFromModule(moduleName).remove('help')
-        createViewFileForModule(moduleName, category)
-    except:
-        ht.Logger.printMessage(message='loadModuleFunctionsToView', description='Something wen\'t wrong creating views file for {m}'.format(m=moduleName), is_error=True)
-
-def regenerateModal(moduleName):
-    pass
-
-def reviewChangesViewFunctionsParams():
-    pass
+            f.write(__default_view_init__)

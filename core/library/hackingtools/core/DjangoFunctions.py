@@ -169,6 +169,7 @@ def __getModulesFunctionsCalls__():
         module_funcs = {}
         for func in ht.__modules_loaded__[module]:
             try:
+                print(ht.__modules_loaded__[module], func)
                 for param in ht.__modules_loaded__[module][func]['original_params']:
                     module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(ht.__modules_loaded__[module][func]['original_params'][param]), params=', '.join(header_params_arg[module][func]))
             except:

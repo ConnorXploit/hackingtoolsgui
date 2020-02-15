@@ -288,6 +288,9 @@ def saveRestAPIsFile(rest_api_file, password, session_id=None):
     except Exception as e:
         return str(e)
 
+def setTelegramBotToken(token):
+    __config__['core']['TelegramBot']['bot-token'] = token
+
 # End API Keys
 
 # Maps
