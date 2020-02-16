@@ -45,8 +45,8 @@ def startWorker(workerName, functionCall, args=(), timesleep=1, loop=True, run_u
         w = __Worker()
         if log:
             Logger.printMessage('Starting Worker: {w}'.format(w=workerName))
-        t = __Thread(target=w.run, args=(functionCall, args, int(timesleep), loop ), daemon=run_until_ht_stops)
-        __threads__[workerName] = [ w, t ]
+        t = Thread(target=w.run, args=(functionCall, args, int(timesleep), loop ), daemon=run_until_ht_stops)
+        threads[workerName] = [ w, t ]
         t.start()
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)

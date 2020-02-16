@@ -23,9 +23,12 @@ try:
 except:
     import pyreadline as readline  # Windows
 
-r = ht.getModule('radare2')
-pene = r.getImports('C:\\Users\\luill\\Downloads\\test.exe')
-print(pene)
+ht.Config.setTelegramBotToken('1035804165:AAEYfAiHNF9FK-x6TqUF--BiiEGhZDpO1f0')
+ht.startTelegramBot()
+
+# r = ht.getModule('radare2')
+# pene = r.getImports('C:\\Users\\luill\\Downloads\\test.exe')
+# print(pene)
 #
 # # Prints the modules loaded on your hackingtools library
 # # print(ht.getModulesNames())
