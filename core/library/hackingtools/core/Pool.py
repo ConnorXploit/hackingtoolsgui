@@ -247,10 +247,10 @@ def __getNodeId__(node, thread=False):
 
         if thread:
             Logger.printMessage('Call to the node for not been idle in 3 minutes', url, color=Logger.__Fore.YELLOW)
-            time.sleep(180)
+            __time.sleep(180)
 
         try:
-            r = __requests.post(url, headers=ht.__Connections.headers)
+            r = __requests.post(url, headers=ht.__Connections.__headers__)
             if r.status_code == 200:
                 return r.json()['data']
         except:

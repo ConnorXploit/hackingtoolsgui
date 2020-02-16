@@ -143,11 +143,16 @@
             ]
         },
         "Pool": {
-            "known_nodes": []
+            "known_nodes": [
+                "http://pool1.pentestinglab.es",
+                "http://pool2.pentestinglab.es",
+                "http://pool3.pentestinglab.es",
+                "http://pool4.pentestinglab.es"
+            ]
         },
         "TelegramBot": {
-            "bot-name" : "HackingTools Portable",
-            "bot-token" : ""
+            "bot-name": "HackingTools Portable",
+            "bot-token": ""
         },
         "__API_KEY__": {
             "botscout_api": "",

@@ -404,20 +404,20 @@ def add_pool_node(request):
         if request.POST:
             pool_node = request.POST.get('pool_ip', None)
             if not pool_node or pool_node not in ht.Pool.getPoolNodes():
-                if pool_node not in (ht.Connections.getMyPublicIP(as_service=True), ht.Connections.getMyLocalIP(as_service=True), ht.Connections.getMyLanIP(as_service=True)):
+                if pool_node not in (ht.__Connections.getMyPublicIP(as_service=True), ht.__Connections.getMyLocalIP(as_service=True), ht.__Connections.getMyLanIP(as_service=True)):
                     ht.Pool.addNodeToPool(pool_node)
                     if not request.POST.get('pooling', False):
-                        for serv in ht.Connections.getMyServices():
+                        for serv in ht.__Connections.getMyServices():
                             service_for_call = '{node_ip}/core/pool/add_pool_node/'.format(node_ip=pool_node)
-                            add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv},  headers=ht.Connections.headers)
+                            add_me_to_theis_pool = requests.post(service_for_call, data={'pool_ip':serv},  headers=ht.__Connections.__headers__)
                             if add_me_to_theis_pool.status_code == 200:
                                 Logger.printMessage(message="send", description='Saving my service API REST to {n} - {s} '.format(n=pool_node, s=serv), is_info=True, debug_core=True)
                 else:
                     return renderMainPanel(request=request, popup_text='Could not add my own service to my pool nodes')
             return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
         return renderMainPanel(request=request, popup_text='Only POST is available')
-    except:
-        return renderMainPanel(request=request, popup_text=this_conf['error'])
+    except Exception as e:
+        return renderMainPanel(request=request, popup_text='{m}\n{e}'.format(m=this_conf['error'], e=str(e)))
     return renderMainPanel(request=request, popup_text='\n'.join(ht.Pool.getPoolNodes()))
 
 def getDictionaryAlphabet(numeric=True, lower=False, upper=False, simbols14=False, simbolsAll=False):

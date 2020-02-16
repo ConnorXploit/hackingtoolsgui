@@ -16,7 +16,7 @@ class StartModule():
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_cve'), debug_module=True)
 
-	def searchCVE(self, cve_id=''):
+	def searchCVE(self, cve_id):
 		try:
 			url = 'https://www.cvedetails.com/cve/{id}'.format(id=cve_id.strip())
 			soup = BeautifulSoup(urllib3.urlopen(url).read())

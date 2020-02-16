@@ -24,20 +24,20 @@ import os as __os
 import ast
 import inspect
 import json as __json
-from threading import Thread as __Thread
-from threading import Lock as __Lock
-from itertools import product as __product
-from functools import reduce as __reduce
-from datetime import datetime as __datetime
+from threading import Thread
+from threading import Lock
+from itertools import product
+from functools import reduce
+from datetime import datetime
 
-global __threads__
-__threads__ = {}
+global threads
+threads = {}
 
 __path = __os.path.abspath(__os.path.split(__os.path.dirname(__file__))[0])
 
 def getWorkers():
-    global __threads__
-    return __threads__
+    global threads
+    return threads
 
 def startWorker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False):
     t = None
@@ -52,20 +52,20 @@ def startWorker(workerName, functionCall, args=(), timesleep=1, loop=True, run_u
         Logger.printMessage(str(e), is_error=True)
 
 def killAllWorkers():
-    global __threads__
-    for t in __threads__:
-        __threads__[t][0].terminate()
-        __threads__[t][1].join()
+    global threads
+    for t in threads:
+        threads[t][0].terminate()
+        threads[t][1].join()
 
 def stopWorker(workerName):
-    global __threads__
-    if workerName in __threads__:
+    global threads
+    if workerName in threads:
         try:
-            __threads__[workerName][0].terminate()
-            __threads__[workerName][1].join()
+            threads[workerName][0].terminate()
+            threads[workerName][1].join()
         except Exception as e:
             Logger.printMessage(str(e), is_error=True)
-        del __threads__[workerName]
+        del threads[workerName]
 
 # File Manipulation
 def getFileContentInByteArray(filePath):
@@ -220,7 +220,7 @@ def doesFunctionContainsExplicitReturn(functionCall):
 
 # Others
 def getTime():
-    return __datetime.utcnow().strftime(__config_logger__['log_print_date_format'])[:-3]
+    return datetime.utcnow().strftime(__config_logger__['log_print_date_format'])[:-3]
 
 def getLocationGPS():
     ip_request = __requests.get('https://get.geojs.io/v1/ip.json')
@@ -457,7 +457,7 @@ def getRandomCharFromDict(alphabet='lalpha'):
     return None
 
 def getCombinationPosibilitiesLength(alphabet, length):
-    return [''.join(x) for x in __product(__config_utils__[alphabet], repeat=int(length))]
+    return [''.join(x) for x in product(__config_utils__[alphabet], repeat=int(length))]
 
 def fromWhatDictListIsChar(char='a'):
     dictionaryOptions = Config.getConfig(parentKey='modules', key='ht_bruteforce', subkey='dictionaryOptions')
@@ -487,7 +487,7 @@ def getCombinationPosibilitiesByPattern(try_pattern=None):
             if i_alp == 0:
                 final_combinations = getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp])
             else:
-                final_combinations = [r[0] + r[1] for r in __product(final_combinations, getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp]))]
+                final_combinations = [r[0] + r[1] for r in product(final_combinations, getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp]))]
 
         return final_combinations
     except MemoryError:
@@ -521,7 +521,7 @@ def get_from_dict(data_dict, map_list, default=None):
     if isinstance(map_list, str):
         map_list = map_list.split('.')
 
-    return __reduce(getitem, map_list, data_dict)
+    return reduce(getitem, map_list, data_dict)
 
 def groupListByLength(dataList, length):
     return [ dataList[i:i+length] for i in range(0, len(dataList), length) ]

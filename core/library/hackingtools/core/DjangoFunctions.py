@@ -160,7 +160,7 @@ def __getModulesFunctionsCalls__():
                                 if default_params[defpar] == 'None' or default_params[defpar] == None or isinstance(default_params[defpar], int) or isinstance(default_params[defpar], list) or isinstance(default_params[defpar], dict):
                                     header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p} (Default value: {d}): \')\nif not params[\'{p}\']:\n\tparams[\'{p}\'] = {d}'.format(p=defpar, d=default_params[defpar])
                                 else:
-                                    header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p} (Default value: {d}): \')\nparams[\'if not {p}\']:\n\tparams[\'{p}\'] = \'{d}\''.format(p=defpar, d=default_params[defpar])
+                                    header_params[module][func] += '\n\nparams[\'{p}\'] = input(\'Set the param {p} (Default value: {d}): \')\nif not params[\'{p}\']:\n\tparams[\'{p}\'] = \'{d}\''.format(p=defpar, d=default_params[defpar])
                                 header_params_arg[module][func].append('{p}=params[\'{p}\']'.format(p=defpar))
 
             except:
