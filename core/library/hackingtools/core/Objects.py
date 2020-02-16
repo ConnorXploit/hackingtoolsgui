@@ -1330,3 +1330,8 @@ class Ticker(__threading.Thread):
       time.sleep(self.interval)
       self.evt.set()
 
+class TelegramBotCoreHT():
+
+    @staticmethod
+    def run():
+        from . import TelegramBot

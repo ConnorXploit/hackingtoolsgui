@@ -225,7 +225,6 @@ def stopWorker(nameWorker):
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
 
-
 def startTelegramBot():
     #setTelegramBotToken
     worker('telegram-bot', 'ht.core.Objects.TelegramBotCoreHT.run', loop=False, log=__amidjango__)
