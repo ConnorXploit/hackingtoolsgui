@@ -117,7 +117,7 @@
                 "__in_map_decode__": false
             },
             "encode": {
-                "__in_map_encode__": true
+                "__in_map_encode__": false
             },
             "decrypt": {
                 "__in_map_decrypt__": false
@@ -166,7 +166,7 @@
                 "__in_map_get_image_exif__": false
             },
             "get_pdf_exif": {
-                "__in_map_get_pdf_exif__": true
+                "__in_map_get_pdf_exif__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -235,7 +235,7 @@
                 "__in_map_get_timeline__": false
             },
             "get_user": {
-                "__in_map_get_user__": true
+                "__in_map_get_user__": false
             },
             "searchTweets": {
                 "__in_map_searchTweets__": false
@@ -257,7 +257,7 @@
         },
         "ht_cwe": {
             "searchCWE": {
-                "__in_map_searchCWE__": true
+                "__in_map_searchCWE__": false
             },
             "searchWeakness": {
                 "__in_map_searchWeakness__": false
@@ -268,7 +268,7 @@
         },
         "ht_spider": {
             "crawl": {
-                "__in_map_crawl__": true
+                "__in_map_crawl__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -320,7 +320,7 @@
         },
         "ht_hash": {
             "hashContent": {
-                "__in_map_hashContent__": true
+                "__in_map_hashContent__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -337,12 +337,12 @@
                 "__in_map_search__": true
             },
             "search_pastebin": {
-                "__in_map_search_pastebin__": true
+                "__in_map_search_pastebin__": false
             }
         },
         "ht_bannergrabber": {
             "grabPortBanner": {
-                "__in_map_grabPortBanner__": true
+                "__in_map_grabPortBanner__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -350,7 +350,7 @@
         },
         "ht_facebook": {
             "get_posts": {
-                "__in_map_get_posts__": true
+                "__in_map_get_posts__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -370,6 +370,14 @@
         "ht_radare2": {
             "getImports": {
                 "__in_map_getImports__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_finder": {
+            "findAll": {
+                "__in_map_findAll__": false
             },
             "help": {
                 "__in_map_help__": false

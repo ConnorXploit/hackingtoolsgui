@@ -106,7 +106,8 @@
         "ht_bannergrabber": {},
         "ht_facebook": {},
         "ht_r2": {},
-        "ht_radare2": {}
+        "ht_radare2": {},
+        "ht_finder": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
