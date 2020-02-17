@@ -34,6 +34,24 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="popup_response_ajax" tabindex="-1" role="dialog" aria-labelledby="responseLabel" aria-hidden="true" style="z-index: 11111;">
+      <div class="modal-dialog modal-dialog-pop-up" role="document">
+        <div class="modal-content" style="min-height: 500px;">
+          <div class="modal-header">
+            <h5 class="modal-title" id="responseLabelAjax">Response:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="response_ajax">
+            
+          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="pool_list" tabindex="-1" role="dialog" aria-labelledby="pool_list_modal" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -407,13 +425,10 @@
                                                             }
                                                             $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
                                                           } else {
-                                                            /*$('#popup_textarea').val(data)
-                                                            $('#popup').modal('show');*/
-                                                            $.notify("{{functi}}:\n" + res.data, "success");
-                                                            if($('#resultsLogger').val() != ''){
-                                                              $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
-                                                            }
-                                                            $('#resultsLogger').val("{{functi}}:\n" + res.data + "\n" + $('#resultsLogger').val())
+                                                            $('#popup_response_ajax').modal('show');
+                                                            $('#response_ajax').empty();
+                                                            $('#response_ajax').append(res.data);
+                                                            $('#responseLabelAjax').text('Response from {{functi}}');
                                                           }
                                                         }
                                                       } else {

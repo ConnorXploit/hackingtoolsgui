@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -30,7 +30,7 @@ def get_followers(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_twitter').get_followers( username=username, limit=limit, interval=interval )
 			if request.POST.get('is_async_get_followers', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_get_followers', False):
@@ -60,7 +60,7 @@ def get_friends(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_twitter').get_friends( username=username, limit=limit, interval=interval )
 			if request.POST.get('is_async_get_friends', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_get_friends', False):
@@ -90,7 +90,7 @@ def get_timeline(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_twitter').get_timeline( username=username, limit=limit, interval=interval )
 			if request.POST.get('is_async_get_timeline', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_get_timeline', False):
@@ -114,7 +114,7 @@ def get_user(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_twitter').get_user( username=username )
 			if request.POST.get('is_async_get_user', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_get_user', False):
@@ -169,7 +169,7 @@ def searchTweets(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_twitter').searchTweets( username=username, since=since, until=until, query=query, limit=limit, verified=verified, proxy=proxy, interval=interval )
 			if request.POST.get('is_async_searchTweets', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_searchTweets', False):

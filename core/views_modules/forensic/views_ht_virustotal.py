@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -29,7 +29,7 @@ def isBadFile(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_virustotal').isBadFile( filename=filename )
 			if request.POST.get('is_async_isBadFile', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_isBadFile', False):
@@ -58,7 +58,7 @@ def isBadFileHash(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_virustotal').isBadFileHash( fileHash=fileHash )
 			if request.POST.get('is_async_isBadFileHash', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_isBadFileHash', False):

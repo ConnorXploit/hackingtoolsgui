@@ -183,22 +183,22 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
 
 def getValueType(value):
     try:
-        if isinstance(eval(value), bool):
+        if isinstance(value, bool) or isinstance(eval(value), bool):
             return 'checkbox'
     except:
         pass
     try:
-        if isinstance(eval(value), int):
+        if isinstance(value, int) or isinstance(eval(value), int):
             return 'number'
     except:
         pass
     try:
-        if isinstance(eval(value), list):
+        if isinstance(value, list) or isinstance(eval(value), list):
             return 'select'
     except:
         pass
     try:
-        if isinstance(eval(value), str):
+        if isinstance(value, str) or isinstance(eval(value), str):
             if '.' in value and len(value.split('.')[1] in range(1,4)):
                 return 'file'
             if 'path' in value or 'file' in value:

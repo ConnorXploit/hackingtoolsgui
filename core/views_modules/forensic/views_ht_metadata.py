@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -29,7 +29,7 @@ def get_image_exif(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_metadata').get_image_exif( filename=filename )
 			if request.POST.get('is_async_get_image_exif', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_get_image_exif', False):
@@ -58,7 +58,7 @@ def get_pdf_exif(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_metadata').get_pdf_exif( pdf_file=pdf_file )
 			if request.POST.get('is_async_get_pdf_exif', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_get_pdf_exif', False):

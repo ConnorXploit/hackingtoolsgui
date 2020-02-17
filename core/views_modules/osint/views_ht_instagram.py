@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -24,7 +24,7 @@ def getAccountByUsername(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_instagram').getAccountByUsername( username=username )
 			if request.POST.get('is_async_getAccountByUsername', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_getAccountByUsername', False):

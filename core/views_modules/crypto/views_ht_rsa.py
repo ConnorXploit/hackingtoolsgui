@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -54,7 +54,7 @@ def decrypt(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').decrypt( public_key=public_key, ciphertext=ciphertext )
 			if request.POST.get('is_async_decrypt', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_decrypt', False):
@@ -105,7 +105,7 @@ def getRandomKeypair(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').getRandomKeypair( length=length )
 			if request.POST.get('is_async_getRandomKeypair', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_getRandomKeypair', False):
@@ -132,7 +132,7 @@ def decode(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').decode( key=key, ciphertext=ciphertext )
 			if request.POST.get('is_async_decode', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_decode', False):
@@ -159,7 +159,7 @@ def encode(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').encode( key=key, plaintext=plaintext )
 			if request.POST.get('is_async_encode', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_encode', False):
@@ -190,7 +190,7 @@ def decodeFromComplexMap(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').decodeFromComplexMap( password=password, ciphertext=ciphertext, complexMap=complexMap )
 			if request.POST.get('is_async_decodeFromComplexMap', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_decodeFromComplexMap', False):
@@ -217,7 +217,7 @@ def encodeFromComplexMap(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_rsa').encodeFromComplexMap( password=password, plaintext=plaintext )
 			if request.POST.get('is_async_encodeFromComplexMap', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_encodeFromComplexMap', False):

@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal
 
 	
 # Automatic view function for grabPortBanner
@@ -26,7 +26,7 @@ def grabPortBanner(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_bannergrabber').grabPortBanner( ip=ip, port=port )
 			if request.POST.get('is_async_grabPortBanner', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_grabPortBanner', False):

@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -45,7 +45,7 @@ def get_posts(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_facebook').get_posts( account=account, group=group, pages=pages, timeout=timeout, sleep=sleep, credentials=credentials )
 			if request.POST.get('is_async_get_posts', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_get_posts', False):

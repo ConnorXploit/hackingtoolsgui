@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal
 
 # Create your views here.
 	
@@ -29,7 +29,7 @@ def getIPListfromServices(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').getIPListfromServices( serviceName=serviceName, shodan_api=shodan_api )
 			if request.POST.get('is_async_getIPListfromServices', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_getIPListfromServices', False):
@@ -58,7 +58,7 @@ def search_host(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').search_host( ip=ip, shodan_api=shodan_api )
 			if request.POST.get('is_async_search_host', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_search_host', False):
@@ -87,7 +87,7 @@ def getSSLCerts(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').getSSLCerts( ip=ip, shodan_api=shodan_api )
 			if request.POST.get('is_async_getSSLCerts', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_getSSLCerts', False):
@@ -121,7 +121,7 @@ def queryShodan(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').queryShodan( category=category, osintDays=osintDays, shodan_api=shodan_api )
 			if request.POST.get('is_async_queryShodan', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_queryShodan', False):
@@ -157,7 +157,7 @@ def searchFromConfig(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').searchFromConfig( search=search, keyword=keyword, shodan_api=shodan_api )
 			if request.POST.get('is_async_searchFromConfig', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_searchFromConfig', False):

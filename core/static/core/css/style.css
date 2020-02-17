@@ -719,3 +719,6 @@ input {
     background: red !important;
     color: white !important;
 }
+.my-separator-response {
+    background: red;
+}

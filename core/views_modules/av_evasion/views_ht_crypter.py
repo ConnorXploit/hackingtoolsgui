@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -142,7 +142,7 @@ def createStub(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_crypter').createStub( crypto_data_hex=crypto_data_hex, public_key=public_key, drop_file_name=drop_file_name, save_name=save_name, is_iterating=is_iterating, is_last=is_last, convert=convert )
 			if request.POST.get('is_async_createStub', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_createStub', False):

@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -34,7 +34,7 @@ def extractFile(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_unzip').extractFile( zipPathName=zipPathName, password=password )
 			if request.POST.get('is_async_extractFile', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_extractFile', False):
@@ -76,7 +76,7 @@ def extractFilePassword(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_unzip').extractFilePassword( zipPathName=zipPathName, password=password, posible_combinations=posible_combinations, output_dir_new=output_dir_new )
 			if request.POST.get('is_async_extractFilePassword', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_extractFilePassword', False):
@@ -100,7 +100,7 @@ def zipDirectory(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_unzip').zipDirectory( new_folder_name=new_folder_name )
 			if request.POST.get('is_async_zipDirectory', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_zipDirectory', False):

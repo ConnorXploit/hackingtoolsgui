@@ -217,6 +217,93 @@ def __getModulesConfig_treeView__():
 def __regenerateConfigView__(moduleName):
     Config.__regenerateConfigModulesDjango__({}, ht.getModuleCategory(moduleName), moduleName)
 
+def __getReturnAsModalHTML__(response):
+    res = ''
+    default_classnames_per_type = Config.getConfig(parentKey='django', key='html', subkey='modal_forms', extrasubkey='default_types')
+    res_type = Utils.getValueType(response)
+    if isinstance(response, dict):
+        
+        for key, val in response.items():
+            if val:
+                val_type_temp = ''
+                try:
+                    val_type_temp = type(eval(val))
+                except:
+                    val_type_temp = 'text'
+                val_type = 'text'
+                if val_type_temp == int:
+                    val_type = 'number'
+                if val_type_temp == list:
+                    val_type = 'select'
+                if val_type_temp == bool:
+                    val_type = 'checkbox'
+                try:
+                    input_className = default_classnames_per_type[val_type]['__className__']
+                except:
+                    input_className = ''
+
+                if val_type == 'checkbox':
+                    res += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" {checked} disabled><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=key, input_label_desc=key, checked=val)
+                
+                elif val_type == 'number':
+                    res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"number\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
+                
+                elif val_type == 'select':
+                    res += "<select id=\"editable-select-{id}\" name=\"dropdown_{id}\" class=\"{className}\">".format(desc=key, className=input_className, id=key)
+                    res += "<option value='{input_value}' selected></option>".format(input_value=val[0])
+
+                    for va in val:
+                        if isinstance(va, str) and Utils.getValueType(va) == 'text':
+                            res += "<option value='{value}'>{value}</option>".format(value=va)
+                        else:
+                            res += "<option value='{value}'>{value}</option>".format(value=__getReturnAsModalHTML__(va))
+                    
+                    res += "</select><script>$('#editable-select-{id}').editableSelect();".format(id=key)
+
+                    res += "</script>"
+
+                elif val_type == 'password':
+                    res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"apiKey\" type=\"password\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
+                
+                elif val_type == 'textarea':
+                    res += "<div class=\"form-group row\"><label for=\"{id}\" class=\"col-4 col-form-label label-description\">{input_label_desc}</label><div class=\"col-4\"><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"5\">{value}</textarea></div></div>".format(className=input_className, id=key, input_label_desc=key, value=val)
+
+                else:
+                    res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"text\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
+        res += "<hr class='sidebar-divider my-0 my-separator-response'>"
+
+    elif isinstance(response, int):
+        val_type = Utils.getValueType(response)
+        try:
+            input_className = default_classnames_per_type[val_type]['__className__']
+        except:
+            input_className = ''
+        return "<div class='md-form'><input class=\"{className}\" type=\"number\" value=\"{input_value}\" /></div>".format(className=input_className, input_value=response)
+    elif isinstance(response, bool):
+        return "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" {checked} disabled></div><br />".format(checked=response)
+    elif res_type == 'select':
+        if isinstance(response, str):
+            response = eval(response)
+            
+        res += "<ul class=\"list-group list-group-flush\">"
+
+        for r in response:
+            if isinstance(r, str) and Utils.getValueType(r) == 'text':
+                res += "<li class=\"list-group-item\">{value}</li>".format(value=r)
+            else:
+                res += "<li class=\"list-group-item\">{value}</li>".format(value=__getReturnAsModalHTML__(r))
+        
+        res += "</ul>"
+    else:
+        val_type = Utils.getValueType(response)
+        try:
+            input_className = default_classnames_per_type[val_type]['__className__']
+        except:
+            input_className = ''
+        return "<div class='md-form'><input class=\"{className}\" type=\"text\" value=\"{input_value}\"/></div>".format(className=input_className, input_value=response)
+    return res
+
+
 # TreeView for Modules Configuration in Modal Panel
 global __treeview_counter__
 __treeview_counter__ = 0

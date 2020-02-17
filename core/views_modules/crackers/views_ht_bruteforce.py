@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 from core import views
-from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, sendPool
+from core.views import ht, config, renderMainPanel, saveFileOutput, Logger, sendPool, returnAsModal, sendPool, returnAsModal
 
 # Create your views here.
 
@@ -50,7 +50,7 @@ def crackZip(request):
 			# Execute, get result and show it
 			result = ht.getModule('ht_bruteforce').crackZip( zipPathName=zipPathName, unzipper=unzipper, alphabet=alphabet, password_length=password_length, password_pattern=password_pattern, log=log )
 			if request.POST.get('is_async_crackZip', False):
-				return JsonResponse({ "data" : result })
+				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
 		if request.POST.get('is_async_crackZip', False):

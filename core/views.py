@@ -5,6 +5,7 @@ from django.urls import reverse, resolve
 from django.views.decorators.csrf import csrf_exempt
 from .library import hackingtools as ht
 from .library.hackingtools.core import Utils, Logger, Config, Connections, UtilsDjangoViewsAuto, DjangoFunctions
+from .library.hackingtools.core.DjangoFunctions import __getReturnAsModalHTML__ as returnAsModal
 from importlib import reload
 import os, sys, requests
 import json, collections
