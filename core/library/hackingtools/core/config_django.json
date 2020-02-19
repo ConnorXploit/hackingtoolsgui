@@ -382,6 +382,53 @@
             "help": {
                 "__in_map_help__": false
             }
+        },
+        "ht_ssh": {
+            "_StartModule__connect": {
+                "__in_map__StartModule__connect__": false
+            },
+            "_StartModule__get_ssh_key": {
+                "__in_map__StartModule__get_ssh_key__": false
+            },
+            "_StartModule__upload_single_file": {
+                "__in_map__StartModule__upload_single_file__": false
+            },
+            "_StartModule__upload_ssh_key": {
+                "__in_map__StartModule__upload_ssh_key__": false
+            },
+            "connect": {
+                "__in_map_connect__": true
+            },
+            "disconnect": {
+                "__in_map_disconnect__": true
+            },
+            "download_file": {
+                "__in_map_download_file__": false
+            },
+            "execute_commands": {
+                "__in_map_execute_commands__": false
+            },
+            "upload_files": {
+                "__in_map_upload_files__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_nessus": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_openvas": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_qualys": {
+            "help": {
+                "__in_map_help__": false
+            }
         }
     }
 }

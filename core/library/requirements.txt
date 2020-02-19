@@ -15,7 +15,7 @@ docutils
 entrypoints
 Flask
 future
-hackingtools==3.0.0.004
+hackingtools==3.0.0.008
 html5lib
 httplib2
 idna
@@ -35,6 +35,7 @@ msgpack-python
 netaddr
 numpy
 pandas
+paramiko
 pefile
 Pillow
 pkginfo
@@ -54,6 +55,7 @@ readme-renderer
 requests
 requests_html
 scikit-build
+scp
 shodan
 six
 sklearn

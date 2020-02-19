@@ -36,6 +36,7 @@ netaddr
 numpy
 opencv-python
 pandas
+paramiko
 pefile
 Pillow
 pkginfo
@@ -55,6 +56,7 @@ readme-renderer
 requests
 requests_html
 scikit-build
+scp
 shodan
 six
 sklearn

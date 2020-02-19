@@ -107,7 +107,11 @@
         "ht_facebook": {},
         "ht_r2": {},
         "ht_radare2": {},
-        "ht_finder": {}
+        "ht_finder": {},
+        "ht_ssh": {},
+        "ht_nessus": {},
+        "ht_qualys": {},
+        "ht_openvas": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,

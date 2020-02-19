@@ -383,13 +383,6 @@ def __getModulesDjangoForms__():
     forms = {}
     for mod in ht.getModulesNames():
         form = __createHtmlModalForm__(mod)
-        # if not form:
-        #     __regenerateConfigView__(mod)
-        #     for f in ht.getFunctionsNamesFromModule(mod):
-        #         if not f == 'help':
-        #             __createModuleFunctionView__(mod, f)
-        #     Config.__readFilesAuto__()
-        #     form = __createHtmlModalForm__(mod)
         if form:
             for url in form:
                 if form[url]:

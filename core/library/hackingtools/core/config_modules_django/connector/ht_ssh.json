@@ -1,0 +1,21 @@
+{
+    "__gui_label__": "ht_ssh",
+    "django_form_module_function": {
+        "upload_files": {
+            "__function__": "upload_files",
+            "__async__": false,
+            "__return__": "",
+            "files": {
+                "__type__": "file",
+                "label_desc": "files",
+                "placeholder": "files",
+                "required": true
+            },
+            "__pool_it_upload_files__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}
