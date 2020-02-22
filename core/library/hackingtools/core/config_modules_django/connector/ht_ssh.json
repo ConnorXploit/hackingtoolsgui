@@ -1,17 +1,59 @@
 {
     "__gui_label__": "ht_ssh",
+    "django_form_main_function": {
+        "__function__": "connect",
+        "host": {
+            "__type__": "text",
+            "label_desc": "host",
+            "placeholder": "host",
+            "required": true
+        },
+        "user": {
+            "__type__": "text",
+            "label_desc": "user",
+            "placeholder": "user",
+            "required": true
+        },
+        "ssh_key_filepath": {
+            "__type__": "file",
+            "label_desc": "ssh_key_filepath",
+            "placeholder": "ssh_key_filepath",
+            "required": true
+        },
+        "remote_upload_dir": {
+            "__type__": "text",
+            "label_desc": "remote_upload_dir",
+            "placeholder": "remote_upload_dir",
+            "required": true
+        },
+        "__pool_it_connect__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "connect",
+            "__type__": "submit",
+            "value": "Connect",
+            "loading_text": "sshing"
+        }
+    },
     "django_form_module_function": {
-        "upload_files": {
-            "__function__": "upload_files",
+        "execute_commands": {
+            "__function__": "execute_commands",
             "__async__": false,
             "__return__": "",
-            "files": {
-                "__type__": "file",
-                "label_desc": "files",
-                "placeholder": "files",
+            "commands": {
+                "__type__": "text",
+                "label_desc": "commands",
+                "placeholder": "commands",
                 "required": true
             },
-            "__pool_it_upload_files__": {
+            "__pool_it_execute_commands__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false

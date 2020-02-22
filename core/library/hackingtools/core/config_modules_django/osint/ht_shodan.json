@@ -2,14 +2,14 @@
     "__gui_label__": "Shodan",
     "django_form_main_function": {
         "__function__": "getIPListfromServices",
-        "service_name": {
+        "serviceName": {
             "__type__": "text",
             "placeholder": "apache",
             "value": "",
             "label_desc": "Search query",
             "required": true
         },
-        "shodanKeyString": {
+        "shodan_api": {
             "__type__": "text",
             "placeholder": "abcdef0123456789",
             "value": "",

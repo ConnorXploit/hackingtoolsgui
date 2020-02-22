@@ -403,16 +403,16 @@
                 "__in_map_connect__": true
             },
             "disconnect": {
-                "__in_map_disconnect__": true
+                "__in_map_disconnect__": false
             },
             "download_file": {
-                "__in_map_download_file__": false
+                "__in_map_download_file__": true
             },
             "execute_commands": {
                 "__in_map_execute_commands__": true
             },
             "upload_files": {
-                "__in_map_upload_files__": true
+                "__in_map_upload_files__": false
             },
             "help": {
                 "__in_map_help__": false
