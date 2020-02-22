@@ -15,7 +15,7 @@ docutils
 entrypoints
 Flask
 future
-hackingtools==3.0.0.008
+hackingtools==3.0.0.010
 html5lib
 httplib2
 idna

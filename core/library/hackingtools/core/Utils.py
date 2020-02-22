@@ -181,33 +181,79 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
     function = getFunctionFullCall(moduleName=moduleName, category=category, functionName=functionName)
     return getAnyFunctionParams(function, i_want_list)
 
-def getValueType(value):
+def getValueType(value, getResponse=False, returnLiteralType=False):
     try:
         if isinstance(value, bool) or isinstance(eval(value), bool):
+            if returnLiteralType:
+                return bool
             return 'checkbox'
     except:
         pass
     try:
         if isinstance(value, int) or isinstance(eval(value), int):
+            if returnLiteralType:
+                return int
             return 'number'
     except:
         pass
     try:
-        if isinstance(value, list) or isinstance(eval(value), list):
+        if isinstance(value, dict) or isinstance(eval(value), dict):
+            if returnLiteralType:
+                return dict
+            return 'data'
+    except:
+        pass
+    try:
+        if isinstance(value, datetime) or isinstance(eval(value), datetime) or datetime.strptime(value, '%Y-%m-%d %H:%M:%S') or isinstance(value, datetime):
+            if returnLiteralType:
+                return datetime
+            return 'time'
+    except:
+        pass
+    try:
+        if (isinstance(value, list) or isinstance(eval(value), list)) and (str(value)[0] == '[' and str(value)[-1] == ']'):
+            if returnLiteralType:
+                return list
             return 'select'
+    except:
+        pass
+    if returnLiteralType:
+        return str
+    try:
+        if isinstance(value, str) or isinstance(eval(value), str):
+            if returnLiteralType:
+                return str
+    except:
+        pass
+    if not getResponse:
+        try:
+            if isinstance(value, str) or isinstance(eval(value), str):
+                if '.' in value and len(value.split('.')[1] in range(1,4)):
+                    return 'file'
+        except:
+            pass
+        try:
+            if isinstance(value, str) or isinstance(eval(value), str):
+                if 'path' in value or 'file' in value:
+                    return 'file'
+        except:
+            pass
+        try:
+            if isinstance(value, str) or isinstance(eval(value), str):
+                if 'pass' in value or 'password' in value:
+                    return 'password'
+        except:
+            pass
+    try:
+        if isinstance(value, str) or isinstance(eval(value), str):
+            if 'http' in value and ('.jpg' in value or '.png' in value or '.ico' in value or '.gif' in value or ('image' in value and '.php' in value)):
+                return 'image'
     except:
         pass
     try:
         if isinstance(value, str) or isinstance(eval(value), str):
-            if '.' in value and len(value.split('.')[1] in range(1,4)):
-                return 'file'
-            if 'path' in value or 'file' in value:
-                return 'file'
-            if 'pass' in value or 'password' in value:
-                return 'password'
-            if 'data' in value:
+            if len(value) > 100:
                 return 'textarea'
-            return 'select'
     except:
         pass
     return 'text'

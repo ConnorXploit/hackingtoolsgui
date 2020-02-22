@@ -146,7 +146,7 @@ def  __getViewTemplateByFunctionParams__(moduleName, functionName, category, par
         
         # If async
         template = '{temp}\t\t\tif request.POST.get(\'is_async_{f}\', False):\n'.format(temp=template, f=functionName)
-        template = '{temp}\t\t\t\treturn JsonResponse({res})\n'.format(temp=template, res='{ "data" : result }')
+        template = '{temp}\t\t\t\treturn JsonResponse({res})\n'.format(temp=template, res='{ "data" : returnAsModal(result) }')
                     
         example_return = "return renderMainPanel(request=request, popup_text=result)"
         template = '{temp}\t\t\t{r}\n'.format(temp=template, r=example_return)

@@ -30,7 +30,7 @@
             "__async__": false,
             "__return__": "text",
             "username": {
-                "__type__": "select",
+                "__type__": "text",
                 "label_desc": "username",
                 "placeholder": "username",
                 "required": true

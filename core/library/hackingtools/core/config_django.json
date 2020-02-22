@@ -46,12 +46,15 @@
                     "__className__": "form-control"
                 },
                 "textarea": {
-                    "__className__": "file-input"
+                    "__className__": "form-control"
                 },
                 "file": {
                     "__className__": "file-input"
                 },
                 "select": {
+                    "__className__": "form-control"
+                },
+                "time": {
                     "__className__": "form-control"
                 },
                 "button": {
@@ -406,10 +409,10 @@
                 "__in_map_download_file__": false
             },
             "execute_commands": {
-                "__in_map_execute_commands__": false
+                "__in_map_execute_commands__": true
             },
             "upload_files": {
-                "__in_map_upload_files__": false
+                "__in_map_upload_files__": true
             },
             "help": {
                 "__in_map_help__": false

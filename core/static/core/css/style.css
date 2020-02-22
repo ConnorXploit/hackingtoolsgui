@@ -722,3 +722,10 @@ input {
 .my-separator-response {
     background: red;
 }
+.md-form {
+    margin-bottom: 12px !important
+}
+.response_image {
+    max-width: 100% !important;
+    width: 100% !important;
+}

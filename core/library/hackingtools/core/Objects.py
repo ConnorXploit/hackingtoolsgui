@@ -1,7 +1,7 @@
 from . import Logger, Utils
 import json as __json
 import time
-import requests as __requests
+import requests
 import os as __os
 import textwrap as __textwrap
 import urllib.parse as __parse
@@ -409,7 +409,7 @@ class RequestHandler:
 			"User-Agent": self.header_maker(self.user_agent)
 		}
 		try:
-			s = __requests.Session()
+			s = requests.Session()
 			if self.current_proxy:
 				res = s.get(url, headers=headers, proxies=proxies)
 			else:
@@ -422,8 +422,8 @@ class RequestHandler:
 					return res.json()
 			else:
 				return None
-		except __requests.exceptions.ConnectionError:
-			raise __requests.exceptions.ConnectionError
+		except requests.exceptions.ConnectionError:
+			raise requests.exceptions.ConnectionError
 		except __json.decoder.JSONDecodeError:
 			return None
 

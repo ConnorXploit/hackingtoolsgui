@@ -1,4 +1,5 @@
 altgraph
+scikit-build
 astroid
 beautifulsoup4
 bleach
@@ -55,7 +56,6 @@ python-utils
 readme-renderer
 requests
 requests_html
-scikit-build
 scp
 shodan
 six
