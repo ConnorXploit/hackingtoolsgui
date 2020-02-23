@@ -36,8 +36,6 @@ while not want_exit:
     if want_update:
         print('Updating...')
         p = subprocess.call(['bash', 'server_updater.sh'])
-        if sys.platform in ('darwin', 'linux'):
-            p = subprocess.call(['sudo', 'chmod', 'u+x', 'server.py'])
         want_update = False
 
     try:
