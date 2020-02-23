@@ -43,17 +43,17 @@
         }
     },
     "django_form_module_function": {
-        "execute_commands": {
-            "__function__": "execute_commands",
+        "upload_files": {
+            "__function__": "upload_files",
             "__async__": false,
             "__return__": "",
-            "commands": {
-                "__type__": "text",
-                "label_desc": "commands",
-                "placeholder": "commands",
+            "files": {
+                "__type__": "file",
+                "label_desc": "files",
+                "placeholder": "files",
                 "required": true
             },
-            "__pool_it_execute_commands__": {
+            "__pool_it_upload_files__": {
                 "__type__": "checkbox",
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false

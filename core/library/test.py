@@ -23,12 +23,19 @@ try:
 except:
     import pyreadline as readline  # Windows
 
-ht.Config.setTelegramBotToken('1035804165:AAEYfAiHNF9FK-x6TqUF--BiiEGhZDpO1f0')
-ht.startTelegramBot()
+# qualys = ht.getModule('qualys')
+# if qualys.connect('<USERNAME>', '<PASSWORD>'):
+#     print('Sesion creada :D')
+#     print(qualys.scan('XXX.XXX.XXX.XXX'))
+#     if qualys.disconnect():
+#         print('Sesion cerrada :D')
+
+# ht.Config.setTelegramBotToken('<TELEGRAM_TOKEN>')
+# ht.startTelegramBot()
 
 # r = ht.getModule('radare2')
-# pene = r.getImports('C:\\Users\\luill\\Downloads\\test.exe')
-# print(pene)
+# res = r.getImports('C:\\Users\\<USER>\\Downloads\\test.exe')
+# print(res)
 #
 # # Prints the modules loaded on your hackingtools library
 # # print(ht.getModulesNames())
@@ -48,7 +55,7 @@ ht.startTelegramBot()
 # target = Target(option, 1)
 #
 # # Set the API for shodan
-# shodan.settingApi('lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl')
+# shodan.settingApi('<SHODAN_API>')
 #
 # # Ask shodan for getting a list of IPs from a service name
 # for ip in shodan.getIPListfromServices(option):

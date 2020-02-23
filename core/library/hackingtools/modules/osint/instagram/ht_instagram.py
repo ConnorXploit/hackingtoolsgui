@@ -27,7 +27,7 @@ instance_cache = None
 
 class StartModule():
 
-    def __init__(self, sleep_between_requests=0):
+    def __init__(self):
         self._main_gui_func_ = 'getAccountByUsername'
         self.__req = requests.session()
         self.paging_time_limit_sec = PAGING_TIME_LIMIT_SEC
@@ -38,7 +38,7 @@ class StartModule():
         self.session_password = None
         self.user_session = None
         self.rhx_gis = None
-        self.sleep_between_requests = sleep_between_requests
+        self.sleep_between_requests = 0
         self.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) ' \
                           'AppleWebKit/537.36 (KHTML, like Gecko) ' \
                           'Chrome/66.0.3359.139 Safari/537.36'

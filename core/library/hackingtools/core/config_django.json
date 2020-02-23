@@ -400,16 +400,16 @@
                 "__in_map__StartModule__upload_ssh_key__": false
             },
             "connect": {
-                "__in_map_connect__": true
+                "__in_map_connect__": false
             },
             "disconnect": {
-                "__in_map_disconnect__": false
+                "__in_map_disconnect__": true
             },
             "download_file": {
-                "__in_map_download_file__": true
+                "__in_map_download_file__": false
             },
             "execute_commands": {
-                "__in_map_execute_commands__": true
+                "__in_map_execute_commands__": false
             },
             "upload_files": {
                 "__in_map_upload_files__": false

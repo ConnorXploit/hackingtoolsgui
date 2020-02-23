@@ -14,18 +14,17 @@ global __https__
 __https__ = ''
 
 __headers__ = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+}
 
 # Ngrok connections
 global __ngrok_ip__
 __ngrok_ip__ = None
 
-
 # Main functions
 def getMyServices():
     global __services__
     return [serv for serv in __services__ if serv]
-
 
 def addMineService(serv):
     global __services__
@@ -33,11 +32,9 @@ def addMineService(serv):
     if not serv in __services__:
         __services__.append(serv)
 
-
 def getActualPort():
     global __listening_port__
     return __listening_port__
-
 
 def getMyPublicIP(as_service=False):
     global __listening_port__
@@ -58,7 +55,6 @@ def getMyPublicIP(as_service=False):
                                            debug_core=True)
         return Logger.print_and_return(msg='getMyPublicIP', value='127.0.0.1', debug_core=True)
 
-
 def getMyLanIP(as_service=False):
     global __listening_port__
     global __https__
@@ -69,7 +65,6 @@ def getMyLanIP(as_service=False):
                                                                                                   p=__listening_port__),
                                                debug_core=True)
             return Logger.print_and_return(msg='getMyLanIP', value=ip, debug_core=True)
-
 
 def getMyLocalIP(as_service=False, port=True):
     global __services__
@@ -96,17 +91,14 @@ def getMyLocalIP(as_service=False, port=True):
                                        debug_core=True)
     return Logger.print_and_return(msg='getMyLocalIP', value='127.0.0.1', debug_core=True)
 
-
 def isHeroku():
     if 'DYNO' in os.environ:  # Automatically Heroku Deploy
         return True
     return False
 
-
 def getNgrokServiceUrl():
     global __ngrok_ip__
     return __ngrok_ip__
-
 
 def startNgrok(port=__listening_port__):
     try:
@@ -120,7 +112,6 @@ def startNgrok(port=__listening_port__):
         Logger.printMessage(message='Couldn\'t start ngrok service', description=str(e), is_error=True)
         return None
 
-
 def stopNgrok(ngrokServiceUrl):
     try:
         from pyngrok import ngrok
@@ -132,13 +123,11 @@ def stopNgrok(ngrokServiceUrl):
         Logger.printMessage(message='Couldn\'t stop ngrok service', description=str(e), is_error=True)
         return False
 
-
 def __serviceNotMine__(service):
     for serv in __services__:
         if service == serv:
             return False
     return True
-
 
 def __loadActualPort__():
     global __listening_port__
@@ -147,7 +136,6 @@ def __loadActualPort__():
                                                      debug_core=True)
     except:
         __listening_port__ = Logger.print_and_return(msg='__loadActualPort__', value='8000', debug_core=True)
-
 
 def __initServices__():
     if not isHeroku():
@@ -174,7 +162,6 @@ def __initServices__():
         __services__ += Config.getConfig(parentKey='core', key='Connections', subkey='my___services__')
     Logger.printMessage(message='Loaded __services__', description=__services__, color=Logger.__Fore.YELLOW,
                         debug_core=True)
-
 
 # Init
 if not isHeroku():
