@@ -1,6 +1,7 @@
 from . import Logger, Utils
 import json as __json
 import time
+from datetime import datetime
 import requests
 import os as __os
 import textwrap as __textwrap
@@ -8,6 +9,8 @@ import urllib.parse as __parse
 import threading as __threading
 from abc import ABC as __ABC
 from abc import abstractmethod
+from functools import wraps
+import errno
 
 import hackingtools as ht
 
@@ -359,24 +362,53 @@ class Worker():
     def __init__(self): 
         self._running = True
         self.responses = []
+        self.time = None
+        self.timeout = None
+
+    def is_alive(self):
+        return self._running
 
     def terminate(self): 
         self._running = False
+        raise KeyboardInterrupt
     
     def getLastResponse(self):
         return self.responses[-1]
 
-    def run(self, functionCall, args, timesleep, loop):
+    def run(self, functionCall, args, timesleep, loop, timeout):
+        if timeout and isinstance(timeout, int) and not self.time:
+            self.time = datetime.now()
+            self.timeout = int(timeout)
+
         if loop:
+
             while self._running:
-                func = '{f}{a}'.format(f=functionCall, a=args)
-                res = eval(func)
-                self.responses.append( res )
-                time.sleep(timesleep)
+                try:
+                    if timeout and (datetime.now() - self.time).total_seconds() > self.timeout:
+                        self.terminate()
+
+                    else:
+                        func = '{f}{a}'.format(f=functionCall, a=tuple(args, ))
+                        res = eval(func)
+                        self.responses.append( res )
+                        time.sleep(timesleep)
+                except KeyboardInterrupt:
+                    pass
+
         else:
-            func = '{f}{a}'.format(f=functionCall, a=args)
-            res = eval(func)
-            self.responses.append( res )
+            try:
+                if timeout and (datetime.now() - self.time).total_seconds() > self.timeout:
+                    self.terminate()
+
+                else:
+                    func = '{f}{a}'.format(f=functionCall, a=tuple(args, ))
+                    print(func)
+                    res = eval(func)
+                    self.responses.append( res )
+            except KeyboardInterrupt:
+                pass
+
+# Instagram Module Main Utils
 
 class RequestHandler:
 	"""
@@ -1330,8 +1362,11 @@ class Ticker(__threading.Thread):
       time.sleep(self.interval)
       self.evt.set()
 
+# Telegram Bot
+
 class TelegramBotCoreHT():
 
     @staticmethod
     def run():
         from . import TelegramBot
+

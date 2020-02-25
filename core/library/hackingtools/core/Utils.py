@@ -39,13 +39,13 @@ def getWorkers():
     global threads
     return threads
 
-def startWorker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False):
+def startWorker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False, timeout=None):
     t = None
     try:
         w = __Worker()
         if log:
             Logger.printMessage('Starting Worker: {w}'.format(w=workerName))
-        t = Thread(target=w.run, args=(functionCall, args, int(timesleep), loop ), daemon=run_until_ht_stops)
+        t = Thread(target=w.run, args=(functionCall, args, int(timesleep), loop, timeout ), daemon=run_until_ht_stops)
         threads[workerName] = [ w, t ]
         t.start()
     except Exception as e:
@@ -502,9 +502,6 @@ def getRandomCharFromDict(alphabet='lalpha'):
         return __random.choice(dictionaryOptions[alphabet])
     return None
 
-def getCombinationPosibilitiesLength(alphabet, length):
-    return [''.join(x) for x in product(__config_utils__[alphabet], repeat=int(length))]
-
 def fromWhatDictListIsChar(char='a'):
     dictionaryOptions = Config.getConfig(parentKey='modules', key='ht_bruteforce', subkey='dictionaryOptions')
     for opt in dictionaryOptions:
@@ -512,7 +509,14 @@ def fromWhatDictListIsChar(char='a'):
             return opt
     return None
 
-def getCombinationPosibilitiesByPattern(try_pattern=None):
+def getCombinationPosibilitiesLength(alphabet, length, generator=False):
+    if generator:
+        for x in product(__config_utils__[alphabet], repeat=int(length)):
+            yield ''.join(x)
+    else:
+        return [ ''.join(x) for x in product(__config_utils__[alphabet], repeat=int(length)) ]
+
+def getCombinationPosibilitiesByPattern(try_pattern=None, generator=False):
     try:
         alphabets_patter = []
         create_pattern = []
@@ -528,24 +532,40 @@ def getCombinationPosibilitiesByPattern(try_pattern=None):
                 alphabets_patter.append(char)
 
         final_combinations = []
-
         for i_alp, alp in enumerate(alphabets_patter):
             if i_alp == 0:
-                final_combinations = getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp])
+                for comb in getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp], generator=generator):
+                    final_combinations.append(comb)
             else:
-                final_combinations = [r[0] + r[1] for r in product(final_combinations, getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp]))]
+                temp_final_combinations = final_combinations
+                final_combinations = []
+                for combb in getCombinationPosibilitiesLength(alphabet=alp, length=create_pattern[i_alp], generator=generator):
+                    for comb in [r[0] + r[1] for r in product(temp_final_combinations, combb)]:
+                        final_combinations.append(comb)
 
-        return final_combinations
+        if generator:
+            for f in final_combinations:
+                yield f
+        else:
+            return final_combinations
+
     except MemoryError:
         Logger.printMessage(message='Memory Error', description='There are so many combinations for this pattern', is_error=True)
+    return []
 
-def getDict(length=8, alphabet='lalpha', try_pattern=None):
+def getDict(length=8, alphabet='lalpha', try_pattern=None, generator=False):
     if try_pattern and not try_pattern == '':
-        return getCombinationPosibilitiesByPattern(try_pattern=try_pattern)
+        if generator:
+            for comb in getCombinationPosibilitiesByPattern(try_pattern=try_pattern, generator=generator):
+                yield comb
+        else:
+            return getCombinationPosibilitiesByPattern(try_pattern=try_pattern, generator=generator)
     else:
-        res = getCombinationPosibilitiesLength(alphabet=alphabet, length=length)
-        Logger.printMessage(message='getDict', description='{data} - {count}'.format(data=res[:10], count=len(res)), debug_core=True)
-        return res
+        if generator:
+            for comb in getCombinationPosibilitiesLength(alphabet=alphabet, length=length, generator=generator):
+                yield comb
+        else:
+            return getCombinationPosibilitiesLength(alphabet=alphabet, length=length, generator=generator)
 
 def getPosibleAlphabet():
     return list(__config_utils__.keys())

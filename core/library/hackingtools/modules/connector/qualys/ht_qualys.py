@@ -47,7 +47,6 @@ class StartModule():
 		self.api['common']['assets2'] = '/api/2.0/fo/asset/host/'
 		self.api['common']['scan'] = '/api/2.0/fo/scan/'
 
-
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_qualys'), debug_module=True)
 

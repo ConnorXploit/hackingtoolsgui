@@ -111,7 +111,8 @@
         "ht_ssh": {},
         "ht_nessus": {},
         "ht_qualys": {},
-        "ht_openvas": {}
+        "ht_openvas": {},
+        "ht_scapy": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
@@ -135,6 +136,9 @@
             ],
             "ht_radare2": [
                 "r2pipe"
+            ],
+            "ht_scapy": [
+                "scapy"
             ]
         },
         "Connections": {

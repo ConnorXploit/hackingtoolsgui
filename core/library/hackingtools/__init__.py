@@ -194,8 +194,8 @@ def wantPool():
     global __WANT_TO_BE_IN_POOL__
     return __WANT_TO_BE_IN_POOL__
 
-def worker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False):
-    Utils.startWorker(workerName, functionCall, args, int(timesleep), loop, run_until_ht_stops, log)
+def worker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False, timeout=None):
+    Utils.startWorker(workerName, functionCall, args, int(timesleep), loop, run_until_ht_stops, log, timeout)
     __workers__.append(workerName)
 
 def stopWorker(nameWorker):

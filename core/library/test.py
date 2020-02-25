@@ -23,6 +23,19 @@ try:
 except:
     import pyreadline as readline  # Windows
 
+sca = ht.getModule('scapy')
+print(sca.traceroute('54.38.242.225'))
+# print(sca.traceroute('hackingteam.space'))
+# print(sca.traceroute('google.com'))
+
+# f = open("hashes-md5.txt","w+")
+# try:
+#     for i in ht.Utils.getCombinationPosibilitiesLength('lalpha-numeric', 32):
+#         f.write(i + '\n')
+# except:
+#     pass
+# f.close()
+
 # qualys = ht.getModule('qualys')
 # if qualys.connect('<USERNAME>', '<PASSWORD>'):
 #     print('Sesion creada :D')

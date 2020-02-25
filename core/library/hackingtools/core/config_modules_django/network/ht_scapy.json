@@ -39,23 +39,5 @@
                 }
             }
         }
-    },
-    "django_form_module_function": {
-        "scan": {
-            "__function__": "scan",
-            "__async__": false,
-            "__return__": "text",
-            "ips": {
-                "__type__": "text",
-                "label_desc": "ips",
-                "placeholder": "ips",
-                "required": true
-            },
-            "__pool_it_scan__": {
-                "__type__": "checkbox",
-                "label_desc": "Pool the execution to the pool list",
-                "selected": false
-            }
-        }
     }
 }
