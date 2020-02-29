@@ -70,7 +70,6 @@ def __createModuleFunctionView__(moduleName, functionName, is_main=False):
             moduleViewConfig['submit']['value'] = ' '.join( [ x.capitalize() for x in functionName.split('_') ] )
             moduleViewConfig['submit']['loading_text'] = '{m}ing'.format(m=moduleName.replace('ht_', ''))
 
-
         Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName, is_main=is_main)
         Config.switch_function_for_map(category, moduleName, functionName)
         ht.Config.__look_for_changes__()
@@ -246,17 +245,17 @@ def __getReturnAsModalHTML__(response, main=True):
                     elif val_type == 'number':
                         res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"number\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
 
-                    elif val_type == 'textarea':
-                        res += "<div class=\"md-form\"><label for=\"{id}\">{input_label_desc}</label><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"{rows}\">{value}</textarea></div>".format(className=input_className, id=key, input_label_desc=key, value=val, rows=str( int( len(val)/100 ) + val.count('\n') ) )
+                    elif val_type == 'textarea' or val_type == 'data':
+                        res += "<div class=\"md-form\"><label for=\"{id}\">{input_label_desc}</label><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"{rows}\">{value}</textarea></div>".format(className=input_className, id=key, input_label_desc=key, value=val, rows=int(int( len(val)/80 ) + val.count('\n') ) )
 
                     elif val_type == 'image':
-                            res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><img src=\"{input_value}\" name=\"{id}\" class=\"response_image\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
+                            res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label></br><img src=\"{input_value}\" name=\"{id}\" class=\"response_image\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
                     
-                    else:
-                        if val_type == 'time':
-                            val = val.strftime("%d-%m-%Y %H:%M:%S")
+                    elif val_type == 'time':
+                        val = val.strftime("%d-%m-%Y %H:%M:%S")
                         res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"text\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
-    
+                    else:
+                        res += __getReturnAsModalHTML__(val, main=False)
     elif isinstance(response, int):
         val_type = Utils.getValueType(response, getResponse=True)
         try:
@@ -298,7 +297,18 @@ def __getReturnAsModalHTML__(response, main=True):
             input_className = default_classnames_per_type[val_type]['__className__']
         except:
             input_className = ''
-        return "<div class='md-form'><input class=\"{className}\" type=\"text\" value=\"{input_value}\"/></div>".format(className=input_className, input_value=response)
+        if val_type == 'checkbox':
+            return "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"response-{id}\" name=\"{id}\" {checked} disabled><label style=\"padding: 0 10px;\" for=\"response-{id}\">True or False?</label></div><br />".format(id=response, checked=response)
+        elif val_type == 'data' or val_type == 'textarea':
+            return "<div class=\"md-form\"><label for=\"response-{id}\">data</label><textarea class=\"{className}\" name=\"response-{id}\" id=\"response-{id}\" rows=\"{rows}\">{value}</textarea></div>".format(className=input_className, id=response[0], value=response, rows=int( int( len(response)/80 ) + response.count('\n') ) )
+        elif val_type == 'password':
+            return "<div class='md-form'><input class=\"{className}\" type=\"password\" value=\"{input_value}\"/></div>".format(className=input_className, input_value=response)
+        elif val_type == 'image':
+            return "<div class='md-form'><label for=\"response-img\">image</label></br><img src=\"{input_value}\" name=\"response-img\" class=\"response_image\" /></div>".format(className=input_className, input_value=response)
+        else:
+            # if val_type == 'url':
+            #     return "<button class=\"btn\" data-clipboard-target=\"#response\"><img src=\"/static/core/img/clippy.svg\" alt=\"Copy to clipboard\"></button><div class='md-form'><input class=\"{className}\" type=\"text\" id=\"response\" value=\"{input_value}\"/></div>".format(className=input_className, input_value=response)
+            return "<div class='md-form'><input class=\"{className}\" type=\"text\" id=\"response\" value=\"{input_value}\"/></div>".format(className=input_className, input_value=response)
     return res
 
 

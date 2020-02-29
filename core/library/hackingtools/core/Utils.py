@@ -24,11 +24,15 @@ import os as __os
 import ast
 import inspect
 import json as __json
+import shutil
 from threading import Thread
 from threading import Lock
 from itertools import product
 from functools import reduce
 from datetime import datetime
+import git
+import re
+from pathlib import Path
 
 global threads
 threads = {}
@@ -134,6 +138,16 @@ def emptyDirectory(directory):
     except:
         return False
 
+def readFileAsString(filepath):
+    data = ''
+    try:
+        f = open(filepath, 'r', encoding='utf8')
+        data = f.read()
+    except Exception as e:
+        pass
+    return data
+
+# Data Manipulation
 def getValidDictNoEmptyKeys(data):
     final_data = {}
     if isinstance(data, str):
@@ -173,8 +187,7 @@ def getAnyFunctionParams(functionObjectStr, i_want_list=False):
 
         return {"params":params_func}
     except:
-        pass
-        #Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
+        Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
     return []
 
 def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
@@ -252,6 +265,12 @@ def getValueType(value, getResponse=False, returnLiteralType=False):
         pass
     try:
         if isinstance(value, str) or isinstance(eval(value), str):
+            if value.startswith('http://') or value.startswith('https://'):
+                return 'url'
+    except:
+        pass
+    try:
+        if isinstance(value, str) or isinstance(eval(value), str):
             if len(value) > 100:
                 return 'textarea'
     except:
@@ -263,6 +282,61 @@ def doesFunctionContainsExplicitReturn(functionCall):
         return True if 'return' in inspect.getsource(eval(functionCall)) else False
     except:
         return False
+
+def downloadProjectAsModuleFromGithub(moduleName, category, githubURL):
+    try:
+        ht.__createModule__(moduleName, category)
+        moduleDir = __os.path.join( __path, 'modules', category, moduleName.replace('ht_', '') )
+        if __os.path.isdir( moduleDir ):
+            # Name for the new module-git
+            name_git_folder = githubURL.split('/')[-1].replace('.git', '')
+            # Get the dir path
+            actual_git_folder = __os.path.join( moduleDir, name_git_folder )
+            # Remove if exists
+            if __os.path.isdir( actual_git_folder ):
+                __os.remove( actual_git_folder )
+            # Git clone
+            git.Git( moduleDir ).clone( githubURL )
+            # Create new name
+            new_git_folder = __os.path.join( moduleDir, '_'.join( [ moduleName, 'git' ] ) )
+            # Rename the folder
+            if __os.path.isdir( new_git_folder ):
+                __os.remove( new_git_folder )
+                
+            __os.rename( actual_git_folder, new_git_folder )
+            # Get all files in directory
+            entries = __os.listdir(new_git_folder)
+            for ent in entries:
+                # Check files for remove not interesting ones
+                if ent.endswith('.md') or ent.endswith('.jpg') or ent.endswith('.png') or ent.endswith('.txt'):
+                    __os.remove( __os.path.join( new_git_folder, ent ) )
+
+            # Search for setup.py if there is
+            entries = __os.listdir(new_git_folder)
+            for filen in entries:
+                file_to_read = __os.path.join( new_git_folder, filen )
+                setup_content = readFileAsString( file_to_read )
+                commands = []
+                find_for = [ '--' ]
+                for finding in find_for:
+                    if finding in setup_content:
+                        for ind in findIndexAllOccurrencesSubstring(finding, str( setup_content )):
+                            interesting_line = str(setup_content)[ind:].split('\n')[0]
+                            for appearances in interesting_line.split( finding ):
+                                comm = ''.join( [ finding, appearances.split('\'')[0] ] ).split(' ')[0]
+                                if not comm in commands and not comm == finding:
+                                    commands.append( comm )
+                if commands:
+                    print('Found commands:', commands)
+                else:
+                    print('Not commands')
+        else:
+            Logger.printMessage('Not exists', description=moduleDir, is_error=True)
+            ht.__removeModule__(moduleName, category)
+    except Exception as e:
+        raise
+        Logger.printMessage(str(e), is_error=True)
+        ht.__removeModule__(moduleName, category)
 
 # Others
 def getTime():
@@ -378,6 +452,9 @@ def getRandomPrimeByLength(length = 8):
         return -1
 
 # Text Treatment
+def findIndexAllOccurrencesSubstring(substring, content):
+    return [m.start() for m in re.finditer( substring, str(content) )]
+
 def decimalToBinary(n):
     return bin(n).replace("0b","")
 

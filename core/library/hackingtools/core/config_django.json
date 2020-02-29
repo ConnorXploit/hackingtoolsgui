@@ -39,6 +39,9 @@
                 "text": {
                     "__className__": "form-control"
                 },
+                "url": {
+                    "__className__": "form-control"
+                },
                 "number": {
                     "__className__": "form-control"
                 },
@@ -400,19 +403,19 @@
                 "__in_map__StartModule__upload_ssh_key__": false
             },
             "connect": {
-                "__in_map_connect__": true
+                "__in_map_connect__": false
             },
             "disconnect": {
                 "__in_map_disconnect__": false
             },
             "download_file": {
-                "__in_map_download_file__": true
+                "__in_map_download_file__": false
             },
             "execute_commands": {
                 "__in_map_execute_commands__": false
             },
             "upload_files": {
-                "__in_map_upload_files__": true
+                "__in_map_upload_files__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -433,13 +436,132 @@
                 "__in_map_help__": false
             },
             "connect": {
-                "__in_map_connect__": true
+                "__in_map_connect__": false
             },
             "disconnect": {
                 "__in_map_disconnect__": false
             },
             "scan": {
                 "__in_map_scan__": false
+            }
+        },
+        "ht_scapy": {
+            "traceroute": {
+                "__in_map_traceroute__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_keylogger": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_sia": {
+            "Consensus": {
+                "__in_map_Consensus__": true
+            },
+            "Daemon": {
+                "__in_map_Daemon__": true
+            },
+            "Miner": {
+                "__in_map_Miner__": true
+            },
+            "Renter": {
+                "__in_map_Renter__": true
+            },
+            "Wallet": {
+                "__in_map_Wallet__": true
+            },
+            "getConsensus": {
+                "__in_map_getConsensus__": false
+            },
+            "getDaemonConstants": {
+                "__in_map_getDaemonConstants__": false
+            },
+            "getDaemonVersion": {
+                "__in_map_getDaemonVersion__": false
+            },
+            "getRenter": {
+                "__in_map_getRenter__": false
+            },
+            "getRenterContracts": {
+                "__in_map_getRenterContracts__": false
+            },
+            "getRenterDownloads": {
+                "__in_map_getRenterDownloads__": false
+            },
+            "getRenterFiles": {
+                "__in_map_getRenterFiles__": false
+            },
+            "getRenterPrices": {
+                "__in_map_getRenterPrices__": false
+            },
+            "getWallet": {
+                "__in_map_getWallet__": false
+            },
+            "getWalletAddress": {
+                "__in_map_getWalletAddress__": false
+            },
+            "getWalletAddresses": {
+                "__in_map_getWalletAddresses__": false
+            },
+            "getWalletBackup": {
+                "__in_map_getWalletBackup__": false
+            },
+            "getWalletSeeds": {
+                "__in_map_getWalletSeeds__": false
+            },
+            "getWalletTransactions": {
+                "__in_map_getWalletTransactions__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_parser": {
+            "csvToHTML": {
+                "__in_map_csvToHTML__": true
+            },
+            "csvToJSON": {
+                "__in_map_csvToJSON__": true
+            },
+            "csvToXML": {
+                "__in_map_csvToXML__": true
+            },
+            "htmlToCSV": {
+                "__in_map_htmlToCSV__": true
+            },
+            "htmlToJSON": {
+                "__in_map_htmlToJSON__": true
+            },
+            "htmlToXML": {
+                "__in_map_htmlToXML__": true
+            },
+            "jsonToCSV": {
+                "__in_map_jsonToCSV__": true
+            },
+            "jsonToHTML": {
+                "__in_map_jsonToHTML__": true
+            },
+            "jsonToXML": {
+                "__in_map_jsonToXML__": true
+            },
+            "readFileToType": {
+                "__in_map_readFileToType__": false
+            },
+            "xmlToCSV": {
+                "__in_map_xmlToCSV__": true
+            },
+            "xmlToHTML": {
+                "__in_map_xmlToHTML__": true
+            },
+            "xmlToJSON": {
+                "__in_map_xmlToJSON__": false
+            },
+            "help": {
+                "__in_map_help__": false
             }
         }
     }

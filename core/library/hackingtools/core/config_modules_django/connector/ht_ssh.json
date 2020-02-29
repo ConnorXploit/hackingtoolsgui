@@ -58,6 +58,82 @@
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
             }
+        },
+        "connect": {
+            "__function__": "connect",
+            "__async__": false,
+            "__return__": "",
+            "host": {
+                "__type__": "text",
+                "label_desc": "host",
+                "placeholder": "host",
+                "required": true
+            },
+            "user": {
+                "__type__": "text",
+                "label_desc": "user",
+                "placeholder": "user",
+                "required": true
+            },
+            "ssh_key_filepath": {
+                "__type__": "file",
+                "label_desc": "ssh_key_filepath",
+                "placeholder": "ssh_key_filepath",
+                "required": true
+            },
+            "remote_upload_dir": {
+                "__type__": "text",
+                "label_desc": "remote_upload_dir",
+                "placeholder": "remote_upload_dir",
+                "required": true
+            },
+            "__pool_it_connect__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "disconnect": {
+            "__function__": "disconnect",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_disconnect__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "download_file": {
+            "__function__": "download_file",
+            "__async__": false,
+            "__return__": "",
+            "file": {
+                "__type__": "file",
+                "label_desc": "file",
+                "placeholder": "file",
+                "required": true
+            },
+            "__pool_it_download_file__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "upload_files": {
+            "__function__": "upload_files",
+            "__async__": false,
+            "__return__": "",
+            "files": {
+                "__type__": "file",
+                "label_desc": "files",
+                "placeholder": "files",
+                "required": true
+            },
+            "__pool_it_upload_files__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
         }
     }
 }

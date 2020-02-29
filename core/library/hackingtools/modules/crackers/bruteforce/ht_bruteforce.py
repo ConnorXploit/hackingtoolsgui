@@ -3,7 +3,7 @@ import hackingtools as ht
 import os
 
 import time
-import numpy
+#import numpy
 
 config = Config.getConfig(parentKey='modules', key='ht_bruteforce')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))

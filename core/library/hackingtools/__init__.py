@@ -343,10 +343,25 @@ def __createModule__(moduleName, category):
 
 def __removeModule__(moduleName, category):
     modulePath = __join(__this_dir__, 'modules', category, moduleName.replace('ht_', ''))
-    if __os.path.isdir(modulePath):
-        __shutil.rmtree(modulePath)
-    if __os.path.isdir(modulePath):
-        __os.rmdir(modulePath)
+    try:
+        __os.chmod(modulePath, 777)
+    except:
+        pass
+    try:
+        if __os.path.isdir(modulePath):
+            __shutil.rmtree(modulePath, ignore_errors=True)
+    except:
+        pass
+    try:
+        if __os.path.isdir(modulePath):
+            __os.rmdir(modulePath)
+    except:
+        pass
+    try:
+        if __os.path.isdir(modulePath):
+            __os.removedirs(modulePath)
+    except:
+        pass
 
 def __createCategory__(categoryName):
     categoryName = categoryName.lower()
@@ -499,6 +514,7 @@ def __importModule__(modules, category, moduleName, __progressbar=None):
         else:
             __modules_loaded__[module_import_string_no_from] = 'Sin funciones...'
     except Exception as e:
+        Logger.printMessage(str(e), is_error=True)
         new_module_name = str(e).split("'")[1]
         if 'No module named' in str(e):
 

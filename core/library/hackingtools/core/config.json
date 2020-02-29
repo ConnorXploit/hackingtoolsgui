@@ -112,7 +112,11 @@
         "ht_nessus": {},
         "ht_qualys": {},
         "ht_openvas": {},
-        "ht_scapy": {}
+        "ht_scapy": {},
+        "ht_keylogger": {},
+        "ht_nuevo": {},
+        "ht_parser": {},
+        "ht_sia": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,

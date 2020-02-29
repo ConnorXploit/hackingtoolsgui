@@ -23,8 +23,23 @@ try:
 except:
     import pyreadline as readline  # Windows
 
-sca = ht.getModule('scapy')
-print(sca.traceroute('54.38.242.225'))
+# Necesary sia daemon loaded in the system ( SIA-UI or siad )
+# sia = ht.getModule('sia')
+# print(sia.getConsensus())
+# print(sia.getWallet())
+
+
+# par = ht.getModule('parser')
+
+# response = par.readFileToType('C:\\Users\\Connor\\Desktop\\ejemplo.csv', typeToExport='json')
+
+# print( json.dumps(response, indent=4) )
+
+
+# ht.Utils.downloadProjectAsModuleFromGithub('nuevo', 'nu', 'https://github.com/th3unkn0n/TeleGram-Scraper')
+
+# sca = ht.getModule('scapy')
+# print(sca.traceroute('54.38.242.225'))
 # print(sca.traceroute('hackingteam.space'))
 # print(sca.traceroute('google.com'))
 

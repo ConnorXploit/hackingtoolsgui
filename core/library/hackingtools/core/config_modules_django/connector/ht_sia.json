@@ -1,0 +1,145 @@
+{
+    "__gui_label__": "ht_sia",
+    "django_form_module_function": {
+        "getConsensus": {
+            "__function__": "getConsensus",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getConsensus__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getDaemonConstants": {
+            "__function__": "getDaemonConstants",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getDaemonConstants__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getDaemonVersion": {
+            "__function__": "getDaemonVersion",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getDaemonVersion__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getRenter": {
+            "__function__": "getRenter",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getRenter__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getRenterContracts": {
+            "__function__": "getRenterContracts",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getRenterContracts__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getRenterDownloads": {
+            "__function__": "getRenterDownloads",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getRenterDownloads__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getRenterFiles": {
+            "__function__": "getRenterFiles",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getRenterFiles__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getRenterPrices": {
+            "__function__": "getRenterPrices",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getRenterPrices__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getWallet": {
+            "__function__": "getWallet",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getWallet__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getWalletAddress": {
+            "__function__": "getWalletAddress",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getWalletAddress__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getWalletAddresses": {
+            "__function__": "getWalletAddresses",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getWalletAddresses__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getWalletBackup": {
+            "__function__": "getWalletBackup",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getWalletBackup__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getWalletSeeds": {
+            "__function__": "getWalletSeeds",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getWalletSeeds__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getWalletTransactions": {
+            "__function__": "getWalletTransactions",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getWalletTransactions__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

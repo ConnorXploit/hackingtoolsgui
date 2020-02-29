@@ -1,0 +1,40 @@
+{
+    "__gui_label__": "ht_parser",
+    "django_form_module_function": {
+        "readFileToType": {
+            "__function__": "readFileToType",
+            "__async__": false,
+            "__return__": "text",
+            "filename": {
+                "__type__": "file",
+                "label_desc": "filename",
+                "placeholder": "filename",
+                "required": true
+            },
+            "typeToExport": {
+                "__type__": "text",
+                "label_desc": "typeToExport",
+                "placeholder": "typeToExport",
+                "required": true
+            },
+            "typeOf": {
+                "__type__": "text",
+                "label_desc": "typeOf",
+                "placeholder": "typeOf",
+                "value": null
+            },
+            "csv_headers": {
+                "__type__": "checkbox",
+                "label_desc": "csv_headers",
+                "placeholder": "csv_headers",
+                "value": false,
+                "selected": false
+            },
+            "__pool_it_readFileToType__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

@@ -436,9 +436,6 @@ def __save_django_module_config__(new_conf, category, moduleName, functionName, 
             if outfile:
                 __config__ = __json.load(outfile)
 
-    if add_django_modal_to in __config__ and not is_main:
-        del(__config__[add_django_modal_to])
-
     if not add_django_modal_to in __config__:
         __config__[add_django_modal_to] = {}
     else: # is_main - not deleted in last line
