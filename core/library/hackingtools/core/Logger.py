@@ -7,6 +7,21 @@ from colorama import Fore as __Fore
 from . import Config, Utils
 config = Config.getConfig(parentKey='core', key='Logger')
 
+
+import logging
+logger = logging.getLogger('hackingtools')
+# Prevent multiple instances
+if not logger.handlers:
+    logger.setLevel(logging.DEBUG)
+    # create file handler which logs even debug messages
+    fh = logging.FileHandler('hackingtools.log')
+    fh.setLevel(logging.DEBUG)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    # add the handlers to the logger
+    logger.addHandler(fh)
+
 __colorama.init()
 
 global __logs__
@@ -123,7 +138,17 @@ def printMessage(message, description=None, debug_module=False, debug_core=False
         msg = '{methodCalledFrom} - {message} - {description}'.format(methodCalledFrom=methodCalledFrom, message=message, description=description)
     else:
         msg = '{methodCalledFrom} - {message}'.format(methodCalledFrom=methodCalledFrom, message=message)
-
+    
+    if is_error:
+        logger.critical(msg)
+    elif is_info:
+        logger.info(msg)
+    elif is_success:
+        logger.debug(msg)
+    elif is_warn:
+        logger.warning(msg)
+    else:
+        logger.debug(msg)
 
     if (color == __Fore.YELLOW or is_warn):
         msg = '{e} - {m}'.format(e=warn_flag, m=msg)

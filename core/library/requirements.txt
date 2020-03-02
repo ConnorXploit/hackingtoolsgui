@@ -6,7 +6,7 @@ colorama
 Django
 Flask
 gitpython
-hackingtools==3.0.0.034
+hackingtools==3.0.0.045
 html5lib
 Jinja2
 keyring

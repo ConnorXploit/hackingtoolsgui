@@ -24,7 +24,7 @@ dependencies:
     - django
     - flask
     - future==0.17.1
-    - hackingtools==3.0.0.034    
+    - hackingtools==3.0.0.045    
     - html5lib==1.0.1
     - httplib2==0.12.0
     - idna==2.8

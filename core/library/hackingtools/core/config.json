@@ -116,7 +116,8 @@
         "ht_keylogger": {},
         "ht_nuevo": {},
         "ht_parser": {},
-        "ht_sia": {}
+        "ht_sia": {},
+        "ht_mimikatz": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
