@@ -21,3 +21,4 @@ function package_exists() {
 # fi
 
 python3 -m pip install hackingtools -U
+python3 -m pip install -r requirements.txt -U
