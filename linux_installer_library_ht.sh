@@ -20,4 +20,4 @@ function package_exists() {
 #     rm cmake-2.8.3.tar.gz
 # fi
 
-pip install hackingtools -U
+python3 -m pip install hackingtools -U
