@@ -6,7 +6,7 @@ colorama
 Django
 Flask
 gitpython
-hackingtools==3.0.0.046
+hackingtools==3.0.0.048
 html5lib
 Jinja2
 keyring
@@ -17,6 +17,7 @@ paramiko
 Pillow
 progressbar2
 Pycco
+pycryptodome
 Pygments
 PyInstaller
 pylint
@@ -24,9 +25,11 @@ PyPDF2
 pyngrok
 pyreadline
 python-nmap
+r2pipe
 requests
 requests_html
 scp
+scapy
 shodan
 six
 python-slugify

@@ -6,7 +6,7 @@ Also you could see some modules and I use shodan for testing something
 # Main hackingtools imports
 
 import hackingtools as ht
-from hackingtools.core import Logger, Utils
+from hackingtools.core import Logger, Utils, Pool
 from hackingtools.core.Objects import Target, Host
 
 import progressbar
@@ -23,11 +23,43 @@ try:
 except:
     import pyreadline as readline  # Windows
 
+# Pool.setMasterNode('localhost:6767')
+
+# Pool.getBlockchain()
+
+# Pool.getPendingTransactions()
+
+# Pool.minePendingTransaction()
+# Pool.getBlockchain()
+# Pool.getPendingTransactions()
+# print( Pool.__CURRENT_BLOCKCHAIN__ )
+# print( Pool.__PENDING_TRANSACTIONS__ )
+
+# # 1 - Worker Verificar Pendientes
+# Pool.getPendingTransactions()
+# Pool.minePendingTransaction()
+
+# # 2 - Send Pool
+# Pool.sendTransaction('esto es una prueba')
+
+# Pool.getBlockchain()
+
+# Pool.getPendingTransactions()
+
+# Pool.minePendingTransaction()
+
+
+# par = ht.getModule('parser')
+
+# response = par.readFileToType('C:\\Users\\Connor\\Desktop\\test.json', typeToExport='csv')
+
+# print( response )
+
+
 # Necesary sia daemon loaded in the system ( SIA-UI or siad )
 # sia = ht.getModule('sia')
 # print(sia.getConsensus())
 # print(sia.getWallet())
-
 
 # par = ht.getModule('parser')
 
@@ -58,8 +90,8 @@ except:
 #     if qualys.disconnect():
 #         print('Sesion cerrada :D')
 
-# ht.Config.setTelegramBotToken('<TELEGRAM_TOKEN>')
-# ht.startTelegramBot()
+ht.Config.setTelegramBotToken('1035804165:AAEYfAiHNF9FK-x6TqUF--BiiEGhZDpO1f0')
+ht.startTelegramBot()
 
 # r = ht.getModule('radare2')
 # res = r.getImports('C:\\Users\\<USER>\\Downloads\\test.exe')

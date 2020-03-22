@@ -114,3 +114,32 @@ def getCVEsFromHost(request):
 			return JsonResponse({ "data" : str(e) })
 		return renderMainPanel(request=request, popup_text=str(e))
 	
+# Automatic view function for executeScan
+def executeScan(request):
+	# Init of the view executeScan
+	try:
+		# Pool call
+		response, repool = sendPool(request, 'executeScan')
+		if response or repool:
+			if repool:
+				return HttpResponse(response)
+			return JsonResponse({ "data" : str(response) })
+		else:
+			# Parameter ip
+			ip = request.POST.get('ip')
+
+			# Parameter params (Optional - Default )
+			params = str(request.POST.get('params', ''))
+			if not params:
+				params = None
+
+			# Execute, get result and show it
+			result = ht.getModule('ht_nmap').executeScan( ip=ip, params=params )
+			if request.POST.get('is_async_executeScan', False):
+				return JsonResponse({ "data" : returnAsModal(result) })
+			return renderMainPanel(request=request, popup_text=result)
+	except Exception as e:
+		if request.POST.get('is_async_executeScan', False):
+			return JsonResponse({ "data" : str(e) })
+		return renderMainPanel(request=request, popup_text=str(e))
+	

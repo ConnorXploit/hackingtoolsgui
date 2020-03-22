@@ -1,4 +1,5 @@
 from . import Config, Logger, Utils
+from .Objects import Transaction
 if Utils.amIdjango(__name__):
     from core.library import hackingtools as ht
 else:
@@ -9,6 +10,10 @@ import json as __json
 import random as __random
 import time as __time
 
+import binascii
+from Crypto import Random
+from Crypto.PublicKey import RSA
+
 # Nodes Pool Treatment
 
 __nodes_pool__ = Config.getConfig(parentKey='core', key='Pool', subkey='known_nodes')
@@ -16,6 +21,101 @@ __nodes_pool__ = Config.getConfig(parentKey='core', key='Pool', subkey='known_no
 global __CHECKED_NODES__
 __CHECKED_NODES__ = False
 __MY_NODE_ID__ = Utils.randomText(length=32, alphabet='mixalpha-numeric-symbol14')
+
+global __BLOCKCHAIN_MASTERNODE__
+__BLOCKCHAIN_MASTERNODE__ = None
+
+global __CURRENT_BLOCKCHAIN__
+__CURRENT_BLOCKCHAIN__ = None
+
+global __PENDING_TRANSACTIONS__
+__PENDING_TRANSACTIONS__ = None
+
+def newWallet():
+	random_gen = Random.new().read
+	private_key = RSA.generate(1024, random_gen)
+	public_key = private_key.publickey()
+	response = {
+		'private_key': binascii.hexlify(private_key.exportKey(format='DER')).decode('ascii'),
+		'public_key': binascii.hexlify(public_key.exportKey(format='DER')).decode('ascii')
+	}
+	return response['private_key'], response['public_key']
+
+def __generateWalletTransaction__(value, sent_to_wallet=''):
+	transaction = Transaction(__WALLET_PUBLIC_KEY__, __WALLET_PRIVATE_KEY__, sent_to_wallet, value)
+	response = {'transaction': transaction.to_dict(), 'signature': transaction.sign_transaction()}
+	return response['transaction'], response['signature']
+
+def sendTransaction(value, sent_to_wallet=''):
+    global __BLOCKCHAIN_MASTERNODE__
+    global __CURRENT_BLOCKCHAIN__
+    if __BLOCKCHAIN_MASTERNODE__:
+        if not __CURRENT_BLOCKCHAIN__:
+            getBlockchain()
+        transaction, signature = __generateWalletTransaction__(value, sent_to_wallet)
+        url = 'http://{url}/transactions/new'.format(url=__BLOCKCHAIN_MASTERNODE__)
+        data = {
+            'sender_address': transaction['sender_address'], 
+            'recipient_address': transaction['recipient_address'], 
+            'amount': transaction['value'], 
+            'signature': signature
+        }
+        response = __requests.post( url, data )
+        return __json.loads( response.text )
+    else:
+        Logger.printMessage( 'There is no Master Node for the Wallet configured yet', is_error=True )
+
+def getBlockchain():
+    global __BLOCKCHAIN_MASTERNODE__
+    global __CURRENT_BLOCKCHAIN__
+    if __BLOCKCHAIN_MASTERNODE__:
+        try:
+            url = 'http://{url}/chain'.format(url=__BLOCKCHAIN_MASTERNODE__)
+            response = __requests.get(url)
+            if response.status_code == 200:
+                __CURRENT_BLOCKCHAIN__ = __json.loads( response.text )
+            else:
+                Logger.printMessage( response.status_code, is_error=True )
+        except Exception as e:
+            Logger.printMessage( str(e), is_error=True )
+    else:
+        Logger.printMessage( 'There is no Master Node for the Wallet configured yet', is_error=True )
+
+def getPendingTransactions():
+    global __BLOCKCHAIN_MASTERNODE__
+    global __PENDING_TRANSACTIONS__
+    global __WALLET_PUBLIC_KEY__
+    if __BLOCKCHAIN_MASTERNODE__:
+        try:
+            url = 'http://{url}/transactions/get'.format(url=__BLOCKCHAIN_MASTERNODE__)
+            response = __requests.get(url)
+            if response.status_code == 200:
+                __PENDING_TRANSACTIONS__ = [ tran for tran in __json.loads( response.text )['transactions'] if not tran['sender_address'] == __WALLET_PUBLIC_KEY__ ]
+            else:
+                Logger.printMessage( response.status_code, is_error=True )
+        except Exception as e:
+            Logger.printMessage( str(e), is_error=True )
+    else:
+        Logger.printMessage( 'There is no Master Node for the Wallet configured yet', is_error=True )
+
+def setMasterNode(nodeUrl):
+    global __BLOCKCHAIN_MASTERNODE__
+    __BLOCKCHAIN_MASTERNODE__ = nodeUrl.replace('http://', '').replace('https://', '').split('/')[0]
+
+def minePendingTransaction():
+    global __BLOCKCHAIN_MASTERNODE__
+    global __WALLET_PUBLIC_KEY__
+    if __BLOCKCHAIN_MASTERNODE__:
+        url = 'http://{url}/mine'.format(url=__BLOCKCHAIN_MASTERNODE__)
+        data = {
+            'sender_address': __WALLET_PUBLIC_KEY__
+        }
+        response = __requests.post( url, data )
+        return __json.loads( response.text )
+    else:
+        Logger.printMessage( 'There is no Master Node for the Wallet configured yet', is_error=True )
+
+__WALLET_PRIVATE_KEY__, __WALLET_PUBLIC_KEY__ = newWallet()
 
 def switchPool():
     ht.switchPool()

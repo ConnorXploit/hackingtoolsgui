@@ -26,9 +26,15 @@ def getIPListfromServices(request):
 			if not shodan_api:
 				shodan_api = None
 
+			fromMap = request.POST.get('fromMap', None)
+			if not fromMap:
+				fromMap = None
+
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').getIPListfromServices( serviceName=serviceName, shodan_api=shodan_api )
 			if request.POST.get('is_async_getIPListfromServices', False):
+				if fromMap:
+					return JsonResponse({ "data" : result })
 				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:
@@ -55,9 +61,15 @@ def search_host(request):
 			if not shodan_api:
 				shodan_api = None
 
+			fromMap = request.POST.get('fromMap', None)
+			if not fromMap:
+				fromMap = None
+
 			# Execute, get result and show it
 			result = ht.getModule('ht_shodan').search_host( ip=ip, shodan_api=shodan_api )
 			if request.POST.get('is_async_search_host', False):
+				if fromMap:
+					return JsonResponse({ "data" : result })
 				return JsonResponse({ "data" : returnAsModal(result) })
 			return renderMainPanel(request=request, popup_text=result)
 	except Exception as e:

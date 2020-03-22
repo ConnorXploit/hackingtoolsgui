@@ -56,7 +56,7 @@ __cant_install_requirements__ = Config.getConfig(parentKey='core', key='__cant_i
 __workers__ = []
 
 __telegrambot_name__ = 'ht-bot'
-__telegrambot_token__ = ''
+__telegrambot_token__ = '1035804165:AAEYfAiHNF9FK-x6TqUF--BiiEGhZDpO1f0'
 
 def getModulesNames():
     """Return's an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)
@@ -567,6 +567,9 @@ worker('refresh-pool-servers', 'ht.Pool.__checkPoolNodes__', timesleep=180, run_
 worker('clear-htpass-files', 'ht.Config.__cleanHtPassFiles__', timesleep=100, run_until_ht_stops=True, log=__amidjango__)
 worker('clear-uploaded-modules-temp', 'ht.Repositories.clearUploadsTemp', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
 worker('clear-output-modules', 'ht.__cleanOutputModules__', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
+
+Config.setTelegramBotToken(__telegrambot_token__)
+startTelegramBot()
 
 __importModules__()
 

@@ -225,6 +225,9 @@
             },
             "getCVEsFromHost": {
                 "__in_map_getCVEsFromHost__": false
+            },
+            "executeScan": {
+                "__in_map_executeScan__": true
             }
         },
         "ht_twitter": {

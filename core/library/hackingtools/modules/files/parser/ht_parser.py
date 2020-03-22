@@ -7,6 +7,10 @@ import os
 import csv
 import json
 import xlsxwriter
+import xmltodict
+import xml.etree.ElementTree as ET
+import pandas as pd
+from pandas.io.json import json_normalize
 
 config = Config.getConfig(parentKey='modules', key='ht_parser')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
@@ -46,7 +50,8 @@ class StartModule():
 
 			# Transformar JSON a X
 			if (extension_file or typeOf) == 'json' and typeToExport == 'csv':
-				self.__jsonToCSV__()
+				datos = self.__readJSONFile__(filename)
+				return self.__jsonToCSV__( datos )
 
 			if (extension_file or typeOf) == 'json' and typeToExport == 'xml':
 				self.__jsonToXML__()
@@ -56,7 +61,8 @@ class StartModule():
 
 			# Transformar XML a X
 			if (extension_file or typeOf) == 'xml' and typeToExport == 'json':
-				self.__xmlToJSON__()
+				datos = self.__readXMLFile__(filename)
+				return self.__xmlToJSON__( datos )
 
 			if (extension_file or typeOf) == 'xml' and typeToExport == 'csv':
 				self.__xmlToCSV__()
@@ -84,6 +90,22 @@ class StartModule():
 			return reader
 		except:
 			return None
+
+	def __readXMLFile__(self, filename):
+		try:
+			xmlfile = open(filename, 'r')
+			datos = ET.parse(xmlfile).getroot()
+			return datos
+		except Exception as e:
+			return str( e )
+
+	def __readJSONFile__(self, filename):
+		try:
+			jsonfile = open(filename, 'r')
+			datos = json.load( jsonfile )
+			return datos
+		except Exception as e:
+			return str( e )
 
 	def __csvToJSON__(self, fileData, csv_headers=False):
 		data = {}
@@ -118,8 +140,8 @@ class StartModule():
 	def __csvToHTML__(self):
 		pass
 
-	def __jsonToCSV__(self):
-		pass
+	def __jsonToCSV__(self, fileData):
+		return json_normalize(fileData).to_csv( encoding='utf-8' )
 
 	def __jsonToXML__(self):
 		pass
@@ -130,8 +152,12 @@ class StartModule():
 	def __xmlToCSV__(self):
 		pass
 
-	def __xmlToJSON__(self):
-		pass
+	def __xmlToJSON__(self, fileData):
+		try:
+			parsedString = ET.tostring( fileData, encoding='unicode' )
+			return json.dumps( xmltodict.parse(parsedString) )
+		except Exception as e:
+			return str( e )
 	
 	def __xmlToHTML__(self):
 		pass

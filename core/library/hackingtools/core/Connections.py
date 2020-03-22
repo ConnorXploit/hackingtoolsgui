@@ -17,6 +17,11 @@ __headers__ = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
 }
 
+__tor_proxies__ = {
+    'http': 'socks5://127.0.0.1:9150',
+    'https': 'socks5://127.0.0.1:9150'
+}
+
 # Ngrok connections
 global __ngrok_ip__
 __ngrok_ip__ = None
@@ -122,6 +127,13 @@ def stopNgrok(ngrokServiceUrl):
     except Exception as e:
         Logger.printMessage(message='Couldn\'t stop ngrok service', description=str(e), is_error=True)
         return False
+
+def requestByTor(url):
+    try:
+        return requests.get(url, proxies=__tor_proxies__).text.strip()
+    except Exception as e:
+        Logger.printMessage( str(e), is_error=True)
+        return None
 
 def __serviceNotMine__(service):
     for serv in __services__:

@@ -33,6 +33,14 @@ class StartModule():
 			return hosts
 		return []
 
+	def executeScan(self, ip, params=''):
+		Logger.printMessage(message='{methodName}'.format(methodName='executeScan'), description='{param}'.format(param=ip), debug_module=True)
+		nm = nmap.PortScanner()
+		try:
+			return dict( nm.scan(hosts=ip, arguments=params) )
+		except:
+			return {}
+
 	def getCVEsFromHost(self, ip):
 		Logger.printMessage(message='{methodName}'.format(methodName='getConnectedDevices'), description='{param}'.format(param=ip), debug_module=True)
 		nm = nmap.PortScanner()

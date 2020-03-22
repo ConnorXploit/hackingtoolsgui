@@ -22,7 +22,16 @@ try:
 
         markup = types.InlineKeyboardMarkup()
 
-        modules_list_3 = ht.Utils.groupListByLength(modules, 3)
+        modules_list_3 = ht.Utils.groupListByLength(modules, 3) 
+        
+        # [ 
+        #     ['ht_shodan','ht_*','ht_*'],
+        #     ['ht_*','ht_*','ht_*'],
+        #     ['ht_*','ht_*','ht_*'] ,
+        #     ['ht_*','ht_*'] 
+        # ]
+
+        # ['value', 'ht_shodan', 'osint']
 
         for line in modules_list_3:
             if len(line) == 3:
@@ -39,12 +48,18 @@ try:
         
     @bot.callback_query_handler(lambda q: q.message.chat.type == "private")
     def private_query(query):
-        if (query.data.startswith("['value'")):
-            moduleName = __ast.literal_eval(query.data)[1]
-            category = __ast.literal_eval(query.data)[2]
-            bot.answer_callback_query(callback_query_id=query.id, show_alert=True, text="You Clicked " + moduleName + " module and it's category is " + category)
-            
-        bot.edit_message_reply_markup(query.message.chat.id, query.message.message_id)
+        try:
+            if (query.data.startswith("['value'")):
+                moduleName = __ast.literal_eval(query.data)[1]
+                category = __ast.literal_eval(query.data)[2]
+
+                functions = '\n'.join( ht.getFunctionsNamesFromModule(moduleName) )
+
+                bot.answer_callback_query(callback_query_id=query.id, show_alert=True, text=functions)
+                
+            bot.edit_message_reply_markup(query.message.chat.id, query.message.message_id)
+        except Exception as e:
+            bot.answer_callback_query(callback_query_id=query.id, show_alert=True, text=str(e))
 
     bot.polling()
 except:

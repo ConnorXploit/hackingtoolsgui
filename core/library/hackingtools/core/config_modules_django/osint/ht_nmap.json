@@ -102,6 +102,28 @@
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
             }
+        },
+        "executeScan": {
+            "__function__": "executeScan",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
+            },
+            "params": {
+                "__type__": "text",
+                "label_desc": "params",
+                "placeholder": "params",
+                "value": ""
+            },
+            "__pool_it_executeScan__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
         }
     }
 }

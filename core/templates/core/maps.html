@@ -40,6 +40,7 @@
       var params = {
         serviceName: $('#search_this').val(),
         shodan_api: shodan_key,
+        fromMap: '1',
         is_async_getIPListfromServices: true
       }
       $('#search_queue').append('<div class="queue_item search_' + $('#search_this').val() + '">' + $('#search_this').val() + '</div>')
@@ -81,6 +82,7 @@
                       var params = {
                         ip: r.data['ip'],
                         shodan_api: shodan_key,
+                        fromMap: '1',
                         is_async_search_host: true
                       }
                       $.ajax({

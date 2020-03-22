@@ -160,8 +160,7 @@
             "known_nodes": [
                 "http://pool1.pentestinglab.es",
                 "http://pool2.pentestinglab.es",
-                "http://pool3.pentestinglab.es",
-                "http://pool4.pentestinglab.es"
+                "http://pool3.pentestinglab.es"
             ]
         },
         "TelegramBot": {
