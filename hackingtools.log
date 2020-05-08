@@ -1582,3 +1582,295 @@
 2020-03-19 18:07:18,051 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
 2020-03-19 18:07:18,797 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
 2020-03-19 18:07:19,228 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-23 18:51:19,418 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-23 18:51:19,837 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-23 18:51:20,210 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-23 18:51:20,583 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-23 18:51:35,469 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-23 18:51:40,805 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-23 18:51:41,286 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-23 18:51:41,752 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-23 18:51:42,184 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-23 18:51:42,791 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-23 18:51:43,195 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-23 18:51:43,608 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-23 18:51:43,953 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-23 18:51:44,371 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-23 18:51:46,896 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-23 18:51:47,241 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-23 18:54:33,503 - DEBUG - __init__.py.__createModule__() - Creating supernet on malware
+2020-03-23 18:54:33,564 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-23 18:54:33,629 - CRITICAL - Utils.py.getAnyFunctionParams() - ht.modules.malware.supernet.ht_supernet.StartModule().help is not a function - Be sure you have all your module class variables outsite the class, in the file (ht.modules.malware.supernet.ht_supernet.py) before the 'class StartModule:' statement
+2020-03-23 18:54:33,659 - CRITICAL - Utils.py.getAnyFunctionParams() - ht.modules.malware.supernet.ht_supernet.StartModule().help is not a function - Be sure you have all your module class variables outsite the class, in the file (ht.modules.malware.supernet.ht_supernet.py) before the 'class StartModule:' statement
+2020-03-24 00:41:00,228 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-24 00:41:00,520 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-24 00:41:00,809 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-24 00:41:01,077 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-24 00:41:02,034 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-24 00:41:25,871 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-24 00:41:26,291 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-24 00:41:26,631 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-24 00:41:26,932 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-24 00:41:27,483 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-24 00:41:27,720 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-24 00:41:28,010 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-24 00:41:28,225 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-24 00:41:28,521 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-24 00:41:29,561 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-24 00:41:29,801 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-25 19:47:33,974 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-25 19:47:34,292 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-25 19:47:34,587 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-25 19:47:34,881 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-25 19:47:35,366 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-25 19:47:38,192 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-25 19:47:38,660 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-25 19:47:39,055 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-25 19:47:39,394 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-25 19:47:39,865 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-25 19:47:40,141 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-25 19:47:40,456 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-25 19:47:40,721 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-25 19:47:41,129 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-25 19:47:41,844 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-25 19:47:42,177 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-25 19:50:14,972 - DEBUG - views.py.saveFileOutput() - saveFileOutput - Saving to core\library\hackingtools\modules\av_evasion\crypter\output\rat_client.py
+2020-03-25 19:50:15,015 - DEBUG - ht_crypter.py.crypt_file() - crypt_file - core\library\hackingtools\modules\av_evasion\crypter\output\rat_client.py
+2020-03-25 19:50:15,041 - DEBUG - Utils.py.getFileContentInByteArray() - getFileInByteArray - core\library\hackingtools\modules\av_evasion\crypter\output\rat_client.py
+2020-03-25 19:50:15,071 - DEBUG - ht_rsa.py.getRandomKeypair() - getRandomKeypair
+2020-03-25 19:50:15,096 - DEBUG - Utils.py.isPrime() - isPrime - 70
+2020-03-25 19:50:15,121 - DEBUG - Utils.py.isPrime() - isPrime - 98
+2020-03-25 19:50:15,145 - DEBUG - Utils.py.isPrime() - isPrime - 75
+2020-03-25 19:50:15,168 - DEBUG - Utils.py.isPrime() - isPrime - 47
+2020-03-25 19:50:15,192 - DEBUG - Utils.py.isPrime() - isPrime - 69
+2020-03-25 19:50:15,214 - DEBUG - Utils.py.isPrime() - isPrime - 55
+2020-03-25 19:50:15,236 - DEBUG - Utils.py.isPrime() - isPrime - 60
+2020-03-25 19:50:15,258 - DEBUG - Utils.py.isPrime() - isPrime - 25
+2020-03-25 19:50:15,280 - DEBUG - Utils.py.isPrime() - isPrime - 74
+2020-03-25 19:50:15,302 - DEBUG - Utils.py.isPrime() - isPrime - 87
+2020-03-25 19:50:15,324 - DEBUG - Utils.py.isPrime() - isPrime - 32
+2020-03-25 19:50:15,347 - DEBUG - Utils.py.isPrime() - isPrime - 84
+2020-03-25 19:50:15,369 - DEBUG - Utils.py.isPrime() - isPrime - 17
+2020-03-25 19:50:15,389 - DEBUG - ht_rsa.py.getRandomKeypair() - getRandomKeypair - (17, 47)
+2020-03-25 19:50:15,414 - DEBUG - Utils.py.isPrime() - isPrime - 17
+2020-03-25 19:50:15,436 - DEBUG - Utils.py.isPrime() - isPrime - 47
+2020-03-25 19:50:15,457 - DEBUG - Utils.py.euclides() - euclides - 29 - 736
+2020-03-25 19:50:15,482 - DEBUG - Utils.py.multiplicativeInverse() - multiplicativeInverse - 29 - 736
+2020-03-25 19:50:15,504 - DEBUG - ht_rsa.py.encrypt() - encrypt - (533, 799) - b'import sub'
+2020-03-25 19:50:15,530 - DEBUG - Utils.py.asciiToHex() - AsciiToHex - Length: 24544 - b'aW1wb3J0IH' ...
+2020-03-25 19:50:15,571 - DEBUG - Utils.py.hexToBase64() - HexToBase64 - Length: 24544 - ['61', '57', '31', '77', '62', '33', '4a', '30', '49', '48'] ...
+2020-03-25 19:50:15,609 - DEBUG - Utils.py.joinBase64() - joinBase64 - Length: 24544 - [b'NjE=', b'NTc=', b'MzE=', b'Nzc=', b'NjI=', b'MzM=', b'NGE=', b'MzA=', b'NDk=', b'NDg='] ...
+2020-03-25 19:50:15,639 - DEBUG - Utils.py.decimalToAscii() - decimalToAscii - Length: 98176 - b'NjE=NTc=Mz' ...
+2020-03-25 19:50:15,671 - DEBUG - Utils.py.textToAscii() - textToAscii - Length: 98176 - NjE=NTc=Mz ...
+2020-03-25 19:50:15,700 - DEBUG - ht_rsa.py.encrypt() - encrypt - [78, 106, 69, 61, 78, 84, 99, 61, 77, 122] - Length: 98176
+2020-03-25 19:50:16,260 - DEBUG - Utils.py.asciiToHex() - AsciiToHex - Length: 98176 - [499, 667, 86, 346, 499, 271, 80, 346, 280, 413] ...
+2020-03-25 19:50:16,304 - DEBUG - Utils.py.hexToBase64() - HexToBase64 - Length: 98176 - ['1f3', '29b', '56', '15a', '1f3', '10f', '50', '15a', '118', '19d'] ...
+2020-03-25 19:50:16,372 - DEBUG - Utils.py.joinBase64() - joinBase64 - Length: 98176 - [b'MWYz', b'Mjli', b'NTY=', b'MTVh', b'MWYz', b'MTBm', b'NTA=', b'MTVh', b'MTE4', b'MTlk'] ...
+2020-03-25 19:50:16,428 - DEBUG - Utils.py.saveToFile() - saveToFile - core\library\hackingtools\modules\av_evasion\crypter\output\rat_client.py
+2020-03-25 19:51:33,084 - DEBUG - views.py.saveFileOutput() - saveFileOutput - Saving to core\library\hackingtools\modules\av_evasion\crypter\output\rat_client.py
+2020-03-25 19:51:33,106 - DEBUG - ht_crypter.py.crypt_file() - crypt_file - core\library\hackingtools\modules\av_evasion\crypter\output\rat_client_UAWwUhL.py
+2020-03-25 19:51:33,135 - DEBUG - Utils.py.getFileContentInByteArray() - getFileInByteArray - core\library\hackingtools\modules\av_evasion\crypter\output\rat_client_UAWwUhL.py
+2020-03-25 19:51:33,165 - DEBUG - ht_rsa.py.getRandomKeypair() - getRandomKeypair
+2020-03-25 19:51:33,190 - DEBUG - Utils.py.isPrime() - isPrime - 17
+2020-03-25 19:51:33,215 - DEBUG - Utils.py.isPrime() - isPrime - 18
+2020-03-25 19:51:33,238 - DEBUG - Utils.py.isPrime() - isPrime - 12
+2020-03-25 19:51:33,261 - DEBUG - Utils.py.isPrime() - isPrime - 99
+2020-03-25 19:51:33,285 - DEBUG - Utils.py.isPrime() - isPrime - 48
+2020-03-25 19:51:33,312 - DEBUG - Utils.py.isPrime() - isPrime - 52
+2020-03-25 19:51:33,334 - DEBUG - Utils.py.isPrime() - isPrime - 92
+2020-03-25 19:51:33,359 - DEBUG - Utils.py.isPrime() - isPrime - 83
+2020-03-25 19:51:33,382 - DEBUG - ht_rsa.py.getRandomKeypair() - getRandomKeypair - (17, 83)
+2020-03-25 19:51:33,405 - DEBUG - Utils.py.isPrime() - isPrime - 17
+2020-03-25 19:51:33,430 - DEBUG - Utils.py.isPrime() - isPrime - 83
+2020-03-25 19:51:33,454 - DEBUG - Utils.py.euclides() - euclides - 581 - 1312
+2020-03-25 19:51:33,478 - DEBUG - Utils.py.multiplicativeInverse() - multiplicativeInverse - 581 - 1312
+2020-03-25 19:51:33,501 - DEBUG - ht_rsa.py.encrypt() - encrypt - (621, 1411) - b'import sub'
+2020-03-25 19:51:33,526 - DEBUG - Utils.py.asciiToHex() - AsciiToHex - Length: 24544 - b'aW1wb3J0IH' ...
+2020-03-25 19:51:33,555 - DEBUG - Utils.py.hexToBase64() - HexToBase64 - Length: 24544 - ['61', '57', '31', '77', '62', '33', '4a', '30', '49', '48'] ...
+2020-03-25 19:51:33,589 - DEBUG - Utils.py.joinBase64() - joinBase64 - Length: 24544 - [b'NjE=', b'NTc=', b'MzE=', b'Nzc=', b'NjI=', b'MzM=', b'NGE=', b'MzA=', b'NDk=', b'NDg='] ...
+2020-03-25 19:51:33,618 - DEBUG - Utils.py.decimalToAscii() - decimalToAscii - Length: 98176 - b'NjE=NTc=Mz' ...
+2020-03-25 19:51:33,656 - DEBUG - Utils.py.textToAscii() - textToAscii - Length: 98176 - NjE=NTc=Mz ...
+2020-03-25 19:51:33,685 - DEBUG - ht_rsa.py.encrypt() - encrypt - [78, 106, 69, 61, 78, 84, 99, 61, 77, 122] - Length: 98176
+2020-03-25 19:51:34,387 - DEBUG - Utils.py.asciiToHex() - AsciiToHex - Length: 98176 - [436, 990, 1021, 742, 436, 84, 260, 742, 93, 403] ...
+2020-03-25 19:51:34,431 - DEBUG - Utils.py.hexToBase64() - HexToBase64 - Length: 98176 - ['1b4', '3de', '3fd', '2e6', '1b4', '54', '104', '2e6', '5d', '193'] ...
+2020-03-25 19:51:34,498 - DEBUG - Utils.py.joinBase64() - joinBase64 - Length: 98176 - [b'MWI0', b'M2Rl', b'M2Zk', b'MmU2', b'MWI0', b'NTQ=', b'MTA0', b'MmU2', b'NWQ=', b'MTkz'] ...
+2020-03-25 19:51:34,554 - DEBUG - Utils.py.saveToFile() - saveToFile - core\library\hackingtools\modules\av_evasion\crypter\output\rat_client_UAWwUhL.py
+2020-03-25 19:51:34,812 - DEBUG - ht_crypter.py.convertToExe() - convertToExe - core\library\hackingtools\modules\av_evasion\crypter\output\rat_client_UAWwUhL.py
+2020-03-27 01:11:19,415 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-27 01:11:19,744 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-27 01:11:20,065 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-27 01:11:20,375 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-27 01:11:35,761 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-27 01:12:01,351 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-27 01:12:01,744 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-27 01:12:02,147 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-27 01:12:02,534 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-27 01:12:03,004 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-27 01:12:03,400 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-27 01:12:03,792 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-27 01:12:04,080 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-27 01:12:04,436 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-27 01:12:05,155 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-27 01:12:05,437 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-27 01:12:25,191 - DEBUG - views.py.saveFileOutput() - saveFileOutput - Saving to core\library\hackingtools\modules\crypto\rsa\output\MyKeys.htpass
+2020-03-27 01:12:56,512 - DEBUG - UtilsDjangoViewsAuto.py.restartDjangoServer() - Restarting the server!
+2020-03-27 01:13:04,763 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-27 01:13:05,119 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-27 01:13:05,455 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-27 01:13:05,796 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-27 01:13:06,230 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-27 01:13:10,174 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-27 01:13:10,640 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-27 01:13:11,123 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-27 01:13:11,546 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-27 01:13:12,006 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-27 01:13:12,379 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-27 01:13:12,796 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-27 01:13:13,090 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-27 01:13:13,430 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-27 01:13:13,807 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-27 01:13:14,046 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-27 01:13:28,645 - DEBUG - views.py.saveFileOutput() - saveFileOutput - Saving to core\library\hackingtools\modules\crypto\rsa\output\MyKeys (1).htpass
+2020-03-27 01:13:56,702 - DEBUG - __init__.py.__createModule__() - Creating vulndb on vulnerabilities
+2020-03-27 01:13:56,754 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-27 01:13:56,823 - CRITICAL - Utils.py.getAnyFunctionParams() - ht.modules.vulnerabilities.vulndb.ht_vulndb.StartModule().help is not a function - Be sure you have all your module class variables outsite the class, in the file (ht.modules.vulnerabilities.vulndb.ht_vulndb.py) before the 'class StartModule:' statement
+2020-03-27 01:13:56,849 - CRITICAL - Utils.py.getAnyFunctionParams() - ht.modules.vulnerabilities.vulndb.ht_vulndb.StartModule().help is not a function - Be sure you have all your module class variables outsite the class, in the file (ht.modules.vulnerabilities.vulndb.ht_vulndb.py) before the 'class StartModule:' statement
+2020-03-28 19:44:40,407 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:44:40,789 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:44:41,103 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:44:41,410 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:44:41,927 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:44:46,135 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:44:46,477 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:44:46,891 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:44:47,293 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:44:47,656 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-28 19:44:48,081 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-28 19:44:48,378 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-28 19:44:48,757 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-28 19:44:49,050 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:44:49,611 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - checkerOnline
+2020-03-28 19:44:49,872 - WARNING - urls.py.loadModuleUrls() - loadModuleUrls - There is no View for the URL 'checkerOnline' Creating it!
+2020-03-28 19:44:50,108 - DEBUG - UtilsDjangoViewsAuto.py.createTemplateFunctionForModule() - Added a view for the function - checkerOnline
+2020-03-28 19:44:50,355 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - checkerOnline
+2020-03-28 19:44:50,664 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:44:50,896 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:44:51,296 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAPI
+2020-03-28 19:44:51,610 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getCVEInfo
+2020-03-28 19:44:51,839 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getSuggestions
+2020-03-28 19:44:52,001 - INFO - urls.py.loadModuleUrls() - loadModuleUrls - Can' load from .views_modules.vulnerabilities import views_ht_vulndb. Creating it!
+2020-03-28 19:44:52,345 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAPI
+2020-03-28 19:44:52,700 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getCVEInfo
+2020-03-28 19:44:52,938 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getSuggestions
+2020-03-28 19:44:53,110 - WARNING - urls.py.loadModuleUrls() - loadModuleUrls - There is no View for the URL 'getAPI' Creating it!
+2020-03-28 19:44:53,377 - DEBUG - UtilsDjangoViewsAuto.py.createTemplateFunctionForModule() - Added a view for the function - getAPI
+2020-03-28 19:44:53,603 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAPI
+2020-03-28 19:44:53,769 - WARNING - urls.py.loadModuleUrls() - loadModuleUrls - There is no View for the URL 'getCVEInfo' Creating it!
+2020-03-28 19:44:54,019 - DEBUG - UtilsDjangoViewsAuto.py.createTemplateFunctionForModule() - Added a view for the function - getCVEInfo
+2020-03-28 19:44:54,248 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getCVEInfo
+2020-03-28 19:44:54,415 - WARNING - urls.py.loadModuleUrls() - loadModuleUrls - There is no View for the URL 'getSuggestions' Creating it!
+2020-03-28 19:44:54,599 - DEBUG - UtilsDjangoViewsAuto.py.createTemplateFunctionForModule() - Added a view for the function - getSuggestions
+2020-03-28 19:44:54,887 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getSuggestions
+2020-03-28 19:44:55,112 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAPI
+2020-03-28 19:44:55,281 - WARNING - urls.py.loadModuleUrls() - loadModuleUrls - There is no View for the URL 'getCVEInfo' Creating it!
+2020-03-28 19:44:55,596 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getCVEInfo
+2020-03-28 19:44:55,780 - WARNING - urls.py.loadModuleUrls() - loadModuleUrls - There is no View for the URL 'getSuggestions' Creating it!
+2020-03-28 19:44:56,032 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getSuggestions
+2020-03-28 19:44:56,548 - INFO - urls.py - CORE VIEWS - Loaded new functions views: checkerOnline, getAPI, getCVEInfo, getSuggestions
+2020-03-28 19:45:09,380 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:45:09,699 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:45:10,006 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:45:10,319 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:45:10,742 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:45:14,025 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:45:14,360 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:45:14,759 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:45:15,161 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:45:15,498 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-28 19:45:15,827 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-28 19:45:16,109 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-28 19:45:16,443 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-28 19:45:16,720 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:45:17,094 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:45:17,377 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:52:14,559 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:52:14,952 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:52:15,279 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:52:15,617 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:52:16,128 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:52:19,597 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:52:19,966 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:52:20,534 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:52:21,004 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:52:21,390 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-28 19:52:21,757 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-28 19:52:22,050 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-28 19:52:22,400 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-28 19:52:22,681 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:52:23,211 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:52:23,516 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:52:58,284 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:52:58,610 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:52:58,936 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:52:59,250 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:52:59,694 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:53:03,358 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:53:03,741 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:53:04,181 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:53:04,648 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:53:05,012 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-28 19:53:05,386 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-28 19:53:05,683 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-28 19:53:06,043 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-28 19:53:06,344 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:53:06,737 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - checkerOnline
+2020-03-28 19:53:07,065 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:53:07,311 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:56:41,680 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:56:42,001 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:56:42,326 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:56:42,639 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:56:43,135 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:56:46,787 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-03-28 19:56:47,164 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-03-28 19:56:47,585 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-03-28 19:56:48,037 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-03-28 19:56:48,463 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-03-28 19:56:48,848 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-03-28 19:56:49,170 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-03-28 19:56:49,501 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-03-28 19:56:49,780 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-03-28 19:56:50,245 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-03-28 19:56:50,551 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-04-13 15:05:09,890 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-04-13 15:05:10,258 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-04-13 15:05:10,566 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-04-13 15:05:10,857 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-04-13 15:05:37,959 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-04-13 15:06:03,208 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-04-13 15:06:03,576 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-04-13 15:06:03,975 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-04-13 15:06:04,383 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-04-13 15:06:04,802 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-04-13 15:06:05,142 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-04-13 15:06:05,393 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-04-13 15:06:05,699 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-04-13 15:06:05,947 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-04-13 15:06:06,750 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-04-13 15:06:07,033 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-05-08 18:24:58,862 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-05-08 18:24:59,153 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-05-08 18:24:59,439 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-05-08 18:24:59,722 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-05-08 18:25:00,298 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-05-08 18:25:24,488 - DEBUG - Logger.py.print_and_return() - __loadActualPort__ - 2222
+2020-05-08 18:25:24,889 - DEBUG - Logger.py.print_and_return() - getMyLanIP - http://192.168.1.233:2222
+2020-05-08 18:25:25,383 - DEBUG - Logger.py.print_and_return() - getMyLocalIP - http://127.0.0.1:2222
+2020-05-08 18:25:25,716 - DEBUG - Connections.py.__initServices__() - Loaded __services__ - ['http://192.168.1.233:2222', 'http://127.0.0.1:2222']
+2020-05-08 18:25:26,148 - DEBUG - Utils.py.startWorker() - Starting Worker: refresh-pool-servers
+2020-05-08 18:25:26,394 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-htpass-files
+2020-05-08 18:25:26,681 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-uploaded-modules-temp
+2020-05-08 18:25:26,917 - DEBUG - Utils.py.startWorker() - Starting Worker: clear-output-modules
+2020-05-08 18:25:27,209 - DEBUG - __init__.py.__importModules__() - __importModules__ - Loading modules...
+2020-05-08 18:25:27,792 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername
+2020-05-08 18:25:28,098 - DEBUG - DjangoFunctions.py.__createModuleFunctionView__() - Creating Function Modal View - getAccountByUsername

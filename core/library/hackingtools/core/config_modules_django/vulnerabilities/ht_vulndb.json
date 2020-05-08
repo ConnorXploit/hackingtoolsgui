@@ -1,0 +1,118 @@
+{
+    "__gui_label__": "_MODULE_GUI_LABEL_",
+    "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+    "_django_form_module_function_": {
+        "_PUBLIC_FUNCTION_": {
+            "__function__": "_FUNCTION_NAME_",
+            "__async__": false,
+            "__return__": "_IF_RETURNS_LIKE_TEXT_",
+            "_PARAM_TO_USE_IN_VIEWS_PY_": {
+                "__type__": "_HTML_INPUT_TYPE_",
+                "label_desc": "_DESCRIPTION_LABEL_",
+                "value": "_INPUT_VALUE_",
+                "required": "_IF_REQUIRED_",
+                "returnable_modules_functions": {
+                    "_MODULE_CALL_FOR_": [
+                        "_THAT_MODULES_FUNCTION"
+                    ]
+                },
+                "options_from_function": {
+                    "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
+                }
+            }
+        }
+    },
+    "django_form_module_function": {
+        "getAPI": {
+            "__function__": "getAPI",
+            "__async__": false,
+            "__return__": "text",
+            "vulndb_api": {
+                "__type__": "text",
+                "label_desc": "vulndb_api",
+                "placeholder": "vulndb_api",
+                "value": null
+            },
+            "session_id": {
+                "__type__": "text",
+                "label_desc": "session_id",
+                "placeholder": "session_id",
+                "value": null
+            },
+            "__pool_it_getAPI__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getCVEInfo": {
+            "__function__": "getCVEInfo",
+            "__async__": false,
+            "__return__": "text",
+            "CVE": {
+                "__type__": "text",
+                "label_desc": "CVE",
+                "placeholder": "CVE",
+                "required": true
+            },
+            "references": {
+                "__type__": "checkbox",
+                "label_desc": "references",
+                "placeholder": "references",
+                "value": false,
+                "selected": false
+            },
+            "vulndb_api": {
+                "__type__": "text",
+                "label_desc": "vulndb_api",
+                "placeholder": "vulndb_api",
+                "value": null
+            },
+            "session_id": {
+                "__type__": "text",
+                "label_desc": "session_id",
+                "placeholder": "session_id",
+                "value": null
+            },
+            "__pool_it_getCVEInfo__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getSuggestions": {
+            "__function__": "getSuggestions",
+            "__async__": false,
+            "__return__": "text",
+            "fieldType": {
+                "__type__": "text",
+                "label_desc": "fieldType",
+                "placeholder": "fieldType",
+                "required": true
+            },
+            "fieldName": {
+                "__type__": "text",
+                "label_desc": "fieldName",
+                "placeholder": "fieldName",
+                "required": true
+            },
+            "vulndb_api": {
+                "__type__": "text",
+                "label_desc": "vulndb_api",
+                "placeholder": "vulndb_api",
+                "value": null
+            },
+            "session_id": {
+                "__type__": "text",
+                "label_desc": "session_id",
+                "placeholder": "session_id",
+                "value": null
+            },
+            "__pool_it_getSuggestions__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

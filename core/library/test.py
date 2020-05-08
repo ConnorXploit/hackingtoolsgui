@@ -3,6 +3,7 @@ This is an example for starting doing something with the Library and learning so
 Also you could see some modules and I use shodan for testing something
 """
 
+
 # Main hackingtools imports
 
 import hackingtools as ht
@@ -22,6 +23,11 @@ try:
     import readline  # Linux
 except:
     import pyreadline as readline  # Windows
+
+# vul = ht.getModule('vulndb')
+# #print(vul.getSuggestions('distinct', 'affectedSoftware.name', vulndb_api='K8U08QNZ6NG1LORLOF5Z05S5GEFV0MYR2ZM8WTBPSW549S5M6M0Y54IIUH5N1VTM'))
+# print(vul.getCVEInfo('CVE-2019-0607', vulndb_api='K8U08QNZ6NG1LORLOF5Z05S5GEFV0MYR2ZM8WTBPSW549S5M6M0Y54IIUH5N1VTM'))
+
 
 # Pool.setMasterNode('localhost:6767')
 
@@ -90,8 +96,8 @@ except:
 #     if qualys.disconnect():
 #         print('Sesion cerrada :D')
 
-ht.Config.setTelegramBotToken('1035804165:AAEYfAiHNF9FK-x6TqUF--BiiEGhZDpO1f0')
-ht.startTelegramBot()
+# ht.Config.setTelegramBotToken('1035804165:AAEYfAiHNF9FK-x6TqUF--BiiEGhZDpO1f0')
+# ht.startTelegramBot()
 
 # r = ht.getModule('radare2')
 # res = r.getImports('C:\\Users\\<USER>\\Downloads\\test.exe')

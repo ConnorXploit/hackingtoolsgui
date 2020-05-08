@@ -390,6 +390,9 @@
             },
             "help": {
                 "__in_map_help__": false
+            },
+            "checkerOnline": {
+                "__in_map_checkerOnline__": false
             }
         },
         "ht_ssh": {
@@ -562,6 +565,20 @@
             },
             "xmlToJSON": {
                 "__in_map_xmlToJSON__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_vulndb": {
+            "getAPI": {
+                "__in_map_getAPI__": true
+            },
+            "getCVEInfo": {
+                "__in_map_getCVEInfo__": true
+            },
+            "getSuggestions": {
+                "__in_map_getSuggestions__": true
             },
             "help": {
                 "__in_map_help__": false

@@ -117,7 +117,9 @@
         "ht_nuevo": {},
         "ht_parser": {},
         "ht_sia": {},
-        "ht_mimikatz": {}
+        "ht_mimikatz": {},
+        "ht_supernet": {},
+        "ht_vulndb": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
@@ -212,8 +214,8 @@
             "walletbuilders_masternode_acc_addr_MN1": ""
         },
         "Logger": {
-            "__DEBUG_CORE_FLAG__": false,
-            "__DEBUG_MODULE_FLAG__": false,
+            "__DEBUG_CORE_FLAG__": true,
+            "__DEBUG_MODULE_FLAG__": true,
             "__DEBUG_USER__": true,
             "clear_on_load": false,
             "log_save_date_format": "%Y-%m-%d-%H-%M-%S-%f",
