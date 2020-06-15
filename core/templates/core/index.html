@@ -389,68 +389,76 @@
                                                     cache: false,
                                                     processData: false,
                                                     success : function(res) {
-                                                      if('data' in res && res.data && Object.keys(res.data).length !== 0){
-                                                        function isDict(v) {
-                                                            return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
-                                                        }
-                                                        if(isDict(res.data)){
-                                                          data = JSON.stringify(res.data, null, 2);
-                                                          $.notify("{{functi}}:\n" + data, "success");
-                                                          if($('#resultsLogger').val() != ''){
-                                                            $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                      try{
+                                                        if('data' in res && res.data && Object.keys(res.data).length !== 0){
+                                                          function isDict(v) {
+                                                              return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
                                                           }
-                                                          $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
-                                                        } else {
-                                                          if(res.data instanceof Array){
-                                                            var data = '';
-                                                            for(var i=0; i < res.data.length; i++){
-                                                              if(isDict(res.data[i])){
-                                                                for(var key in res.data[i]){
-                                                                  data += key + ': ' + res.data[i][key];
-                                                                  if(res.data.length-1 != i){
-                                                                    data += "\n";
-                                                                  }
-                                                                }
-                                                              } else {
-                                                                data += res.data[i];
-                                                                if(res.data.length-1 != i){
-                                                                  data += "\n";
-                                                                }
-                                                              }
-                                                              data += "-#-#-#-#-#-#-#-#-#-#-#-#-\n"
-                                                            }
+                                                          if(isDict(res.data)){
+                                                            data = JSON.stringify(res.data, null, 2);
                                                             $.notify("{{functi}}:\n" + data, "success");
                                                             if($('#resultsLogger').val() != ''){
                                                               $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
                                                             }
                                                             $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
                                                           } else {
-                                                            $('#popup_response_ajax').modal('show');
-                                                            $('#response_ajax').empty();
-                                                            $('#response_ajax').append(res.data);
-                                                            $('#responseLabelAjax').text('Response from {{functi}}');
-                                                          }
-                                                        }
-                                                      } else {
-                                                        /*$('#popup_textarea').val(res)
-                                                        $('#popup').modal('show');*/
-                                                        if('data' in res){
-                                                          if(res.data == ''){
-                                                            $.notify("{{functi}} - Empty response...", "warn");
-                                                          } else {
-                                                            $.notify("{{functi}} - " + res.data, "warn");
+                                                            if(res.data instanceof Array){
+                                                              var data = '';
+                                                              for(var i=0; i < res.data.length; i++){
+                                                                if(isDict(res.data[i])){
+                                                                  for(var key in res.data[i]){
+                                                                    data += key + ': ' + res.data[i][key];
+                                                                    if(res.data.length-1 != i){
+                                                                      data += "\n";
+                                                                    }
+                                                                  }
+                                                                } else {
+                                                                  data += res.data[i];
+                                                                  if(res.data.length-1 != i){
+                                                                    data += "\n";
+                                                                  }
+                                                                }
+                                                                data += "-#-#-#-#-#-#-#-#-#-#-#-#-\n"
+                                                              }
+                                                              $.notify("{{functi}}:\n" + data, "success");
+                                                              if($('#resultsLogger').val() != ''){
+                                                                $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                              }
+                                                              $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
+                                                            } else {
+                                                              $('#popup_response_ajax').modal('show');
+                                                              $('#response_ajax').empty();
+                                                              $('#response_ajax').append(res.data);
+                                                              $('#responseLabelAjax').text('Response from {{functi}}');
+                                                            }
                                                           }
                                                         } else {
-                                                          if(res == ''){
-                                                            $.notify("{{functi}} - Empty response...", "warn");
+                                                          /*$('#popup_textarea').val(res)
+                                                          $('#popup').modal('show');*/
+                                                          if('data' in res){
+                                                            if(res.data == ''){
+                                                              $.notify("{{functi}} - Empty response...", "warn");
+                                                            } else {
+                                                              $.notify("{{functi}} - " + res.data, "warn");
+                                                            }
                                                           } else {
-                                                            $.notify("{{functi}} - " + res, "warn");
+                                                            if(res == ''){
+                                                              $.notify("{{functi}} - Empty response...", "warn");
+                                                            } else {
+                                                              $.notify("{{functi}} - " + res, "warn");
+                                                            }
                                                           }
+                                                          if($('#resultsLogger').val() != ''){
+                                                            $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                          }
+                                                          $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
                                                         }
+                                                      } catch(error) {
+                                                        $.notify("{{functi}} - Could not get the response... Seems not to be a readable value... Is any type of file?", "error");
                                                         if($('#resultsLogger').val() != ''){
                                                           $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
                                                         }
-                                                        $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                        $('#resultsLogger').val("{{functi}}:\nCould not get the response... Seems not to be a readable value... Is any type of file?\n" + $('#resultsLogger').val())
                                                       }
                                                     },
                                                     error : function(xhr,errmsg,err) {

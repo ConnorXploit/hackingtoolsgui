@@ -10,11 +10,14 @@ from datetime import datetime
 
 __config_locales__ = ht.Config.getConfig(parentKey='core', key='locales')
 
-def __createModuleFunctionView__(moduleName, functionName, is_main=False):
+def __createModuleFunctionView__(category, moduleName, functionName, is_main=False):
     try:
         # Creates the JSON config for the view modal form
-        category = ht.getModuleCategory(moduleName)
         functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=functionName)
+        
+        # Get posible functions with args that uses values from another func
+        funcsFromFunc = None if not hasattr( ht.getModule(moduleName), '_funcArgFromFunc_') else dict(ht.getModule(moduleName)._funcArgFromFunc_)
+        
         moduleViewConfig = {}
 
         moduleViewConfig['__function__'] = functionName
@@ -49,6 +52,15 @@ def __createModuleFunctionView__(moduleName, functionName, is_main=False):
                     moduleViewConfig[param]['value'] = functionParams['defaults'][param]
                     if moduleViewConfig[param]['__type__'] == 'checkbox':
                         moduleViewConfig[param]['selected'] = moduleViewConfig[param]['value']
+            
+            # Create the data for auto fill the param with another funcs return
+            if funcsFromFunc and functionName in funcsFromFunc and len(funcsFromFunc[functionName]) > 0:
+                for arg in funcsFromFunc[functionName]:
+                    if arg in moduleViewConfig:
+                        if not 'options_from_function' in moduleViewConfig[arg]:
+                            moduleViewConfig[arg]['options_from_function'] = {}
+                        for moduleToExecute in funcsFromFunc[functionName][arg]:
+                            moduleViewConfig[arg]['options_from_function'][moduleToExecute] = funcsFromFunc[functionName][arg][moduleToExecute]
         else:
             ht.Logger.printMessage(message='No function params', description=functionName, debug_core=True)
 
@@ -67,7 +79,8 @@ def __createModuleFunctionView__(moduleName, functionName, is_main=False):
             moduleViewConfig['submit'] = {}
             moduleViewConfig['submit']['__id__'] = functionName
             moduleViewConfig['submit']['__type__'] = 'submit'
-            moduleViewConfig['submit']['value'] = ' '.join( [ x.capitalize() for x in functionName.split('_') ] )
+            if functionName:
+                moduleViewConfig['submit']['value'] = ' '.join( [ x.capitalize() for x in functionName.split('_') ] )
             moduleViewConfig['submit']['loading_text'] = '{m}ing'.format(m=moduleName.replace('ht_', ''))
 
         Config.__save_django_module_config__(moduleViewConfig, category, moduleName, functionName, is_main=is_main)
@@ -75,7 +88,8 @@ def __createModuleFunctionView__(moduleName, functionName, is_main=False):
         ht.Config.__look_for_changes__()
         ht.Logger.printMessage(message='Creating Function Modal View', description=functionName, debug_core=True)
         return {functionName : moduleViewConfig}
-    except:
+    except Exception as e:
+        Logger.printMessage(str(e), is_error=True)
         return None
 
 def __getModulesGuiNames__():
@@ -170,7 +184,10 @@ def __getModulesFunctionsCalls__():
         for func in ht.__modules_loaded__[module]:
             try:
                 for param in ht.__modules_loaded__[module][func]['original_params']:
-                    module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(ht.__modules_loaded__[module][func]['original_params'][param]), params=', '.join(header_params_arg[module][func]))
+                    moduleParams = ht.__modules_loaded__[module][func]['original_params'][param]
+                    if not moduleParams:
+                        moduleParams = []
+                    module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params=', '.join(moduleParams), params=', '.join(header_params_arg[module][func]))
             except:
                 module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params='')
         modulesCalls[module.split('.')[-1]] = module_funcs
@@ -255,7 +272,9 @@ def __getReturnAsModalHTML__(response, main=True):
                         val = val.strftime("%d-%m-%Y %H:%M:%S")
                         res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"text\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
                     else:
+                        res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label>".format(id=key, input_label_desc=key)
                         res += __getReturnAsModalHTML__(val, main=False)
+                        res += "</div>"
     elif isinstance(response, int):
         val_type = Utils.getValueType(response, getResponse=True)
         try:
@@ -458,16 +477,27 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 if 'required' in temp_m_form[m] and temp_m_form[m]['required'] == True:
                     required = 'required'
                 
-                options_from_function = []
-                if 'options_from_function' in temp_m_form[m]:
-                    options_from_function = temp_m_form[m]['options_from_function']
-                    for optModuleName in options_from_function:
-                        if optModuleName in ht.getModulesNames():
-                            functionCall = 'ht.getModule(\'{mod}\').{func}()'.format(mod=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
-                            options_from_function = eval(functionCall)
-                        if 'core' == optModuleName:
-                            functionCall = 'ht.{func}()'.format(func=temp_m_form[m]['options_from_function'][optModuleName])
-                            options_from_function = eval(functionCall)
+                # Creates a select if any options are filled by another func
+                try:
+                    options_from_function = []
+                    if 'options_from_function' in temp_m_form[m]:
+                        options_from_function = temp_m_form[m]['options_from_function']
+                        for optModuleName in options_from_function:
+                            if optModuleName in ht.getModulesNames() or optModuleName in [ moduleNm.replace('ht_', '') for moduleNm in ht.getModulesNames() ]:
+                                functionCall = 'ht.getModule(\'{mod}\').{func}()'.format(mod=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
+                                options_from_function = eval(functionCall)
+                            elif 'core' == optModuleName:
+                                functionCall = 'ht.{func}()'.format(func=temp_m_form[m]['options_from_function'][optModuleName])
+                                options_from_function = eval(functionCall)
+                            else:
+                                functionCall = '{m}.{func}()'.format(m=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
+                                options_from_function = eval(functionCall)
+                except Exception as e:
+                    Logger.printMessage(str(e), is_error=True)
+                    options_from_function = []
+                
+                if options_from_function:
+                    input_type = 'select'
 
                 if input_type == 'file':
                     html += "<div class='input-group'>"
@@ -493,8 +523,11 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                 
                 elif input_type == 'select':
 
-                    html += "<span class=\"name-select\" value=\"{placeholder}\"></span><select id=\"editable-select-{id}\" name=\"dropdown_{id}\" placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(placeholder=input_placeholder, className=input_className, id=m, required=required)
-                    html += "<option value='{input_value}' selected></option>".format(input_value=input_value)
+                    html += "<span class=\"name-select\" value=\"{placeholder}\">{placeholder}</span><select id=\"editable-select-{id}\" name=\"{id}\" placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(placeholder=input_placeholder, className=input_className, id=m, required=required)
+                    html += "<option value='{input_value}' selected>{input_value}</option>".format(input_value=input_value)
+
+                    if input_value in options_from_function:
+                        options_from_function.remove(input_value)
 
                     for func in options_from_function:
                         html += "<option value='{cat}'>{cat}</option>".format(cat=func)

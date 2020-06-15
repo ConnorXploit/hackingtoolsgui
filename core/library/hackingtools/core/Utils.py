@@ -50,7 +50,8 @@ def startWorker(workerName, functionCall, args=(), timesleep=1, loop=True, run_u
         if log:
             Logger.printMessage('Starting Worker: {w}'.format(w=workerName))
         t = Thread(target=w.run, args=(functionCall, args, int(timesleep), loop, timeout ), daemon=run_until_ht_stops)
-        threads[workerName] = [ w, t ]
+        if loop:
+            threads[workerName] = [ w, t ]
         t.start()
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
@@ -187,7 +188,8 @@ def getAnyFunctionParams(functionObjectStr, i_want_list=False):
 
         return {"params":params_func}
     except:
-        Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
+        pass
+        #Logger.printMessage('{functionObjectStr} is not a function'.format(functionObjectStr=functionObjectStr), 'Be sure you have all your module class variables outsite the class, in the file ({functionObjectStr}.py) before the \'class StartModule:\' statement'.format(functionObjectStr='.'.join(functionObjectStr.split('.')[0:5])), is_error=True)
     return []
 
 def getFunctionsParams(category, moduleName, functionName, i_want_list=False):

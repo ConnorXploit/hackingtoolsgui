@@ -124,7 +124,7 @@ def renderMainPanel(request, popup_text=''):
         load_data(session_id)
     if popup_text != '':
         ht_data['popup_text'] = popup_text
-    
+
     response = render(request, 'core/index.html', dict(ht_data))
     response.set_cookie('htpass', session_id)
     return response

@@ -47,7 +47,10 @@ class StartModule():
         return ht.getFunctionsNamesFromModule('ht_instagram')
 
     def getAccountByUsername(self, username):
-        return self.__get_account__(username).get_data()
+        try:
+            return self.__get_account__(username).get_data()
+        except Exception as e:
+            return str(e)
 
     def __with_credentials__(self, username, password, session_folder=None):
         """
@@ -1063,8 +1066,7 @@ class StartModule():
         response = self.__req.get(InstagramEndPoints().get_account_page_link(username), headers=self.__generate_headers__(self.user_session))
 
         if HTTP_NOT_FOUND == response.status_code:
-            raise NotFoundException(
-                'Account with given username does not exist.')
+            raise NotFoundException('Account with given username does not exist.')
 
         if HTTP_OK != response.status_code:
             raise AnyException.default(response.text, response.status_code)

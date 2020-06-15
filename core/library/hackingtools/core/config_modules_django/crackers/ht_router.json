@@ -1,0 +1,62 @@
+{
+    "__gui_label__": "_MODULE_GUI_LABEL_",
+    "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+    "django_form_module_function": {
+        "getBrands": {
+            "__function__": "getBrands",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getBrands__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getDefaultLogin": {
+            "__function__": "getDefaultLogin",
+            "__async__": false,
+            "__return__": "text",
+            "routerBrand": {
+                "__type__": "text",
+                "label_desc": "routerBrand",
+                "placeholder": "routerBrand",
+                "value": "cisco",
+                "options_from_function": {
+                    "router": "getBrands"
+                }
+            },
+            "__pool_it_getDefaultLogin__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    },
+    "django_form_main_function": {
+        "__function__": "getDefaultLogin",
+        "routerBrand": {
+            "__type__": "text",
+            "label_desc": "routerBrand",
+            "placeholder": "routerBrand",
+            "value": "cisco",
+            "options_from_function": {
+                "router": "getBrands"
+            }
+        },
+        "__pool_it_getDefaultLogin__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "getDefaultLogin",
+            "__type__": "submit",
+            "value": "Getdefaultlogin",
+            "loading_text": "routering"
+        }
+    }
+}

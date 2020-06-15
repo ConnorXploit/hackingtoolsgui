@@ -221,4 +221,4 @@ def newModuleUpload(server, category, moduleName):
     except Exception as e:
         return __json.dumps({'status':  'FAIL', 'data': str(e)})
 
-getOnlineServers()
+#getOnlineServers()

@@ -164,7 +164,7 @@
                 "__in_map_searchFromConfig__": false
             },
             "setApi": {
-                "__in_map_setApi__": true
+                "__in_map_setApi__": false
             }
         },
         "ht_metadata": {
@@ -176,6 +176,21 @@
             },
             "help": {
                 "__in_map_help__": false
+            },
+            "set_pdf_author": {
+                "__in_map_set_pdf_author__": false
+            },
+            "set_pdf_field_value": {
+                "__in_map_set_pdf_field_value__": false
+            },
+            "set_pdf_metadata_to_another": {
+                "__in_map_set_pdf_metadata_to_another__": false
+            },
+            "get_mp3_exif": {
+                "__in_map_get_mp3_exif__": false
+            },
+            "set_mp3_metadata": {
+                "__in_map_set_mp3_metadata__": false
             }
         },
         "ht_virustotal": {
@@ -183,7 +198,7 @@
                 "__in_map_help__": false
             },
             "isBadFile": {
-                "__in_map_isBadFile__": false
+                "__in_map_isBadFile__": true
             },
             "isBadFileHash": {
                 "__in_map_isBadFileHash__": false
@@ -207,7 +222,7 @@
                 "__in_map_help__": false
             },
             "getAccountByUsername": {
-                "__in_map_getAccountByUsername__": true
+                "__in_map_getAccountByUsername__": false
             }
         },
         "ht_nmap": {
@@ -227,7 +242,7 @@
                 "__in_map_getCVEsFromHost__": false
             },
             "executeScan": {
-                "__in_map_executeScan__": true
+                "__in_map_executeScan__": false
             }
         },
         "ht_twitter": {
@@ -359,7 +374,7 @@
         },
         "ht_facebook": {
             "get_posts": {
-                "__in_map_get_posts__": false
+                "__in_map_get_posts__": true
             },
             "help": {
                 "__in_map_help__": false
@@ -572,13 +587,46 @@
         },
         "ht_vulndb": {
             "getAPI": {
-                "__in_map_getAPI__": true
+                "__in_map_getAPI__": false
             },
             "getCVEInfo": {
-                "__in_map_getCVEInfo__": true
+                "__in_map_getCVEInfo__": false
             },
             "getSuggestions": {
-                "__in_map_getSuggestions__": true
+                "__in_map_getSuggestions__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_test": {
+            "hola": {
+                "__in_map_hola__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_urlshortener": {
+            "createShortcut": {
+                "__in_map_createShortcut__": false
+            },
+            "getShortcutDomains": {
+                "__in_map_getShortcutDomains__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            },
+            "getShortDomains": {
+                "__in_map_getShortDomains__": false
+            }
+        },
+        "ht_router": {
+            "getBrands": {
+                "__in_map_getBrands__": true
+            },
+            "getDefaultLogin": {
+                "__in_map_getDefaultLogin__": true
             },
             "help": {
                 "__in_map_help__": false

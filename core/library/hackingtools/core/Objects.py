@@ -1,11 +1,11 @@
 from . import Logger, Utils
-import json as __json
+import json
 import time
 from datetime import datetime
 import requests
 import os as __os
 import textwrap as __textwrap
-import urllib.parse as __parse
+import urllib.parse
 import threading as __threading
 from abc import ABC as __ABC
 from abc import abstractmethod
@@ -64,7 +64,7 @@ class Host():
             parameters["os"] = self.getOS()
         if self.data:
             parameters["data"] = self.getData()
-        Logger.printMessage(message='{data}'.format(data=__json.dumps(parameters, indent=4, sort_keys=True), debug_core=True))
+        Logger.printMessage(message='{data}'.format(data=json.dumps(parameters, indent=4, sort_keys=True), debug_core=True))
         return parameters
     
     def setTarget(self, id):
@@ -407,9 +407,9 @@ class Worker():
 
                 else:
                     func = '{f}{a}'.format(f=functionCall, a=tuple(args, ))
-                    print(func)
                     res = eval(func)
                     self.responses.append( res )
+                    self.terminate()
             except KeyboardInterrupt:
                 pass
 
@@ -461,7 +461,7 @@ class RequestHandler:
 				return None
 		except requests.exceptions.ConnectionError:
 			raise requests.exceptions.ConnectionError
-		except __json.decoder.JSONDecodeError:
+		except json.decoder.JSONDecodeError:
 			return None
 
 	def header_maker(self, mode):
@@ -998,7 +998,7 @@ class Media(InitializerModel):
 
     @staticmethod
     def __getImageUrls(image_url):
-        parts = '/'.split(__parse.quote_plus(image_url)['path'])
+        parts = '/'.split(urllib.parse.quote_plus(image_url)['path'])
         imageName = parts[len(parts) - 1]
         urls = {
             'thumbnail': InstagramEndPoints().INSTAGRAM_CDN_URL + 't/s150x150/' + imageName,
@@ -1130,134 +1130,134 @@ class InstagramEndPoints:
 
     BASE_URL = 'https://www.instagram.com'
     LOGIN_URL = 'https://www.instagram.com/accounts/login/ajax/'
-    ACCOUNT_PAGE = 'https://www.instagram.com/%s'
-    MEDIA_LINK = 'https://www.instagram.com/p/%s'
-    ACCOUNT_MEDIAS = 'https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables=%s'
-    ACCOUNT_JSON_INFO = 'https://www.instagram.com/%s/?__a=1'
-    MEDIA_JSON_INFO = 'https://www.instagram.com/p/%s/?__a=1'
-    MEDIA_JSON_BY_LOCATION_ID = 'https://www.instagram.com/explore/locations/%s/?__a=1&max_id=%s'
-    MEDIA_JSON_BY_TAG = 'https://www.instagram.com/explore/tags/%s/?__a=1&max_id=%s'
-    GENERAL_SEARCH = 'https://www.instagram.com/web/search/topsearch/?query=%s'
-    COMMENTS_BEFORE_COMMENT_ID_BY_CODE = 'https://www.instagram.com/graphql/query/?query_hash=97b41c52301f77ce508f55e66d17620e&variables=%s'
-    LIKES_BY_SHORTCODE_OLD = 'https://www.instagram.com/graphql/query/?query_id=17864450716183058&variables={"shortcode":"%s","first":%s,"after":"%s"}'
-    LIKES_BY_SHORTCODE = 'https://www.instagram.com/graphql/query/?query_hash=d5d763b1e2acf209d62d22d184488e57&variables=%s'
+    ACCOUNT_PAGE = 'https://www.instagram.com/{s}'
+    MEDIA_LINK = 'https://www.instagram.com/p/{s}'
+    ACCOUNT_MEDIAS = 'https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables={s}'
+    ACCOUNT_JSON_INFO = 'https://www.instagram.com/{s}/?__a=1'
+    MEDIA_JSON_INFO = 'https://www.instagram.com/p/{s}/?__a=1'
+    MEDIA_JSON_BY_LOCATION_ID = 'https://www.instagram.com/explore/locations/{s}/?__a=1&max_id={s2}'
+    MEDIA_JSON_BY_TAG = 'https://www.instagram.com/explore/tags/{s}/?__a=1&max_id={s2}'
+    GENERAL_SEARCH = 'https://www.instagram.com/web/search/topsearch/?query={s}'
+    COMMENTS_BEFORE_COMMENT_ID_BY_CODE = 'https://www.instagram.com/graphql/query/?query_hash=97b41c52301f77ce508f55e66d17620e&variables={s}'
+    LIKES_BY_SHORTCODE_OLD = 'https://www.instagram.com/graphql/query/?query_id=17864450716183058&variables={"shortcode":"{s}","first":{s2},"after":"{s3}"}'
+    LIKES_BY_SHORTCODE = 'https://www.instagram.com/graphql/query/?query_hash=d5d763b1e2acf209d62d22d184488e57&variables={s}'
     FOLLOWING_URL_OLD = 'https://www.instagram.com/graphql/query/?query_id=17874545323001329&id={{accountId}}&first={{count}}&after={{after}}'
-    FOLLOWING_URL = 'https://www.instagram.com/graphql/query/?query_hash=d04b0a864b4b54837c0d870b0e77e076&variables=%s'
+    FOLLOWING_URL = 'https://www.instagram.com/graphql/query/?query_hash=d04b0a864b4b54837c0d870b0e77e076&variables={s}'
     FOLLOWERS_URL_OLD = 'https://www.instagram.com/graphql/query/?query_id=17851374694183129&id={{accountId}}&first={{count}}&after={{after}}'
-    FOLLOWERS_URL = 'https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%s'
-    FOLLOW_URL = 'https://www.instagram.com/web/friendships/%s/follow/'
-    UNFOLLOW_URL = 'https://www.instagram.com/web/friendships/%s/unfollow/'
+    FOLLOWERS_URL = 'https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables={s}'
+    FOLLOW_URL = 'https://www.instagram.com/web/friendships/{s}/follow/'
+    UNFOLLOW_URL = 'https://www.instagram.com/web/friendships/{s}/unfollow/'
     INSTAGRAM_CDN_URL = 'https://scontent.cdninstagram.com/'
-    ACCOUNT_JSON_PRIVATE_INFO_BY_ID = 'https://i.instagram.com/api/v1/users/%s/info/'
-    LIKE_URL = 'https://www.instagram.com/web/likes/%s/like/'
-    UNLIKE_URL = 'https://www.instagram.com/web/likes/%s/unlike/'
-    ADD_COMMENT_URL = 'https://www.instagram.com/web/comments/%s/add/'
-    DELETE_COMMENT_URL = 'https://www.instagram.com/web/comments/%s/delete/%s/'
+    ACCOUNT_JSON_PRIVATE_INFO_BY_ID = 'https://i.instagram.com/api/v1/users/{s}/info/'
+    LIKE_URL = 'https://www.instagram.com/web/likes/{s}/like/'
+    UNLIKE_URL = 'https://www.instagram.com/web/likes/{s}/unlike/'
+    ADD_COMMENT_URL = 'https://www.instagram.com/web/comments/{s}/add/'
+    DELETE_COMMENT_URL = 'https://www.instagram.com/web/comments/{s}/delete/{s2}/'
 
     ACCOUNT_MEDIAS2 = 'https://www.instagram.com/graphql/query/?query_id=17880160963012870&id={{accountId}}&first=10&after='
 
-    GRAPH_QL_QUERY_URL = 'https://www.instagram.com/graphql/query/?query_id=%s'
+    GRAPH_QL_QUERY_URL = 'https://www.instagram.com/graphql/query/?query_id={s}'
 
     request_media_count = 30
 
     def get_account_page_link(self, username):
-        return self.ACCOUNT_PAGE % __parse.quote_plus(username)
+        return self.ACCOUNT_PAGE.format( s=urllib.parse.quote_plus(username) )
 
     def get_account_json_link(self, username):
-        return self.ACCOUNT_JSON_INFO % __parse.quote_plus(username)
+        return self.ACCOUNT_JSON_INFO.format( s=urllib.parse.quote_plus(username) )
 
     def get_account_json_private_info_link_by_account_id(self, account_id):
-        return self.ACCOUNT_JSON_PRIVATE_INFO_BY_ID % __parse.quote_plus(str(account_id))
+        return self.ACCOUNT_JSON_PRIVATE_INFO_BY_ID.format( s=urllib.parse.quote_plus(str(account_id)) )
 
     def get_account_medias_json_link(self, variables):
-        return self.ACCOUNT_MEDIAS % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
+        return self.ACCOUNT_MEDIAS.format( s=urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':'))) )
 
     def get_media_page_link(self, code):
-        return self.MEDIA_LINK % __parse.quote_plus(code)
+        return self.MEDIA_LINK.format( s=urllib.parse.quote_plus(code) )
 
     def get_media_json_link(self, code):
-        return self.MEDIA_JSON_INFO % __parse.quote_plus(code)
+        return self.MEDIA_JSON_INFO.format( s=urllib.parse.quote_plus(code) )
 
     def get_medias_json_by_location_id_link(self, facebook_location_id, max_id=''):
-        return self.MEDIA_JSON_BY_LOCATION_ID % (__parse.quote_plus(str(facebook_location_id)), __parse.quote_plus(max_id))
+        return self.MEDIA_JSON_BY_LOCATION_ID.format( s=urllib.parse.quote_plus(str(facebook_location_id)), s2=urllib.parse.quote_plus(max_id) )
 
     def get_medias_json_by_tag_link(self, tag, max_id=''):
-        return self.MEDIA_JSON_BY_TAG % (__parse.quote_plus(str(tag)), __parse.quote_plus(str(max_id)))
+        return self.MEDIA_JSON_BY_TAG.format( s=urllib.parse.quote_plus(str(tag)), s2=urllib.parse.quote_plus(str(max_id)) )
 
     def get_general_search_json_link(self, query):
-        return self.GENERAL_SEARCH % __parse.quote_plus(query)
+        return self.GENERAL_SEARCH.format( s=urllib.parse.quote_plus(query) )
 
     def get_comments_before_comments_id_by_code(self, variables):
-        return self.COMMENTS_BEFORE_COMMENT_ID_BY_CODE % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
+        return self.COMMENTS_BEFORE_COMMENT_ID_BY_CODE.format( s=urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':'))) )
 
     def get_last_likes_by_code_old(self, code, count, last_like_id):
-        return self.LIKES_BY_SHORTCODE_OLD % (__parse.quote_plus(code), __parse.quote_plus(str(count)), __parse.quote_plus(str(last_like_id)))
+        return self.LIKES_BY_SHORTCODE_OLD.format( s=urllib.parse.quote_plus(code), s2=urllib.parse.quote_plus(str(count)), s3=urllib.parse.quote_plus(str(last_like_id)) )
 
     def get_last_likes_by_code(self, variables):
-        return self.LIKES_BY_SHORTCODE % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
+        return self.LIKES_BY_SHORTCODE.format( s=urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':'))) )
 
     def get_follow_url(self, account_id):
-        return self.FOLLOW_URL % __parse.quote_plus(account_id)
+        return self.FOLLOW_URL.format( s=urllib.parse.quote_plus(account_id) )
 
     def get_unfollow_url(self, account_id):
-        return self.UNFOLLOW_URL % __parse.quote_plus(account_id)
+        return self.UNFOLLOW_URL.format( s=urllib.parse.quote_plus(account_id) )
 
     def get_followers_json_link_old(self, account_id, count, after=''):
         url = self.FOLLOWERS_URL_OLD.replace(
-            '{{accountId}}', __parse.quote_plus(account_id))
-        url = url.replace('{{count}}', __parse.quote_plus(str(count)))
+            '{{accountId}}', urllib.parse.quote_plus(account_id))
+        url = url.replace('{{count}}', urllib.parse.quote_plus(str(count)))
 
         if after == '':
             url = url.replace('&after={{after}}', '')
         else:
-            url = url.replace('{{after}}', __parse.quote_plus(str(after)))
+            url = url.replace('{{after}}', urllib.parse.quote_plus(str(after)))
 
         return url
 
     def get_followers_json_link(self, variables):
-        return self.FOLLOWERS_URL % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
+        return self.FOLLOWERS_URL.format( s=urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':'))) )
 
     def get_following_json_link_old(self, account_id, count, after=''):
         url = self.FOLLOWING_URL_OLD.replace(
-            '{{accountId}}', __parse.quote_plus(account_id))
-        url = url.replace('{{count}}', __parse.quote_plus(count))
+            '{{accountId}}', urllib.parse.quote_plus(account_id))
+        url = url.replace('{{count}}', urllib.parse.quote_plus(count))
 
         if after == '':
             url = url.replace('&after={{after}}', '')
         else:
-            url = url.replace('{{after}}', __parse.quote_plus(after))
+            url = url.replace('{{after}}', urllib.parse.quote_plus(after))
 
         return url
 
     def get_following_json_link(self, variables):
-        return self.FOLLOWING_URL % __parse.quote_plus(__json.dumps(variables, separators=(',', ':')))
+        return self.FOLLOWING_URL.format( s=urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':'))) )
 
     def get_user_stories_link(self, ):
-        return self.get_graph_ql_url(self.USER_STORIES, {'variables': __json.dumps([], separators=(',', ':'))})
+        return self.get_graph_ql_url(self.USER_STORIES, {'variables': json.dumps([], separators=(',', ':'))})
 
     def get_graph_ql_url(self, query_id, parameters):
-        url = self.GRAPH_QL_QUERY_URL % __parse.quote_plus(query_id)
+        url = self.GRAPH_QL_QUERY_URL.format( s=urllib.parse.quote_plus(query_id) )
 
         if len(parameters) > 0:
-            query_string = __parse.urlencode(parameters)
+            query_string = urllib.parse.urlencode(parameters)
             url += '&' + query_string
 
         return url
 
     def get_stories_link(self, variables):
-        return self.get_graph_ql_url(self.STORIES, {'variables': __json.dumps(variables, separators=(',', ':'))})
+        return self.get_graph_ql_url(self.STORIES, {'variables': json.dumps(variables, separators=(',', ':'))})
 
     def get_like_url(self, media_id):
-        return self.LIKE_URL % __parse.quote_plus(str(media_id))
+        return self.LIKE_URL.format( s=urllib.parse.quote_plus(str(media_id)) )
 
     def get_unlike_url(self, media_id):
-        return self.UNLIKE_URL % __parse.quote_plus(str(media_id))
+        return self.UNLIKE_URL.format( s=urllib.parse.quote_plus(str(media_id)) )
 
     def get_add_comment_url(self, media_id):
-        return self.ADD_COMMENT_URL % __parse.quote_plus(str(media_id))
+        return self.ADD_COMMENT_URL.format( s=urllib.parse.quote_plus(str(media_id)) )
 
     def get_delete_comment_url(self, media_id, comment_id):
-        return self.DELETE_COMMENT_URL % (__parse.quote_plus(str(media_id)), __parse.quote_plus(str(comment_id)))
+        return self.DELETE_COMMENT_URL.format( s=urllib.parse.quote_plus(str(media_id)), s2=urllib.parse.quote_plus(str(comment_id)) )
 
 class TwoStepVerificationAbstractClass(__ABC):
 

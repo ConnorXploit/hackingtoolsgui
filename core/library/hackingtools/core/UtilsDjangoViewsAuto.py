@@ -31,7 +31,7 @@ def createTemplateFunctionForModule(moduleName, category, functionName):
             __lastly_added_func__.append(functionName)
             ht.Logger.printMessage(message='Added a view for the function', description=functionName, debug_core=True)
 
-        ht.DjangoFunctions.__createModuleFunctionView__(moduleName, functionName)
+        ht.DjangoFunctions.__createModuleFunctionView__(category, moduleName, functionName)
 
     except Exception as e:
         ht.Logger.printMessage(message=str(e), is_error=True)

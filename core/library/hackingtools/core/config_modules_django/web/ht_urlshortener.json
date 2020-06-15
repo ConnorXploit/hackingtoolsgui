@@ -1,0 +1,122 @@
+{
+    "__gui_label__": "_MODULE_GUI_LABEL_",
+    "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+    "django_form_module_function": {
+        "createShortcut": {
+            "__function__": "createShortcut",
+            "__async__": false,
+            "__return__": "text",
+            "url": {
+                "__type__": "text",
+                "label_desc": "url",
+                "placeholder": "url",
+                "required": true
+            },
+            "fakeUrl": {
+                "__type__": "text",
+                "label_desc": "fakeUrl",
+                "placeholder": "fakeUrl",
+                "required": true
+            },
+            "fakeText": {
+                "__type__": "text",
+                "label_desc": "fakeText",
+                "placeholder": "fakeText",
+                "required": true
+            },
+            "domainShortener": {
+                "__type__": "text",
+                "label_desc": "domainShortener",
+                "placeholder": "domainShortener",
+                "value": "tinyurl",
+                "options_from_function": {
+                    "urlshortener": "getShortDomains"
+                }
+            },
+            "api_key": {
+                "__type__": "text",
+                "label_desc": "api_key",
+                "placeholder": "api_key",
+                "value": null
+            },
+            "user_id": {
+                "__type__": "text",
+                "label_desc": "user_id",
+                "placeholder": "user_id",
+                "value": null
+            },
+            "__pool_it_createShortcut__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "getShortDomains": {
+            "__function__": "getShortDomains",
+            "__async__": false,
+            "__return__": "text",
+            "__pool_it_getShortDomains__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    },
+    "django_form_main_function": {
+        "__function__": "createShortcut",
+        "url": {
+            "__type__": "text",
+            "label_desc": "url",
+            "placeholder": "url",
+            "required": true
+        },
+        "fakeUrl": {
+            "__type__": "text",
+            "label_desc": "fakeUrl",
+            "placeholder": "fakeUrl",
+            "required": true
+        },
+        "fakeText": {
+            "__type__": "text",
+            "label_desc": "fakeText",
+            "placeholder": "fakeText",
+            "required": true
+        },
+        "domainShortener": {
+            "__type__": "text",
+            "label_desc": "domainShortener",
+            "placeholder": "domainShortener",
+            "value": "tinyurl",
+            "options_from_function": {
+                "urlshortener": "getShortDomains"
+            }
+        },
+        "api_key": {
+            "__type__": "text",
+            "label_desc": "api_key",
+            "placeholder": "api_key",
+            "value": null
+        },
+        "user_id": {
+            "__type__": "text",
+            "label_desc": "user_id",
+            "placeholder": "user_id",
+            "value": null
+        },
+        "__pool_it_createShortcut__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "createShortcut",
+            "__type__": "submit",
+            "value": "Createshortcut",
+            "loading_text": "urlshortenering"
+        }
+    }
+}

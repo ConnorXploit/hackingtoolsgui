@@ -1,2 +1,4 @@
+eyed3
+pdfrw
 Pillow
 PyPDF2

@@ -47,6 +47,8 @@ def loadModuleUrls(moduleName):
     if hasattr(mod, '_main_gui_func_'):
         main_func = mod._main_gui_func_
 
+    category = ht.getModuleCategory(moduleName)
+
     if not functions_config:
         functions = ht.getFunctionsNamesFromModule(moduleName)
 
@@ -55,13 +57,13 @@ def loadModuleUrls(moduleName):
         if functions:
             functions_config = {}
             for func in functions:
-                new_conf = ht.DjangoFunctions.__createModuleFunctionView__(moduleName, functionName=func)
+                new_conf = ht.DjangoFunctions.__createModuleFunctionView__(category, moduleName, functionName=func)
                 if new_conf:
                     functions_config[func] = new_conf[func]
     else:
         for function in ht.getFunctionsNamesFromModule(moduleName):
             if not function in functions_config and not 'help' == function:
-                new_conf = ht.DjangoFunctions.__createModuleFunctionView__(moduleName, functionName=function)
+                new_conf = ht.DjangoFunctions.__createModuleFunctionView__(category, moduleName, functionName=function)
                 if new_conf:
                     functions_config[function] = new_conf[function]
 
@@ -97,7 +99,7 @@ def loadModuleUrls(moduleName):
         if main_func and not main_function_config:
             #ht.Logger.printMessage(message='loadModuleUrls', description='{mod} has no config for main function. Creating main function setted: {m}'.format(mod=moduleName, m=main_func), is_warn=True)
             if main_func in ht.getFunctionsNamesFromModule(moduleName):
-                ht.DjangoFunctions.__createModuleFunctionView__(moduleName, main_func, is_main=True)
+                ht.DjangoFunctions.__createModuleFunctionView__(category, moduleName, main_func, is_main=True)
             else:
                 ht.Logger.printMessage(message='loadModuleUrls', description='Error creating main function setted: {m}. Function does not exist in module {mod}'.format(m=main_func, mod=moduleName), is_error=True)
         #else:

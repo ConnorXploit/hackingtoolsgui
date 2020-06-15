@@ -32,19 +32,145 @@
                 "label_desc": "Pool the execution to the pool list",
                 "selected": false
             }
+        },
+        "set_pdf_author": {
+            "__function__": "set_pdf_author",
+            "__async__": false,
+            "__return__": "",
+            "__pool_it_set_pdf_author__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "set_pdf_field_value": {
+            "__function__": "set_pdf_field_value",
+            "__async__": false,
+            "__return__": "text",
+            "pdf_file": {
+                "__type__": "file",
+                "label_desc": "pdf_file",
+                "placeholder": "pdf_file",
+                "required": true
+            },
+            "field": {
+                "__type__": "text",
+                "label_desc": "field",
+                "placeholder": "field",
+                "required": true
+            },
+            "fieldValue": {
+                "__type__": "text",
+                "label_desc": "fieldValue",
+                "placeholder": "fieldValue",
+                "required": true
+            },
+            "__pool_it_set_pdf_field_value__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "set_pdf_metadata_to_another": {
+            "__function__": "set_pdf_metadata_to_another",
+            "__async__": false,
+            "__return__": "text",
+            "pdf_file_original": {
+                "__type__": "file",
+                "label_desc": "pdf_file_original",
+                "placeholder": "pdf_file_original",
+                "required": true
+            },
+            "pdf_file_fake": {
+                "__type__": "file",
+                "label_desc": "pdf_file_fake",
+                "placeholder": "pdf_file_fake",
+                "required": true
+            },
+            "__pool_it_set_pdf_metadata_to_another__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "get_mp3_exif": {
+            "__function__": "get_mp3_exif",
+            "__async__": false,
+            "__return__": "text",
+            "mp3_file": {
+                "__type__": "file",
+                "label_desc": "mp3_file",
+                "placeholder": "mp3_file",
+                "required": true
+            },
+            "__pool_it_get_mp3_exif__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "set_mp3_metadata": {
+            "__function__": "set_mp3_metadata",
+            "__async__": false,
+            "__return__": "text",
+            "mp3_file": {
+                "__type__": "file",
+                "label_desc": "mp3_file",
+                "placeholder": "mp3_file",
+                "required": true
+            },
+            "title": {
+                "__type__": "text",
+                "label_desc": "title",
+                "placeholder": "title",
+                "value": null
+            },
+            "artist": {
+                "__type__": "text",
+                "label_desc": "artist",
+                "placeholder": "artist",
+                "value": null
+            },
+            "album": {
+                "__type__": "text",
+                "label_desc": "album",
+                "placeholder": "album",
+                "value": null
+            },
+            "album_artist": {
+                "__type__": "text",
+                "label_desc": "album_artist",
+                "placeholder": "album_artist",
+                "value": null
+            },
+            "track_num": {
+                "__type__": "text",
+                "label_desc": "track_num",
+                "placeholder": "track_num",
+                "value": null
+            },
+            "__pool_it_set_mp3_metadata__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
         }
     },
     "django_form_main_function": {
-        "__function__": "get_pdf_exif",
-        "__async__": false,
-        "__return__": "text",
-        "pdf_file": {
+        "__function__": "set_pdf_metadata_to_another",
+        "pdf_file_original": {
             "__type__": "file",
-            "label_desc": "pdf_file",
-            "placeholder": "pdf_file",
+            "label_desc": "pdf_file_original",
+            "placeholder": "pdf_file_original",
             "required": true
         },
-        "__pool_it_get_pdf_exif__": {
+        "pdf_file_fake": {
+            "__type__": "file",
+            "label_desc": "pdf_file_fake",
+            "placeholder": "pdf_file_fake",
+            "required": true
+        },
+        "__pool_it_set_pdf_metadata_to_another__": {
             "__type__": "checkbox",
             "label_desc": "Pool the execution to the pool list",
             "selected": false
@@ -54,9 +180,9 @@
             "value": "Close"
         },
         "submit": {
-            "__id__": "get_pdf_exif",
+            "__id__": "set_pdf_metadata_to_another",
             "__type__": "submit",
-            "value": "Get Pdf Exif",
+            "value": "Set Pdf Metadata To Another",
             "loading_text": "metadataing"
         }
     }

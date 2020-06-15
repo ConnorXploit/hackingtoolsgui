@@ -1,3 +1,4 @@
+__tool_name__ = 'hackingtools'
 from .core import Connections as __Connections
 from .core import Config, Utils, Logger, Repositories, Objects
 
@@ -12,10 +13,10 @@ import types as __types
 import inspect as __inspect
 import shutil as __shutil
 import ast as __ast
-import progressbar as __progressbar
 import json as __json
 import sys as __sys
 import readline as __readline
+from time import sleep as __sleep
 
 __readline.parse_and_bind('tab: complete')
 
@@ -58,6 +59,23 @@ __workers__ = []
 __telegrambot_name__ = 'ht-bot'
 __telegrambot_token__ = ''
 
+def __checkLibraryUpdate__():
+    try:
+        # Check Version Update
+        import pkg_resources as __pkg
+        __version__ = __pkg.get_distribution(__tool_name__).version
+        import requests as __req 
+        from bs4 import BeautifulSoup as __bs4
+        __pypipage__ = __req.get("https://pypi.org/project/hackingtools/")
+        if __pypipage__.status_code == 200:
+            __pageContent = __bs4(__pypipage__.content, 'html.parser')
+            __pypiHeader = __pageContent.find('h1', {'class' : 'package-header__name'}).text
+            __pypiVersion = __pypiHeader.replace(__tool_name__, '').replace('\n', ' ').replace('\r', '').replace(' ', '')
+            if not __version__ == __pypiVersion:
+                Logger.printMessage('Version outdated... Newer version available: {v}'.format(v=__pypiVersion), is_warn=True)
+    except:
+        pass
+
 def getModulesNames():
     """Return's an Array with all the modules loaded names (ht_shodan, ht_nmap, etc.)
 
@@ -72,6 +90,7 @@ def getModulesNames():
     modules_names = []
     for tools in __modules_loaded__:
         modules_names.append(tools.split('.')[-1])
+    modules_names.sort()
     return modules_names
 
 def getModulesFromCategory(category):
@@ -100,6 +119,11 @@ def getModule(moduleName):
         eval(module)
     """
     #Logger.printMessage('Initiation of {moduleName}'.format(moduleName=moduleName), debug_module=True)
+
+    # While the mods are loading with workers, wait por it
+    while any( [ work.startswith('import-module-') for work in getWorkers() ] ):
+        __sleep(0.1)
+
     for m in __modules_loaded__:
         if moduleName in m:
             if not 'ht_' in moduleName:
@@ -196,7 +220,8 @@ def wantPool():
 
 def worker(workerName, functionCall, args=(), timesleep=1, loop=True, run_until_ht_stops=False, log=False, timeout=None):
     Utils.startWorker(workerName, functionCall, args, int(timesleep), loop, run_until_ht_stops, log, timeout)
-    __workers__.append(workerName)
+    if loop:
+        __workers__.append(workerName)
 
 def stopWorker(nameWorker):
     try:
@@ -312,7 +337,7 @@ def __createModule__(moduleName, category):
                                                                               moduleName=moduleName)):
         f = open('{dir}/modules/{category}/{moduleName}/ht_{moduleName}.py'.format(dir=dir_actual, category=category,
                                                                                    moduleName=moduleName), "w")
-        f.write(__default_template_modules_ht__.format(moduleName=moduleName))
+        f.write(__default_template_modules_ht__.replace('{moduleName}', moduleName))
     if not __os.path.exists(
             '{dir}/modules/{category}/{moduleName}/__init__.py'.format(dir=dir_actual, category=category,
                                                                        moduleName=moduleName)):
@@ -490,7 +515,7 @@ def __methodsFromModule__(cls):
 def __classNameFromModule__(cls):
     return [x for x in dir(cls) if __inspect.isclass(getattr(cls, x)) and x.startswith(__class_name_starts_with_modules__)]
 
-def __importModule__(modules, category, moduleName, __progressbar=None):
+def __importModule__(modules, category, moduleName):
     module_import_string = 'from .{modules}.{category}.{tool} import {toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
     module_import_string_no_from = '{modules}.{category}.{tool}.{toolFileName}'.format(modules=modules, category=category, tool=moduleName.replace('ht_', ''), toolFileName=moduleName)
     try:
@@ -502,8 +527,6 @@ def __importModule__(modules, category, moduleName, __progressbar=None):
         if len(module_functions) > 0:
             __modules_loaded__[module_import_string_no_from] = {}
             for mod_func in module_functions:
-                if __progressbar:
-                    __progressbar.update(1)
                 functionParams = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=mod_func, i_want_list=True)
                 original_params = Utils.getFunctionsParams(category=category, moduleName=moduleName, functionName=mod_func)
 
@@ -550,21 +573,24 @@ def __importModules__():
     """
     Logger.printMessage(message='{meth}'.format(meth='__importModules__'), description='Loading modules...', debug_module=True)
     modules = __getModules__()
-    with __progressbar.ProgressBar(max_value=__progressbar.UnknownLength) as bar:
-        for modu in modules:
-            for submod in modules[modu]:
-                for files in modules[modu][submod]:
-                    try:
-                        module_name = modules[modu][submod][files][0].split(".")[0]
-                        # worker("import-module-{m}".format(m=module_name), __importModule__, args=(modu, submod, module_name, bar)) # Threaded
-                        __importModule__(modules=modu, category=submod, moduleName=module_name, __progressbar=bar)
-                    except Exception as e:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} File not found: {error}'.format(moduleName=files, error=str(e)), is_error=True)
-                        pass
+    for modu in modules:
+        for submod in modules[modu]:
+            for files in modules[modu][submod]:
+                try:
+                    module_name = modules[modu][submod][files][0].split(".")[0]
+                    if not __amidjango__:
+                        worker("import-module-{m}".format(m=module_name), 'ht.__importModule__', args=(modu, submod, module_name), loop=False, log=False) # Threaded
+                    else:
+                        __importModule__(modules=modu, category=submod, moduleName=module_name)
+                except Exception as e:
+                    Logger.printMessage(message='__importModules__', description='{moduleName} File not found: {error}'.format(moduleName=files, error=str(e)), is_error=True)
+                    pass
 
+worker('check-library-updated', 'ht.__checkLibraryUpdate__', loop=False, run_until_ht_stops=True, log=__amidjango__)
 worker('refresh-pool-servers', 'ht.Pool.__checkPoolNodes__', timesleep=180, run_until_ht_stops=True, log=__amidjango__)
 worker('clear-htpass-files', 'ht.Config.__cleanHtPassFiles__', timesleep=100, run_until_ht_stops=True, log=__amidjango__)
 worker('clear-uploaded-modules-temp', 'ht.Repositories.clearUploadsTemp', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
+worker('repositories-get-online-servers', 'ht.Repositories.getOnlineServers', loop=False, run_until_ht_stops=True, log=__amidjango__)
 worker('clear-output-modules', 'ht.__cleanOutputModules__', timesleep=200, run_until_ht_stops=True, log=__amidjango__)
 
 if __telegrambot_token__:

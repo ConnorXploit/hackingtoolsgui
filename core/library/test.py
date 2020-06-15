@@ -24,6 +24,27 @@ try:
 except:
     import pyreadline as readline  # Windows
 
+meta = ht.getModule('metadata')
+fich = meta.set_mp3_title('C:\\Users\\ivan-\\Desktop\\test.mp3', 'salmorejo es feo')
+print(meta.get_mp3_exif(fich))
+
+# new_file = meta.set_pdf_metadata_to_another('D:\\CURRICULUM INFO\\CV.pdf', 'D:\\CURRICULUM INFO\\test.pdf')
+# print('Se ha guardado en ', new_file)
+# print(meta.get_pdf_exif('D:\\CURRICULUM INFO\\CV-test.pdf'))
+# new_file = meta.set_pdf_field_value('D:\\CURRICULUM INFO\\CV-test.pdf', '/Pene', 'come pollas')
+# print(meta.get_pdf_exif(new_file))
+# print(datos)
+
+# from shodan import Shodan 
+
+# api_key = 'MM72AkzHXdHpC8iP65VVEEVrJjp7zkgd' 
+
+# api = Shodan(api_key)
+
+# res = api.info()
+
+# print(res)
+
 # vul = ht.getModule('vulndb')
 # #print(vul.getSuggestions('distinct', 'affectedSoftware.name', vulndb_api='K8U08QNZ6NG1LORLOF5Z05S5GEFV0MYR2ZM8WTBPSW549S5M6M0Y54IIUH5N1VTM'))
 # print(vul.getCVEInfo('CVE-2019-0607', vulndb_api='K8U08QNZ6NG1LORLOF5Z05S5GEFV0MYR2ZM8WTBPSW549S5M6M0Y54IIUH5N1VTM'))
