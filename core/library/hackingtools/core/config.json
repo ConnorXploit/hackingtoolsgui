@@ -122,7 +122,9 @@
         "ht_vulndb": {},
         "ht_instagram": {},
         "ht_urlshortener": {},
-        "ht_router": {}
+        "ht_router": {},
+        "ht_fuzz": {},
+        "ht_rc4": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
@@ -155,6 +157,9 @@
                 "pdfrw",
                 "taglib",
                 "eyeD3"
+            ],
+            "ht_builtwith": [
+                "buildwith"
             ]
         },
         "Connections": {

@@ -198,7 +198,7 @@
                 "__in_map_help__": false
             },
             "isBadFile": {
-                "__in_map_isBadFile__": true
+                "__in_map_isBadFile__": false
             },
             "isBadFileHash": {
                 "__in_map_isBadFileHash__": false
@@ -374,7 +374,7 @@
         },
         "ht_facebook": {
             "get_posts": {
-                "__in_map_get_posts__": true
+                "__in_map_get_posts__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -623,13 +623,21 @@
         },
         "ht_router": {
             "getBrands": {
-                "__in_map_getBrands__": true
+                "__in_map_getBrands__": false
             },
             "getDefaultLogin": {
                 "__in_map_getDefaultLogin__": true
             },
             "help": {
                 "__in_map_help__": false
+            }
+        },
+        "ht_rc4": {
+            "decrypt": {
+                "__in_map_decrypt__": true
+            },
+            "encrypt": {
+                "__in_map_encrypt__": true
             }
         }
     }

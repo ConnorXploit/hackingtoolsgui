@@ -1,0 +1,71 @@
+{
+    "__gui_label__": "_MODULE_GUI_LABEL_",
+    "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+    "_django_form_module_function_": {
+        "_PUBLIC_FUNCTION_": {
+            "__function__": "_FUNCTION_NAME_",
+            "__async__": false,
+            "__return__": "_IF_RETURNS_LIKE_TEXT_",
+            "_PARAM_TO_USE_IN_VIEWS_PY_": {
+                "__type__": "_HTML_INPUT_TYPE_",
+                "label_desc": "_DESCRIPTION_LABEL_",
+                "value": "_INPUT_VALUE_",
+                "required": "_IF_REQUIRED_",
+                "returnable_modules_functions": {
+                    "_MODULE_CALL_FOR_": [
+                        "_THAT_MODULES_FUNCTION"
+                    ]
+                },
+                "options_from_function": {
+                    "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
+                }
+            }
+        }
+    },
+    "django_form_module_function": {
+        "decrypt": {
+            "__function__": "decrypt",
+            "__async__": false,
+            "__return__": "text",
+            "password": {
+                "__type__": "password",
+                "label_desc": "password",
+                "placeholder": "password",
+                "required": true
+            },
+            "text": {
+                "__type__": "text",
+                "label_desc": "text",
+                "placeholder": "text",
+                "required": true
+            },
+            "__pool_it_decrypt__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        },
+        "encrypt": {
+            "__function__": "encrypt",
+            "__async__": false,
+            "__return__": "text",
+            "password": {
+                "__type__": "password",
+                "label_desc": "password",
+                "placeholder": "password",
+                "required": true
+            },
+            "text": {
+                "__type__": "text",
+                "label_desc": "text",
+                "placeholder": "text",
+                "required": true
+            },
+            "__pool_it_encrypt__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}
