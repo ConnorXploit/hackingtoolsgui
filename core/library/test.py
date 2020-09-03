@@ -24,9 +24,9 @@ try:
 except:
     import pyreadline as readline  # Windows
 
-meta = ht.getModule('metadata')
-fich = meta.set_mp3_title('C:\\Users\\ivan-\\Desktop\\test.mp3', 'salmorejo es feo')
-print(meta.get_mp3_exif(fich))
+# meta = ht.getModule('metadata')
+# fich = meta.set_mp3_title('C:\\Users\\ivan-\\Desktop\\test.mp3', 'salmorejo es feo')
+# print(meta.get_mp3_exif(fich))
 
 # new_file = meta.set_pdf_metadata_to_another('D:\\CURRICULUM INFO\\CV.pdf', 'D:\\CURRICULUM INFO\\test.pdf')
 # print('Se ha guardado en ', new_file)
@@ -37,7 +37,7 @@ print(meta.get_mp3_exif(fich))
 
 # from shodan import Shodan 
 
-# api_key = 'MM72AkzHXdHpC8iP65VVEEVrJjp7zkgd' 
+api_key = 'lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl' 
 
 # api = Shodan(api_key)
 
@@ -128,7 +128,8 @@ print(meta.get_mp3_exif(fich))
 # # print(ht.getModulesNames())
 #
 # # From hackingtools, I get a module. In this case, shodan module:
-# shodan = ht.getModule('ht_shodan')
+ht.Config.setAPIKey('shodan_api', api_key)
+shodan = ht.getModule('ht_shodan')
 #
 # # I get help method from the shodan module
 # # ! This returns the methods in console!
@@ -145,7 +146,8 @@ print(meta.get_mp3_exif(fich))
 # shodan.settingApi('<SHODAN_API>')
 #
 # # Ask shodan for getting a list of IPs from a service name
-# for ip in shodan.getIPListfromServices(option):
+for ip in shodan.getIPListfromServices('apache'):
+    print(ip)
 #     # For any IP we get, create a Host object, with the Target ID
 #     # Add it to target with addHost function
 #     if not target.existsHostWithIp(ip):

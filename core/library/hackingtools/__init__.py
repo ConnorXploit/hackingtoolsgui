@@ -15,10 +15,12 @@ import shutil as __shutil
 import ast as __ast
 import json as __json
 import sys as __sys
-import readline as __readline
+try:
+    import readline as __readline
+    __readline.parse_and_bind('tab: complete')
+except:
+    pass
 from time import sleep as __sleep
-
-__readline.parse_and_bind('tab: complete')
 
 # try:
 #     from pip import main as pipmain
@@ -107,7 +109,7 @@ def getCategories():
             data.append(mods.split('.')[1])
     return data
 
-def getModule(moduleName):
+def getModule(moduleName, count_try=0):
     """Return's and load's a module into a variable passing a module name as parameter
 
     Parameters
@@ -119,18 +121,19 @@ def getModule(moduleName):
         eval(module)
     """
     #Logger.printMessage('Initiation of {moduleName}'.format(moduleName=moduleName), debug_module=True)
-
-    # While the mods are loading with workers, wait por it
-    while any( [ work.startswith('import-module-') for work in getWorkers() ] ):
-        __sleep(0.1)
-
+    
     for m in __modules_loaded__:
         if moduleName in m:
             if not 'ht_' in moduleName:
                 moduleName = 'ht_{m}'.format(m=moduleName)
             sentence = 'modules.{category}.{mod}.{moduleName}.StartModule()'.format(category=m.split('.')[1], mod='_'.join(moduleName.split('_')[1:]), moduleName=moduleName)
             return eval(sentence)
-    Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), is_error=True)
+
+    if count_try <= 4:
+        __sleep(1)
+        return getModule(moduleName, count_try+1)
+    else:
+        Logger.printMessage('Looks like {mod} is not loaded on HackingTools. Look the first import in log. You could have some error in your code :)'.format(mod=moduleName), is_error=True)
 
 def getModules():
     data = []
@@ -535,6 +538,7 @@ def __importModule__(modules, category, moduleName):
                 __modules_loaded__[module_import_string_no_from][mod_func]['original_params'] = original_params if original_params else None
         else:
             __modules_loaded__[module_import_string_no_from] = 'Sin funciones...'
+
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
         new_module_name = str(e).split("'")[1]

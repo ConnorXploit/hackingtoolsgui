@@ -30,7 +30,11 @@ from threading import Lock
 from itertools import product
 from functools import reduce
 from datetime import datetime
-import git
+import platform as __platform
+try:
+    import git
+except:
+    pass
 import re
 from pathlib import Path
 

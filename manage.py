@@ -21,7 +21,7 @@ def main():
 def checkPackages():
     # If Windows NT
     extra_packages = {
-        "nt" : ['pywin32', 'pywin32-ctypes', 'opencv-python'],
+        "nt" : ['pywin32', 'pywin32-ctypes', 'opencv-python', 'cmake', 'PyInstaller'],
         "linux" : ['opencv-python'],
     }
     for system in extra_packages:
