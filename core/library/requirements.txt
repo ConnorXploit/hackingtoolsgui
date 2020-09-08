@@ -38,3 +38,4 @@ typed-ast
 urllib3
 virustotal-python
 xlsxwriter
+whitenoise
