@@ -88,7 +88,6 @@ class StartModule():
 								}
                             else:
                                 result[url] = {"malicious": False}
-                        print(result)
                         return {'OK': result}
                 return {'error': "Uno de los parámetros en el campo url es invalido"}
             else:

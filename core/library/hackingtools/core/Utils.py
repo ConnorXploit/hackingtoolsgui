@@ -202,7 +202,7 @@ def getFunctionsParams(category, moduleName, functionName, i_want_list=False):
 
 def getValueType(value, getResponse=False, returnLiteralType=False):
     try:
-        if isinstance(value, bool) or isinstance(eval(value), bool):
+        if isinstance(value, bool) and ( str(value) == 'False' or str(value) == 'True'):
             if returnLiteralType:
                 return bool
             return 'checkbox'
