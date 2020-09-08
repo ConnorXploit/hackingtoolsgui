@@ -11,6 +11,21 @@ import json
 config = Config.getConfig(parentKey='modules', key='ht_phising')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
+DEFAULT_SAFEBROWSING_FEEDS = [
+    db.SBList(
+        threatType = "MALWARE",
+        platformType = "ALL_PLATFORMS",
+        threatEntryType = "URL",
+        state = "",
+    ),
+    db.SBList(
+        threatType = "SOCIAL_ENGINEERING",
+        platformType = "ALL_PLATFORMS",
+        threatEntryType = "URL",
+        state = "",
+    ),
+]
+
 
 class StartModule():
 
@@ -36,6 +51,7 @@ class StartModule():
             self.threat_typeslist = self.datos['schemas']['ThreatInfo']['properties']['threatTypes']['items']['enum']
             self.threat_entry_typeslist = self.datos['schemas']['ThreatInfo']['properties']['threatEntryTypes']['items']['enum']
             self.threat_platform_typeslist = self.datos['schemas']['ThreatInfo']['properties']['platformTypes']['items']['enum']
+            
             
             self.apiendpointsdic = {}
             for nombre in self.datos['resources']:
@@ -94,3 +110,15 @@ class StartModule():
                 return {'error': "Debes pasar una lista URLs"}
         else:
             return {'error': "Debes usar una API KEY"}
+
+
+
+
+    # def fetch(self, what, ):
+    #     if not gsb_api:
+    #         gsb_api = ht.Config.getAPIKey('gsb_api', gsb_api)
+    #     else:
+    #        nuevasfirmas = {} 
+
+
+

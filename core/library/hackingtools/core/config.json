@@ -161,6 +161,9 @@
             ],
             "ht_builtwith": [
                 "buildwith"
+            ],
+            "ht_parser": [
+                "xmltodict"
             ]
         },
         "Connections": {
