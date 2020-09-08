@@ -626,7 +626,7 @@
                 "__in_map_getBrands__": false
             },
             "getDefaultLogin": {
-                "__in_map_getDefaultLogin__": true
+                "__in_map_getDefaultLogin__": false
             },
             "help": {
                 "__in_map_help__": false
@@ -634,10 +634,26 @@
         },
         "ht_rc4": {
             "decrypt": {
-                "__in_map_decrypt__": true
+                "__in_map_decrypt__": false
             },
             "encrypt": {
-                "__in_map_encrypt__": true
+                "__in_map_encrypt__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_fuzz": {
+            "help": {
+                "__in_map_help__": false
+            }
+        },
+        "ht_phising": {
+            "search": {
+                "__in_map_search__": false
+            },
+            "help": {
+                "__in_map_help__": false
             }
         }
     }

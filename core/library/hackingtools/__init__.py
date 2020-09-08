@@ -541,32 +541,32 @@ def __importModule__(modules, category, moduleName):
 
     except Exception as e:
         Logger.printMessage(str(e), is_error=True)
-        new_module_name = str(e).split("'")[1]
-        if 'No module named' in str(e):
-
-            if not moduleName in __cant_install_requirements__:
-                __cant_install_requirements__[moduleName] = []
-
-            if not new_module_name in __cant_install_requirements__[moduleName]:
-
-                try:
-                    Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=new_module_name), is_warn=True)
-                    import subprocess
-                    p = subprocess.Popen([__sys.executable, '-m', 'pip', 'install', new_module_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    out = p.communicate()
-                    if 'EnvironmentError' in out[0]:
-                        Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=new_module_name, error='Could not install in environment'), is_error=True)
-                    # pipmain([sys.executable, '-m', 'pip', 'install', '--user', new_module_name])
-                except:
-                    pass
+        if not 'inconsistent use of tabs' in str(e):
+            new_module_name = str(e).split("'")[1]
+            if 'No module named' in str(e):
+                if not moduleName in __cant_install_requirements__:
+                    __cant_install_requirements__[moduleName] = []
 
                 if not new_module_name in __cant_install_requirements__[moduleName]:
-                    __cant_install_requirements__[moduleName].append(new_module_name)
 
-                if not 'hackingtools' in new_module_name:
-                    Config.add_requirements_ignore(moduleName, new_module_name)
+                    try:
+                        Logger.printMessage(message='__importModules__', description='Trying to install module {m}'.format(m=new_module_name), is_warn=True)
+                        import subprocess
+                        p = subprocess.Popen([__sys.executable, '-m', 'pip', 'install', new_module_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        out = p.communicate()
+                        if 'EnvironmentError' in out[0]:
+                            Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=new_module_name, error='Could not install in environment'), is_error=True)
+                        # pipmain([sys.executable, '-m', 'pip', 'install', '--user', new_module_name])
+                    except:
+                        pass
 
-                Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
+                    if not new_module_name in __cant_install_requirements__[moduleName]:
+                        __cant_install_requirements__[moduleName].append(new_module_name)
+
+                    if not 'hackingtools' in new_module_name:
+                        Config.add_requirements_ignore(moduleName, new_module_name)
+
+                    Logger.printMessage(message='__importModules__', description='{moduleName} {error}'.format(moduleName=module_import_string, error=str(e)), is_error=True)
 
 # Core method
 def __importModules__():

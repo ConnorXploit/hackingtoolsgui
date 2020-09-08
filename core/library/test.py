@@ -24,6 +24,11 @@ try:
 except:
     import pyreadline as readline  # Windows
 
+gsb = ht.getModule('phising')
+
+print( gsb.search('https://google.com, https://short-share.com/download.php', 'AIzaSyA-gR-B1g2erXNE01dpfUlgWOe_4fTQHac') )
+
+
 # meta = ht.getModule('metadata')
 # fich = meta.set_mp3_title('C:\\Users\\ivan-\\Desktop\\test.mp3', 'salmorejo es feo')
 # print(meta.get_mp3_exif(fich))
@@ -37,7 +42,7 @@ except:
 
 # from shodan import Shodan 
 
-api_key = 'lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl' 
+# api_key = 'lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl' 
 
 # api = Shodan(api_key)
 
@@ -128,8 +133,8 @@ api_key = 'lO6PkeAYJIp9w3N33ri0Rm2DM3WeWbhl'
 # # print(ht.getModulesNames())
 #
 # # From hackingtools, I get a module. In this case, shodan module:
-ht.Config.setAPIKey('shodan_api', api_key)
-shodan = ht.getModule('ht_shodan')
+# ht.Config.setAPIKey('shodan_api', api_key)
+# shodan = ht.getModule('ht_shodan')
 #
 # # I get help method from the shodan module
 # # ! This returns the methods in console!
@@ -146,8 +151,8 @@ shodan = ht.getModule('ht_shodan')
 # shodan.settingApi('<SHODAN_API>')
 #
 # # Ask shodan for getting a list of IPs from a service name
-for ip in shodan.getIPListfromServices('apache'):
-    print(ip)
+# for ip in shodan.getIPListfromServices('apache'):
+    # print(ip)
 #     # For any IP we get, create a Host object, with the Target ID
 #     # Add it to target with addHost function
 #     if not target.existsHostWithIp(ip):
@@ -155,12 +160,12 @@ for ip in shodan.getIPListfromServices('apache'):
 #         target.addHost(host)
 #     else:
 #         print('IP Repeated... Host registered yet on the Target - {i}'.format(i=ip))
-#
+# #
 # # For all the host we have:
 # for host in target.hosts:
-#     # Add to host's data the response of the call to the shodan function.
-#     # In this case, we get some public info of that IP
-#     host.addScanResult(shodan.search_host(host.ip))
+    # Add to host's data the response of the call to the shodan function.
+    # In this case, we get some public info of that IP
+    # host.addScanResult(shodan.search_host(host.ip))
 #
 # [host.__str__() for host in target.hosts]
 #

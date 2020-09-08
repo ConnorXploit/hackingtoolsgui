@@ -240,15 +240,13 @@ def __getReturnAsModalHTML__(response, main=True):
     res_type = Utils.getValueType(response, getResponse=True)
     if isinstance(response, dict):
         for key, val in response.items():
-            if val:
+            if val is not None:
                 val_type_temp = Utils.getValueType(val, getResponse=True, returnLiteralType=True)
                 if val_type_temp == list:
                     res += "<label for=\"{id}\">{input_label_desc}</label>".format(id=key, input_label_desc=key)
                     res += __getReturnAsModalHTML__(list(val), main=False)
-                elif val_type_temp == bool:
-                    res += __getReturnAsModalHTML__(bool(val), main=False)
-                elif val_type_temp == dict:
-                    res += __getReturnAsModalHTML__(val, main=False)
+                # elif val_type_temp == dict:
+                #     res += __getReturnAsModalHTML__(val, main=False)
                 else:
                     val_type = Utils.getValueType(val, getResponse=True)
                     try:
@@ -257,12 +255,15 @@ def __getReturnAsModalHTML__(response, main=True):
                         input_className = ''
 
                     if val_type == 'checkbox':
-                        res += "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" {checked} disabled><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></div><br />".format(id=key, input_label_desc=key, checked=val)
+                        if not val:
+                            res += "</br><div class=\"toggle btn waves-effect waves-light btn-warning off\" data-toggle=\"toggle\" style=\"width: 0px; height: 0px;\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" disabled><div class=\"toggle-group\"><label class=\"btn btn-primary toggle-on waves-effect waves-light\">On</label><label class=\"btn btn-warning active toggle-off waves-effect waves-light\">Off</label><span class=\"toggle-handle btn btn-default waves-effect waves-light\"></span></div></div><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></br></br>".format(id=key, input_label_desc=key)
+                        else:
+                            res += "</br><div class=\"toggle btn waves-effect waves-light btn-primary\" data-toggle=\"toggle\" style=\"width: 0px; height: 0px;\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" disabled><div class=\"toggle-group\"><label class=\"btn btn-primary toggle-on waves-effect waves-light\">On</label><label class=\"btn btn-warning active toggle-off waves-effect waves-light\">Off</label><span class=\"toggle-handle btn btn-default waves-effect waves-light\"></span></div></div><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></br></br>".format(id=key, input_label_desc=key)
                     
                     elif val_type == 'number':
                         res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"number\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
 
-                    elif val_type == 'textarea' or val_type == 'data':
+                    elif val_type == 'textarea':
                         res += "<div class=\"md-form\"><label for=\"{id}\">{input_label_desc}</label><textarea class=\"{className}\" name=\"{id}\" id=\"{id}\" rows=\"{rows}\">{value}</textarea></div>".format(className=input_className, id=key, input_label_desc=key, value=val, rows=int(int( len(val)/80 ) + val.count('\n') ) )
 
                     elif val_type == 'image':
@@ -272,9 +273,11 @@ def __getReturnAsModalHTML__(response, main=True):
                         val = val.strftime("%d-%m-%Y %H:%M:%S")
                         res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label><input class=\"{className}\" type=\"text\" value=\"{input_value}\" name=\"{id}\" /></div>".format(id=key, input_label_desc=key, className=input_className, input_value=val)
                     else:
-                        res += "<div class='md-form'><label for=\"{id}\">{input_label_desc}</label>".format(id=key, input_label_desc=key)
+                        res += "<div class='md-form' id=\"{id}\"><label for=\"{id}\">{input_label_desc}</label>".format(id=key, input_label_desc=key)
                         res += __getReturnAsModalHTML__(val, main=False)
                         res += "</div>"
+    elif isinstance(response, bool):
+        return "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" {checked} disabled></div><br />".format(checked=response)
     elif isinstance(response, int):
         val_type = Utils.getValueType(response, getResponse=True)
         try:
@@ -282,8 +285,6 @@ def __getReturnAsModalHTML__(response, main=True):
         except:
             input_className = ''
         return "<div class='md-form'><input class=\"{className}\" type=\"number\" value=\"{input_value}\" /></div>".format(className=input_className, input_value=response)
-    elif isinstance(response, bool):
-        return "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" {checked} disabled></div><br />".format(checked=response)
     elif res_type == 'select':
         if isinstance(response, str):
             response = list(response)
@@ -317,7 +318,9 @@ def __getReturnAsModalHTML__(response, main=True):
         except:
             input_className = ''
         if val_type == 'checkbox':
-            return "<div class=\"checkbox\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"response-{id}\" name=\"{id}\" {checked} disabled><label style=\"padding: 0 10px;\" for=\"response-{id}\">True or False?</label></div><br />".format(id=response, checked=response)
+            if not response:
+                return "</br><div class=\"toggle btn waves-effect waves-light btn-warning off\" data-toggle=\"toggle\" style=\"width: 0px; height: 0px;\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" disabled><div class=\"toggle-group\"><label class=\"btn btn-primary toggle-on waves-effect waves-light\">On</label><label class=\"btn btn-warning active toggle-off waves-effect waves-light\">Off</label><span class=\"toggle-handle btn btn-default waves-effect waves-light\"></span></div></div><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></br></br>".format(id=key, input_label_desc=key)
+            return "</br><div class=\"toggle btn waves-effect waves-light btn-primary\" data-toggle=\"toggle\" style=\"width: 0px; height: 0px;\"><input type=\"checkbox\" class=\"checkbox\" data-toggle=\"toggle\" data-on=\"On\" data-off=\"Off\" data-onstyle=\"primary\" data-offstyle=\"warning\" id=\"{id}\" name=\"{id}\" disabled><div class=\"toggle-group\"><label class=\"btn btn-primary toggle-on waves-effect waves-light\">On</label><label class=\"btn btn-warning active toggle-off waves-effect waves-light\">Off</label><span class=\"toggle-handle btn btn-default waves-effect waves-light\"></span></div></div><label style=\"padding: 0 10px;\" for=\"{id}\">{input_label_desc}</label></br></br>".format(id=key, input_label_desc=key)       
         elif val_type == 'data' or val_type == 'textarea':
             return "<div class=\"md-form\"><label for=\"response-{id}\">data</label><textarea class=\"{className}\" name=\"response-{id}\" id=\"response-{id}\" rows=\"{rows}\">{value}</textarea></div>".format(className=input_className, id=response[0], value=response, rows=int( int( len(response)/80 ) + response.count('\n') ) )
         elif val_type == 'password':

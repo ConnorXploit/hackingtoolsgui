@@ -1,0 +1,79 @@
+{
+    "__gui_label__": "_MODULE_GUI_LABEL_",
+    "_comment": "Rename templates if have to use: (remove underscore) 'django_form_main_function' and 'django_form_module_function'",
+    "_django_form_module_function_": {
+        "_PUBLIC_FUNCTION_": {
+            "__function__": "_FUNCTION_NAME_",
+            "__async__": false,
+            "__return__": "_IF_RETURNS_LIKE_TEXT_",
+            "_PARAM_TO_USE_IN_VIEWS_PY_": {
+                "__type__": "_HTML_INPUT_TYPE_",
+                "label_desc": "_DESCRIPTION_LABEL_",
+                "value": "_INPUT_VALUE_",
+                "required": "_IF_REQUIRED_",
+                "returnable_modules_functions": {
+                    "_MODULE_CALL_FOR_": [
+                        "_THAT_MODULES_FUNCTION"
+                    ]
+                },
+                "options_from_function": {
+                    "__CORE_OR_MODULE_NAME__": "__FUNCTION_TO_CALL__"
+                }
+            }
+        }
+    },
+    "django_form_module_function": {
+        "search": {
+            "__function__": "search",
+            "__async__": false,
+            "__return__": "text",
+            "urls": {
+                "__type__": "text",
+                "label_desc": "urls",
+                "placeholder": "urls",
+                "required": true
+            },
+            "gsb_api": {
+                "__type__": "text",
+                "label_desc": "gsb_api",
+                "placeholder": "gsb_api",
+                "value": null
+            },
+            "__pool_it_search__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    },
+    "django_form_main_function": {
+        "__function__": "search",
+        "urls": {
+            "__type__": "text",
+            "label_desc": "urls",
+            "placeholder": "urls",
+            "value": []
+        },
+        "gsb_api": {
+            "__type__": "text",
+            "label_desc": "gsb_api",
+            "placeholder": "gsb_api",
+            "value": null
+        },
+        "__pool_it_search__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "search",
+            "__type__": "submit",
+            "value": "Search",
+            "loading_text": "phisinging"
+        }
+    }
+}
