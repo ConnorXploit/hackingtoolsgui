@@ -209,7 +209,7 @@ def getValueType(value, getResponse=False, returnLiteralType=False):
     except:
         pass
     try:
-        if isinstance(value, int) or isinstance(eval(value), int):
+        if isinstance(value, int) and int(value):
             if returnLiteralType:
                 return int
             return 'number'
