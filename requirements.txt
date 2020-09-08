@@ -1,4 +1,4 @@
 Django
-hackingtools==3.0.0.965
+hackingtools==3.0.0.966
 Jinja2
 keyring
