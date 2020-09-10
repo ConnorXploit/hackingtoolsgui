@@ -33,7 +33,3 @@ blocks:
         - name: Checklist
           commands:
             - python manage.py check --deploy
-        - name: 'Style CheckJob #3'
-          commands:
-            - pip install flake8
-            - flake8 ./ --max-line-length=127
