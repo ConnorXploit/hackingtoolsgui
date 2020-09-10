@@ -24,6 +24,7 @@ blocks:
           - sem-version python 3.8
           - checkout
           - cache restore
+          - pip install --cache-dir .pip_cache hackingtools -U
           - pip install --cache-dir .pip_cache -r requirements.txt
       jobs:
         - name: Unit tests
