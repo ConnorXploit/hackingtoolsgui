@@ -32,4 +32,4 @@ blocks:
             - python manage.py test
         - name: Checklist
           commands:
-            - 'python manage.py check --deploy '
+            - python manage.py check --deploy
