@@ -34,6 +34,4 @@ blocks:
           commands:
             - python manage.py check --deploy
         - name: Style check
-          commands:
-            - pip install flake8
-            - flake8 ./ --max-line-length=127
+          commands: []
