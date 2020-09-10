@@ -33,5 +33,5 @@ blocks:
         - name: Checklist
           commands:
             - python manage.py check --deploy
-        - name: Style check
+        - name: ''
           commands: []
