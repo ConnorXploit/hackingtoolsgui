@@ -11,6 +11,7 @@ blocks:
         - name: Build
           commands:
             - sem-version python 3.8
+            - cache clear
             - checkout
             - mkdir .pip_cache
             - cache restore
@@ -33,3 +34,8 @@ blocks:
         - name: Checklist
           commands:
             - python manage.py check --deploy
+promotions:
+  - name: Dockerize
+    pipeline_file: pipeline_2.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed'
