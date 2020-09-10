@@ -30,3 +30,10 @@ blocks:
             - python manage.py makemigrations
             - python manage.py migrate
             - python manage.py test
+        - name: Checklist
+          commands:
+            - python manage.py check --deploy
+        - name: Style check
+          commands:
+            - pip install flake8
+            - flake8 / --max-line-length=127
