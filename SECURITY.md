@@ -7,9 +7,9 @@ currently being supported with security updates.
 
 | Version | Supported          |
 | -------  | ------------------ |
-| 3.0.0.968 | :heavy_check_mark: |
-| 3.0.0.967  | :x:                |
-| 3.0.0.966   | :x: |
+| 3.1.2 | :heavy_check_mark: |
+| 3.0.0.969  | :x:                |
+| 3.0.0.968   | :x: |
 
 
 ## Reporting a Vulnerability
