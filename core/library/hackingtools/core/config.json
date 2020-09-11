@@ -130,7 +130,7 @@
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
         "LOAD_DJANGO_CONF": true,
-        "not_async__main_function": [
+        "not_async_main_function": [
             "ht_crypter"
         ],
         "__cant_install_requirements__": {
