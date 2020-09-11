@@ -340,25 +340,25 @@
                                                     <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}">
                                                     </form>
                                                     {% for modul, funcs in funcs_map.items %}
-                                                    {% if modul in 'ht_'|add:name %}
-                                                        {% if functi in funcs %}
-                                                        <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
-                                                            {% csrf_token %}
-                                                            <div class="custom-control custom-switch">
-                                                            <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}" checked>
-                                                            <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
-                                                            </div>
-                                                        </form>
-                                                        {% else %}
-                                                        <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
-                                                            {% csrf_token %}
-                                                            <div class="custom-control custom-switch">
-                                                            <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}">
-                                                            <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
-                                                            </div>
-                                                        </form>
+                                                        {% if modul in 'ht_'|add:name %}
+                                                            {% if functi in funcs %}
+                                                            <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
+                                                                {% csrf_token %}
+                                                                <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}" checked>
+                                                                <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
+                                                                </div>
+                                                            </form>
+                                                            {% else %}
+                                                            <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
+                                                                {% csrf_token %}
+                                                                <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}">
+                                                                <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
+                                                                </div>
+                                                            </form>
+                                                            {% endif %}
                                                         {% endif %}
-                                                    {% endif %}
                                                     {% endfor %}
 
 
@@ -721,10 +721,120 @@
                                     </button>
                                 </div>
                                 {% for urlmodform, form in modform.items %}
-                                    <form action="{% url urlmodform %}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {{form|safe}}
-                                    </form>
+                                    {% if mod not in not_async_form %}
+                                        <form action="#" method="post" enctype="multipart/form-data" id="form_main_{{mod}}">
+                                        {% csrf_token %}
+                                        {{form|safe}}
+                                        </form>
+                                        <script>
+                                            $("#form_main_{{mod}}").on('submit',(function(e) {
+                                                e.preventDefault();
+                                                var form = $('#form_main_{{mod}}');
+
+                                                $.ajax({
+                                                    url: '{% url urlmodform %}',
+                                                    type: "POST",
+                                                    data: new FormData($('#form_main_{{mod}}')[0]),
+                                                    async: true,
+                                                    enctype: 'multipart/form-data',
+                                                    contentType: false,
+                                                    cache: false,
+                                                    processData: false,
+                                                    success : function(res) {
+                                                        try{
+                                                            if('data' in res && res.data && Object.keys(res.data).length !== 0){
+                                                            function isDict(v) {
+                                                                return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+                                                            }
+                                                            if(isDict(res.data)){
+                                                                data = JSON.stringify(res.data, null, 2);
+                                                                $.notify("{{functi}}:\n" + data, "success");
+                                                                if($('#resultsLogger').val() != ''){
+                                                                $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                                }
+                                                                $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
+                                                            } else {
+                                                                if(res.data instanceof Array){
+                                                                    var data = '';
+                                                                    for(var i=0; i < res.data.length; i++){
+                                                                        if(isDict(res.data[i])){
+                                                                        for(var key in res.data[i]){
+                                                                            data += key + ': ' + res.data[i][key];
+                                                                            if(res.data.length-1 != i){
+                                                                            data += "\n";
+                                                                            }
+                                                                        }
+                                                                        } else {
+                                                                        data += res.data[i];
+                                                                        if(res.data.length-1 != i){
+                                                                            data += "\n";
+                                                                        }
+                                                                        }
+                                                                        data += "-#-#-#-#-#-#-#-#-#-#-#-#-\n"
+                                                                    }
+                                                                    $.notify("{{functi}}:\n" + data, "success");
+                                                                    if($('#resultsLogger').val() != ''){
+                                                                        $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                                    }
+                                                                    $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
+                                                                    } else {
+                                                                    $('#popup_response_ajax').modal('show');
+                                                                    $('#response_ajax').empty();
+                                                                    $('#response_ajax').append(res.data);
+                                                                    $('#responseLabelAjax').text('Response from {{functi}}');
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                /*$('#popup_textarea').val(res)
+                                                                $('#popup').modal('show');*/
+                                                                if('data' in res){
+                                                                    if(res.data == ''){
+                                                                    $.notify("{{functi}} - Empty response...", "warn");
+                                                                    } else {
+                                                                    $.notify("{{functi}} - " + res.data, "warn");
+                                                                    }
+                                                                } else {
+                                                                    if(res == ''){
+                                                                        $.notify("{{functi}} - Empty response...", "warn");
+                                                                    } else {
+                                                                        $.notify("{{functi}} - " + res, "warn");
+                                                                    }
+                                                                }
+                                                                if($('#resultsLogger').val() != ''){
+                                                                    $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                                }
+                                                                $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                                }
+                                                        } catch(error) {
+                                                            $.notify("{{functi}} - Could not get the response... Seems not to be a readable value... Is any type of file?", "error");
+                                                            if($('#resultsLogger').val() != ''){
+                                                                $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                            }
+                                                            $('#resultsLogger').val("{{functi}}:\nCould not get the response... Seems not to be a readable value... Is any type of file?\n" + $('#resultsLogger').val())
+                                                        }
+                                                    },
+                                                        error : function(xhr,errmsg,err) {
+                                                        /*console.log(xhr.status + ": " + xhr.responseText);*/
+                                                        $.notify("{{functi}} - " + res, "error");
+                                                        if($('#resultsLogger').val() != ''){
+                                                            $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                        }
+                                                        $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                    }
+                                                });
+                                                return false;
+                                            }));
+                                            $('#submit_main_{{mod}}').submit(function(e) {
+                                                e.preventDefault();
+                                                $('form_main_{{mod}}').submit(upload);
+                                            });
+                                        </script>
+                                    {% else %}
+                                        <form action="{% url urlmodform %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{form|safe}}
+                                        </form>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

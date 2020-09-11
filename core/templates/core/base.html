@@ -47,24 +47,9 @@
             $('.name-file').html(': <b>' + file_pieces[file_pieces.length-1] + '</b>');
         })
       </script>
-        <style>
-            .no-js #loader { display: none;  }
-            .js #loader { display: block; position: absolute; left: 100px; top: 0; }
-        </style>
-        <script src="{% static 'core/js/jquery_1.5.2.min.js' %}"></script>
-        <script>
-            // Wait for window load
-            $(window).load(function() {
-                // Animate loader off screen
-                $("#loader").animate({
-                    top: -200
-                }, 1500);
-            });
-        </script>
   </head>
 
   <body id="page-top">
-    <img src="{% static 'core/img/loading5.gif' %}" id="loader">
     <script>
       /* 
       

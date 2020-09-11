@@ -37,6 +37,7 @@ def load_data(session_id=None):
     global ht_data
     modules_and_params = ht.__getModulesJSON__()
     modules_forms = ht.DjangoFunctions.__getModulesDjangoForms__()
+    not_async_form = ht.Config.getConfig('core', 'not_async_function')
     modules_forms_modal = DjangoFunctions.__getModulesDjangoFormsModal__(
         session_id=session_id)
     modules_config = ht.__getModulesConfig__()
@@ -84,6 +85,7 @@ def load_data(session_id=None):
         'categories': categories,
         'modules_all': modules_all,
         'modules_forms': modules_forms,
+        'not_async_form': not_async_form,
         'modules_forms_modal': modules_forms_modal,
         'modules_config': modules_config,
         'console_command': modules_functions_calls_console_string,
