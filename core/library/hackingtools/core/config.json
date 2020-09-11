@@ -130,6 +130,9 @@
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
         "LOAD_DJANGO_CONF": true,
+        "not_async_main_function": [
+            "ht_crypter"
+        ],
         "__cant_install_requirements__": {
             "ht_objectdetection": [
                 "face_recognition"
@@ -161,9 +164,6 @@
             ],
             "ht_builtwith": [
                 "buildwith"
-            ],
-            "ht_parser": [
-                "xmltodict"
             ]
         },
         "Connections": {

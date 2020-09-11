@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="container-fluid" style="padding-bottom: 200px;">
+    <!-- PopUp No Ajax -->
     {% if popup_text %}
       <script type="text/javascript">
         $(window).on('load',function(){
@@ -34,6 +35,7 @@
         </div>
       </div>
     </div>
+    <!-- PopUp Ajax -->
     <div class="modal fade" id="popup_response_ajax" tabindex="-1" role="dialog" aria-labelledby="responseLabel" aria-hidden="true" style="z-index: 11111;">
       <div class="modal-dialog modal-dialog-pop-up" role="document">
         <div class="modal-content" style="min-height: 500px;">
@@ -52,6 +54,7 @@
         </div>
       </div>
     </div>
+    <!-- Pool List -->
     <div class="modal fade" id="pool_list" tabindex="-1" role="dialog" aria-labelledby="pool_list_modal" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -96,6 +99,7 @@
         </div>
       </div>
     </div>
+    <!-- Top Menu -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
       <div class="d-sm-flex align-items-center justify-content-between mb-6">
@@ -167,7 +171,7 @@
       </div>
     </div>
 
-    <!-- Content Row -->
+    <!-- Menu 4 Buttons -->
     <div class="row">
       <!-- Modal create Module -->
       <div class="modal fade" id="createModuleModal" tabindex="-1" role="dialog" aria-labelledby="createModuleLabel" aria-hidden="true">
@@ -270,7 +274,6 @@
           </div>
         </div>
       </div>
-      <!-- Earnings (Monthly) Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
         <a href="#" data-toggle="modal" data-target="#configModuleModal">
           <div class="card border-left-info shadow h-100 py-2 overMouseButtons">
@@ -301,233 +304,235 @@
             </div>
             <div class="modal-body modal-body-limited">
               <div class="row">
-                {% for name, funct in modules_all.items %}
-                  <div class="col-lg-3 mb-3">
-                    <h3>{{name}}</h3>
-                    <div class="moduleFunctions">
-                      {% if funct.items|length > 1 %}
-                        {% for funct_name, funct_params in funct.items %}
-                          {% if funct_name != 'help' %}
-                            {% for tool, function in modules_functions_modals.items %}
-                              {% for functi, data in function.items %}
-                                {% if functi == funct_name and 'ht_'|add:name == tool %}
-                                  <!-- MODAL PARA LA FUNCTION -->
-                                  <div class="modal fade" id="testModuleFunctionModal_{{tool}}_{{functi}}" tabindex="-1" role="dialog" aria-labelledby="testModuleFunctionModalLabel_{{tool}}_{{functi}}" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                      <div class="modal-content">
-                                        {% for data_key, data_value in data.items %}
-                                          {% if data_key in '__function__' %}
-                                              <div class="modal-header">
-                                                <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
-                                              </div><!-- -->
-                                              <div class="modal-body">
-                                                <form action="#" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
-                                                  {% csrf_token %}
-                                                  {% for mod, modform in modules_forms_modal.items %}
-                                                    {% for f_name, f_data_form in modform.items %}
-                                                      {% if f_name == functi %}
-                                                        {% if f_data_form %}
-                                                          {{f_data_form|safe}}
+                {% spaceless %}
+                    {% for name, funct in modules_all.items %}
+                    <div class="col-lg-3 mb-3">
+                        <h3>{{name}}</h3>
+                        <div class="moduleFunctions">
+                        {% if funct.items|length > 1 %}
+                            {% for funct_name, funct_params in funct.items %}
+                            {% if funct_name != 'help' %}
+                                {% for tool, function in modules_functions_modals.items %}
+                                {% for functi, data in function.items %}
+                                    {% if functi == funct_name and 'ht_'|add:name == tool %}
+                                    <!-- MODAL PARA LA FUNCTION -->
+                                    <div class="modal fade" id="testModuleFunctionModal_{{tool}}_{{functi}}" tabindex="-1" role="dialog" aria-labelledby="testModuleFunctionModalLabel_{{tool}}_{{functi}}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            {% for data_key, data_value in data.items %}
+                                            {% if data_key in '__function__' %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="testModuleFunctionModalLabel_{{tool}}_{{functi}}">Test {{functi}}</h5>
+                                                </div><!-- -->
+                                                <div class="modal-body">
+                                                    <form action="#" method="post" enctype="multipart/form-data" id="form_{{data_value}}">
+                                                    {% csrf_token %}
+                                                    {% for mod, modform in modules_forms_modal.items %}
+                                                        {% for f_name, f_data_form in modform.items %}
+                                                        {% if f_name == functi %}
+                                                            {% if f_data_form %}
+                                                            {{f_data_form|safe}}
+                                                            {% endif %}
                                                         {% endif %}
-                                                      {% endif %}
+                                                        {% endfor %}
                                                     {% endfor %}
-                                                  {% endfor %}
-                                                  <input type="text" id="is_async_{{functi}}" name="is_async_{{functi}}" value="true" style="display: none;">
-                                                  <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}">
-                                                </form>
-                                                {% for modul, funcs in funcs_map.items %}
-                                                  {% if modul in 'ht_'|add:name %}
-                                                    {% if functi in funcs %}
-                                                      <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
-                                                        {% csrf_token %}
-                                                        <div class="custom-control custom-switch">
-                                                          <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}" checked>
-                                                          <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
-                                                        </div>
-                                                      </form>
-                                                    {% else %}
-                                                      <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
-                                                        {% csrf_token %}
-                                                        <div class="custom-control custom-switch">
-                                                          <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}">
-                                                          <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
-                                                        </div>
-                                                      </form>
-                                                    {% endif %}
-                                                  {% endif %}
-                                                {% endfor %}
+                                                    <input type="text" id="is_async_{{functi}}" name="is_async_{{functi}}" value="true" style="display: none;">
+                                                    <input type="submit" class="btn btn-primary" id="submit_{{functi}}" value="Test {{functi}}">
+                                                    </form>
+                                                    {% for modul, funcs in funcs_map.items %}
+                                                        {% if modul in 'ht_'|add:name %}
+                                                            {% if functi in funcs %}
+                                                            <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
+                                                                {% csrf_token %}
+                                                                <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}" checked>
+                                                                <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
+                                                                </div>
+                                                            </form>
+                                                            {% else %}
+                                                            <form id="switchFunctionMap_{{modul}}_{{functi}}" class="on_off_in_map">
+                                                                {% csrf_token %}
+                                                                <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="checkSwitchFunctionMap_{{modul}}_{{functi}}">
+                                                                <label class="custom-control-label" for="checkSwitchFunctionMap_{{modul}}_{{functi}}">On/Off in map</label>
+                                                                </div>
+                                                            </form>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
 
 
-                                                <script>
-                                                  $(function() {
-                                                    $("#checkSwitchFunctionMap_{{'ht_'|add:name}}_{{functi}}").change(function(e) {
-                                                      e.preventDefault();
-                                                      //$("#switchPoolForm").submit();
-                                                      $.ajax({
-                                                        headers: { "X-CSRFToken": '{{csrf_token}}' },
-                                                        url : "{% url 'switchFunctionMap' %}", // the endpoint
-                                                        type : "POST", // http method
-                                                        async: true,
-                                                        data : { csrfmiddlewaretoken : '{{ csrf_token }}' , module : 'ht_{{ name }}', functionName : '{{ functi }}'}
-                                                      });
+                                                    <script>
+                                                    $(function() {
+                                                        $("#checkSwitchFunctionMap_{{'ht_'|add:name}}_{{functi}}").change(function(e) {
+                                                        e.preventDefault();
+                                                        //$("#switchPoolForm").submit();
+                                                        $.ajax({
+                                                            headers: { "X-CSRFToken": '{{csrf_token}}' },
+                                                            url : "{% url 'switchFunctionMap' %}", // the endpoint
+                                                            type : "POST", // http method
+                                                            async: true,
+                                                            data : { csrfmiddlewaretoken : '{{ csrf_token }}' , module : 'ht_{{ name }}', functionName : '{{ functi }}'}
+                                                        });
+                                                        })
                                                     })
-                                                  })
-                                                </script>
-                                              </div>
-                                            <script>
-                                              $("#form_{{data_value}}").on('submit',(function(e) {
-                                                e.preventDefault();
-                                                var form = $('#form_{{data_value}}');
+                                                    </script>
+                                                </div>
+                                                <script>
+                                                $("#form_{{data_value}}").on('submit',(function(e) {
+                                                    e.preventDefault();
+                                                    var form = $('#form_{{data_value}}');
 
-                                                $.ajax({
-                                                    url: '{% url data_value %}',
-                                                    type: "POST",
-                                                    data: new FormData($('#form_{{data_value}}')[0]),
-                                                    async: true,
-                                                    enctype: 'multipart/form-data',
-                                                    contentType: false,
-                                                    cache: false,
-                                                    processData: false,
-                                                    success : function(res) {
-                                                      try{
-                                                        if('data' in res && res.data && Object.keys(res.data).length !== 0){
-                                                          function isDict(v) {
-                                                              return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
-                                                          }
-                                                          if(isDict(res.data)){
-                                                            data = JSON.stringify(res.data, null, 2);
-                                                            $.notify("{{functi}}:\n" + data, "success");
-                                                            if($('#resultsLogger').val() != ''){
-                                                              $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                    $.ajax({
+                                                        url: '{% url data_value %}',
+                                                        type: "POST",
+                                                        data: new FormData($('#form_{{data_value}}')[0]),
+                                                        async: true,
+                                                        enctype: 'multipart/form-data',
+                                                        contentType: false,
+                                                        cache: false,
+                                                        processData: false,
+                                                        success : function(res) {
+                                                        try{
+                                                            if('data' in res && res.data && Object.keys(res.data).length !== 0){
+                                                            function isDict(v) {
+                                                                return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
                                                             }
-                                                            $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
-                                                          } else {
-                                                            if(res.data instanceof Array){
-                                                              var data = '';
-                                                              for(var i=0; i < res.data.length; i++){
-                                                                if(isDict(res.data[i])){
-                                                                  for(var key in res.data[i]){
-                                                                    data += key + ': ' + res.data[i][key];
-                                                                    if(res.data.length-1 != i){
-                                                                      data += "\n";
-                                                                    }
-                                                                  }
-                                                                } else {
-                                                                  data += res.data[i];
-                                                                  if(res.data.length-1 != i){
-                                                                    data += "\n";
-                                                                  }
-                                                                }
-                                                                data += "-#-#-#-#-#-#-#-#-#-#-#-#-\n"
-                                                              }
-                                                              $.notify("{{functi}}:\n" + data, "success");
-                                                              if($('#resultsLogger').val() != ''){
+                                                            if(isDict(res.data)){
+                                                                data = JSON.stringify(res.data, null, 2);
+                                                                $.notify("{{functi}}:\n" + data, "success");
+                                                                if($('#resultsLogger').val() != ''){
                                                                 $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
-                                                              }
-                                                              $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
+                                                                }
+                                                                $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
                                                             } else {
-                                                              $('#popup_response_ajax').modal('show');
-                                                              $('#response_ajax').empty();
-                                                              $('#response_ajax').append(res.data);
-                                                              $('#responseLabelAjax').text('Response from {{functi}}');
+                                                                if(res.data instanceof Array){
+                                                                var data = '';
+                                                                for(var i=0; i < res.data.length; i++){
+                                                                    if(isDict(res.data[i])){
+                                                                    for(var key in res.data[i]){
+                                                                        data += key + ': ' + res.data[i][key];
+                                                                        if(res.data.length-1 != i){
+                                                                        data += "\n";
+                                                                        }
+                                                                    }
+                                                                    } else {
+                                                                    data += res.data[i];
+                                                                    if(res.data.length-1 != i){
+                                                                        data += "\n";
+                                                                    }
+                                                                    }
+                                                                    data += "-#-#-#-#-#-#-#-#-#-#-#-#-\n"
+                                                                }
+                                                                $.notify("{{functi}}:\n" + data, "success");
+                                                                if($('#resultsLogger').val() != ''){
+                                                                    $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                                }
+                                                                $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
+                                                                } else {
+                                                                $('#popup_response_ajax').modal('show');
+                                                                $('#response_ajax').empty();
+                                                                $('#response_ajax').append(res.data);
+                                                                $('#responseLabelAjax').text('Response from {{functi}}');
+                                                                }
                                                             }
-                                                          }
-                                                        } else {
-                                                          /*$('#popup_textarea').val(res)
-                                                          $('#popup').modal('show');*/
-                                                          if('data' in res){
-                                                            if(res.data == ''){
-                                                              $.notify("{{functi}} - Empty response...", "warn");
                                                             } else {
-                                                              $.notify("{{functi}} - " + res.data, "warn");
-                                                            }
-                                                          } else {
-                                                            if(res == ''){
-                                                              $.notify("{{functi}} - Empty response...", "warn");
+                                                            /*$('#popup_textarea').val(res)
+                                                            $('#popup').modal('show');*/
+                                                            if('data' in res){
+                                                                if(res.data == ''){
+                                                                $.notify("{{functi}} - Empty response...", "warn");
+                                                                } else {
+                                                                $.notify("{{functi}} - " + res.data, "warn");
+                                                                }
                                                             } else {
-                                                              $.notify("{{functi}} - " + res, "warn");
+                                                                if(res == ''){
+                                                                $.notify("{{functi}} - Empty response...", "warn");
+                                                                } else {
+                                                                $.notify("{{functi}} - " + res, "warn");
+                                                                }
                                                             }
-                                                          }
-                                                          if($('#resultsLogger').val() != ''){
+                                                            if($('#resultsLogger').val() != ''){
+                                                                $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                            }
+                                                            $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                            }
+                                                        } catch(error) {
+                                                            $.notify("{{functi}} - Could not get the response... Seems not to be a readable value... Is any type of file?", "error");
+                                                            if($('#resultsLogger').val() != ''){
                                                             $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
-                                                          }
-                                                          $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                            }
+                                                            $('#resultsLogger').val("{{functi}}:\nCould not get the response... Seems not to be a readable value... Is any type of file?\n" + $('#resultsLogger').val())
                                                         }
-                                                      } catch(error) {
-                                                        $.notify("{{functi}} - Could not get the response... Seems not to be a readable value... Is any type of file?", "error");
+                                                        },
+                                                        error : function(xhr,errmsg,err) {
+                                                        /*console.log(xhr.status + ": " + xhr.responseText);*/
+                                                        $.notify("{{functi}} - " + res, "error");
                                                         if($('#resultsLogger').val() != ''){
-                                                          $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                            $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
                                                         }
-                                                        $('#resultsLogger').val("{{functi}}:\nCould not get the response... Seems not to be a readable value... Is any type of file?\n" + $('#resultsLogger').val())
-                                                      }
-                                                    },
-                                                    error : function(xhr,errmsg,err) {
-                                                      /*console.log(xhr.status + ": " + xhr.responseText);*/
-                                                      $.notify("{{functi}} - " + res, "error");
-                                                      if($('#resultsLogger').val() != ''){
-                                                        $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
-                                                      }
-                                                      $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
-                                                    }
+                                                        $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                        }
+                                                    });
+                                                    return false;
+                                                }));
+                                                $('#submit_{{functi}}').submit(function(e) {
+                                                    e.preventDefault();
+                                                    $('form_{{data_value}}').submit(upload);
                                                 });
-                                                return false;
-                                              }));
-                                              $('#submit_{{functi}}').submit(function(e) {
-                                                e.preventDefault();
-                                                $('form_{{data_value}}').submit(upload);
-                                              });
-                                            </script>
-                                          {% endif %}
-                                        {% endfor %}
-                                      </div>
+                                                </script>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        </div>
                                     </div>
-                                  </div>
-                                  <script>
-                                    $("#function_background_{{name}}_{{funct_name}}").ready(function(){
-                                      $("#function_background_{{name}}_{{funct_name}}").removeClass("bg-dark");
-                                      $("#function_background_{{name}}_{{funct_name}}").addClass("bg-info");
-                                    });
-                                  </script>
-                                {% endif %}
-                              {% endfor %}
-                            {% endfor %}
-                            <a href="#" data-toggle="modal" data-target="#testModuleFunctionModal_ht_{{name}}_{{funct_name}}">
-                              <div class="card bg-dark text-white shadow mouseOverFunction card-function" id="function_background_{{name}}_{{funct_name}}">
-                                <div class="card-body">
-                                  {{funct_name}}
-                                  {% for i, param in funct_params.original_params.items %}
-                                    {% if param %}
-                                    <div class="text-white-50 small">{{i}}: {{param}}</div>
-                                    {% else %}
-                                      {% if i == 'params' %}
-                                        <div class="text-white-50 small">No obligatory params</div>
-                                      {% else %}
-                                        <div class="text-white-50 small">No params</div>
-                                      {% endif %}
+                                    <script>
+                                        $("#function_background_{{name}}_{{funct_name}}").ready(function(){
+                                        $("#function_background_{{name}}_{{funct_name}}").removeClass("bg-dark");
+                                        $("#function_background_{{name}}_{{funct_name}}").addClass("bg-info");
+                                        });
+                                    </script>
                                     {% endif %}
-                                  {% endfor %}
-                                </div>
-                                {% for modul, funcs in funcs_map.items %}
-                                  {% if modul in 'ht_'|add:name %}
-                                    {% if funct_name in funcs %}
-                                      <i class="far fa-map in_map_icon"></i>
-                                    {% endif %}
-                                  {% endif %}
                                 {% endfor %}
-                              </div>
-                            </a>
-                          {% endif %}
-                        {% endfor %}
-                      {% else %}
-                        <div class="card bg-secondary text-white shadow mouseOverFunction">
-                          <div class="card-body">
-                            No functions
-                          </div>
+                                {% endfor %}
+                                <a href="#" data-toggle="modal" data-target="#testModuleFunctionModal_ht_{{name}}_{{funct_name}}">
+                                <div class="card bg-dark text-white shadow mouseOverFunction card-function" id="function_background_{{name}}_{{funct_name}}">
+                                    <div class="card-body">
+                                    {{funct_name}}
+                                    {% for i, param in funct_params.original_params.items %}
+                                        {% if param %}
+                                        <div class="text-white-50 small">{{i}}: {{param}}</div>
+                                        {% else %}
+                                        {% if i == 'params' %}
+                                            <div class="text-white-50 small">No obligatory params</div>
+                                        {% else %}
+                                            <div class="text-white-50 small">No params</div>
+                                        {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </div>
+                                    {% for modul, funcs in funcs_map.items %}
+                                    {% if modul in 'ht_'|add:name %}
+                                        {% if funct_name in funcs %}
+                                        <i class="far fa-map in_map_icon"></i>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </a>
+                            {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="card bg-secondary text-white shadow mouseOverFunction">
+                            <div class="card-body">
+                                No functions
+                            </div>
+                            </div>
+                        {% endif %}
                         </div>
-                      {% endif %}
                     </div>
-                  </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endspaceless %}
               </div>
             </div>
             <div class="modal-footer">
@@ -537,7 +542,7 @@
           </div>
         </div>
       </div>
-      <!-- Earnings (Monthly) Card Example -->
+      <!-- Graphically create script -->
       <div class="col-xl-3 col-md-6 mb-4">
         <a href="#" data-toggle="modal" data-target="#createScriptModuleModal">
           <div class="card border-left-primary shadow h-100 py-2 overMouseButtons">
@@ -555,8 +560,6 @@
           </div>
         </a>
       </div>
-
-      <!-- Pending Requests Card Example -->
       <div class="modal fade" id="testModuleModal" tabindex="-1" role="dialog" aria-labelledby="testModuleLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-bigger" role="document">
           <div class="modal-content">
@@ -581,36 +584,38 @@
                 var div = document.getElementById(data);
                 /*var clone = div.cloneNode(true);
                 clone.id = "dragged_" + data;*/
-                {% for name, funct in modules_all.items %}
-                  if(data.includes('{{name}}')){
-                    {% if funct.items|length > 1 %}
-                      {% for funct_name, funct_params in funct.items %}
-                        {% if funct_name != 'help' %}
-                          {% for tool, function in modules_functions_modals.items %}
-                            {% for functi, data in function.items %}
-                              {% if functi == funct_name and 'ht_'|add:name == tool %}
-                                if(data.includes('{{functi}}')){
-                                  {% for modCommand, funcCommand in console_command.items %}
-                                    if(data.includes('{{modCommand}}'.split('_')[1])){
-                                      {% for funcCom, funcComText in funcCommand.items %}
-                                        if(data.includes('{{funcCom}}')){
-                                          if(!document.getElementById("code_panel").value.includes('import hackingtools as ht')){
-                                            document.getElementById("code_panel").value += '\nimport hackingtools as ht\n\n';
-                                          }
-                                          document.getElementById("code_panel").value += '{{funcComText|escapejs }}\n\n';
+                {% spaceless %}
+                    {% for name, funct in modules_all.items %}
+                        if(data.includes('{{name}}')){
+                            {% if funct.items|length > 1 %}
+                            {% for funct_name, funct_params in funct.items %}
+                                {% if funct_name != 'help' %}
+                                {% for tool, function in modules_functions_modals.items %}
+                                    {% for functi, data in function.items %}
+                                    {% if functi == funct_name and 'ht_'|add:name == tool %}
+                                        if(data.includes('{{functi}}')){
+                                        {% for modCommand, funcCommand in console_command.items %}
+                                            if(data.includes('{{modCommand}}'.split('_')[1])){
+                                            {% for funcCom, funcComText in funcCommand.items %}
+                                                if(data.includes('{{funcCom}}')){
+                                                if(!document.getElementById("code_panel").value.includes('import hackingtools as ht')){
+                                                    document.getElementById("code_panel").value += '\nimport hackingtools as ht\n\n';
+                                                }
+                                                document.getElementById("code_panel").value += '{{funcComText|escapejs }}\n\n';
+                                                }
+                                            {% endfor %}
+                                            }
+                                        {% endfor %}
                                         }
-                                      {% endfor %}
-                                    }
-                                  {% endfor %}
-                                }
-                              {% endif %}
+                                    {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% endif %}
                             {% endfor %}
-                          {% endfor %}
-                        {% endif %}
-                      {% endfor %}
-                    {% endif %}
-                  }
-                {% endfor %}
+                            {% endif %}
+                        }
+                    {% endfor %}
+                {% endspaceless %}
                 ev.target.appendChild(div);
               }
             </script>
@@ -621,7 +626,7 @@
               <div id="code_functions_panel">
                 <textarea id="code_panel" ondrop="return false;">import hackingtools as ht
 
-</textarea>
+                </textarea>
               </div>
               <div class="row">
                 <div id="accordion">
@@ -700,179 +705,292 @@
       </div>
     </div>
 
-    <!-- Content Row -->
+    <!-- Buttons Modules -->
     <div class="row">
       <div class="col-lg-6 mb-4">
         <div class="row">
-          {% for mod, modform in modules_forms.items %}
-            <div class="modal fade" id="{{mod}}_test" tabindex="-1" role="dialog" aria-labelledby="{{mod}}_test_label" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="{{mod}}_test_label">Module: {{mod}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  {% for urlmodform, form in modform.items %}
-                    <form action="{% url urlmodform %}" method="post" enctype="multipart/form-data">
-                      {% csrf_token %}
-                      {{form|safe}}
-                    </form>
-                  {% endfor %}
-                  <!--<div id="console_command">{{console_command}}</div>-->
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-          {% for mod in modules %}
-            <div id="remove-{{mod}}" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="createModuleLabel">Remove {{mod}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <span>Sure you want to remove the module {{mod}}?</span>
-                    <span>For deleting, enter below: <b>{{mod}}</b></span>
-                    <input type="text" class="form-control" id="removeMod_{{mod}}"/>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <script>
-              function removeModule{{mod}}(evt) {
-                evt.preventDefault();
-                var txt;
-                var person = prompt("Sure you want to remove the module {{mod}}?\n\nFor deleting, enter below: '{{mod}}'", "");
-                if (person == "{{mod}}") {
-                  $.ajax({
-                    url: "{% url 'removeModule' %}",
-                    method: "POST",
-                    data: {
-                      module_name :'{{mod}}',
-                      csrfmiddlewaretoken : '{{ csrf_token }}'
-                    },
-                    success: function(result){
-                      $.notify("{{mod}}:\n" + result['data'], "success");
-                      if($('#resultsLogger').val() != ''){
-                        $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
-                      }
-                      $('#resultsLogger').val("Remove {{mod}}:\n" + result['data'] + "\n" + $('#resultsLogger').val())
-                      $.notify("Restart Server:\n RESTART NEEDED", "warn");
-                      /*$.ajax({
-                        url: "{% url 'restartServerDjango' %}",
-                        method: "POST",
-                        success: function(res){
-                          $.notify("Restart server:\n" + res['data'], "warn");
-                          changeGif(Math.floor(Math.random() * 4) + 1);
-                          $('#reloading-server').modal('show');
-                        }
-                      });*/
-                    },
-                    error(){
-                      $.notify("{{mod}}:\nSomething wen't wrong", "error");
-                      $('#reloading-server').modal('hide');
-                    }
-                  });
-                } else {
-                  $.notify("Bad module name", "error");
-                  $('#reloading-server').modal('hide');
-                }
-              }
-            </script>
-            <div class="col-lg-4 mb-3">
-              <a href="#" data-toggle="modal" data-target="#{{mod}}_test">
-                <div class="card bg-success text-white shadow mouseOverModule">
-                  <div class="card-body">
-                    <i class="icon-trash" style="float: right;" onclick="removeModule{{mod}}(event);"></i>
-                    {{mod|slice:"3:"}}
-                    <div class="text-white-50 small">Module</div>
-                  </div>
-                </div>
-              </a>
-            </div>
-          {% endfor %}
-          {% for mod in modules_names_repo %}
-            {% if not mod in modules %}
-              <div class="col-lg-4 mb-3">
-                <a href="#" id="download_{{mod}}">
-                  <div class="card bg-secondary text-white shadow mouseOverModule">
-                    <div class="card-body">
-                      {{mod}}
-                      <div class="text-white-50 small">Download Module</div>
+            {% spaceless %}
+                {% for mod, modform in modules_forms.items %}
+                    <div class="modal fade" id="{{mod}}_test" tabindex="-1" role="dialog" aria-labelledby="{{mod}}_test_label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="{{mod}}_test_label">Module: {{mod}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% for urlmodform, form in modform.items %}
+                                    {% if mod not in not_async_form %}
+                                        <form action="#" method="post" enctype="multipart/form-data" id="form_main_{{mod}}">
+                                        {% csrf_token %}
+                                        {{form|safe}}
+                                        </form>
+                                        <script>
+                                            $("#form_main_{{mod}}").on('submit',(function(e) {
+                                                e.preventDefault();
+                                                var form = $('#form_main_{{mod}}');
+
+                                                $.ajax({
+                                                    url: '{% url urlmodform %}',
+                                                    type: "POST",
+                                                    data: new FormData($('#form_main_{{mod}}')[0]),
+                                                    async: true,
+                                                    enctype: 'multipart/form-data',
+                                                    contentType: false,
+                                                    cache: false,
+                                                    processData: false,
+                                                    success : function(res) {
+                                                        try{
+                                                            if('data' in res && res.data && Object.keys(res.data).length !== 0){
+                                                            function isDict(v) {
+                                                                return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+                                                            }
+                                                            if(isDict(res.data)){
+                                                                data = JSON.stringify(res.data, null, 2);
+                                                                $.notify("{{functi}}:\n" + data, "success");
+                                                                if($('#resultsLogger').val() != ''){
+                                                                $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                                }
+                                                                $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
+                                                            } else {
+                                                                if(res.data instanceof Array){
+                                                                    var data = '';
+                                                                    for(var i=0; i < res.data.length; i++){
+                                                                        if(isDict(res.data[i])){
+                                                                        for(var key in res.data[i]){
+                                                                            data += key + ': ' + res.data[i][key];
+                                                                            if(res.data.length-1 != i){
+                                                                            data += "\n";
+                                                                            }
+                                                                        }
+                                                                        } else {
+                                                                        data += res.data[i];
+                                                                        if(res.data.length-1 != i){
+                                                                            data += "\n";
+                                                                        }
+                                                                        }
+                                                                        data += "-#-#-#-#-#-#-#-#-#-#-#-#-\n"
+                                                                    }
+                                                                    $.notify("{{functi}}:\n" + data, "success");
+                                                                    if($('#resultsLogger').val() != ''){
+                                                                        $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                                    }
+                                                                    $('#resultsLogger').val("{{functi}}:\n" + data + "\n" + $('#resultsLogger').val())
+                                                                    } else {
+                                                                    $('#popup_response_ajax').modal('show');
+                                                                    $('#response_ajax').empty();
+                                                                    $('#response_ajax').append(res.data);
+                                                                    $('#responseLabelAjax').text('Response from {{functi}}');
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                /*$('#popup_textarea').val(res)
+                                                                $('#popup').modal('show');*/
+                                                                if('data' in res){
+                                                                    if(res.data == ''){
+                                                                    $.notify("{{functi}} - Empty response...", "warn");
+                                                                    } else {
+                                                                    $.notify("{{functi}} - " + res.data, "warn");
+                                                                    }
+                                                                } else {
+                                                                    if(res == ''){
+                                                                        $.notify("{{functi}} - Empty response...", "warn");
+                                                                    } else {
+                                                                        $.notify("{{functi}} - " + res, "warn");
+                                                                    }
+                                                                }
+                                                                if($('#resultsLogger').val() != ''){
+                                                                    $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                                }
+                                                                $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                                }
+                                                        } catch(error) {
+                                                            $.notify("{{functi}} - Could not get the response... Seems not to be a readable value... Is any type of file?", "error");
+                                                            if($('#resultsLogger').val() != ''){
+                                                                $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                            }
+                                                            $('#resultsLogger').val("{{functi}}:\nCould not get the response... Seems not to be a readable value... Is any type of file?\n" + $('#resultsLogger').val())
+                                                        }
+                                                    },
+                                                        error : function(xhr,errmsg,err) {
+                                                        /*console.log(xhr.status + ": " + xhr.responseText);*/
+                                                        $.notify("{{functi}} - " + res, "error");
+                                                        if($('#resultsLogger').val() != ''){
+                                                            $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                                        }
+                                                        $('#resultsLogger').val("{{functi}}:\n" + res + "\n" + $('#resultsLogger').val())
+                                                    }
+                                                });
+                                                return false;
+                                            }));
+                                            $('#submit_main_{{mod}}').submit(function(e) {
+                                                e.preventDefault();
+                                                $('form_main_{{mod}}').submit(upload);
+                                            });
+                                        </script>
+                                    {% else %}
+                                        <form action="{% url urlmodform %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{form|safe}}
+                                        </form>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </a>
-                <script>
-                  $('#download_{{mod}}').click(function(){
-                    $.ajax({
-                      url: "{% url 'downloadInstallModule' %}",
-                      method: "POST",
-                      data: {
-                        module_name :'{{mod}}',
-                        csrfmiddlewaretoken : '{{ csrf_token }}'
-                      },
-                      success: function(result){
-                        $.notify("{{mod}}:\n" + result['data'], "success");
-                        if($('#resultsLogger').val() != ''){
-                          $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                {% endfor %}
+                {% for mod in modules %}
+                    <div id="remove-{{mod}}" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="createModuleLabel">Remove {{mod}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <span>Sure you want to remove the module {{mod}}?</span>
+                                    <span>For deleting, enter below: <b>{{mod}}</b></span>
+                                    <input type="text" class="form-control" id="removeMod_{{mod}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        function removeModule{{mod}}(evt) {
+                            evt.preventDefault();
+                            var txt;
+                            var person = prompt("Sure you want to remove the module {{mod}}?\n\nFor deleting, enter below: '{{mod}}'", "");
+                            if (person == "{{mod}}") {
+                            $.ajax({
+                                url: "{% url 'removeModule' %}",
+                                method: "POST",
+                                data: {
+                                module_name :'{{mod}}',
+                                csrfmiddlewaretoken : '{{ csrf_token }}'
+                                },
+                                success: function(result){
+                                $.notify("{{mod}}:\n" + result['data'], "success");
+                                if($('#resultsLogger').val() != ''){
+                                    $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                }
+                                $('#resultsLogger').val("Remove {{mod}}:\n" + result['data'] + "\n" + $('#resultsLogger').val())
+                                $.notify("Restart Server:\n RESTART NEEDED", "warn");
+                                /*$.ajax({
+                                    url: "{% url 'restartServerDjango' %}",
+                                    method: "POST",
+                                    success: function(res){
+                                    $.notify("Restart server:\n" + res['data'], "warn");
+                                    changeGif(Math.floor(Math.random() * 4) + 1);
+                                    $('#reloading-server').modal('show');
+                                    }
+                                });*/
+                                },
+                                error(){
+                                $.notify("{{mod}}:\nSomething wen't wrong", "error");
+                                $('#reloading-server').modal('hide');
+                                }
+                            });
+                            } else {
+                            $.notify("Bad module name", "error");
+                            $('#reloading-server').modal('hide');
+                            }
                         }
-                        $('#resultsLogger').val("Download {{mod}}:\n" + result['data'] + "\n" + $('#resultsLogger').val())
-                        $.notify("Restart Server:\n RESTART NEEDED", "warn");
-                        /*$.ajax({
-                          url: "{% url 'restartServerDjango' %}",
-                          method: "POST",
-                          success: function(res){
-                            $.notify("Restart server:\n" + res['data'], "warn");
-                            changeGif(Math.floor(Math.random() * 4) + 1);
-                            $('#reloading-server').modal('show');
-                          }
-                        });*/
-                      },
-                      error(){
-                        $.notify("{{mod}}:\nSomething wen't wrong", "error");
-                        $('#reloading-server').modal('hide');
-                      }
-                    });
-                  });
-                </script>
-              </div>
-            {% endif %}
-          {% endfor %}
+                    </script>
+                    <div class="col-lg-4 mb-3">
+                        <a href="#" data-toggle="modal" data-target="#{{mod}}_test">
+                            <div class="card bg-success text-white shadow mouseOverModule">
+                            <div class="card-body">
+                                <i class="icon-trash" style="float: right;" onclick="removeModule{{mod}}(event);"></i>
+                                {{mod|slice:"3:"}}
+                                <div class="text-white-50 small">Module</div>
+                            </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% for mod in modules_names_repo %}
+                    {% if not mod in modules %}
+                        <div class="col-lg-4 mb-3">
+                            <a href="#" id="download_{{mod}}">
+                                <div class="card bg-secondary text-white shadow mouseOverModule">
+                                    <div class="card-body">
+                                    {{mod}}
+                                    <div class="text-white-50 small">Download Module</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <script>
+                                $('#download_{{mod}}').click(function(){
+                                    $.ajax({
+                                    url: "{% url 'downloadInstallModule' %}",
+                                    method: "POST",
+                                    data: {
+                                        module_name :'{{mod}}',
+                                        csrfmiddlewaretoken : '{{ csrf_token }}'
+                                    },
+                                    success: function(result){
+                                        $.notify("{{mod}}:\n" + result['data'], "success");
+                                        if($('#resultsLogger').val() != ''){
+                                        $('#resultsLogger').val("-----------------\n" + $('#resultsLogger').val())
+                                        }
+                                        $('#resultsLogger').val("Download {{mod}}:\n" + result['data'] + "\n" + $('#resultsLogger').val())
+                                        $.notify("Restart Server:\n RESTART NEEDED", "warn");
+                                        /*$.ajax({
+                                        url: "{% url 'restartServerDjango' %}",
+                                        method: "POST",
+                                        success: function(res){
+                                            $.notify("Restart server:\n" + res['data'], "warn");
+                                            changeGif(Math.floor(Math.random() * 4) + 1);
+                                            $('#reloading-server').modal('show');
+                                        }
+                                        });*/
+                                    },
+                                    error(){
+                                        $.notify("{{mod}}:\nSomething wen't wrong", "error");
+                                        $('#reloading-server').modal('hide');
+                                    }
+                                    });
+                                });
+                            </script>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endspaceless %}
         </div>
       </div>
 
-      <!-- Content Column -->
+      <!-- Buttons Category -->
       <div class="col-lg-6 mb-4">
 
         <!-- Color System -->
         <div class="row">
-          {% for cat in categories %}
-            <div class="col-lg-4 mb-3">
-              <div class="card bg-primary text-white shadow mouseOverCategory">
-                <div class="card-body">
-                  {{cat}}
-                  <div class="text-white-50 small">Category</div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-          {% for cat in categories_names_repo %}
-            {% if not cat in categories %}
-              <div class="col-lg-4 mb-3">
-                <div class="card bg-secondary text-white shadow mouseOverCategory">
-                  <div class="card-body">
-                    {{cat}}
-                    <div class="text-white-50 small">Category</div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
+            {% spaceless %}
+                {% for cat in categories %}
+                    <div class="col-lg-4 mb-3">
+                        <div class="card bg-primary text-white shadow mouseOverCategory">
+                            <div class="card-body">
+                                {{cat}}
+                                <div class="text-white-50 small">Category</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for cat in categories_names_repo %}
+                    {% if not cat in categories %}
+                    <div class="col-lg-4 mb-3">
+                        <div class="card bg-secondary text-white shadow mouseOverCategory">
+                            <div class="card-body">
+                                {{cat}}
+                                <div class="text-white-50 small">Category</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endspaceless %}
         </div>
       </div>
 
