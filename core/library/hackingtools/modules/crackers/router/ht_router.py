@@ -31,7 +31,9 @@ class StartModule():
 
 	def getDefaultLogin(self, routerBrand='cisco'):
 		formatedBrand = urllib.parse.quote(routerBrand)
+        
 		url = self.website.format(search=formatedBrand)
+
 		response = requests.get( url )
 		soup = BeautifulSoup(response.content)
 		finalResponse = []
