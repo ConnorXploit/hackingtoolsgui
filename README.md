@@ -1,5 +1,7 @@
 # HackingTools
 
+[![PyPI version](https://badge.fury.io/py/hackingtools.svg)](https://badge.fury.io/py/hackingtools)
+
 ![](https://blog.pentestinglab.es/wp-content/uploads/2019/11/HackingTools.png)
 
 HackingTools is a recopilation of my own created modules in Python for automating the Hacking and Security Developer's life.

@@ -11,21 +11,6 @@ import json
 config = Config.getConfig(parentKey='modules', key='ht_phising')
 output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))
 
-DEFAULT_SAFEBROWSING_FEEDS = [
-    db.SBList(
-        threatType = "MALWARE",
-        platformType = "ALL_PLATFORMS",
-        threatEntryType = "URL",
-        state = "",
-    ),
-    db.SBList(
-        threatType = "SOCIAL_ENGINEERING",
-        platformType = "ALL_PLATFORMS",
-        threatEntryType = "URL",
-        state = "",
-    ),
-]
-
 
 class StartModule():
 
