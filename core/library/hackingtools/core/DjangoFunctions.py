@@ -545,23 +545,42 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
                     required = 'required'
 
                 # Creates a select if any options are filled by another func
+                # try:
+                #     options_from_function = []
+                #     if 'options_from_function' in temp_m_form[m]:
+                #         options_from_function = temp_m_form[m]['options_from_function']
+                #         for optModuleName in options_from_function:
+                #             if optModuleName in ht.getModulesNames() or optModuleName in [moduleNm.replace('ht_', '') for moduleNm in ht.getModulesNames()]:
+                #                 functionCall = 'ht.getModule(\'{mod}\').{func}()'.format(
+                #                     mod=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
+                #                 options_from_function = eval(functionCall)
+                #             elif 'core' == optModuleName:
+                #                 functionCall = 'ht.{func}()'.format(
+                #                     func=temp_m_form[m]['options_from_function'][optModuleName])
+                #                 options_from_function = eval(functionCall)
+                #             else:
+                #                 functionCall = '{m}.{func}()'.format(
+                #                     m=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
+                #                 options_from_function = eval(functionCall)
+                # except Exception as e:
+                #     Logger.printMessage(str(e), is_error=True)
                 try:
                     options_from_function = []
                     if 'options_from_function' in temp_m_form[m]:
-                        options_from_function = temp_m_form[m]['options_from_function']
-                        for optModuleName in options_from_function:
+                        options = temp_m_form[m]['options_from_function']
+                        for optModuleName in options:
                             if optModuleName in ht.getModulesNames() or optModuleName in [moduleNm.replace('ht_', '') for moduleNm in ht.getModulesNames()]:
                                 functionCall = 'ht.getModule(\'{mod}\').{func}()'.format(
                                     mod=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
-                                options_from_function = eval(functionCall)
+                                options_from_function = [functionCall]
                             elif 'core' == optModuleName:
                                 functionCall = 'ht.{func}()'.format(
                                     func=temp_m_form[m]['options_from_function'][optModuleName])
-                                options_from_function = eval(functionCall)
+                                options_from_function = [functionCall]
                             else:
                                 functionCall = '{m}.{func}()'.format(
                                     m=optModuleName, func=temp_m_form[m]['options_from_function'][optModuleName])
-                                options_from_function = eval(functionCall)
+                                options_from_function = [functionCall]
                 except Exception as e:
                     Logger.printMessage(str(e), is_error=True)
                     options_from_function = []
@@ -596,24 +615,51 @@ def __createHtmlModalForm__(mod, config_subkey='django_form_main_function', conf
 
                 elif input_type == 'select':
 
-                    html += "<span class=\"name-select\" value=\"{placeholder}\">{placeholder}</span><select id=\"editable-select-{id}\" name=\"{id}\" placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(
-                        placeholder=input_placeholder, className=input_className, id=m, required=required)
-                    html += "<option value='{input_value}' selected>{input_value}</option>".format(
-                        input_value=input_value)
+                    html += "<span class=\"name-select\" value=\"{placeholder}\">{placeholder}</span><select id=\"editable-select-{mod}-{id}-{config_subkey}\" name=\"{id}\" placeholder=\"{placeholder}\" class=\"{className}\" {required}>".format(
+                        placeholder=input_placeholder, className=input_className, mod=mod, id=m, required=required, config_subkey=config_subkey)
+                    html += "<option value='{input_value}' selected>{input_value}</option>".format(input_value=input_value)
 
-                    if input_value in options_from_function:
-                        options_from_function.remove(input_value)
+                    # if input_value in options_from_function:
+                    #     options_from_function.remove(input_value)
 
-                    for func in options_from_function:
-                        html += "<option value='{cat}'>{cat}</option>".format(
-                            cat=func)
+                    # for func in options_from_function:
+                    #     html += "<option value='{cat}'>{cat}</option>".format(
+                    #         cat=func)
 
-                    html += "</select><script>$('#editable-select-{id}').editableSelect();".format(
-                        id=m)
+                    html += "</select><script>$('#editable-select-{mod}-{id}-{config_subkey}').editableSelect();".format(mod=mod, id=m, config_subkey=config_subkey)
 
                     if required != '':
-                        html += "$('#editable-select-{id}').prop('required',true);".format(
-                            id=m)
+                        html += "$('#editable-select-{mod}-{id}-{config_subkey}').prop('required',true);".format(mod=mod, id=m, config_subkey=config_subkey)
+
+                    options = temp_m_form[m]['options_from_function']
+                    for optModuleName in options:
+                        datos = {}
+                        datos['mod'] = optModuleName
+                        datos['argument'] = m
+                        datos['typeFunction'] = config_subkey
+                        if config_extrasubkey:
+                            datos['origFunction'] = config_extrasubkey
+
+                        html += "$( document ).ready(function(){"
+                        html += "$.ajax({"
+                        html += "cache: false, processData: false, dataType: 'json', contentType: 'application/json', "
+                        html += "url: '/core/loadcontentfunctionparam/', type : 'POST', async: true, "
+                        html += "data: JSON.stringify({datos}),".format(datos=datos)
+                        html += "success: function(data){"
+                        html += "var array = data.data;"
+                        html += "if (array != '')"
+                        html += "{"
+                        html += "for (i in array) {"                    
+                        html += "$(\"#editable-select-{mod}-{id}-{config_subkey}\").next().next().append('<li value=\"'+array[i]+'\" class=\"es-visible\">'+array[i]+'</li>');".format(mod=mod, id=m, config_subkey=config_subkey)
+                        html += "}"
+                        html += "}"
+                        html += "},"
+                        html += "error: function (xhr, ajaxOptions, thrownError) {"
+                        html += "var errorMsg = 'Ajax request failed: ' + xhr.responseText;"
+                        html += "console.log(errorMsg);"
+                        html += "}"
+                        html += "});"
+                        html += "});"
 
                     html += "</script>"
 

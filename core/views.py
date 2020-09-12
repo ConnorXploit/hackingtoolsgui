@@ -100,7 +100,6 @@ def load_data(session_id=None):
         'funcs_map': funcs_map,
         'api_keys': collections.OrderedDict(sorted(api_keys.items()))}
 
-
 def load_data_maps(session_id=None):
     global ht_data_maps
     if ht_data_maps:
@@ -269,6 +268,43 @@ def documentation(request, module_name=''):
         return renderMainPanel(request=request, popup_text=this_conf['bad_module'])
     else:
         return renderMainPanel(request=request, popup_text=this_conf['no_module_selected'])
+
+@csrf_exempt
+def loadcontentfunctionparam(request):
+    try:
+        received_json_data = json.loads(request.body)
+        mod = received_json_data['mod']
+        arg = received_json_data['argument']
+        typeFunction = received_json_data['typeFunction']
+        origFunction = ''
+        if 'origFunction' in received_json_data:
+            origFunction = received_json_data['origFunction']
+
+        if typeFunction == 'django_form_main_function':
+            configMod = Config.getConfig(parentKey='modules', key='ht_{m}'.format(m=mod), subkey=typeFunction, extrasubkey=arg)['options_from_function']
+        else:
+            configMod = Config.getConfig(parentKey='modules', key='ht_{m}'.format(m=mod), subkey=typeFunction, extrasubkey=origFunction)[arg]['options_from_function']
+
+        for optModuleName in configMod:
+            if optModuleName in ht.getModulesNames() or optModuleName in [moduleNm.replace('ht_', '') for moduleNm in ht.getModulesNames()]:
+                functionCall = 'ht.getModule(\'{mod}\').{func}()'.format(mod=optModuleName, func=configMod[optModuleName])
+                options_from_function = eval(functionCall)
+            elif 'core' == optModuleName:
+                functionCall = 'ht.{func}()'.format(func=configMod[optModuleName])
+                options_from_function = eval(functionCall)
+            else:
+                functionCall = '{m}.{func}()'.format(m=optModuleName, func=configMod[optModuleName])
+                options_from_function = eval(functionCall)
+        
+        data = {
+            'data': options_from_function
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        data = {
+            'data': str(e)
+        }
+        return JsonResponse(data)
 
 
 def sendPool(request, functionName):
