@@ -53,9 +53,9 @@ class StartModule():
     def help(self):
         Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_phising'), debug_module=True)
     
-    def search(self, urls, gsb_api=None):
+    def search(self, urls, gsb_api=None, session_id=None):
         if not gsb_api:
-            gsb_api = ht.Config.getAPIKey('gsb_api', gsb_api)
+            gsb_api = ht.Config.getAPIKey('gsb_api', session_id)
             
         if gsb_api:
             if urls:

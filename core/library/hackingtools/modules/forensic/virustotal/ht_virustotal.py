@@ -18,10 +18,10 @@ class StartModule():
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_virustotal'), debug_module=True)
 
-	def isBadFileHash(self, fileHash, virustotal_api=None):
+	def isBadFileHash(self, fileHash, virustotal_api=None, session_id=None):
 		try:
 			if not virustotal_api:
-				virustotal_api = ht.Config.config['API']['virustotal']
+				virustotal_api = ht.Config.getAPIKey('virustotal_api', session_id) 
 			self.vtotal = Virustotal(virustotal_api)
 			resp = self.vtotal.file_report([fileHash])
 			if resp["status_code"] in (200, 204):
