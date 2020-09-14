@@ -1,0 +1,45 @@
+{
+    "__gui_label__": "ht_vehicle",
+    "django_form_module_function": {
+        "searchIdentificationPlate": {
+            "__function__": "searchIdentificationPlate",
+            "__async__": false,
+            "__return__": "text",
+            "plate": {
+                "__type__": "text",
+                "label_desc": "plate",
+                "placeholder": "plate",
+                "required": true
+            },
+            "__pool_it_searchIdentificationPlate__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    },
+    "django_form_main_function": {
+        "__function__": "searchIdentificationPlate",
+        "plate": {
+            "__type__": "text",
+            "label_desc": "plate",
+            "placeholder": "plate",
+            "required": true
+        },
+        "__pool_it_searchIdentificationPlate__": {
+            "__type__": "checkbox",
+            "label_desc": "Pool the execution to the pool list",
+            "selected": false
+        },
+        "close": {
+            "__type__": "button",
+            "value": "Close"
+        },
+        "submit": {
+            "__id__": "searchIdentificationPlate",
+            "__type__": "submit",
+            "value": "Searchidentificationplate",
+            "loading_text": "vehicleing"
+        }
+    }
+}

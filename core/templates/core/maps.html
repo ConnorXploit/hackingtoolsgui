@@ -169,6 +169,28 @@
       });
       return false;
     }));
+    $(document).ready(function(){
+        $.ajax({
+        headers: { "X-CSRFToken": '{{csrf_token}}' },
+        url: '/maps/getCCTV/',
+        type: "POST",
+        async: true,
+        success : function(res) {
+          if('data' in res && res.data && Object.keys(res.data).length !== 0){
+            function isDict(v) {
+                return !!v && typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+            }
+            if(res.data instanceof Object){
+                for(var i = 0; i < res.data.length; i++) {
+                    var marker = new mapboxgl.Marker()
+                    var popup = new mapboxgl.Popup({ offset: 25 }).setHTML('<img style="width; 50%; height: 50%;" src="'+res.data[i]['img']+'">');
+                    marker.setLngLat(res.data[i]['location']).setPopup(popup).addTo(map);
+                }
+            }
+          }
+        }
+      });
+    });
   </script>
   <div class="container-fluid-maps" style="padding-bottom: 200px;">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>

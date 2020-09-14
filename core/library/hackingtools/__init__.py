@@ -524,7 +524,7 @@ def __importModule__(modules, category, moduleName):
     try:
         exec(module_import_string)
         # globals()[module_name] = __importlib.import_module(module_import_string)
-        module_className = __classNameFromModule__(eval(moduleName))
+        _ = __classNameFromModule__(eval(moduleName))
         module_functions = __methodsFromModule__(eval(moduleName))
         # Logger.printMessage(message='{mod} loaded'.format(mod=module_name), debug_module=True)
         if len(module_functions) > 0:

@@ -36,7 +36,7 @@ def checkPackages():
 checkPackages()
 
 setup(name='hackingtools',
-      version='3.1.3',
+      version='3.1.6',
       description='All Hacking Tools in this Python with Manually Created Modules',
       url='http://github.com/ConnorXploit/hackingtools-py',
       author='Connor',

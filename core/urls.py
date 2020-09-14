@@ -15,8 +15,8 @@ urlpatterns = [
          views.documentation, name="documentation"),
     path('popup/<string>', views.home, name="home"),
     path('maps/', views.renderMaps, name="maps"),
-    path('maps/switchFunctionMap/',
-         views.switchFunctionMap, name="switchFunctionMap"),
+    path('maps/switchFunctionMap/', views.switchFunctionMap, name="switchFunctionMap"),
+    path('maps/getCCTV/', views.getCCTV, name="getCCTV"),
     # Core URLs
     path('core/loadcontentfunctionparam/', views.loadcontentfunctionparam, name="loadcontentfunctionparam"),
     path('core/utils/getIPLocationGPS/', views.getIPLocationGPS, name="getIPLocationGPS"),

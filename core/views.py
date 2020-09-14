@@ -12,6 +12,7 @@ import sys
 import requests
 import json
 import collections
+import xmltodict
 from requests import Response
 from colorama import Fore
 
@@ -458,6 +459,25 @@ def getIPLocationGPS(request):
 
     return JsonResponse(data)
 
+def getCCTV(request):
+    urlDGT = 'http://infocar.dgt.es/datex2/dgt/CCTVSiteTablePublication/all/content.xml'
+    resp = requests.get( urlDGT )
+    data = xmltodict.parse( resp.content.decode() )["_0:d2LogicalModel"]["_0:payloadPublication"]["_0:genericPublicationExtension"]["_0:cctvSiteTablePublication"]["_0:cctvCameraList"]["_0:cctvCameraMetadataRecord"]
+    
+    finalData = []
+
+    for camera in data:
+        datosCamara = {}
+        datosCamara['name'] = camera['_0:cctvCameraIdentification']
+        datosCamara['location'] = [ camera["_0:cctvCameraLocation"]["_0:locationForDisplay"]["_0:longitude"], camera["_0:cctvCameraLocation"]["_0:locationForDisplay"]["_0:latitude"] ]
+        datosCamara['img'] = camera["_0:cctvStillImageService"]["_0:stillImageUrl"]["_0:urlLinkAddress"]
+        finalData.append( datosCamara )
+
+    respuesta = {
+        'data' : finalData
+    }
+
+    return JsonResponse( respuesta )
 
 @csrf_exempt
 def saveHostSearchedInMap(request):

@@ -655,6 +655,14 @@
             "help": {
                 "__in_map_help__": false
             }
+        },
+        "ht_vehicle": {
+            "searchIdentificationPlate": {
+                "__in_map_searchIdentificationPlate__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
         }
     }
 }
