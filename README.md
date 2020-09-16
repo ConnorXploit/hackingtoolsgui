@@ -1,6 +1,6 @@
 # HackingTools
 
-[![PyPI version](https://badge.fury.io/py/hackingtools.svg)](https://badge.fury.io/py/hackingtools)
+[![PyPI version](https://badge.fury.io/py/hackingtools.svg)]
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/hackingtools)
 ![GitHub issues](https://img.shields.io/github/issues/Luiggy/hackingtoolsgui?color=purple&style=plastic)
 
