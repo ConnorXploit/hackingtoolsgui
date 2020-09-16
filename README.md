@@ -1,6 +1,8 @@
 # HackingTools
 
-[![PyPI version](https://badge.fury.io/py/hackingtools.svg)](https://badge.fury.io/py/hackingtools)
+![PyPI version](https://badge.fury.io/py/hackingtools.svg)](https://badge.fury.io/py/hackingtools)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/hackingtools)
+![GitHub issues](https://img.shields.io/github/issues/Luiggy/hackingtoolsgui?color=purple&style=plastic)
 
 ![](https://blog.pentestinglab.es/wp-content/uploads/2019/11/HackingTools.png)
 
