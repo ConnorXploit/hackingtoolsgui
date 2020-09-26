@@ -174,8 +174,7 @@ def uploadAPIFileToConf(request):
             myfile = request.FILES['api_keys_file']
 
             # Save the file
-            filename, location, uploaded_file_url = saveFileOutput(
-                myfile, "rsa", "crypto")
+            filename, location, uploaded_file_url = saveFileOutput(myfile, "rsa", "crypto")
 
             password = request.POST.get('password_apis')
 
@@ -201,16 +200,13 @@ def downloadAPIFile(request):
 
         if password:
             try:
-                file_apis = apis_config.saveRestAPIsFile('{n}.htpass'.format(
-                    n=ht.Utils.randomText(32, 'mixalpha-numeric')), password, session_id)
+                file_apis = apis_config.saveRestAPIsFile('{n}.htpass'.format(n=ht.Utils.randomText(32, 'mixalpha-numeric')), password, session_id)
 
                 if os.path.exists(file_apis):
                     with open(file_apis, 'rb') as fh:
 
-                        response = HttpResponse(
-                            fh.read(), content_type="application/x-www-form-urlencoded")
-                        response['Content-Disposition'] = 'inline; filename=' + \
-                            os.path.basename(file_apis)
+                        response = HttpResponse(fh.read(), content_type="application/x-www-form-urlencoded")
+                        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_apis)
                         return response
                 else:
                     return JsonResponse({"data": 'Seem\'s that the file {n} doesn\'t exist'.format(n=file_apis)})
@@ -487,8 +483,7 @@ def saveHostSearchedInMap(request):
         session_id = request.COOKIES['htpass']
     try:
         ip = request.POST.get('ip')
-        location = [request.POST.get(
-            'longitude', 0), request.POST.get('latitude', 0)]
+        location = [request.POST.get('longitude', 0), request.POST.get('latitude', 0)]
         info = request.POST.get('info')
         country = request.POST.get('country')
         searched_term = request.POST.get('searched_term')
