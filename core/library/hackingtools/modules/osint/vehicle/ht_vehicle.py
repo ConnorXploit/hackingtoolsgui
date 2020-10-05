@@ -14,6 +14,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'searchIdentificationPlate'
+		self.__gui_label__ = 'Vehicle Info Extractor'
 		self._funcArgFromFunc_ = {
 			'_functionName_' : {
 				'_functionParamName_' : {

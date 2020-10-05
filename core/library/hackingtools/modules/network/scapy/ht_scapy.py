@@ -14,6 +14,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = ''
+		self.__gui_label__ = 'Scapy for Network Manipulation'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_scapy'), debug_module=True)

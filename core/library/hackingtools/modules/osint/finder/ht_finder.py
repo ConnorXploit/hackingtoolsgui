@@ -12,6 +12,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'checkerOnline'
+		self.__gui_label__ = 'Find an Alias Registered Anywhere'
 		self.options = {
 			'facebook' : self.__facebook__,
 			'twitter' : self.__twitter__,

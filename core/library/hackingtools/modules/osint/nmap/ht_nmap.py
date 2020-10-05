@@ -11,6 +11,7 @@ class StartModule():
 	
 	def __init__(self):
 		self._main_gui_func_ = 'getCVEsFromHost'
+		self.__gui_label__ = 'Nmap'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_nmap'), debug_module=True)

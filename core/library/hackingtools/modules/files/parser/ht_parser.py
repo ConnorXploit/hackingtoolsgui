@@ -19,6 +19,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = ''
+		self.__gui_label__ = 'File Parser'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_parser'), debug_module=True)

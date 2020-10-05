@@ -95,6 +95,16 @@ def getModulesNames():
     modules_names.sort()
     return modules_names
 
+def getModulesNamesLabels():
+    modules_names = {}
+    for tools in __modules_loaded__:
+        try:
+            moduleName = tools.split('.')[-1]
+            modules_names[moduleName] = getModule(moduleName).__gui_label__
+        except:
+            modules_names[moduleName] = ''
+    return modules_names
+
 def getModulesFromCategory(category):
     mods = []
     for m in getModulesNames():

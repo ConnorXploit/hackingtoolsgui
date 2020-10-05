@@ -1,5 +1,5 @@
 Django
-hackingtools==3.1.6
+hackingtools==3.1.7
 Jinja2
 keyring
 gunicorn

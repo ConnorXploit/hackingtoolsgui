@@ -14,6 +14,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'createShortcut'
+		self.__gui_label__ = 'URL Shortener'
 		self._funcArgFromFunc_ = {
 			'createShortcut' : {
 				'domainShortener' : {

@@ -46,6 +46,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'get_posts'
+		self.__gui_label__ = 'Facebook Info Extractor'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_facebook'), debug_module=True)

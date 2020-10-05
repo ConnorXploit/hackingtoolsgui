@@ -12,6 +12,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = ''
+		self.__gui_label__ = 'Web Fuzzer'
 		self._funcArgFromFunc_ = {
 			'_functionName_' : {
 				'_functionParamName_' : {

@@ -19,6 +19,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'search_pastebin'
+		self.__gui_label__ = 'Pastebin Searcher'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_pastebin'), debug_module=True)

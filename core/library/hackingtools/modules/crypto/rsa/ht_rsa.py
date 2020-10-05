@@ -26,6 +26,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'encode'
+		self.__gui_label__ = 'RSA Crypter'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_rsa'), debug_module=True)

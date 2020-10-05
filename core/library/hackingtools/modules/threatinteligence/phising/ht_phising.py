@@ -16,6 +16,7 @@ class StartModule():
 
     def __init__(self):
         self._main_gui_func_ = 'search'
+        self.__gui_label__ = 'Phising URLs Analyzer'
         self._funcArgFromFunc_ = {
             '_functionName_': {
                 '_functionParamName_': {
