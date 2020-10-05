@@ -593,7 +593,8 @@ def __importModules__():
                 try:
                     module_name = modules[modu][submod][files][0].split(".")[0]
                     if not __amidjango__:
-                        worker("import-module-{m}".format(m=module_name), 'ht.__importModule__', args=(modu, submod, module_name), loop=False, log=False) # Threaded
+                        __importModule__(modu, submod, module_name)
+                        #worker("import-module-{m}".format(m=module_name), 'ht.__importModule__', args=(modu, submod, module_name), loop=False, log=False) # Threaded
                     else:
                         __importModule__(modules=modu, category=submod, moduleName=module_name)
                 except Exception as e:
