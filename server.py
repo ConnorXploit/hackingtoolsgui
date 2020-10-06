@@ -1,6 +1,6 @@
 import subprocess, time, argparse, os, requests, sys
 
-python_version = "python"
+python_version = "python3"
 if 'DYNO' in os.environ:
     python_version = "python3"
     

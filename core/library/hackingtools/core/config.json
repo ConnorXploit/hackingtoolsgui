@@ -126,7 +126,8 @@
         "ht_fuzz": {},
         "ht_rc4": {},
         "ht_phising": {},
-        "ht_vehicle": {}
+        "ht_vehicle": {},
+        "ht_abuseipdb": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
