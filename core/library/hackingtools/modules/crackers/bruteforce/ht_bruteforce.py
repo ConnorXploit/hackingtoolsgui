@@ -13,6 +13,7 @@ class StartModule():
 	def __init__(self):
 		Utils.emptyDirectory(output_dir)
 		self._main_gui_func_ = 'crackZip'
+		self.__gui_label__ = 'File Cracker by Bruteforce'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_bruteforce'), debug_module=True)

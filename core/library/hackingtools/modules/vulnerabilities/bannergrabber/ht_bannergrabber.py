@@ -12,6 +12,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'grabPortBanner'
+		self.__gui_label__ = 'Banner Grabber'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_bannergrabber'), debug_module=True)

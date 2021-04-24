@@ -33,6 +33,7 @@ class StartModule():
 	def __init__(self):
 		Utils.emptyDirectory(output_dir)
 		self._main_gui_func_ = 'crypt_file'
+		self.__gui_label__ = 'File Crypter'
 
 # === help ===
 	def help(self):

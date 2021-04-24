@@ -16,6 +16,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'getDefaultLogin'
+		self.__gui_label__ = 'Router Default User/Password Finder'
 		self._funcArgFromFunc_ = {
 			'getDefaultLogin' : {
 				'routerBrand' : {

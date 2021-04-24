@@ -19,6 +19,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'connect'
+		self.__gui_label__ = 'SSH Connection'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_ssh'), debug_module=True)

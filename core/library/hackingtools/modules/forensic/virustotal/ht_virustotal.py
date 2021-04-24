@@ -14,6 +14,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'isBadFile'
+		self.__gui_label__ = 'Virustotal Search'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_virustotal'), debug_module=True)

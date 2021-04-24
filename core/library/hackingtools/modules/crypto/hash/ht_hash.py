@@ -13,6 +13,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'hashContent'
+		self.__gui_label__ = 'Hash Calculator'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_hash'), debug_module=True)

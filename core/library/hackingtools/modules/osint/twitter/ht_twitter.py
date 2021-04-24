@@ -94,6 +94,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'get_user'
+		self.__gui_label__ = 'Twitter Info Extractor'
 		self.proxy = ''
 
 	def help(self):

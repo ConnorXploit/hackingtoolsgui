@@ -16,6 +16,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = ''
+		self.__gui_label__ = 'Qualys Scanner'
 		
 		self.server = ''
 

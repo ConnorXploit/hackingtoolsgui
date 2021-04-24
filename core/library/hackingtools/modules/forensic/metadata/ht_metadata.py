@@ -21,6 +21,7 @@ class StartModule():
 
 	def __init__(self):
 		self._main_gui_func_ = 'set_pdf_metadata_to_another'
+		self.__gui_label__ = 'Metadata manipulation'
 
 	def help(self):
 		Logger.printMessage(message=ht.getFunctionsNamesFromModule('ht_metadata'), debug_module=True)

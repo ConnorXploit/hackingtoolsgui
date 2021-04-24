@@ -663,6 +663,14 @@
             "help": {
                 "__in_map_help__": false
             }
+        },
+        "ht_abuseipdb": {
+            "checkIP": {
+                "__in_map_checkIP__": false
+            },
+            "help": {
+                "__in_map_help__": false
+            }
         }
     }
 }

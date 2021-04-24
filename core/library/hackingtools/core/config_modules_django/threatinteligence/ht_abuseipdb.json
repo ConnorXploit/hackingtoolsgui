@@ -1,0 +1,39 @@
+{
+    "__gui_label__": "ht_abuseipdb",
+    "django_form_module_function": {
+        "checkIP": {
+            "__function__": "checkIP",
+            "__async__": false,
+            "__return__": "text",
+            "ip": {
+                "__type__": "text",
+                "label_desc": "ip",
+                "placeholder": "ip",
+                "required": true
+            },
+            "score": {
+                "__type__": "checkbox",
+                "label_desc": "score",
+                "placeholder": "score",
+                "value": false
+            },
+            "totalReports": {
+                "__type__": "checkbox",
+                "label_desc": "totalReports",
+                "placeholder": "totalReports",
+                "value": false
+            },
+            "abuseipdb_api": {
+                "__type__": "text",
+                "label_desc": "abuseipdb_api",
+                "placeholder": "abuseipdb_api",
+                "value": null
+            },
+            "__pool_it_checkIP__": {
+                "__type__": "checkbox",
+                "label_desc": "Pool the execution to the pool list",
+                "selected": false
+            }
+        }
+    }
+}

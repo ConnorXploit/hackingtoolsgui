@@ -126,7 +126,8 @@
         "ht_fuzz": {},
         "ht_rc4": {},
         "ht_phising": {},
-        "ht_vehicle": {}
+        "ht_vehicle": {},
+        "ht_abuseipdb": {}
     },
     "core": {
         "__WANT_TO_BE_IN_POOL__": true,
@@ -269,7 +270,7 @@
             "__function_name_starts_with_modules__": "__",
             "__function_param_exclude__": "self",
             "__default_class_name_for_all__": "StartModule",
-            "__default_template_modules_ht__": "from hackingtools.core import Logger, Utils, Config\nif Utils.amIdjango(__name__):\n\tfrom .library.core import hackingtools as ht\nelse:\n\timport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tself._main_gui_func_ = ''\n\t\tself._funcArgFromFunc_ = {\n\t\t\t'_functionName_' : {\n\t\t\t\t'_functionParamName_' : {\n\t\t\t\t\t'_moduleName_' : '_functionName_' \n\t\t\t\t}\n\t\t\t}\n\t\t}\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'), debug_module=True)"
+            "__default_template_modules_ht__": "from hackingtools.core import Logger, Utils, Config\nif Utils.amIdjango(__name__):\n\tfrom .library.core import hackingtools as ht\nelse:\n\timport hackingtools as ht\nimport os\n\nconfig = Config.getConfig(parentKey='modules', key='ht_{moduleName}')\noutput_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'output'))\n\nclass StartModule():\n\n\tdef __init__(self):\n\t\tself._main_gui_func_ = ''\n\t\tself.__gui_label__ = ''\n\t\tself._funcArgFromFunc_ = {\n\t\t\t'_functionName_' : {\n\t\t\t\t'_functionParamName_' : {\n\t\t\t\t\t'_moduleName_' : '_functionName_' \n\t\t\t\t}\n\t\t\t}\n\t\t}\n\n\tdef help(self):\n\t\tLogger.printMessage(message=ht.getFunctionsNamesFromModule('ht_{moduleName}'), debug_module=True)"
         },
         "Utils": {
             "empty_directory_strict": "modules/",
