@@ -34,10 +34,20 @@ class StartModule():
 
         if response_schema.status_code == 200:
             self.datos = response_schema.json()
-            self.threat_typeslist = self.datos['schemas']['ThreatInfo']['properties']['threatTypes']['items']['enum']
-            self.threat_entry_typeslist = self.datos['schemas']['ThreatInfo']['properties']['threatEntryTypes']['items']['enum']
-            self.threat_platform_typeslist = self.datos['schemas']['ThreatInfo']['properties']['platformTypes']['items']['enum']
-            
+            try:
+                self.threat_typeslist = self.datos['schemas']['ThreatInfo']['properties']['threatTypes']['items']['enum']
+            except:
+                self.threat_typeslist = None
+            try:
+                self.threat_entry_typeslist = self.datos['schemas']['ThreatInfo']['properties']['threatEntryTypes']['items']['enum']
+            except:
+                self.threat_entry_typeslist = None
+
+            try:
+                self.threat_platform_typeslist = self.datos['schemas']['ThreatInfo']['properties']['platformTypes']['items']['enum']
+            except:
+                self.threat_platform_typeslist = None
+
             self.apiendpointsdic = {}
             for nombre in self.datos['resources']:
                 for methods in self.datos['resources'][nombre]['methods']:
