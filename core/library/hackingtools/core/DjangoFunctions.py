@@ -214,8 +214,10 @@ def __getModulesFunctionsCalls__():
                     module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split(
                         '.')[-1], module_function=func, module_function_params=', '.join(moduleParams), params=', '.join(header_params_arg[module][func]))
             except:
-                module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split(
-                    '.')[-1], module_function=func, module_function_params='')
+                try:
+                    module_funcs[func] = header.format(header_params=header_params[module][func], module_name=module.split('.')[-1], module_function=func, module_function_params='')
+                except:
+                    pass
         modulesCalls[module.split('.')[-1]] = module_funcs
     return modulesCalls
 
