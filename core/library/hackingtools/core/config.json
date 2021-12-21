@@ -51,7 +51,7 @@
             "color_ok": "GREEN"
         },
         "ht_crypter": {
-            "pyinstaller": "pyinstaller -F -w --clean --noconsole --specpath {path}",
+            "pyinstaller": "pyinstaller -F -w --clean --noconsole --specpath scriptname {path}",
             "error_encrypt": "Something went wrong"
         },
         "ht_rsa": {

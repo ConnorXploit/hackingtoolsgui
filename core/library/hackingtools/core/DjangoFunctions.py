@@ -1,5 +1,6 @@
 from datetime import datetime
 import os as __os
+import json
 from . import Config, Logger, Utils, UtilsDjangoViewsAuto
 if Utils.amIdjango(__name__):
     from core.library import hackingtools as ht
